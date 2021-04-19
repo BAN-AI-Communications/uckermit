@@ -1,4 +1,4 @@
-char *fnsv = "C-Kermit functions, 4F(058) 14 Jul 89";
+char *fnsv = "C-Kermit functions, 4G(059) 19 Apr 21";
 
 /*  C K C F N S  --  System-independent Kermit protocol support functions.  */
 
@@ -22,6 +22,11 @@ char *fnsv = "C-Kermit functions, 4F(058) 14 Jul 89";
 #include "ckcsym.h"			/* Need this for Mac */
 #include "ckcker.h"			/* Symbol definitions for Kermit */
 #include "ckcdeb.h"			/* Debug formats, typedefs, etc. */
+#ifdef __linux__
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#endif
 
 #ifndef NULL
 #define NULL 0

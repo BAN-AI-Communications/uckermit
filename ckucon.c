@@ -1,4 +1,4 @@
-char *connv = "Connect Command for Unix, 4F(018) 19 Jun 89";
+char *connv = "Connect Command for Unix, 4G(019) 19 Apr 21";
 
 /*  C K U C O N  --  Dumb terminal connection to remote system, for Unix  */
 /*
@@ -15,6 +15,7 @@ char *connv = "Connect Command for Unix, 4F(018) 19 Jun 89";
 #include <ctype.h>			/* Character types */
 #include "ckcdeb.h"
 #include "ckcker.h"
+#include <errno.h>
 #include <signal.h>
 
 #ifndef ZILOG

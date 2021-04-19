@@ -379,7 +379,7 @@ Interactive
 accepts commands from files as well as from the keyboard.  Upon
 startup,
 .I Kermit
-looks for the file .kermrc in your home or current directory (first it
+looks for the file .kermrc4 in your home or current directory (first it
 looks in the home directory, then in the current one) and executes any
 commands it finds there.  These commands must be in interactive format,
 not Unix command-line format.  A "take" command is also provided for use
@@ -567,10 +567,10 @@ Display who's logged in, or get information about a user.
 Frank da Cruz, Columbia University Center for Computing Activities,
 with contributions from many others.
 .SH FILES
-.ta \w"$HOME/.kermrc  "u
-$HOME/.kermrc	\fIKermit\fR initialization commands
+.ta \w"$HOME/.kermrc4  "u
+$HOME/.kermrc4	\fIKermit\fR initialization commands
 .br
-\&./.kermrc	more \fIKermit\fR initialization commands
+\&./.kermrc4	more \fIKermit\fR initialization commands
 .PD
 .SH SEE ALSO
 cu(1C), uucp(1C)

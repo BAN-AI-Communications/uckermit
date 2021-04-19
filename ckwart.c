@@ -1,4 +1,4 @@
-char *wartv = "Wart Version 1A(006) Jan 1989";
+char *wartv = "Wart Version 1A(006.1) Apr 2021";
 
 /* W A R T */
 
@@ -21,6 +21,10 @@ char *wartv = "Wart Version 1A(006) Jan 1989";
 
 #include "ckcdeb.h"			/* Includes */
 #include <stdio.h>
+#ifdef __linux__
+#include <stdlib.h>
+#include <string.h>
+#endif
 #include <ctype.h>
 
 /*
@@ -62,8 +66,9 @@ struct trans { CHAR states[SBYTES];	/* included states */
 
 typedef struct trans *Trans;
 
+#ifndef __linux__
 char *malloc();				/* Returns pointer (not int) */
-
+#endif
 
 /* Variables and tables */
 
@@ -103,7 +108,7 @@ char *txt3 = "\n	    }\n    }\n}\n\n";
  * turn on the bit associated with the given state
  *
  */
-setstate(state,t)
+wsetstate(state,t)
 int state;
 Trans t;
 {
@@ -313,7 +318,7 @@ Trans t;
 		fprintf(stderr,"state %s undefined\n",tokval);
 		fatal("undefined state");
 	   }
-        setstate(sval,t);	
+        wsetstate(sval,t);	
  curtok = gettoken(fp);
    }
 }

@@ -12,12 +12,12 @@
  
 /* Name of C-Kermit program initialization file. */
 #ifdef vms
-#define KERMRC "ckermit.ini"
+#define KERMRC "ckermit4.ini"
 #else
 #ifdef OS2
-#define KERMRC "ckermit.ini"
+#define KERMRC "ckermit4.ini"
 #else
-#define KERMRC ".kermrc"
+#define KERMRC ".kermrc4"
 #endif
 #endif
 

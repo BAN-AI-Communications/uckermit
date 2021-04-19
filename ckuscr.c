@@ -1,4 +1,4 @@
-char *loginv = "Script Command, V2.0(007) 3 Aug 87";
+char *loginv = "Script Command, V2.0(008) 19 Apr 21";
 
 /*  C K U S C R  --  Login script for logging onto remote system */
 
@@ -38,6 +38,10 @@ char *loginv = "Script Command, V2.0(007) 3 Aug 87";
 void alarm( unsigned );
 #endif
  
+#ifdef __linux__
+#include <string.h>
+#endif
+
 extern int local, speed, flow, seslog, mdmtyp, quiet, duplex;
 extern char ttname[];
 extern CHAR dopar();

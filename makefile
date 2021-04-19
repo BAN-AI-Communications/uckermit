@@ -6,6 +6,7 @@
 # ckuker.bwr (the "beware file"), and then rename this file to "makefile"
 # or "Makefile" if necessary, and then:
 #
+# for modern GNU/Linux with GCC, "make linux"
 # for Alliant FX/8 with Concentrix 4.1, "make bsdlck"
 # for Amdahl UTS 2.4 on IBM 370 series & compatible mainframes, "make uts24"
 # for Amdahl UTSV IBM 370 series & compatible mainframes, "make sys3"
@@ -302,7 +303,13 @@ v7:
 
 #Modern Linux with GCC
 linux:
-	make wermit "CFLAGS = -DSVR3 -DUXIII -DDEBUG -DTLOG -O2"
+	make wermit "CFLAGS = -DSVR3 -DUXIII -DDEBUG -DTLOG -DTILDE \
+		-DTIMESTAMP -DFIONREAD -DO_NDELAY -DTIOCFLUSH -DTIOCFLUSH \
+		-DTIOCSINUSE -DFIONBIO -DTIOCEXCL -DPROFILE -DSIGTSTP \
+		-DNOT_YET -DB19200 -DB38400 -DB57600 -Wall -Wextra \
+		-Wno-return-type -Wno-unused-variable -Wno-implicit-int \
+		-Wno-implicit-function-declaration \
+		-Wno-implicit-fallthrough -O2"
 
 #System V R3, some things changed since Sys V R2...
 sys5r3:

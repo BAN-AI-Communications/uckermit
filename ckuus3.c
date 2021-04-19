@@ -24,6 +24,10 @@
 #include <termio.h>
 #endif
 
+#ifdef __linux__
+#include <string.h>
+#endif
+
 #ifdef datageneral
 extern int con_reads_mt,	    /* Flag if console read asynch is active */
 	   conint_ch,		    /* The character read by asynch read */
@@ -647,7 +651,7 @@ case XZWHO:
 
 default:
     if ((x = cmcfm()) < 0) return(x);
-    printf("not working yet - %s\n",cmdbuf);
+    printf("Not working yet - %s\n",cmdbuf);
     return(-2);
     }
 }

@@ -1,4 +1,4 @@
-char *ckzv = "Unix file support, 4E(039) 19 Jun 89";
+char *ckzv = "Unix file support, 4G(040) 19 Apr 21";
 
 /* C K U F I O  --  Kermit file system support for Unix systems */
 
@@ -18,6 +18,7 @@ char *ckzv = "Unix file support, 4E(039) 19 Jun 89";
 #include "ckcdeb.h"			/* Typedefs, debug formats, etc */
 #include <ctype.h>			/* Character types */
 #include <stdio.h>			/* Standard i/o */
+#include <errno.h>
 #include <sys/dir.h>			/* Directory structure */
 #include <pwd.h>			/* Password file for shell name */
 
@@ -40,7 +41,12 @@ void tzset();
 extern long timezone;
 #endif /* NOT_YET - see comments in front of mktime() below */
 #endif /* uxiii */
- 
+
+#ifdef __linux__
+#include <stdlib.h>
+#include <string.h>
+#endif
+
 /* Is `y' a leap year? */
 #define leap(y) (((y) % 4 == 0 && (y) % 100 != 0) || (y) % 400 == 0)
 
@@ -299,7 +305,10 @@ static int pid = 0;			/* pid of child fork */
 static int fcount;			/* Number of files in wild group */
 static char nambuf[MAXNAMLEN+2];	/* Buffer for a filename */
 static char zmbuf[200];			/* For mail, remote print strings */
-char *malloc(), *getenv(), *strcpy();	/* System functions */
+#ifndef __linux__
+char *malloc();
+#endif
+char *getenv(), *strcpy();	/* System functions */
 extern errno;				/* System error code */
 
 static char *mtchs[MAXWLD],		/* Matches found for filename */
@@ -369,7 +378,7 @@ zopeno(n,name) int n; char *name; {
 /** variants supported by this program.  Maybe use setreuid()? **/
 /** The code shown allegedly works in 4.xBSD, Ultrix, etc.     **/
 
-/*  int uid, euid;			/** suid variables...  */
+/*  int uid, euid; */			/** suid variables...  */
     
     if (n != ZDFILE)
       debug(F111," zopeno",name,n);
@@ -382,10 +391,10 @@ zopeno(n,name) int n; char *name; {
 	zoutptr = zoutbuffer;
 	return(1);
     }
-/*  uid = getuid(); euid = geteuid();	/** In case running suid to uucp, */
-/*  seteuid(uid);			/** etc, get user's own id.  */
+/*  uid = getuid(); euid = geteuid(); */	/** In case running suid to uucp, */
+/*  seteuid(uid); */			/** etc, get user's own id.  */
     fp[n] = fopen(name,"w");		/* A real file, try to open. */
-/*  seteuid(uid);			/** Put back program's suid. */
+/*  seteuid(uid); */			/** Put back program's suid. */
     if (fp[n] == NULL) {
         perror("zopeno can't open");
     } else {
@@ -760,7 +769,7 @@ zxcmd(comand) char *comand; {
 #endif
 
 
-/*#if BSD4*/		/* Code from Dave Tweten@AMES-NAS */
+/* #if BSD4 */		/* Code from Dave Tweten@AMES-NAS */
 			/* readapted to use getpwuid to find login shell */
 			/*   -- H. Fischer */
 	char *shpath, *shname, *shptr;	/* to find desired shell */
@@ -1453,7 +1462,6 @@ match(pattern,string) char *pattern,*string; {
 
 /* The following two functions are for expanding tilde in filenames */
 /* Contributed by Howie Kaye, CUCCA, developed for CCMD package. */
-/* 
 
 /* 
  * WHOAMI:

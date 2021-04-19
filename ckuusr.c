@@ -1,4 +1,4 @@
-char *userv = "User Interface 4F(065), 20 Jul 89";
+char *userv = "User Interface 4G(066), 19 Apr 21";
 
 /*  C K U U S R --  "User Interface" for Unix Kermit (Part 1)  */
 
@@ -83,6 +83,12 @@ char *userv = "User Interface 4F(065), 20 Jul 89";
 #include "ckcker.h"
 #include "ckucmd.h"
 #include "ckuusr.h"
+
+#ifdef __linux__
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#endif
 
 #ifdef datageneral
 #define fgets(stringbuf,max,fd) dg_fgets(stringbuf,max,fd)

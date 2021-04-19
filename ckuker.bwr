@@ -236,7 +236,7 @@ General problems:
   it's running on a timesharing system (the 3B20, where it should be remote
   by default) or a workstation (the 3B2, where it should be local by default).
   If you find that Kermit comes up on your system in the wrong mode, you can
-  put the appropriate "set line" command in your .kermrc file -- "set line
+  put the appropriate "set line" command in your .kermrc4 file -- "set line
   /dev/tty" SHOULD always put you in remote mode.  (Actually, problems have
   been reported for this on some systems that support incoming X.25 connections
   on pseudoterminals.)
@@ -256,8 +256,8 @@ General problems:
   expectation.
 
 - Many people have asked for a system-wide startup file similar to
-  the user's .kermrc file, perhaps with a conditional way to escape from
-  it if the user has her own .kermrc file.  This notion might be extended
+  the user's .kermrc4 file, perhaps with a conditional way to escape from
+  it if the user has her own .kermrc4 file.  This notion might be extended
   to include the entire hierarchy system -- home -- current directory.
 
 - Some users report that it would be more desirable to have an error during
@@ -560,7 +560,7 @@ Subject: patches to ckermit
 Organization: Industrial Automation Systems - New York, NY
 
 These patches add to ckermit a "set phone" command.  Aliases are recognized in
-the "dial" command.  My .kermrc is now full of set phone commands.
+the "dial" command.  My .kermrc4 is now full of set phone commands.
 
 The new command looks like
    set phone pacx 280-8050

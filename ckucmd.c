@@ -1,4 +1,4 @@
-char *cmdv = "Unix cmd package V2(025), 19 Jul 89";
+char *cmdv = "Unix cmd package V2(026), 19 Apr 21";
  
 /*  C K U C M D  --  Interactive command package for Unix  */
 
@@ -77,6 +77,11 @@ char *cmdv = "Unix cmd package V2(025), 19 Jul 89";
 
 #ifdef OSK
 #define cc ccount			/* OS-9/68K compiler bug */
+#endif
+
+#ifdef __linux__
+#include <stdlib.h>
+#include <string.h>
 #endif
 
 /* Local variables */

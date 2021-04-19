@@ -1,0 +1,5 @@
+*.o
+kermit
+wermit
+wart
+ckcpro.c

@@ -19,6 +19,11 @@
 #include "ckcsym.h"		/* Conditional compilation (for Macintosh) */
 #include "ckcker.h"
 #include "ckcdeb.h"
+#ifdef __linux__
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#endif
 
 extern int spsiz, spmax, rpsiz, timint, npad, ebq, ebqflg,
  rpt, rptq, rptflg, capas, spsizf;

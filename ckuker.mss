@@ -255,7 +255,7 @@ settings.  If C-Kermit is invoked with a command line that specifies no
 actions, then it will issue a prompt and begin interactive dialog.  Action
 options specify either protocol transactions or terminal connection.
 
-An implicit 'take' command is executed upon your @q(.kermrc) file when C-Kermit
+An implicit 'take' command is executed upon your @q(.kermrc4) file when C-Kermit
 starts up, upon either interactive or command-line invocation.  This file
 may contain C-Kermit interactive-mode commands, which are explained later.
 
@@ -581,7 +581,7 @@ A command line beginning with a percent sign @qq(%) is ignored.  Such
 lines may be used to include illustrative commentary in Kermit command dialogs.
 
 Interactive C-Kermit accepts commands from files as well as from the keyboard.
-When you start C-Kermit, the program looks for the file @q(.kermrc) in your
+When you start C-Kermit, the program looks for the file @q(.kermrc4) in your
 home or current directory (first it looks in the home directory, then in the
 current one) and executes any commands it finds there.  These commands must be
 in interactive format, not Unix command-@|line format.  A "take" command is
@@ -720,7 +720,7 @@ can pipe tar through C-Kermit, as shown in the example on page
 
 @i<Another Note> -- The 'send' command does not skip over "invisible" files
 that match the file specification; Unix systems usually treat files whose names
-start with a dot (like @q(.login), @q(.cshrc), and @q(.kermrc)) as invisible.
+start with a dot (like @q(.login), @q(.cshrc), and @q(.kermrc4)) as invisible.
 Similarly for "temporary" files whose names start with "@q(#)".
 
 @heading<The 'receive' command>
@@ -1289,13 +1289,13 @@ set flow-control xon/xoff
 set duplex full
 @end(example)
 
-An implicit 'take' command is executed upon your @q(.kermrc) file when C-Kermit
-starts up, upon either interactive or command-line invocation.  The @q(.kermrc)
+An implicit 'take' command is executed upon your @q(.kermrc4) file when C-Kermit
+starts up, upon either interactive or command-line invocation.  The @q(.kermrc4)
 file should contain 'set' or other commands you want to be in effect at all
 times.  For instance, you might want override the default action when incoming
 files have the same names as existing files -- in that case, put the command
 @example(set file warning on)
-in your @q(.kermrc) file.  On some non-Unix systems that run C-Kermit, the
+in your @q(.kermrc4) file.  On some non-Unix systems that run C-Kermit, the
 initialization file might have a different name, such as @q<kermit.ini> or
 @q<ckermit.ini>.
 

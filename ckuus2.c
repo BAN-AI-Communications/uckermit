@@ -18,7 +18,11 @@
 #include "ckcker.h"
 #include "ckucmd.h"
 #include "ckuusr.h"
- 
+
+#ifdef __linux__
+#include <string.h>
+#endif
+
 extern CHAR mystch, stchr, eol, seol, padch, mypadc, ctlq;
 extern CHAR data[], *rdatap, ttname[];
 extern char cmdbuf[], line[], debfil[], pktfil[], sesfil[], trafil[];
@@ -535,7 +539,7 @@ a NAK while waiting for a command packet.  Specify 0 for no NAKs at all.");
     return(0);
 
 default:
-    printf("%s","Not available yet - %s\n",cmdbuf);
+    printf("Not available yet - %s\n",cmdbuf);
     return(0);
     }
 }
@@ -585,7 +589,7 @@ about the specified user."));
  
 default:
     if ((x = cmcfm()) < 0) return(x);
-    printf("%s","not working yet - %s\n",cmdbuf);
+    printf("Not working yet - %s\n",cmdbuf);
     return(-2);
     }
 }

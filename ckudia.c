@@ -1,4 +1,4 @@
-char *dialv = "Dial Command, V2.0(013) 29 Aug 89";
+char *dialv = "Dial Command, V2.0(014) 19 Apr 21";
 
 /*  C K U D I A	 --  Dialing program for connection to remote system */
 
@@ -151,6 +151,10 @@ char *dialv = "Dial Command, V2.0(013) 29 Aug 89";
 #ifdef OS2
 #define SIGALRM SIGUSR1
 void alarm( unsigned );
+#endif
+
+#ifdef __linux__
+#include <string.h>
 #endif
 
 extern int flow, local, mdmtyp, quiet, speed, parity, seslog, ttyfd;
@@ -395,8 +399,8 @@ MDMINF HAYES =		/* information for "Hayes" modem */
     2,			/* pause_time */
     "AT\r",		/* wake_str */
 /*** Note: Other wake_str's are possible here.  For Hayes 2400 that is to
-/*** be used for both in and out calls, AT&F&D3 might be best.  For out calls
-/*** only, maybe AT&F&D2.  See Hayes 2400 manual. ***/
+ *** be used for both in and out calls, AT&F&D3 might be best.  For out calls
+ *** only, maybe AT&F&D2.  See Hayes 2400 manual. ***/
     0,			/* wake_rate */
     "",			/* wake_prompt */
     "",			/* dmode_str */

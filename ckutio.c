@@ -1,4 +1,4 @@
-char *ckxv = "Unix tty I/O, 4F(056), 20 Jul 89";
+char *ckxv = "Unix tty I/O, 4G(057), 19 Apr 21";
 
 /*  C K U T I O  */
 
@@ -32,6 +32,10 @@ char *ckxv = "Unix tty I/O, 4F(056), 20 Jul 89";
 #endif
 
 #include "ckcdeb.h"                     /* Typedefs, formats for debug() */
+
+#ifdef __linux__
+#include <string.h>
+#endif
 
 /* Maximum length for the name of a tty device */
 
@@ -344,7 +348,7 @@ Time functions
 /* #include <ioctl.h> */         /* an ancient version of UNOS.  Uncomment */
 /* #else */                      /* these lines if you need them. */
 #include <sys/ioctl.h>
-/* #endif /* unos */
+/* #endif */ /* unos */
 #include <fcntl.h>                      /* directory reading for locking */
 #include <errno.h>                      /* error numbers for system returns */
 #ifdef  ATT7300
@@ -715,17 +719,17 @@ ttopen(ttname,lcl,modem) char *ttname; int *lcl, modem; {
     }
 
 /*
-/* Note, the following code was added so that Unix "idle-line" snoopers
-/* would not think Kermit was idle when it was transferring files, and
-/* maybe log people out.  But it had to be removed because it broke
-/* one of Unix Kermit's very useful features, sending from standard input,
-/* as in "kermit -s - < file" or "command | kermit -s -".  Too bad...
-/*
-/* If we're not local, close the ttyfd and just use 0 */
+ * Note, the following code was added so that Unix "idle-line" snoopers
+ * would not think Kermit was idle when it was transferring files, and
+ * maybe log people out.  But it had to be removed because it broke
+ * one of Unix Kermit's very useful features, sending from standard input,
+ * as in "kermit -s - < file" or "command | kermit -s -".  Too bad...
+ *
+ * If we're not local, close the ttyfd and just use 0 */
 /*    if (xlocal == 0) {
-/*	close(ttyfd);
-/*	ttyfd = 0;
-/*    }
+ *	close(ttyfd);
+ *	ttyfd = 0;
+ *    }
 */
 
 /* Now check if line is locked -- if so fail, else lock for ourselves */
