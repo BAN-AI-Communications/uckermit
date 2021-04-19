@@ -140,7 +140,7 @@ typedef int void;
 #ifdef MAC                              /* Macintosh */
 #define NLCHAR 015
 #else
-#ifdef OSK				/* OS-9/68K */
+#ifdef OSK                              /* OS-9/68K */
 #define NLCHAR 015
 #else                                   /* All Unix-like systems */
 #define NLCHAR 012

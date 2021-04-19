@@ -300,6 +300,10 @@ v7:
 	-DBOOTNAME=\\\"$(BOOTFILE)\\\" -DNPROCNAME=\\\"$(NPROC)\\\" \
 	-DNPTYPE=$(NPTYPE) $(DIRECT)"
 
+#Modern Linux with GCC
+linux:
+	make wermit "CFLAGS = -DSVR3 -DUXIII -DDEBUG -DTLOG -O2"
+
 #System V R3, some things changed since Sys V R2...
 sys5r3:
 	make wermit "CFLAGS = -DSVR3 -DUXIII -DDEBUG -DTLOG -i -O" \
@@ -463,7 +467,7 @@ trs16:
 clean:
 	-rm -f ckcmai.o ckucmd.o ckuusr.o ckuus2.o ckuus3.o ckcpro.o \
 	ckcfns.o ckcfn2.o ckucon.o ckutio.o ckufio.o ckudia.o ckuscr.o \
-	ckwart.o ckcpro.c
+	ckwart.o ckcpro.c kermit wermit wart
 
 #Run Lint on this mess for the BSD version.
 lint:

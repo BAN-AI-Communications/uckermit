@@ -40,13 +40,13 @@
 #define MYEBQ	   '&'		/* 8th-Bit prefix char I will use */
 #define MYRPTQ	   '~'		/* Repeat count prefix I will use */
 
-#define MAXTRY	    10	  	/* Times to retry a packet */
+#define MAXTRY	    12	  	/* Times to retry a packet */
 #define MYPADN	    0	  	/* How many padding chars I need */
 #define MYPADC	    '\0'  	/* Which padding character I need */
 
-#define DMYTIM	    7	  	/* Default timeout interval to use. */
+#define DMYTIM	    9	  	/* Default timeout interval to use. */
 #define URTIME	    10	  	/* Timeout interval to be used on me. */
-#define DSRVTIM     30		/* Default server command wait timeout. */
+#define DSRVTIM     40		/* Default server command wait timeout. */
 
 #define DEFTRN	    0           /* Default line turnaround handshake */
 #define DEFPAR	    0           /* Default parity */
