@@ -1,4 +1,4 @@
-char *versio = "C-Kermit, 4G(097) 19 Apr 21";
+char *versio = "C-Kermit, 4G(102) 19 Apr 2021";
 
 /*  C K C M A I  --  C-Kermit Main program  */
 
@@ -102,10 +102,9 @@ char *versio = "C-Kermit, 4G(097) 19 Apr 21";
    John Zeeff, Ann Arbor, MI
 */
 
-#include "ckcsym.h"			/* Macintosh once needed this */
-#include "ckcker.h"			/* Kermit symbols */
-#include "ckcdeb.h"			/* Debug & other symbols */
-
+#include "ckcker.h"                     /* Kermit symbols */
+#include "ckcdeb.h"                     /* Debug & other symbols */
+
 /* Text message definitions.. each should be 256 chars long, or less. */
 #ifdef MAC
 char *hlptxt = "\r\
@@ -161,21 +160,21 @@ commands from there.  To shut down the C-Kermit server, issue the\r\n\
 FINISH or BYE command and then reconnect.\n\
 \r\n\0";
 #endif
-
+
 /* Declarations for Send-Init Parameters */
 
 int spsiz = DSPSIZ,                     /* curent packet size to send */
-    spmax = DSPSIZ,		/* (PWP) Biggest packet size we can send */
+    spmax = DSPSIZ,             /* (PWP) Biggest packet size we can send */
                                 /* (see rcalcpsz()) */
     spsizf = 0,                         /* Flag to override what you ask for */
     rpsiz = DRPSIZ,                     /* Biggest we want to receive */
-    urpsiz = DRPSIZ,			/* User-requested rpsiz */
-    maxrps = MAXRP,			/* Maximum incoming long packet size */
-    maxsps = MAXSP,			/* Maximum outbound l.p. size */
-    maxtry = MAXTRY,			/* Maximum retries per packet */
-    wslots = 1,				/* Window size */
+    urpsiz = DRPSIZ,                    /* User-requested rpsiz */
+    maxrps = MAXRP,                     /* Maximum incoming long packet size */
+    maxsps = MAXSP,                     /* Maximum outbound l.p. size */
+    maxtry = MAXTRY,                    /* Maximum retries per packet */
+    wslots = 1,                         /* Window size */
     timint = DMYTIM,                    /* Timeout interval I use */
-    srvtim = DSRVTIM,			/* Server command wait timeout */
+    srvtim = DSRVTIM,                   /* Server command wait timeout */
     rtimo = URTIME,                     /* Timeout I want you to use */
     timef = 0,                          /* Flag to override what you ask */
     npad = MYPADN,                      /* How much padding to send */
@@ -184,23 +183,23 @@ int spsiz = DSPSIZ,                     /* curent packet size to send */
     bctu = 1,                           /* Block check type used */
     ebq =  MYEBQ,                       /* 8th bit prefix */
     ebqflg = 0,                         /* 8th-bit quoting flag */
-    rqf = -1,				/* Flag used in 8bq negotiation */
-    rq = 0,				/* Received 8bq bid */
-    sq = 'Y',				/* Sent 8bq bid */
+    rqf = -1,                           /* Flag used in 8bq negotiation */
+    rq = 0,                             /* Received 8bq bid */
+    sq = 'Y',                           /* Sent 8bq bid */
     rpt = 0,                            /* Repeat count */
     rptq = MYRPTQ,                      /* Repeat prefix */
     rptflg = 0;                         /* Repeat processing flag */
 
-int capas = 10,				/* Position of Capabilities */
-    atcapb = 8,				/* Attribute capability */
-    atcapr = 1,				/*  requested */
-    atcapu = 0,				/*  used */
-    swcapb = 4,				/* Sliding Window capability */
-    swcapr = 0,				/*  requested */
-    swcapu = 0,				/*  used */
-    lpcapb = 2,				/* Long Packet capability */
-    lpcapr = 1,				/*  requested */
-    lpcapu = 0;				/*  used */
+int capas = 10,                         /* Position of Capabilities */
+    atcapb = 8,                         /* Attribute capability */
+    atcapr = 1,                         /*  requested */
+    atcapu = 0,                         /*  used */
+    swcapb = 4,                         /* Sliding Window capability */
+    swcapr = 0,                         /*  requested */
+    swcapu = 0,                         /*  used */
+    lpcapb = 2,                         /* Long Packet capability */
+    lpcapr = 1,                         /*  requested */
+    lpcapu = 0;                         /*  used */
 
 CHAR padch = MYPADC,                    /* Padding character to send */
     mypadc = MYPADC,                    /* Padding character to ask for */
@@ -209,29 +208,29 @@ CHAR padch = MYPADC,                    /* Padding character to send */
     ctlq = CTLQ,                        /* Control prefix in incoming data */
     myctlq = CTLQ;                      /* Outbound control character prefix */
 
-struct zattr iattr;			/* Incoming file attributes */
+struct zattr iattr;                     /* Incoming file attributes */
 
 /* Packet-related variables */
 
 int pktnum = 0,                         /* Current packet number */
     prvpkt = -1,                        /* Previous packet number */
     sndtyp,                             /* Type of packet just sent */
-    rsn,				/* Received packet sequence number */
-    rln,				/* Received packet length */
+    rsn,                                /* Received packet sequence number */
+    rln,                                /* Received packet length */
     size,                               /* Current size of output pkt data */
     osize,                              /* Previous output packet data size */
     maxsize,                            /* Max size for building data field */
-    spktl = 0;				/* Length packet being sent */
+    spktl = 0;                          /* Length packet being sent */
 
 CHAR sndpkt[MAXSP+100],                 /* Entire packet being sent */
     recpkt[MAXRP+200],                  /* Packet most recently received */
-    *rdatap,				/* Pointer to received packet data */
-    data[MAXSP+4],			/* Packet data buffer */
+    *rdatap,                            /* Pointer to received packet data */
+    data[MAXSP+4],                      /* Packet data buffer */
     srvcmd[MAXRP+4],                    /* Where to decode server command */
     *srvptr,                            /* Pointer to above */
     mystch = SOH,                       /* Outbound packet-start character */
     stchr = SOH;                        /* Incoming packet-start character */
-
+
 /* File-related variables */
 
 #ifdef datageneral
@@ -261,7 +260,7 @@ int parity,                             /* Parity specified, 0,'e','o',etc */
     delay = DDELAY,                     /* Initial delay before sending */
     mdmtyp = 0;                         /* Modem type (initially none)  */
 
-    int tlevel = -1;			/* Take-file command level */
+    int tlevel = -1;                    /* Take-file command level */
 
 /* Statistics variables */
 
@@ -288,10 +287,10 @@ int deblog = 0,                         /* Flag for debug logging */
     fncnv  = 1,                         /* Flag for file name conversion */
     binary = 0,                         /* Flag for binary file */
     savmod = 0,                         /* Saved file mode (whole session) */
-    bsave  = 0,				/* Saved file mode (per file) */
-    bsavef = 0,				/* Flag if bsave was used. */
-    cmask  = 0177,			/* Connect byte mask */
-    fmask  = 0377,			/* File byte mask */
+    bsave  = 0,                         /* Saved file mode (per file) */
+    bsavef = 0,                         /* Flag if bsave was used. */
+    cmask  = 0177,                      /* Connect byte mask */
+    fmask  = 0377,                      /* File byte mask */
     warn   = 0,                         /* Flag for file warning */
     quiet  = 0,                         /* Be quiet during file transfer */
     local  = 0,                         /* Flag for external tty vs stdout */
@@ -300,7 +299,7 @@ int deblog = 0,                         /* Flag for debug logging */
     cxseen = 0,                         /* Flag for cancelling a file */
     czseen = 0,                         /* Flag for cancelling file group */
     keep = 0,                           /* Keep incomplete files */
-    nakstate = 0;			/* In a state where we can send NAKs */
+    nakstate = 0;                       /* In a state where we can send NAKs */
 
 /* Variables passed from command parser to protocol module */
 
@@ -309,7 +308,7 @@ char sstate  = 0;                       /* Starting state for automaton */
 char *cmarg  = "";                      /* Pointer to command data */
 char *cmarg2 = "";                      /* Pointer to 2nd command data */
 char **cmlist;                          /* Pointer to file list in argv */
-
+
 /* Miscellaneous */
 
 char **xargv;                           /* Global copies of argv */
@@ -325,7 +324,6 @@ CHAR zinbuffer[INBUFSIZE], zoutbuffer[INBUFSIZE];
 CHAR *zinptr, *zoutptr;
 int zincnt, zoutcnt;
 
-
 /*  M A I N  --  C-Kermit main program  */
 
 #ifdef aegis
@@ -350,9 +348,9 @@ main(argc,argv) int argc; char **argv; {
 
 /*** attempt to take ini file before doing command line ***/
 
-    cmdini();				/* Sets tlevel */
-    while (tlevel > -1) {		/* Execute init file. */
-	sstate = parser();		/* Loop getting commands. */
+    cmdini();                           /* Sets tlevel */
+    while (tlevel > -1) {               /* Execute init file. */
+        sstate = parser();              /* Loop getting commands. */
         if (sstate) proto();            /* Enter protocol if requested. */
     }
 
@@ -369,15 +367,15 @@ main(argc,argv) int argc; char **argv; {
     }
 
 #ifdef OS2
-    if (speed==-1) speed = ttspeed();	/* Unless explicitly changed,
-    					   use the current line speed */
+    if (speed==-1) speed = ttspeed();   /* Unless explicitly changed,
+                                           use the current line speed */
 #endif
 
 /* If no action requested on command line, enter interactive parser */
 
-    herald();				/* Display program herald. */
-    while(1) {				/* Loop getting commands. */
-	sstate = parser();
+    herald();                           /* Display program herald. */
+    while(1) {                          /* Loop getting commands. */
+        sstate = parser();
         if (sstate) proto();            /* Enter protocol if requested. */
     }
 }

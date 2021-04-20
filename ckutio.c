@@ -1,4 +1,4 @@
-char *ckxv = "Unix tty I/O, 4G(058), 19 Apr 21";
+char *ckxv = "Unix tty I/O, 4G(060), 19 Apr 2021";
 
 /*  C K U T I O  */
 
@@ -166,7 +166,11 @@ char *ckxsys = " AT&T 7300/Unix PC System III/System V\n";
 #ifdef RTAIX
 char *ckxsys = " IBM PC-RT AIX";
 #else
+#ifdef __linux__
+char *ckxsys = " GNU/Linux";
+#else
 char *ckxsys = " AT&T System III/System V";
+#endif /* linux */
 #endif /* rtaix */
 #endif /* att7300 */
 #endif /* vxve  */
@@ -232,7 +236,7 @@ char *ckxsys = " AT&T System III/System V";
 #undef MYREAD
 #include <errno.h>
 #endif /* bsd42 */
-
+
 /*
  Variables available to outside world:
 
@@ -287,7 +291,7 @@ char *ckxsys = " AT&T System III/System V";
    offgetty(ttname)        -- Turns off getty(1m) for comms line
    ongetty(ttname)         -- Restores getty() to comms line
 */
-
+
 /*
 Functions for console terminal:
 
@@ -312,7 +316,7 @@ Time functions
    rtimer() --  Reset timer
    gtimer()  -- Get elapsed time since last call to rtimer()
 */
-
+
 /* Conditional Includes */
 
 #ifdef FT18
@@ -415,7 +419,7 @@ Time functions
 #ifndef FWRITE
 #define FWRITE 0x10
 #endif
-
+
 /* Declarations */
 
 long time();                            /* All Unixes should have this... */
@@ -442,7 +446,7 @@ char *initrawq(), *qaddr[2]={0,0};
 #endif /* provx1 */
 
 #ifdef RTU
-    int rtu_bug = 0;		    /* set to 1 when returning from SIGTSTP */
+    int rtu_bug = 0;                /* set to 1 when returning from SIGTSTP */
 #endif
 
     int dfprty = 0;                     /* Default parity (0 = none) */
@@ -450,7 +454,7 @@ char *initrawq(), *qaddr[2]={0,0};
     int ttmdm = 0;                      /* Modem in use. */
     int dfflow = 1;                     /* Xon/Xoff flow control */
     int backgrd = 0;                    /* Assume in foreground (no '&' ) */
-    int iniflags = 0;			/* fcntl flags for ttyfd */
+    int iniflags = 0;                   /* fcntl flags for ttyfd */
 
 int ckxech = 0; /* 0 if system normally echoes console characters, else 1 */
 
@@ -504,7 +508,7 @@ static long clock;
 #else
   static struct sgttyb                  /* sgtty info... */
     ttold, ttraw, tttvt, ttbuf,         /* for communication line */
-    ccold, ccraw, cccbrk, vanilla;	/* and for console */
+    ccold, ccraw, cccbrk, vanilla;      /* and for console */
 #endif /* uxiii */
 
 #ifdef ATT7300
@@ -520,7 +524,7 @@ static int conesc = 0;                  /* set to 1 if esc char (^\) typed */
 static int ttlock();                    /* definition of ttlock subprocedure */
 static int ttunlck();                   /* and unlock subprocedure */
 static char ttnmsv[DEVNAMLEN];          /* copy of open path for tthang */
-
+
 #ifdef aegis
 static status_$t st;                    /* error status return value */
 static short concrp = 0;                /* true if console is CRP pad */
@@ -575,7 +579,7 @@ main(argc,argv) int argc; char **argv; {
         return(ckcmai(argc, argv));
 }
 #endif /* aegis */
-
+
 /*  S Y S I N I T  --  System-dependent program initialization.  */
 
 sysinit() {
@@ -584,7 +588,7 @@ sysinit() {
     iniflags = fcntl(0,F_GETFL,0);    /* Get flags */
 #else
 #ifdef AUX
-    set42sig();			      /* Don't ask! (hakanson@cs.orst.edu) */
+    set42sig();                       /* Don't ask! (hakanson@cs.orst.edu) */
 #endif /* aux */
 #endif
     return(0);
@@ -595,11 +599,11 @@ sysinit() {
 syscleanup() {
 #ifdef ultrix
     stty(0,&vanilla);                   /* Get sgtty info */
-    fcntl(0,F_SETFL,iniflags);		/* Restore flags */
+    fcntl(0,F_SETFL,iniflags);          /* Restore flags */
 #endif
     return(0);
 }
-
+
 /*  T T O P E N  --  Open a tty for exclusive access.  */
 
 /*  Returns 0 on success, -1 on failure.  */
@@ -625,7 +629,7 @@ ttopen(ttname,lcl,modem) char *ttname; int *lcl, modem; {
     char *x; extern char* ttyname();
     char cname[DEVNAMLEN+4];
 
-    if (ttyfd > -1) {			/* if comms line already opened */
+    if (ttyfd > -1) {                   /* if comms line already opened */
         if (strncmp(ttname,ttnmsv,DEVNAMLEN)) /* are new & old names equal? */
           ttclos();                     /* no, close old ttname, open new */
         else                            /* else same, ignore this call */
@@ -694,13 +698,13 @@ ttopen(ttname,lcl,modem) char *ttname; int *lcl, modem; {
     if (*lcl != 0) {
         if (strcmp(ttname,CTTNAM) == 0) {   /* "/dev/tty" always remote */
             xlocal = 0;
-	    debug(F111," ttname=CTTNAM",ttname,xlocal);
+            debug(F111," ttname=CTTNAM",ttname,xlocal);
         } else if (isatty(0)) {         /* Else, if stdin not redirected */
             x = ttyname(0);             /* then compare its device name */
             strncpy(cname,x,DEVNAMLEN); /* (copy from internal static buf) */
             x = ttyname(ttyfd);         /* ...with real name of ttname. */
             xlocal = (strncmp(x,cname,DEVNAMLEN) == 0) ? 0 : 1;
-	    debug(F111," ttyname",x,xlocal);
+            debug(F111," ttyname",x,xlocal);
         } else {                        /* Else, if stdin redirected... */
 #ifdef UXIII
 /* Sys III/V provides nice ctermid() function to get name of controlling tty */
@@ -727,8 +731,8 @@ ttopen(ttname,lcl,modem) char *ttname; int *lcl, modem; {
  *
  * If we're not local, close the ttyfd and just use 0 */
 /*    if (xlocal == 0) {
- *	close(ttyfd);
- *	ttyfd = 0;
+ *      close(ttyfd);
+ *      ttyfd = 0;
  *    }
 */
 
@@ -785,20 +789,20 @@ ttopen(ttname,lcl,modem) char *ttname; int *lcl, modem; {
 
 #ifdef ultrix
     if (xlocal) {
-	int temp = 0;
+        int temp = 0;
 
 #ifdef TIOCSINUSE
-	if (ioctl(ttyfd, TIOCSINUSE, NULL) < 0) {
-	    fprintf(stderr, "Can't set in-use flag on modem.\n");
-	    perror("TIOCSINUSE");
-	}
+        if (ioctl(ttyfd, TIOCSINUSE, NULL) < 0) {
+            fprintf(stderr, "Can't set in-use flag on modem.\n");
+            perror("TIOCSINUSE");
+        }
 #endif /* TIOCSINUSE */
-	if (modem) {
-	    ioctl(ttyfd, TIOCMODEM, &temp);
-	    ioctl(ttyfd, TIOCHPCL, 0);
-	} else {
-	    ioctl(ttyfd, TIOCNMODEM, &temp);
-	}
+        if (modem) {
+            ioctl(ttyfd, TIOCMODEM, &temp);
+            ioctl(ttyfd, TIOCHPCL, 0);
+        } else {
+            ioctl(ttyfd, TIOCNMODEM, &temp);
+        }
     }
 #endif /* ultrix */
 
@@ -842,11 +846,11 @@ ttopen(ttname,lcl,modem) char *ttname; int *lcl, modem; {
     debug(F111," lock file",flfnam,lkf);
     return(0);
 }
-
+
 /*  T T C L O S  --  Close the TTY, releasing any lock.  */
 
 SIGTYP
-ttclosx() {				/* To avoid pointer type mismatches */
+ttclosx() {                             /* To avoid pointer type mismatches */
     ttclos();
 }
 
@@ -869,15 +873,15 @@ ttclos() {
 #ifdef TIOCEXCL
 #ifdef TIOCNXCL
     if (xlocal) {
-	if (ioctl(ttyfd, TIOCNXCL, NULL) < 0)
-	 fprintf(stderr,"Warning, problem relinquishing exclusive access\r\n");
+        if (ioctl(ttyfd, TIOCNXCL, NULL) < 0)
+         fprintf(stderr,"Warning, problem relinquishing exclusive access\r\n");
     }
 #endif /* tiocnxcl */
 #endif /* tiocexcl */
 #endif /* not unos */
 #endif /* not xenix */
 
-    if (ttyfd > 0) close(ttyfd);	/* Close it if tthang didn't */
+    if (ttyfd > 0) close(ttyfd);        /* Close it if tthang didn't */
     ttyfd = -1;                         /* Mark it as closed. */
 
 #ifdef NEWUUCP
@@ -908,7 +912,7 @@ tthang() {
 #endif
 
     if (ttyfd < 0) return(0);           /* Not open. */
-    if (xlocal < 1) return(0);		/* Don't do this if not local */
+    if (xlocal < 1) return(0);          /* Don't do this if not local */
 #ifdef aegis
     sio_$control((short)ttyfd, sio_$dtr, false, st);    /* DTR down */
     msleep(500);                                        /* pause */
@@ -916,17 +920,17 @@ tthang() {
 #else
 #ifdef ANYBSD
 #ifdef BSD42
-    ttc_save = fcntl(ttyfd,F_GETFL,0);	/* Get flags */
+    ttc_save = fcntl(ttyfd,F_GETFL,0);  /* Get flags */
 #endif
     ioctl(ttyfd,TIOCCDTR,0);            /* Clear DTR */
     msleep(500);                        /* For about 1/2 sec */
     ioctl(ttyfd,TIOCSDTR,0);            /* Restore DTR */
 #ifdef COMMENT /* was BSD42, this is apparently not necessary. */
-    close(ttyfd);			/* Close/reopen file descriptor */
+    close(ttyfd);                       /* Close/reopen file descriptor */
     if ((ttyfd = open(ttnmsv, ttc_save)) < 0) {
-	perror(ttnmsv);			/* If can't, give message */
-	ttunlck();			/* and unlock the file */
-	return(-1);	
+        perror(ttnmsv);                 /* If can't, give message */
+        ttunlck();                      /* and unlock the file */
+        return(-1);     
     }
 #endif
 #endif /* anybsd */
@@ -991,8 +995,8 @@ ttres() {                               /* Restore the tty to normal. */
 #ifdef UXIII
     if (ioctl(ttyfd,TCSETAW,&ttold) < 0) return(-1); /* restore termio stuff */
     if (ttmdm) {
-	if (fcntl(ttyfd,F_SETFL, fcntl(ttyfd, F_GETFL, 0) & ~O_NDELAY) < 0 )
-	  return(-1);
+        if (fcntl(ttyfd,F_SETFL, fcntl(ttyfd, F_GETFL, 0) & ~O_NDELAY) < 0 )
+          return(-1);
     }
     return(0);
 #else /* not uxiii */
@@ -1018,7 +1022,7 @@ ttres() {                               /* Restore the tty to normal. */
     return(x);
 #endif /* uxiii (this endif moved from above prev code in edit 080) */
 }
-
+
 /* Exclusive uucp file locking control */
 /*
  by H. Fischer, creative non-Bell coding !
@@ -1037,7 +1041,7 @@ look4lk(ttname) char *ttname; {
     char *device, *devname;
     char lockfil[50];                   /* Max length for lock file name */
 
-    char *lockdir = LOCK_DIR;	/* PWP (see beginning of file for #define) */
+    char *lockdir = LOCK_DIR;   /* PWP (see beginning of file for #define) */
     device = ( (devname=xxlast(ttname,'/')) != NULL ? devname+1 : ttname);
 
 #ifdef ISIII
@@ -1087,7 +1091,7 @@ look4lk(ttname) char *ttname; {
     }
     return( 0 );                        /* okay to go ahead and lock */
 }
-
+
 /*  T T L O C K  */
 
 static
@@ -1113,7 +1117,7 @@ ttlock(ttfd) char *ttfd; {              /* lock uucp if possible */
     write (lck_fil, &pid_buf, sizeof(pid_buf) ); /* uucp expects int in file */
 #endif /* HDBUUCP */
     close (lck_fil);
-    chmod(flfnam,0644);			/* make it readable by uucp */
+    chmod(flfnam,0644);                 /* make it readable by uucp */
     hasLock = 1;                        /* now is locked */
 #endif /* not aegis */
     return(0);
@@ -1142,7 +1146,7 @@ acucntrl(flag,ttname) char *flag, *ttname; {
     system(x);
 }
 #endif /* newuucp */
-
+
 /*  T T P K T  --  Condition the communication line for packets. */
 /*              or for modem dialing */
 
@@ -1159,7 +1163,7 @@ ttpkt(speed,flow,parity) int speed, flow, parity; {
     if (ttyfd < 0) return(-1);          /* Not open. */
     ttprty = parity;                    /* Let other tt functions see this. */
     debug(F101,"ttpkt setting ttprty","",ttprty);
-    if (xlocal) s = ttsspd(speed);	/* Check the speed */
+    if (xlocal) s = ttsspd(speed);      /* Check the speed */
 
 #ifndef UXIII
     if (flow == 1) ttraw.sg_flags |= TANDEM; /* Use XON/XOFF if selected */
@@ -1170,16 +1174,16 @@ ttpkt(speed,flow,parity) int speed, flow, parity; {
     ttraw.sg_flags &= ~ANYP;            /* Must tell Tower no parity */
 #endif /* tower1 */
     if (xlocal) {
-	if (s > -1) ttraw.sg_ispeed = ttraw.sg_ospeed = s; /* Do the speed */
+        if (s > -1) ttraw.sg_ispeed = ttraw.sg_ospeed = s; /* Do the speed */
     }
 #ifdef BSD41
     { /*
-	For 4.1BSD only, force "old" tty driver, new one botches TANDEM.
-	Note, should really use TIOCGETD in ttopen to get current discipline,
-	and restore it in ttres().
+        For 4.1BSD only, force "old" tty driver, new one botches TANDEM.
+        Note, should really use TIOCGETD in ttopen to get current discipline,
+        and restore it in ttres().
       */
-	int ldisc = OTTYDISC;
-	ioctl(ttyfd, TIOCSETD, &ldisc);
+        int ldisc = OTTYDISC;
+        ioctl(ttyfd, TIOCSETD, &ldisc);
     }
 #endif
     if (stty(ttyfd,&ttraw) < 0) return(-1);     /* Set the new modes. */
@@ -1251,7 +1255,7 @@ ttpkt(speed,flow,parity) int speed, flow, parity; {
 #endif
 #endif
 #endif
-    if (xlocal && (s > -1)) {		/* set speed */
+    if (xlocal && (s > -1)) {           /* set speed */
         ttraw.c_cflag &= ~CBAUD;
         ttraw.c_cflag |= s;
     }
@@ -1269,7 +1273,7 @@ ttpkt(speed,flow,parity) int speed, flow, parity; {
     return(0);
 #endif /* uxiii */
 }
-
+
 /*  T T V T -- Condition communication line for use as virtual terminal  */
 
 ttvt(speed,flow) int speed, flow; {
@@ -1334,7 +1338,7 @@ ttvt(speed,flow) int speed, flow; {
 #endif
     return(0);
 }
-
+
 /*  T T S S P D  --  Return the internal baud rate code for 'speed'.  */
 
 ttsspd(speed) {
@@ -1369,7 +1373,7 @@ ttsspd(speed) {
         }
         if (spdok) return(s); else return(-1);
  }
-
+
 /*  T T F L U I  --  Flush tty input buffer */
 
 ttflui() {
@@ -1413,7 +1417,7 @@ ttflui() {
 #endif
     return(0);
 }
-
+
 /* Interrupt Functions */
 
 
@@ -1495,14 +1499,14 @@ conint(f) SIGTYP (*f)(); {                 /* Set an interrupt trap. */
 /* check if invoked in background -- if so signals set to be ignored */
 
     if (backgrd) {                      /* In background, ignore signals */
-	debug(F100,"conint background ignoring signals","",0);
+        debug(F100,"conint background ignoring signals","",0);
 #ifdef SIGTSTP
         signal(SIGTSTP,SIG_IGN);        /* Keyboard stop */
 #endif
         signal(SIGQUIT,SIG_IGN);        /* Keyboard quit */
         signal(SIGINT,SIG_IGN);         /* Keyboard interrupt */
     } else {
-	debug(F100,"conint foreground catching signals","",0);
+        debug(F100,"conint foreground catching signals","",0);
         signal(SIGINT,f);               /* Catch terminal interrupt */
 #ifdef SIGTSTP
         signal(SIGTSTP,stptrap);        /* Keyboard stop */
@@ -1542,7 +1546,7 @@ connoi() {                              /* Console-no-interrupts */
     signal(SIGTERM,SIG_DFL);
     conif = 0;                          /* Flag interrupt trapping off */
 }
-
+
 /*  myread() -- For use by systems that can do nonblocking read() calls  */
 /*
  Returns:
@@ -1606,7 +1610,7 @@ myread() {
 myunrd(ch) CHAR ch; {                   /* push back up to one character */
     ungotn = ch;
 }
-
+
 /*  I N I T R A W Q  --  Set up to read /DEV/KMEM for character count.  */
 
 #ifdef  V7
@@ -1661,7 +1665,7 @@ char *initrawq(tty) int tty; {
     if (nl[0].n_type == 0) err("proc array");
 
     if (nl[1].n_type == 0) err("nproc");
-
+
     lseek(m, (long)(nl[1].n_value), 0);
     read (m, &xproc, sizeof(xproc));
     signal(SIGALRM, catch);
@@ -1705,7 +1709,7 @@ iout:
 #endif
 #endif
 }
-
+
 /*  More V7-support functions...  */
 
 static
@@ -1742,7 +1746,7 @@ genbrk(fn) int fn; {
     return;
 }
 #endif
-
+
 /*  T T C H K  --  Tell how many characters are waiting in tty input buffer  */
 
 ttchk() {
@@ -1802,7 +1806,7 @@ ttxin(n,buf) int n; CHAR *buf; {
     if (x < 0) x = -1;
     return(x);
 }
-
+
 /*  T T O L  --  Similar to "ttinl", but for writing.  */
 
 ttol(s,n) int n; char *s; {
@@ -1826,17 +1830,17 @@ ttol(s,n) int n; char *s; {
 ttoc(c) char c; {
     int x;
     if (ttyfd < 0) return(-1);          /* Check for not open. */
-    signal(SIGALRM,timerh);		/* Enable timer interrupt */
-    alarm(2);				/* for 2 seconds. */
-    x = write(ttyfd,&c,1);		/* Try to write the character. */
-    if (setjmp(sjbuf)) {		/* Timer went off? */
-	x = -1;				/* Yes, set return code for failure */
+    signal(SIGALRM,timerh);             /* Enable timer interrupt */
+    alarm(2);                           /* for 2 seconds. */
+    x = write(ttyfd,&c,1);              /* Try to write the character. */
+    if (setjmp(sjbuf)) {                /* Timer went off? */
+        x = -1;                         /* Yes, set return code for failure */
     }
-    alarm(0);				/* Turn off timers, etc. */
+    alarm(0);                           /* Turn off timers, etc. */
     signal(SIGALRM,SIG_DFL);
     return(x);
 }
-
+
 /*  T T I N L  --  Read a record (up to break character) from comm line.  */
 /*
   If no break character encountered within "max", return "max" characters,
@@ -1882,7 +1886,7 @@ ttinl(dest,max,timo,eol) int max,timo; CHAR *dest, eol; {
                 x = -1;
                 break;
             }
-            for (; i < j; i++) {	/* Go thru all chars we just got */
+            for (; i < j; i++) {        /* Go thru all chars we just got */
                 dest[i] &= m;           /* Strip any parity */
                 if (dest[i] == eol) {   /* Got eol? */
                   dest[++i] = '\0';     /* Yes, tie off string, */
@@ -1908,7 +1912,7 @@ ttinl(dest,max,timo,eol) int max,timo; CHAR *dest, eol; {
     signal(SIGALRM,SIG_DFL);            /* and interrupt, */
     return(x);                          /* and return error code. */
 }
-
+
 /*  T T I N C --  Read a character from the communication line  */
 
 ttinc(timo) int timo; {
@@ -1949,7 +1953,7 @@ ttinc(timo) int timo; {
     signal(SIGALRM,SIG_DFL);            /* and interrupt. */
     return( (n < 0) ? -1 : (ch & m) );  /* Return char or -1. */
 }
-
+
 /*  T T S N D B  --  Send a BREAK signal  */
 
 ttsndb() {
@@ -2002,7 +2006,7 @@ ttsndb() {
 #endif
 #endif
 }
-
+
 /*  M S L E E P  --  Millisecond version of sleep().  */
 
 /*
@@ -2092,7 +2096,7 @@ msleep(m) int m; {
 #endif
 #endif
 }
-
+
 /*  R T I M E R --  Reset elapsed time counter  */
 
 rtimer() {
@@ -2163,7 +2167,7 @@ ztime(s) char **s; {
     *s = asctime(tp);
 #endif
 }
-
+
 /*  C O N G M  --  Get console terminal modes.  */
 
 /*
@@ -2250,7 +2254,7 @@ concb(esc) char esc; {
 #endif
     return(x);
 }
-
+
 /*  C O N B I N  --  Put console in binary mode  */
 
 /*  Returns 0 if ok, -1 if not  */
@@ -2291,8 +2295,8 @@ conbin(esc) char esc; {
 #endif
 /*** Sys III/V sites that have trouble with this can restore these lines.
  ***/
-    ccraw.c_cc[0] = 003;		/* Interrupt char is Ctrl-C */
-    ccraw.c_cc[1] = escchr;		/* Escape during packet mode */
+    ccraw.c_cc[0] = 003;                /* Interrupt char is Ctrl-C */
+    ccraw.c_cc[1] = escchr;             /* Escape during packet mode */
     ccraw.c_cc[4] = 1;
 #ifdef ZILOG
     ccraw.c_cc[5] = 0;
@@ -2325,7 +2329,7 @@ conres() {
     return(ioctl(0,TCSETAW,&ccold));
 #endif
 }
-
+
 /*  C O N O C  --  Output a character to the console terminal  */
 
 conoc(c) char c; {
@@ -2359,7 +2363,7 @@ conoll(s) char *s; {
     conol(s);
     write(1,"\r\n",2);
 }
-
+
 /*  C O N C H K  --  Return how many characters available at console  */
 
 conchk() {
@@ -2413,7 +2417,7 @@ conchk() {
 #endif
 #endif
 }
-
+
 /*  C O N I N C  --  Get a character from the console  */
 
 coninc(timo) int timo; {
@@ -2457,7 +2461,7 @@ coninc(timo) int timo; {
 #endif
         return(-1);
 }
-
+
 #ifdef ATT7300
 
 /*  A T T D I A L  --  Dial up the remote system using internal modem
@@ -2530,7 +2534,7 @@ line_status:%o feedback:%o\n",
                 return(-2);
                 }
         } while ((dialer.c_linestatus & MODEMCONNECTED) == 0);
-    signal(SIGHUP, ttclosx);		/* hangup on loss of carrier */
+    signal(SIGHUP, ttclosx);            /* hangup on loss of carrier */
     return(0);                          /* return success */
 }
 

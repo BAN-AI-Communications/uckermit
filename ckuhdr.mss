@@ -12,7 +12,7 @@
         Spread 1, Indent 0, HyphenBreak Off, SingleSided>
 @Use<Hyphendic="kuser.hyp">
 @Modify<IndexEnv,Boxed,
-	Columns 2,ColumnMargin 0.5inch,LineWidth 2.2inch,ColumnWidth 2.7inch>
+        Columns 2,ColumnMargin 0.5inch,LineWidth 2.2inch,ColumnWidth 2.7inch>
 
 @Comment(Set desired spacing around various environments)
 
@@ -132,23 +132,23 @@ provided this copyright notice is retained.>
 @case[device, x9700="@blankpage(1)"]
 @end<titlepage>
 @PageHeading(Odd,Immediate,
-	Left="@xx<@Value[SectionNumber]. @Value[SectionTitle]>",
-	Right="@yy<Page @ref(page)>",
-	Line="@bar()@blankspace(2)")
+        Left="@xx<@Value[SectionNumber]. @Value[SectionTitle]>",
+        Right="@yy<Page @ref(page)>",
+        Line="@bar()@blankspace(2)")
 @PageHeading(Even,
-	Left="@yy<Page @ref(page)>",
-	Right="@xx<Kermit User Guide: @Title(Chapter) @Value[SectionNumber]>",
-	Line="@bar()@blankspace(2)")
+        Left="@yy<Page @ref(page)>",
+        Right="@xx<Kermit User Guide: @Title(Chapter) @Value[SectionNumber]>",
+        Line="@bar()@blankspace(2)")
 @set(page=1)
 @Include<ckuker>
 @PageHeading(Odd,Immediate,
-	Left="@xx<C-Kermit>",
-	Right="@yy<Page @ref(page)>",
-	Line="@bar()@blankspace(2)")
+        Left="@xx<C-Kermit>",
+        Right="@yy<Page @ref(page)>",
+        Line="@bar()@blankspace(2)")
 @PageHeading(Even,
-	Left="@yy<Page @ref(page)>",
-	Right="@xx<Kermit User Guide>",
-	Line="@bar()@blankspace(2)")
+        Left="@yy<Page @ref(page)>",
+        Right="@xx<Kermit User Guide>",
+        Line="@bar()@blankspace(2)")
 @Case(Device,x9700="@Comment<Begin Duplex Kludge>
 @SendEnd(#Index `@begin<Transparent,PageBreak UntilOdd>@end<Transparent>')
 @Comment<End Duplex Kludge>")

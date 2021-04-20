@@ -1,4 +1,4 @@
-char *loginv = "Script Command, V2.0(008) 19 Apr 21";
+char *loginv = "Script Command, V2.0(010) 19 Apr 2021";
 
 /*  C K U S C R  --  Login script for logging onto remote system */
 
@@ -47,28 +47,28 @@ extern char ttname[];
 extern CHAR dopar();
 static char * chstr();
 
-static int EXP_ALRM = 15;		/* Time to wait for expect string */
-#define SND_ALRM	15		/* Time to allow for sending string */
-#define NULL_EXP	2		/* Time to pause on null expect strg*/ 
-#define DEL_MSEC	300		/* milliseconds to pause on ~d */
+static int EXP_ALRM = 15;               /* Time to wait for expect string */
+#define SND_ALRM        15              /* Time to allow for sending string */
+#define NULL_EXP        2               /* Time to pause on null expect strg*/ 
+#define DEL_MSEC        300             /* milliseconds to pause on ~d */
 
-#define SBUFL 512		
-static char seq_buf[SBUFL], *s;		/* Login Sequence buffer */
-static char fls_buf[SBUFL];		/* Flush buffer */
+#define SBUFL 512               
+static char seq_buf[SBUFL+1], *s;               /* Login Sequence buffer */
+static char fls_buf[SBUFL+1];           /* Flush buffer */
 static int got_it, no_cr;
 
 /*  connect state parent/child communication signal handlers */
 
-static jmp_buf alrmRng;		/* Envir ptr for connect errors */
+static jmp_buf alrmRng;         /* Envir ptr for connect errors */
 
 SIGTYP
-scrtime() {				/* modem read failure handler, */
+scrtime() {                             /* modem read failure handler, */
 #ifdef OS2
-    alarmack();				/* Acknowledge the signal */
+    alarmack();                         /* Acknowledge the signal */
 #endif
-    longjmp(alrmRng,1);		/* notifies parent process to stop */
+    longjmp(alrmRng,1);         /* notifies parent process to stop */
 }
-
+
 
 /*
  Sequence interpreter -- pick up next sequence from command string,
@@ -83,64 +83,64 @@ sequenc()  {
     int i;
     char c, oct_char;
 
-    no_cr = 0;				/* output needs cr appended */
+    no_cr = 0;                          /* output needs cr appended */
 
-    for (i=0; i<SBUFL; ) {		
-	if (*s == '\0' || *s == '-' || isspace(*s) ) { /* done */
-	    seq_buf[i] = '\0';
-	    return(0) ;
-	}
+    for (i=0; i<SBUFL; ) {              
+        if (*s == '\0' || *s == '-' || isspace(*s) ) { /* done */
+            seq_buf[i] = '\0';
+            return(0) ;
+        }
 
-	if (*s == '~') {		/* escape character */
-	    switch (c = *(++s) ) {
-		case 'n':	seq_buf[i++] = LF; break;
-		case 'r':	seq_buf[i++] = CR; break;
-		case 't':	seq_buf[i++] = '\t'; break;
-		case 'b':	seq_buf[i++] = '\b'; break;
-		case 'q':	seq_buf[i++] = '?';  break;
-		case '~':	seq_buf[i++] = '~';  break;
-		case '\'':	seq_buf[i++] = '\''; break;
-		case '\"':	seq_buf[i++] = '\"'; break;
-		case 's':	seq_buf[i++] = ' ';  break;
-		case 'x':	seq_buf[i++] = '\021'; break;
-		case 'c':	no_cr = 1; break;
-		case 'd': {			/* send what we have & then */
-		    seq_buf[i] = '\0';		/* expect to send rest after */
-		    no_cr = 1;			/* sender delays a little */
-		    s++;
-		    return(1);
-		    }
-		case 'w': {			/* wait count */
-		    EXP_ALRM = 15;		/* default to 15 sec */
-		    if ( isdigit( *(s+1) ) ) { 
-			EXP_ALRM = (*(++s)) & 15;
-			if ( isdigit( *(s+1) ) ) {
-			    EXP_ALRM = EXP_ALRM*10 + ( (*(++s)) & 15 );
-			    }
-			}
-		    break;
-		    }
-		default:
-		    if ( isdigit(c) ) {	    	/* octal character */
-		    	oct_char = (c & 7);	/* most significant digit */
-			if (isdigit( *(s+1) ) ) {
-			    oct_char = (oct_char<<3) | ( (*(++s)) & 7 ) ;
-			    if (isdigit( *(s+1) ) ) {
-			    	oct_char = (oct_char<<3) | ( (*(++s)) & 7 ) ;
-			    }
-			}
-			seq_buf[i++] = oct_char;
-			break;
-		    }
-	    }
-	}
-	else seq_buf[i++] = *s;		/* plain old character */
-	s++;
+        if (*s == '~') {                /* escape character */
+            switch (c = *(++s) ) {
+                case 'n':       seq_buf[i++] = LF; break;
+                case 'r':       seq_buf[i++] = CR; break;
+                case 't':       seq_buf[i++] = '\t'; break;
+                case 'b':       seq_buf[i++] = '\b'; break;
+                case 'q':       seq_buf[i++] = '?';  break;
+                case '~':       seq_buf[i++] = '~';  break;
+                case '\'':      seq_buf[i++] = '\''; break;
+                case '\"':      seq_buf[i++] = '\"'; break;
+                case 's':       seq_buf[i++] = ' ';  break;
+                case 'x':       seq_buf[i++] = '\021'; break;
+                case 'c':       no_cr = 1; break;
+                case 'd': {                     /* send what we have & then */
+                    seq_buf[i] = '\0';          /* expect to send rest after */
+                    no_cr = 1;                  /* sender delays a little */
+                    s++;
+                    return(1);
+                    }
+                case 'w': {                     /* wait count */
+                    EXP_ALRM = 15;              /* default to 15 sec */
+                    if ( isdigit( *(s+1) ) ) { 
+                        EXP_ALRM = (*(++s)) & 15;
+                        if ( isdigit( *(s+1) ) ) {
+                            EXP_ALRM = EXP_ALRM*10 + ( (*(++s)) & 15 );
+                            }
+                        }
+                    break;
+                    }
+                default:
+                    if ( isdigit(c) ) {         /* octal character */
+                        oct_char = (c & 7);     /* most significant digit */
+                        if (isdigit( *(s+1) ) ) {
+                            oct_char = (oct_char<<3) | ( (*(++s)) & 7 ) ;
+                            if (isdigit( *(s+1) ) ) {
+                                oct_char = (oct_char<<3) | ( (*(++s)) & 7 ) ;
+                            }
+                        }
+                        seq_buf[i++] = oct_char;
+                        break;
+                    }
+            }
+        }
+        else seq_buf[i++] = *s;         /* plain old character */
+        s++;
     }
     seq_buf[i] = '\0';
-    return(0);			/* end of space, return anyway */
+    return(0);                  /* end of space, return anyway */
 }
-
+
 
 /*
  Receive sequence -- see if expected response comes return success
@@ -152,47 +152,47 @@ recvSeq()  {
     char *e, got[7], trace[SBUFL];
     int i, l;
     
-	sequenc();
-	l = strlen(e=seq_buf);		/* no more than 7 chars allowed */
-	if (l > 7) {
-	    e += l-7;
-	    l = 7;
-	}
-	tlog(F111,"expecting sequence",e,(long) l);
-	if (l == 0) {		/* null sequence, just delay a little */
+        sequenc();
+        l = strlen(e=seq_buf);          /* no more than 7 chars allowed */
+        if (l > 7) {
+            e += l-7;
+            l = 7;
+        }
+        tlog(F111,"expecting sequence",e,(long) l);
+        if (l == 0) {           /* null sequence, just delay a little */
 #ifdef OS2
-	    msleep (NULL_EXP*1000);
+            msleep (NULL_EXP*1000);
 #else
-	    sleep (NULL_EXP);
+            sleep (NULL_EXP);
 #endif
-	    got_it = 1;
-	    tlog(F100,"got it (null sequence)","",0l);
-	    return;
-	}
-	*trace = '\0';
-	for (i=0; i<7; i++) got[i]='\0';
+            got_it = 1;
+            tlog(F100,"got it (null sequence)","",0l);
+            return;
+        }
+        *trace = '\0';
+        for (i=0; i<7; i++) got[i]='\0';
 
-	signal(SIGALRM,scrtime);	/* did we get it? */
-	if (!setjmp(alrmRng)) {	/* not timed out yet */
-	    alarm(EXP_ALRM);
-	    while (!got_it) {
-		for (i=0; i<(l-1); i++) got[i] = got[i+1]; /* shift over one */
-		got[l-1] = ttinc(0) & 0177;		/* next char */
-		if (seslog) 		/* Log in session log */
-		  zchout(ZSFILE,got[l-1]);
-		if (strlen(trace) < sizeof(trace)-2 ) 
-		  strcat(trace,chstr(got[l-1]));
-		got_it = (!strncmp(seq_buf, got, l) ) ;
-	    }
-	} else got_it = 0;		/* timed out here */
+        signal(SIGALRM,scrtime);        /* did we get it? */
+        if (!setjmp(alrmRng)) { /* not timed out yet */
+            alarm(EXP_ALRM);
+            while (!got_it) {
+                for (i=0; i<(l-1); i++) got[i] = got[i+1]; /* shift over one */
+                got[l-1] = ttinc(0) & 0177;             /* next char */
+                if (seslog)             /* Log in session log */
+                  zchout(ZSFILE,got[l-1]);
+                if (strlen(trace) < sizeof(trace)-2 ) 
+                  strcat(trace,chstr(got[l-1]));
+                got_it = (!strncmp(seq_buf, got, l) ) ;
+            }
+        } else got_it = 0;              /* timed out here */
 
-	alarm(0);
-	signal(SIGALRM,SIG_IGN);
-	tlog(F110,"received sequence: ",trace,0l);
-	tlog(F101,"returning with got-it code","",(long) got_it);
-	return;
+        alarm(0);
+        signal(SIGALRM,SIG_IGN);
+        tlog(F110,"received sequence: ",trace,0l);
+        tlog(F101,"returning with got-it code","",(long) got_it);
+        return;
 }
-
+
 
 /*
  Output A Sequence starting at pointer s,
@@ -212,106 +212,101 @@ outSeq()  {
     tlog(F111,"sending sequence ",seq_buf,(long) l);
     signal(SIGALRM,scrtime);
     if (!setjmp(alrmRng)) {
-	alarm(SND_ALRM);
-	if (!strcmp(seq_buf,"EOT")) {
-	    ttoc(dopar('\004'));
-	    if (seslog && duplex) zsout(ZSFILE,"{EOT}");
-	} else if (!strcmp(seq_buf,"BREAK")) {
-	    ttsndb();
-	    zsout(ZSFILE,"{BREAK}");
- 	} else {
-	    if (l > 0) {
-		for ( sb=seq_buf; *sb; sb++) *sb = dopar(*sb);
-		ttol(seq_buf,l);		/* with parity */
-		if (seslog && duplex) zsout(ZSFILE,seq_buf);
-	    }
-	    if (!no_cr) {
-		ttoc( dopar('\r') );
-		if (seslog && duplex) zchout(ZSFILE,dopar('\r'));
-	    }
-	}
+        alarm(SND_ALRM);
+        if (!strcmp(seq_buf,"EOT")) {
+            ttoc(dopar('\004'));
+            if (seslog && duplex) zsout(ZSFILE,"{EOT}");
+        } else if (!strcmp(seq_buf,"BREAK")) {
+            ttsndb();
+            zsout(ZSFILE,"{BREAK}");
+        } else {
+            if (l > 0) {
+                for ( sb=seq_buf; *sb; sb++) *sb = dopar(*sb);
+                ttol(seq_buf,l);                /* with parity */
+                if (seslog && duplex) zsout(ZSFILE,seq_buf);
+            }
+            if (!no_cr) {
+                ttoc( dopar('\r') );
+                if (seslog && duplex) zchout(ZSFILE,dopar('\r'));
+            }
+        }
     }
-        else retCode |= -1;    		/* else -- alarm rang */
+        else retCode |= -1;             /* else -- alarm rang */
     alarm(0);
     signal(SIGALRM,SIG_IGN);
     if (!delay) return ( retCode );
-    msleep(DEL_MSEC);		/* delay, and loop to next stuff to send */
+    msleep(DEL_MSEC);           /* delay, and loop to next stuff to send */
     }
 }
-
+
 
 /*  L O G I N  --  Login to remote system */
 
 login(cmdstr) char *cmdstr; {
 
-	SIGTYP (*saveAlm)();	/* save incoming alarm function */
-	char *e;
+        SIGTYP (*saveAlm)();    /* save incoming alarm function */
+        char *e;
 
-	s = cmdstr;			/* make global to ckuscr.c */
+        s = cmdstr;                     /* make global to ckuscr.c */
 
-	tlog(F100,loginv,"",0l);
+        tlog(F100,loginv,"",0l);
 
-	if (!local) {
-	    printf("Sorry, you must 'set line' first\n");
-	    return(-2);
-	}
-	if (speed < 0) {
-	    printf("Sorry, you must 'set speed' first\n");
-	    return(-2);
+        if (!local) {
+            printf("Sorry, you must 'set line' first\n");
+            return(-2);
         }
-	if (ttopen(ttname,&local,mdmtyp) < 0) {
-	    sprintf(seq_buf,"Sorry, can't open %s",ttname);
-	    perror(seq_buf);
-	    return(-2);
-    	}
-    	if (!quiet)
-	  printf("Executing script thru %s, speed %d.\n",ttname,speed);
-	*seq_buf=0;
-	for (e=s; *e; e++) strcat(seq_buf, chstr(*e) );
-	if (!quiet) printf("Script string: %s\n",seq_buf);
-	tlog(F110,"Script string: ",seq_buf, 0l);
+        if (speed < 0) {
+            printf("Sorry, you must 'set speed' first\n");
+            return(-2);
+        }
+        if (ttopen(ttname,&local,mdmtyp) < 0) {
+            sprintf(seq_buf,"Sorry, can't open %s",ttname);
+            perror(seq_buf);
+            return(-2);
+        }
+        if (!quiet)
+          printf("Executing script thru %s, speed %d.\n",ttname,speed);
+        *seq_buf=0;
+        for (e=s; *e; e++) strcat(seq_buf, chstr(*e) );
+        if (!quiet) printf("Script string: %s\n",seq_buf);
+        tlog(F110,"Script string: ",seq_buf, 0l);
 
-/* Condition console terminal and communication line */	    
+/* Condition console terminal and communication line */     
 
-	if (ttvt(speed,flow) < 0) {
-	    printf("Sorry, Can't condition communication line\n");
-	    return(-2);
-    	}
-				/* save initial timer interrupt value */
-	saveAlm = signal(SIGALRM,SIG_IGN);
+        if (ttvt(speed,flow) < 0) {
+            printf("Sorry, Can't condition communication line\n");
+            return(-2);
+        }
+                                /* save initial timer interrupt value */
+        saveAlm = signal(SIGALRM,SIG_IGN);
 
-	flushi();		/* flush stale input */
-
-/* cont'd... */
-
-
-/* ...login, cont'd */
+        flushi();               /* flush stale input */
 
 /* start expect - send sequence */
 
-    while (*s) {		/* while not done with buffer */
+    while (*s) {                /* while not done with buffer */
 
-	while (*s && isspace(*s)) s++;	/* skip over separating whitespaces */
-				/* gather up expect sequence */
-	got_it = 0;
-	recvSeq();
+        while (*s && isspace(*s)) s++;  /* skip over separating whitespaces */
+                                /* gather up expect sequence */
+        got_it = 0;
+        recvSeq();
 
-	while (!got_it) {
-				/* no, is there a conditional send */
-	    if (*s++ != '-') goto failRet;    	/* no -- return failure */
-		
-	    		/* start of conditional send */
-	    flushi();				/* flush out input buffer */
-	    if (outSeq()) goto failRet; 	/* if unable to send! */
+        while (!got_it) {
+                                /* no, is there a conditional send */
+            if (*s++ != '-') goto failRet;      /* no -- return failure */
+                
+                        /* start of conditional send */
+            flushi();                           /* flush out input buffer */
+            if (outSeq()) goto failRet;         /* if unable to send! */
 
-	    if (*s++ != '-') goto failRet; 	/* must have condit respon.*/
-	    recvSeq();
-	}	/* loop back and check got_it */
+            if (*s++ != '-') goto failRet;      /* must have condit respon.*/
+            recvSeq();
+        }       /* loop back and check got_it */
 
-	while (*s && !isspace(*s++) ) ;	/* Skip over conditionals */
-	while (*s && isspace(*s)) s++;	/* Skip over separating whitespaces */
-	flushi();			/* Flush */
-	if (*s) if (outSeq()) goto failRet; /* If any */
+        while (*s && !isspace(*s++) ) ; /* Skip over conditionals */
+        while (*s && isspace(*s)) s++;  /* Skip over separating whitespaces */
+        flushi();                       /* Flush */
+        if (*s) if (outSeq()) goto failRet; /* If any */
     }
     signal(SIGALRM,saveAlm);
     if (!quiet) printf("Script successful.\n");
@@ -342,12 +337,12 @@ chstr(c) char c; {
 
 flushi() {
     int n;
-    if (seslog) {			/* Logging session? */
-        n = ttchk();			/* Yes, anything in buffer? */
-        if (n > 0) {			/* If so, */
-	    if (n > SBUFL) n = SBUFL;	/* make sure not too much, */
-	    n = ttxin(n,fls_buf);	/* then read it, */
-	    zsout(ZSFILE,fls_buf);	/* and log it. */
-	}
-    } else ttflui();			/* Otherwise just flush. */
+    if (seslog) {                       /* Logging session? */
+        n = ttchk();                    /* Yes, anything in buffer? */
+        if (n > 0) {                    /* If so, */
+            if (n > SBUFL) n = SBUFL;   /* make sure not too much, */
+            n = ttxin(n,fls_buf);       /* then read it, */
+            zsout(ZSFILE,fls_buf);      /* and log it. */
+        }
+    } else ttflui();                    /* Otherwise just flush. */
 }

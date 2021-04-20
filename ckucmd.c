@@ -1,4 +1,4 @@
-char *cmdv = "Unix cmd package V2(028), 19 Apr 21";
+char *cmdv = "Unix cmd package V2(031), 19 Apr 2021";
  
 /*  C K U C M D  --  Interactive command package for Unix  */
 
@@ -63,7 +63,7 @@ char *cmdv = "Unix cmd package V2(028), 19 Apr 21";
  or interruption of the program.  If the character wakeup mode is not
  set, the system's own line editor may be used.
 */
-
+
 /* Includes */
  
 #include <stdio.h>                      /* Standard C I/O package */
@@ -76,7 +76,7 @@ char *cmdv = "Unix cmd package V2(028), 19 Apr 21";
 #endif /* OS2 */
 
 #ifdef OSK
-#define cc ccount			/* OS-9/68K compiler bug */
+#define cc ccount                       /* OS-9/68K compiler bug */
 #endif
 
 #ifdef __linux__
@@ -116,7 +116,7 @@ static char *bp,                        /* Current command buffer position */
     *np;                                /* Start of next field */
  
 long zchki();                           /* From ck?fio.c. */
-
+
  
 /*  C M S E T P  --  Set the program prompt.  */
  
@@ -126,7 +126,7 @@ cmsetp(s) char *s; {
     strncpy(cmprom,s,PROML - 1);        /* Copy the string. */
     cmprom[PROML] = NUL;                /* Ensure null terminator. */
     sx = cmprom; sy = cmerrp;           /* Also use as error message prefix. */
-    while (*sy++ = *sx++) ;             /* Copy. */
+    while ( ( *sy++ = *sx++ ) ) ;             /* Copy. */
     sy -= 2; if (*sy == '>') *sy = NUL; /* Delete any final '>'. */
 }
 /*  C M S A V P  --  Save a copy of the current prompt.  */
@@ -181,7 +181,7 @@ stripq(s) char *s; {                    /* Function to strip '\' quotes */
         s++;
     }
 }
-
+
  
 /*  C M N U M  --  Parse a number in the indicated radix  */
  
@@ -205,7 +205,7 @@ cmnum(xhlp,xdef,radix,n) char *xhlp, *xdef; int radix, *n; {
     x = cmfld(xhlp,xdef,&s);
     debug(F101,"cmnum: cmfld","",x);
     debug(F111,"cmnum: atmbuf",atmbuf,cc);
-    if (x < 0) return(x);		/* Parse a field */
+    if (x < 0) return(x);               /* Parse a field */
  
     if (rdigits(atmbuf)) {               /* Convert to number */
         *n = atoi(atmbuf);
@@ -215,7 +215,7 @@ cmnum(xhlp,xdef,radix,n) char *xhlp, *xdef; int radix, *n; {
         return(-2);     
     }
 }
-
+
  
 /*  C M O F I  --  Parse the name of an output file  */
  
@@ -241,8 +241,8 @@ cmofi(xhlp,xdef,xp) char *xhlp, *xdef, **xp; {
     if ((x = cmfld(xhlp,xdef,&s)) < 0) return(x);
 
 #ifdef DTILDE
-    dirp = tilde_expand(s);		/* Expand tilde, if any, */
-    if (*dirp != '\0') setatm(dirp);	/* right in the atom buffer. */
+    dirp = tilde_expand(s);             /* Expand tilde, if any, */
+    if (*dirp != '\0') setatm(dirp);    /* right in the atom buffer. */
 #endif
 
     if (chkwld(s)) {
@@ -257,7 +257,7 @@ cmofi(xhlp,xdef,xp) char *xhlp, *xdef, **xp; {
         return(x);
     }
 }
-
+
  
 /*  C M I F I  --  Parse the name of an existing file  */
  
@@ -304,7 +304,7 @@ cmifi(xhlp,xdef,xp,wild) char *xhlp, *xdef, **xp; int *wild; {
                 return(x);
  
 /* cont'd... */
-
+
  
 /* ...cmifi(), cont'd */
  
@@ -315,8 +315,8 @@ cmifi(xhlp,xdef,xp,wild) char *xhlp, *xdef, **xp; int *wild; {
                 if (**xp == NUL) return(-3); /* If field empty, return -3. */
 
 #ifdef DTILDE
-		dirp = tilde_expand(*xp);    /* Expand tilde, if any, */
-		if (*dirp != '\0') setatm(dirp); /* right in atom buffer. */
+                dirp = tilde_expand(*xp);    /* Expand tilde, if any, */
+                if (*dirp != '\0') setatm(dirp); /* right in atom buffer. */
 #endif
                 /* If filespec is wild, see if there are any matches */
  
@@ -349,13 +349,13 @@ cmifi(xhlp,xdef,xp,wild) char *xhlp, *xdef, **xp; int *wild; {
                 }
                 return(x);
 /* cont'd... */
-
+
 /* ...cmifi(), cont'd */
  
  
             case 2:                     /* ESC */
-				if (cc <= 2)
-					break;
+                                if (cc <= 2)
+                                        break;
                 if (xc == 0) {
                     if (*xdef != '\0') {
                         printf("%s ",xdef); /* If at beginning of field, */
@@ -367,10 +367,10 @@ cmifi(xhlp,xdef,xp,wild) char *xhlp, *xdef, **xp; int *wild; {
                     break;
                 } 
 #ifdef DTILDE
-		dirp = tilde_expand(*xp);    /* Expand tilde, if any, */
-		if (*dirp != '\0') setatm(dirp); /* in the atom buffer. */
+                dirp = tilde_expand(*xp);    /* Expand tilde, if any, */
+                if (*dirp != '\0') setatm(dirp); /* in the atom buffer. */
 #endif
-                if (*wild = chkwld(*xp)) {  /* No completion if wild */
+                if ( ( *wild = chkwld(*xp) ) ) {  /* No completion if wild */
                     putchar(BEL);
                     break;
                 }
@@ -400,7 +400,7 @@ cmifi(xhlp,xdef,xp,wild) char *xhlp, *xdef, **xp; int *wild; {
                 break;
  
 /* cont'd... */
-
+
  
 /* ...cmifi(), cont'd */
  
@@ -412,8 +412,8 @@ cmifi(xhlp,xdef,xp,wild) char *xhlp, *xdef, **xp; int *wild; {
                     printf(" %s",xhlp);
                 if (xc > 0) {
 #ifdef DTILDE
-		    dirp = tilde_expand(*xp);    /* Expand tilde, if any */
-		    if (*dirp != '\0') setatm(dirp);
+                    dirp = tilde_expand(*xp);    /* Expand tilde, if any */
+                    if (*dirp != '\0') setatm(dirp);
 #endif
                     sp = atmbuf + cc;   /* Insert "*" at end */
 #ifdef datageneral
@@ -446,7 +446,7 @@ cmifi(xhlp,xdef,xp,wild) char *xhlp, *xdef, **xp; int *wild; {
     x = gtword();
     }
 }
-
+
 /*  C M D I R  --  Parse a directory specification  */
  
 /*
@@ -495,11 +495,11 @@ cmdir(xhlp,xdef,xp) char *xhlp, *xdef, **xp; {
                 else *xp = atmbuf;
                 if (**xp == NUL) return(-3); /* If field empty, return -3. */
 #ifdef DTILDE
-		dirp = tilde_expand(*xp);    /* Expand tilde, if any, */
-		if (*dirp != '\0') setatm(dirp); /* in the atom buffer. */
+                dirp = tilde_expand(*xp);    /* Expand tilde, if any, */
+                if (*dirp != '\0') setatm(dirp); /* in the atom buffer. */
 #endif
-		if (chkwld(*xp) != 0)	/* If wildcard included... */
-		  return(2);
+                if (chkwld(*xp) != 0)   /* If wildcard included... */
+                  return(2);
 
                 /* If not wild, see if it exists and is readable. */
  
@@ -508,16 +508,16 @@ cmdir(xhlp,xdef,xp) char *xhlp, *xdef, **xp; {
                 if (y == -3) {
                     printf("\n?Read permission denied - %s\n",*xp);
                     return(-2);
-		} else if (y == -2) {	/* Probably a directory... */
-		    return(x);
+                } else if (y == -2) {   /* Probably a directory... */
+                    return(x);
                 } else if (y < 0) {
                     printf("\n?Not found - %s\n",*xp);
                     return(-2);
                 }
                 return(x);
             case 2:                     /* ESC */
-		putchar(BEL);
-		break;
+                putchar(BEL);
+                break;
 
             case 3:                     /* Question mark */
                 if (*xhlp == NUL)
@@ -530,7 +530,7 @@ cmdir(xhlp,xdef,xp) char *xhlp, *xdef, **xp; {
     x = gtword();
     }
 }
- 
+ 
 /*  C H K W L D  --  Check for wildcard characters '*' or '?'  */
  
 chkwld(s) char *s; {
@@ -547,7 +547,7 @@ chkwld(s) char *s; {
     }
     return(0);
 }
-
+
  
 /*  C M F L D  --  Parse an arbitrary field  */
 /*
@@ -582,9 +582,9 @@ cmfld(xhlp,xdef,xp) char *xhlp, *xdef, **xp; {
                 return(x);
             case 0:                     /* SP or NL */
             case 1:
-                if (xc == 0) 		/* If no input, return default. */
-		  cc = setatm(xdef);
-		*xp = atmbuf;
+                if (xc == 0)            /* If no input, return default. */
+                  cc = setatm(xdef);
+                *xp = atmbuf;
                 if (**xp == NUL) x = -3; /* If field empty, return -3. */
                 return(x);
             case 2:                     /* ESC */
@@ -608,7 +608,7 @@ cmfld(xhlp,xdef,xp) char *xhlp, *xdef, **xp; {
     x = gtword();
     }
 }
-
+
  
 /*  C M T X T  --  Get a text string, including confirmation  */
  
@@ -677,7 +677,7 @@ cmtxt(xhlp,xdef,xp) char *xhlp; char *xdef; char **xp; {
         x = gtword();
     }
 }
-
+
  
 /*  C M K E Y  --  Parse a keyword  */
  
@@ -735,7 +735,7 @@ while (1) {
             return(y);
  
 /* cont'd... */
-
+
  
 /* ...cmkey(), cont'd */
  
@@ -768,7 +768,7 @@ while (1) {
             return(y);
  
 /* cont'd... */
-
+
  
 /* ...cmkey(), cont'd */
  
@@ -804,7 +804,7 @@ while (1) {
         zz = gtword();
     }
 }
-
+
  
 /*  C M C F M  --  Parse command confirmation (end of line)  */
  
@@ -855,7 +855,7 @@ cmcfm() {
         }
     }
 }
-
+
  
 /* Keyword help routines */
  
@@ -900,7 +900,7 @@ dmphlp() {                              /* Print the help buffer */
     printf(" %s\n",hlpbuf);
     clrhlp();
 }
-
+
  
 /*  L O O K U P  --  Lookup the string in the given array of strings  */
  
@@ -954,7 +954,7 @@ lookup(table,cmd,n,x) char *cmd; struct keytab table[]; int n, *x; {
         return(table[n-1].val);
     } else return(-1);
 }
-
+
  
 /*  G E T W D  --  Gets a "word" from the command input stream  */
  
@@ -1021,22 +1021,22 @@ gtword() {
             }
 #else
 #ifdef OS2
-	    c = isatty(0) ? coninc(0) : getchar();
-	    if (c<0) return(-4);
+            c = isatty(0) ? coninc(0) : getchar();
+            if (c<0) return(-4);
 #else
             c = getchar();              /* or from tty. */
 #ifdef RTU
-	    if (rtu_bug) {
-		c = getchar();          /* RTU doesn't discard the ^Z */
-		rtu_bug = 0;
-	    }
+            if (rtu_bug) {
+                c = getchar();          /* RTU doesn't discard the ^Z */
+                rtu_bug = 0;
+            }
 #endif /* RTU */
 
             if (c == EOF) {
-/***		perror("ckucmd getchar");  (just return silently) ***/
-		return(-4);
-	    }
-	    c &= 127;			/* Strip any parity bit. */
+/***            perror("ckucmd getchar");  (just return silently) ***/
+                return(-4);
+            }
+            c &= 127;                   /* Strip any parity bit. */
 #endif
 #endif
         } else ignore = 1;
@@ -1062,12 +1062,12 @@ gtword() {
                 putchar(FF);
 #else
 #ifdef OS2
-		{ char cell[2];
-		cell[0] = ' ';
-		cell[1] = 7;
-		VioScrollUp(0,0,-1,-1,-1,cell,0);
-		VioSetCurPos(0,0,0);
-		}
+                { char cell[2];
+                cell[0] = ' ';
+                cell[1] = 7;
+                VioScrollUp(0,0,-1,-1,-1,cell,0);
+                VioSetCurPos(0,0,0);
+                }
 #else
                 system("clear");        /* and clear the screen. */
 #endif
@@ -1080,7 +1080,7 @@ gtword() {
             if (c == HT) c = ESC;        /* Substitute ESC for tab. */
  
 /* cont'd... */
-
+
  
 /* ...gtword(), cont'd */
  
@@ -1171,7 +1171,7 @@ gtword() {
             }
  
 /* cont'd... */
-
+
  
 /* ...gtword(), cont'd */
  
@@ -1220,8 +1220,8 @@ gtword() {
         }
 #ifdef OS2
         if (echof) {
-        	putchar(c);          /* If tty input, echo. */
-        	if (quote==1 && c==CR) putchar(NL);
+                putchar(c);          /* If tty input, echo. */
+                if (quote==1 && c==CR) putchar(NL);
         }
 #else
         if (echof) putchar(c);          /* If tty input, echo. */
@@ -1234,7 +1234,6 @@ gtword() {
     printf("\n?Buffer full\n");
     return(cmflgs = -2);
 }
-
  
 /* Utility functions */
  

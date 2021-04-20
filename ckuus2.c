@@ -72,7 +72,7 @@ char *hlp1[] = {
 usage() {
     conola(hlp1);
 }
-
+
  
 /*  Help string definitions  */
  
@@ -81,13 +81,11 @@ Type ? for a list of commands, type 'help x' for any command x.\n\
 While typing commands, use the following special characters:\n\n\
  DEL, RUBOUT, BACKSPACE, CTRL-H: Delete the most recent character typed.\n\
  CTRL-W:  Delete the most recent word typed.\n",
- 
 "\
  CTRL-U:  Delete the current line.\n\
  CTRL-R:  Redisplay the current line.\n\
- ?        (question mark) Display help on the current command or field.\n\
- ESC      (or TAB) Attempt to complete the current field.\n",
- 
+ ?:       (question mark) Display help on the current command or field.\n\
+ ESCAPE:  (or TAB) Attempt to complete the current field.\n",
 "\
  \\        (backslash) include the following character literally.\n\n\
 From system level, type 'kermit -h' to get help about command line args.\
@@ -122,14 +120,14 @@ Record information in a log file:\n\n\
  transactions          Names and statistics about files transferred.\n\
   (transact.log)\n",
 "" } ;
-
+
  
 static char *hmxxlogi[] = { "\
 Syntax: script text\n\n",
 "Login to a remote system using the text provided.  The login script\n",
 "is intended to operate similarly to uucp \"L.sys\" entries.\n",
 "A login script is a sequence of the form:\n\n",
-"	expect send [expect send] . . .\n\n",
+"       expect send [expect send] . . .\n\n",
 "where 'expect' is a prompt or message to be issued by the remote site, and\n",
 "'send' is the names, numbers, etc, to return.  The send may also be the\n",
 "keyword EOT, to send control-d, or BREAK, to send a break.  Letters in\n",
@@ -141,7 +139,7 @@ Syntax: script text\n\n",
 "e.g. ~0 or two adjacent dashes, causes a short delay.  If you expect\n",
 "that a sequence might not arrive, as with uucp, conditional sequences\n",
 "may be expressed in the form:\n\n",
-"	-send-expect[-send-expect[...]]\n\n",
+"       -send-expect[-send-expect[...]]\n\n",
 "where dashed sequences are followed as long as previous expects fail.\n",
 "" };
  
@@ -175,7 +173,7 @@ Type of packet block check to be used for error detection, 1, 2, or 3.\n",
 "rigorous checking at the cost of higher overhead.  Not all Kermit programs\n",
 "support types 2 and 3.\n",
 "" } ;
-
+
  
 static char *hmxyf[] = { "\
 set file: names, type, warning, display.\n\n",
@@ -201,7 +199,7 @@ The 'remote' command is used to send file management instructions to a\n",
 "see a list of available remote commands.  Type 'help remote x' to get\n",
 "further information about a particular remote command 'x'.\n",
 "" } ;
-
+
  
 /*  D O H L P  --  Give a help message  */
  
@@ -274,7 +272,7 @@ case XXLOGI:
  
 case XXREC:
     return(hmsga(hmxxrc));
-
+
  
 case XXREM:
     if ((y = cmkey(remcmd,nrmt,"Remote command","")) == -2) return(y);
@@ -354,7 +352,7 @@ default:
     }
     return(0);
 }
-
+
  
 /*  H M S G  --  Get confirmation, then print the given message  */
  
@@ -365,14 +363,14 @@ hmsg(s) char *s; {
     return(0);
 }
  
-hmsga(s) char *s[]; {			/* Same function, but for arrays */
+hmsga(s) char *s[]; {                   /* Same function, but for arrays */
     int x, i;
     if ((x = cmcfm()) < 0) return(x);
     for ( i = 0; *s[i] ; i++ ) fputs(s[i], stdout);
     putc( '\n', stdout);
     return(0);
 }
-
+
  
 /*  D O H S E T  --  Give help for SET command  */
  
@@ -429,14 +427,14 @@ case XYHAND:
 Decimal ASCII value for character to use for half duplex line turnaround");
     puts("handshake.  Normally, handshaking is not done.");
     return(0);
-
+
 case XYLINE:
     printf("\
 Device name of communication line to use.  Normally %s.\n",dftty);
     if (!dfloc) {
-	printf("\
+        printf("\
 If you set the line to other than %s, then Kermit\n",dftty);
-	printf("\
+        printf("\
 will be in 'local' mode; 'set line' will reset Kermit to remote mode.\n");
     puts("\
 If the line has a modem, and if the modem-dialer is set to direct, this");
@@ -503,7 +501,7 @@ Communication line speed for external tty line specified in most recent");
 #endif
 #endif
     return(0);
-
+
 case XYRECV:
     puts("\
 Specify parameters for inbound packets:");
@@ -543,7 +541,7 @@ default:
     return(0);
     }
 }
-
+
  
 /*  D O H R M T  --  Give help about REMOTE command  */
  
@@ -593,7 +591,7 @@ default:
     return(-2);
     }
 }
-
+
 /*** The following functions moved here from ckuusr.c because that module ***/
 /*** got too big for PDP-11s. ***/
 
@@ -604,35 +602,35 @@ dolog(x) int x; {
  
     switch (x) {
  
-	case LOGD:
+        case LOGD:
 #ifdef DEBUG
-	    y = cmofi("Name of debugging log file","debug.log",&s);
+            y = cmofi("Name of debugging log file","debug.log",&s);
 #else
-    	    y = -2; s = "";
-	    printf("%s","- Sorry, debug log not available\n");
+            y = -2; s = "";
+            printf("%s","- Sorry, debug log not available\n");
 #endif
-	    break;
+            break;
  
-	case LOGP:
-	    y = cmofi("Name of packet log file","packet.log",&s);
-	    break;
+        case LOGP:
+            y = cmofi("Name of packet log file","packet.log",&s);
+            break;
  
-	case LOGS:
-	    y = cmofi("Name of session log file","session.log",&s);
-	    break;
+        case LOGS:
+            y = cmofi("Name of session log file","session.log",&s);
+            break;
  
-	case LOGT:
+        case LOGT:
 #ifdef TLOG
-	    y = cmofi("Name of transaction log file","transact.log",&s);
+            y = cmofi("Name of transaction log file","transact.log",&s);
 #else
-    	    y = -2; s = "";
-	    printf("%s","- Sorry, transaction log not available\n");
+            y = -2; s = "";
+            printf("%s","- Sorry, transaction log not available\n");
 #endif
-	    break;
+            break;
  
-	default:
-	    printf("\n?Unexpected log designator - %d\n",x);
-	    return(-2);
+        default:
+            printf("\n?Unexpected log designator - %d\n",x);
+            return(-2);
     }
     if (y < 0) return(y);
  
@@ -641,42 +639,42 @@ dolog(x) int x; {
     if ((y = cmcfm()) < 0) return(y);
  
 /* cont'd... */
-
+
 /* ...dolog, cont'd */
  
  
     switch (x) {
  
-	case LOGD:
-	    return(deblog = debopn(s));
+        case LOGD:
+            return(deblog = debopn(s));
  
-	case LOGP:
-	    zclose(ZPFILE);
-	    y = zopeno(ZPFILE,s);
-	    if (y > 0) strcpy(pktfil,s); else *pktfil = '\0';
-	    return(pktlog = y);
+        case LOGP:
+            zclose(ZPFILE);
+            y = zopeno(ZPFILE,s);
+            if (y > 0) strcpy(pktfil,s); else *pktfil = '\0';
+            return(pktlog = y);
  
-	case LOGS:
-	    zclose(ZSFILE);
-	    y = zopeno(ZSFILE,s);
-	    if (y > 0) strcpy(sesfil,s); else *sesfil = '\0';
-	    return(seslog = y);
+        case LOGS:
+            zclose(ZSFILE);
+            y = zopeno(ZSFILE,s);
+            if (y > 0) strcpy(sesfil,s); else *sesfil = '\0';
+            return(seslog = y);
  
-	case LOGT:
-	    zclose(ZTFILE);
-	    tralog = zopeno(ZTFILE,s);
-	    if (tralog > 0) {
-		strcpy(trafil,s);
-		tlog(F110,"Transaction Log:",versio,0l);
-		tlog(F100,ckxsys,"",0);
-		ztime(&s);
-		tlog(F100,s,"",0l);
-    	    }
-	    else *trafil = '\0';
-	    return(tralog);
+        case LOGT:
+            zclose(ZTFILE);
+            tralog = zopeno(ZTFILE,s);
+            if (tralog > 0) {
+                strcpy(trafil,s);
+                tlog(F110,"Transaction Log:",versio,0l);
+                tlog(F100,ckxsys,"",0);
+                ztime(&s);
+                tlog(F100,s,"",0l);
+            }
+            else *trafil = '\0';
+            return(tralog);
  
-	default:
-	    return(-2);
+        default:
+            return(-2);
     }
 }
  
@@ -690,18 +688,18 @@ debopn(s) char *s; {
     zclose(ZDFILE);
     deblog = zopeno(ZDFILE,s);
     if (deblog > 0) {
-	strcpy(debfil,s);
-	debug(F110,"Debug Log ",versio,0);
-	debug(F100,ckxsys,"",0);
-	ztime(&tp);
-	debug(F100,tp,"",0);
+        strcpy(debfil,s);
+        debug(F110,"Debug Log ",versio,0);
+        debug(F100,ckxsys,"",0);
+        ztime(&tp);
+        debug(F100,tp,"",0);
     } else *debfil = '\0';
     return(deblog);
 #else
     return(0);
 #endif
 }
-
+
 /*  S H O P A R  --  Show Parameters  */
  
 shopar() {
@@ -715,27 +713,27 @@ shopar() {
     if (local) printf("local"); else printf("remote");
  
     for (i = 0; i < nmdm; i++) {
-	if (mdmtab[i].val == mdmtyp) {
-	    printf(", modem-dialer: %s",mdmtab[i].kwd);
-	    break;
-	}
+        if (mdmtab[i].val == mdmtyp) {
+            printf(", modem-dialer: %s",mdmtab[i].kwd);
+            break;
+        }
     }
     printf("\n Bits: %d",(parity) ? 7 : 8);
     printf(", parity: ");
     switch (parity) {
-	case 'e': printf("even");  break;
-	case 'o': printf("odd");   break;
-	case 'm': printf("mark");  break;
-	case 's': printf("space"); break;
-	case 0:   printf("none");  break;
-	default:  printf("invalid - %d",parity); break;
-    }		
+        case 'e': printf("even");  break;
+        case 'o': printf("odd");   break;
+        case 'm': printf("mark");  break;
+        case 's': printf("space"); break;
+        case 0:   printf("none");  break;
+        default:  printf("invalid - %d",parity); break;
+    }           
     printf(", duplex: ");
     if (duplex) printf("half, "); else printf("full, ");
     printf("flow: ");
     if (flow == 1) printf("xon/xoff");
-	else if (flow == 0) printf("none");
-	else printf("%d",flow);
+        else if (flow == 0) printf("none");
+        else printf("%d",flow);
     printf(", handshake: ");
     if (turn) printf("%d\n",turnch); else printf("none\n");
     printf("Terminal emulation: %d bits\n", (cmask == 0177) ? 7 : 8);
@@ -791,7 +789,7 @@ shopar() {
 #endif
     puts("\n");
 }
-
+
 /*  D O S T A T  --  Display file transfer statistics.  */
 
 dostat() {
@@ -802,26 +800,26 @@ dostat() {
     printf(" communication line out : %ld\n",tlco);
     printf(" elapsed time           : %d sec\n",tsecs);
     if (filcnt > 0) {
-	if (tsecs > 0) {
-	    long lx;
-	    lx = (tfc * 10l) / tsecs;
-	    printf(" effective data rate    : %ld\n",lx);
-	    if (speed > 0) {
-		lx = (lx * 100l) / speed;
-		printf(" efficiency             : %ld %%\n",lx);
-	    }
-	}
-	printf(" packet length          : %d (send), %d (receive)\n",
-	       spsiz,urpsiz);
-	printf(" block check type used  : %d\n",bctu);
-	printf(" compression            : ");
-	if (rptflg) printf("yes [%c]\n",rptq); else printf("no\n");
-	printf(" 8th bit prefixing      : ");
-	if (ebqflg) printf("yes [%c]\n",ebq); else printf("no\n\n");
+        if (tsecs > 0) {
+            long lx;
+            lx = (tfc * 10l) / tsecs;
+            printf(" effective data rate    : %ld\n",lx);
+            if (speed > 0) {
+                lx = (lx * 100l) / speed;
+                printf(" efficiency             : %ld %%\n",lx);
+            }
+        }
+        printf(" packet length          : %d (send), %d (receive)\n",
+               spsiz,urpsiz);
+        printf(" block check type used  : %d\n",bctu);
+        printf(" compression            : ");
+        if (rptflg) printf("yes [%c]\n",rptq); else printf("no\n");
+        printf(" 8th bit prefixing      : ");
+        if (ebqflg) printf("yes [%c]\n",ebq); else printf("no\n\n");
     } else printf("\n");
     return(0);
 }
-
+
 /*  F S T A T S  --  Record file statistics in transaction log  */
 
 fstats() {
@@ -838,35 +836,35 @@ fstats() {
 tstats() {
     char *tp; int x;
 
-    ztime(&tp);				/* Get time stamp */
+    ztime(&tp);                         /* Get time stamp */
     tlog(F110,"End of transaction",tp,0l);  /* Record it */
 
-    if (filcnt < 1) return;		/* If no files, done. */
+    if (filcnt < 1) return;             /* If no files, done. */
 
 /* If multiple files, record character totals for all files */
 
     if (filcnt > 1) {
-	tlog(F101," files","",filcnt);
-	tlog(F101," total file characters   ","",tfc);
-	tlog(F101," communication line in   ","",tlci);
-	tlog(F101," communication line out  ","",tlco);
+        tlog(F101," files","",filcnt);
+        tlog(F101," total file characters   ","",tfc);
+        tlog(F101," communication line in   ","",tlci);
+        tlog(F101," communication line out  ","",tlco);
     }
 
 /* Record timing info for one or more files */
 
     tlog(F101," elapsed time (seconds)  ","",(long) tsecs);
     if (tsecs > 0) {
-	long lx;
-	lx = (tfc / tsecs) * 10;
-	tlog(F101," effective baud rate     ","",lx);
-	if (speed > 0) {
-	    lx = (lx * 100L) / speed;
-	    tlog(F101," efficiency (percent)    ","",lx);
-	}
+        long lx;
+        lx = (tfc / tsecs) * 10;
+        tlog(F101," effective baud rate     ","",lx);
+        if (speed > 0) {
+            lx = (lx * 100L) / speed;
+            tlog(F101," efficiency (percent)    ","",lx);
+        }
     }
-    tlog(F100,"","",0L);		/* Leave a blank line */
+    tlog(F100,"","",0L);                /* Leave a blank line */
 }
-
+
 /*  S D E B U  -- Record spar results in debugging log  */
 
 sdebu(len) int len; {

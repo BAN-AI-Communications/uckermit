@@ -504,7 +504,7 @@ up Kermit file transfers:
 @begin(example)
 compress file | kermit -is -     (@i(sender))
 kermit -ik | uncompress          (@i(receiver))
-@end(example)	
+@end(example)   
 
 @subheading(Exit Status Codes:)
 
@@ -919,7 +919,7 @@ interactive shell is started; exiting from the shell, e.g. by typing Control-D
 or 'exit', will return you to C-Kermit command level.  Use the `@q(!)' command
 to provide file management or other functions not explicitly provided by
 C-Kermit commands.  The `@q(!)' command has certain peculiarities:
-@begin(itemize,spread 0)	
+@begin(itemize,spread 0)        
 C-Kermit attempts to use your preferred, customary (login) shell.
 
 At least one space must separate the '!' from the shell command.
@@ -1434,14 +1434,14 @@ than most other C-Kermit procedures.
 Example one:
 @begin(example)
 @ux<kermit -l /dev/cul0 -b 1200>
-C-Kermit>@ux<set modem-dialer hayes>	@i(hint: abbreviate) set m h
+C-Kermit>@ux<set modem-dialer hayes>    @i(hint: abbreviate) set m h
 C-Kermit>@ux<dial 9,5551212>
 Connected!
-C-Kermit>@ux<connect>			@i(hint: abbreviate) c
+C-Kermit>@ux<connect>                   @i(hint: abbreviate) c
 @i(logon, request remote server, etc.)
-@ux<^\c>				@i(escape back)
+@ux<^\c>                                @i(escape back)
 C-Kermit> ...
-C-Kermit>@ux<quit>			@i(hint: abbreviate) q
+C-Kermit>@ux<quit>                      @i(hint: abbreviate) q
 @end(example)
 this disconnects modem, and unlocks line.
 
@@ -1857,7 +1857,7 @@ C-Kermit>@ux<set speed 1200>
 C-Kermit>@ux<set modem att>
 C-Kermit>@ux<dial (123) 555-1212>
 @end(example)
-Or use @q</dev/ph1> for the second phone line.	Control-C will terminate the
+Or use @q</dev/ph1> for the second phone line.  Control-C will terminate the
 dialer.  The telephone line must be in the DATA state; C-Kermit will remind
 you of this if it finds the line in VOICE state. 
 

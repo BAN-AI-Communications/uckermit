@@ -25,8 +25,8 @@ can use the following shell script to do this:
 # Shell script to convert C-Kermit DOS-format files into Unix format.
 # Lowercases the filenames, strips out carriage returns and Ctrl-Z's.
 #
-x=$1	# the name of the source directory
-y=$2	# the name of the target directory
+x=$1    # the name of the source directory
+y=$2    # the name of the target directory
 if [ $# -lt 2 ]; then
   echo "usage: $0 source-directory target-directory"
   exit 1
@@ -77,8 +77,8 @@ marked below.  Both files seem to be included somewhere else.
 #endif /* aegis */
 
 #ifdef BSD4
-/*#include <sys/file.h>*/		------ Remove ------
-/*#include <fcntl.h>*/			------ Remove ------
+/*#include <sys/file.h>*/               ------ Remove ------
+/*#include <fcntl.h>*/                  ------ Remove ------
 #endif /* BSD4 */
 
 Brad Davis
@@ -478,8 +478,8 @@ There is an undocumented option on the 4.xBSD rlogin call that must be used
 when C Kermit is at the end of a TCP/IP rlogin connection.  The option is "-8"
 and should be used in the following fashion:
 
-	% rlogin hostname -8
-	% kermit
+        % rlogin hostname -8
+        % kermit
 
 Vic Abell, Purdue University Computing Center
 abe@asc.purdue.edu, ...!pur-ee!pucc-j!abe
@@ -532,9 +532,9 @@ allow the user to negotiate this.
 
 In /usr/src/etc/telnetd.c, routine telrcv(), line 640, replace
 
-			c = '\n';
+                        c = '\n';
 with
-			c = '\r';
+                        c = '\r';
 
 This fix is inappropriate if you have telnet clients which map CR into CR NUL,
 and LF into CR LF, since those clients will then be unable to generate send the
@@ -550,7 +550,7 @@ about this kind of thing, e.g. it negotiates telnet binary mode when a program
 running on a TVT specifies binary input from its controlling terminal, but
 I'm sure there are still bugs in TOPS-20's implementation.
 
-						Chris
+                                                Chris
 
 ------------------------------
 
@@ -588,7 +588,7 @@ cat > "ckudia.diff" << '//E*O*F ckudia.diff//'
 73,75d72
 <  *
 <  *   6-May-87  Support for phone aliases
-<  *							-- Warren Burstein
+<  *                                                    -- Warren Burstein
 126d122
 < char *malloc(), *strcpy();
 422,431d417
@@ -599,19 +599,19 @@ cat > "ckudia.diff" << '//E*O*F ckudia.diff//'
 < 
 < #define MAXPHONES 100
 < struct phones {
-< 	char *name, *number;
+<       char *name, *number;
 < } phones[MAXPHONES];
 < 
 528d513
-< 	struct phones *lookup_phone(), *p;
+<       struct phones *lookup_phone(), *p;
 530,537d514
-< 	if ( !isdigit(*telnbr))
-< 		if (p = lookup_phone(telnbr))
-< 		  telnbr = p->number;
-< 		else {
-< 			printf("I don't recognize that system\n");
-< 			return -2;
-< 		}
+<       if ( !isdigit(*telnbr))
+<               if (p = lookup_phone(telnbr))
+<                 telnbr = p->number;
+<               else {
+<                       printf("I don't recognize that system\n");
+<                       return -2;
+<               }
 < 
 866,927d842
 < }
@@ -627,31 +627,31 @@ cat > "ckudia.diff" << '//E*O*F ckudia.diff//'
 < add_phone(name, number)
 < char *name, *number;
 < {
-< 	struct phones *p;
+<       struct phones *p;
 < 
-< 	/*
-< 	 * If name is in use, redefine its number.
-< 	 */
-< 	if (p = lookup_phone(name)) {
-< 		free(p->number);
-< 		p->number = malloc(strlen(number) + 1);
-< 		(void) strcpy(p->number, number);
-< 		return;
-< 	}
+<       /*
+<        * If name is in use, redefine its number.
+<        */
+<       if (p = lookup_phone(name)) {
+<               free(p->number);
+<               p->number = malloc(strlen(number) + 1);
+<               (void) strcpy(p->number, number);
+<               return;
+<       }
 < 
-< 	/*
-< 	 * Find a vacancy in the table.
-< 	 */
-< 	for (p = phones; p < &phones[MAXPHONES]; p++)
-< 	  if ( !p->name) {
-< 		  p->name = malloc(strlen(name) + 1);
-< 		  (void) strcpy(p->name, name);
-< 		  p->number = malloc(strlen(number) + 1);
-< 		  (void) strcpy(p->number, number);
-< 		  return;
-< 	  }
+<       /*
+<        * Find a vacancy in the table.
+<        */
+<       for (p = phones; p < &phones[MAXPHONES]; p++)
+<         if ( !p->name) {
+<                 p->name = malloc(strlen(name) + 1);
+<                 (void) strcpy(p->name, name);
+<                 p->number = malloc(strlen(number) + 1);
+<                 (void) strcpy(p->number, number);
+<                 return;
+<         }
 < 
-< 	printf("There are too many phone aliases.\n");
+<       printf("There are too many phone aliases.\n");
 < }
 < 
 < /*
@@ -661,47 +661,47 @@ cat > "ckudia.diff" << '//E*O*F ckudia.diff//'
 < struct phones *lookup_phone(name)
 < char *name;
 < {
-< 	struct phones *p;
+<       struct phones *p;
 < 
-< 	for (p = phones; p < &phones[MAXPHONES]; p++)
-< 		if (p->name && !strcmp(p->name, name))
-< 			return p;
+<       for (p = phones; p < &phones[MAXPHONES]; p++)
+<               if (p->name && !strcmp(p->name, name))
+<                       return p;
 < 
-< 	return (struct phones *) 0;
+<       return (struct phones *) 0;
 < }
 < 
 < shphones() {
-< 	struct phones *p;
+<       struct phones *p;
 < 
-< 	for (p = phones; p < &phones[MAXPHONES]; p++)
-< 	  if (p->name)
-< 		printf("%s %s\n", p->name, p->number);
+<       for (p = phones; p < &phones[MAXPHONES]; p++)
+<         if (p->name)
+<               printf("%s %s\n", p->name, p->number);
 //E*O*F ckudia.diff//
 
 echo x - ckuus3.diff
 cat > "ckuus3.diff" << '//E*O*F ckuus3.diff//'
 268,280d267
 <   case XYPHONE:
-< 	{
-< 		char name[30], number[30];
+<       {
+<               char name[30], number[30];
 < 
-< 		if ( (x = cmfld("name of phone alias", "", &s)) < 0) return x;
-< 		(void) strcpy(name, s);
-< 		if ( (x = cmfld("phone number", "", &s)) < 0) return x;
-< 		(void) strcpy(number, s);
+<               if ( (x = cmfld("name of phone alias", "", &s)) < 0) return x;
+<               (void) strcpy(name, s);
+<               if ( (x = cmfld("phone number", "", &s)) < 0) return x;
+<               (void) strcpy(number, s);
 < 
-< 		add_phone(name, number);
-< 	}
-< 	break;
+<               add_phone(name, number);
+<       }
+<       break;
 < 
 //E*O*F ckuus3.diff//
 
 echo x - ckuusr.diff
 cat > "ckuusr.diff" << '//E*O*F ckuusr.diff//'
 436d435
-< 	"phone-number",     XYPHONE, 0,
+<       "phone-number",     XYPHONE, 0,
 473,474c472
-< #define SHPHONE 2			/* phone numbers */
+< #define SHPHONE 2                     /* phone numbers */
 < 
 ---
 >  
@@ -709,9 +709,9 @@ cat > "ckuusr.diff" << '//E*O*F ckuusr.diff//'
 <     "phone-aliases",   SHPHONE, 0,
 1085,1089c1082
 < 
-< 	case SHPHONE:
-< 		shphones();
-< 		break;
+<       case SHPHONE:
+<               shphones();
+<               break;
 < 
 ---
 >  
@@ -720,7 +720,7 @@ cat > "ckuusr.diff" << '//E*O*F ckuusr.diff//'
 echo x - ckuusrh.diff
 cat > "ckuusrh.diff" << '//E*O*F ckuusrh.diff//'
 104c104
-< #define XYPHONE 33				/* set phone alias - WB */
+< #define XYPHONE 33                            /* set phone alias - WB */
 ---
 >  
 //E*O*F ckuusrh.diff//
@@ -766,19 +766,19 @@ real user and real group. I added the following code, and all seems to work:
        debug(F111," zopeno",name,n);
        if (chkfn(n) != 0) return(0);
        if ((n == ZCTERM) || (n == ZSTDIO)) {  /* Terminal or standard output */
-	   fp[ZOFILE] = stdout;
-	   debug(F101," fp[]=stdout", "", (int) fp[n]);
-	   return(1);
+           fp[ZOFILE] = stdout;
+           debug(F101," fp[]=stdout", "", (int) fp[n]);
+           return(1);
        }
 *      uid = getuid(); euid = geteuid();
 *      seteuid(uid);        /* Set us back to who is running kermit */
-       fp[n] = fopen(name,"w");		/* A real file, try to open */
+       fp[n] = fopen(name,"w");         /* A real file, try to open */
 *      seteuid(euid);       /* And set things back to our SUID value */
        if (fp[n] == NULL) {
-	   perror("zopeno can't open");
+           perror("zopeno can't open");
        } else {
-	   chown(name, getuid(), getgid());     /* In case set[gu]id */
-	   if (n == ZDFILE) setbuf(fp[n],NULL); /* Debugging file unbuffered */
+           chown(name, getuid(), getgid());     /* In case set[gu]id */
+           if (n == ZDFILE) setbuf(fp[n],NULL); /* Debugging file unbuffered */
        }
        debug(F101, " fp[n]", "", (int) fp[n]);
        return((fp[n] != NULL) ? 1 : 0);
@@ -904,8 +904,8 @@ dialer program used for this device.  For example, if it were
 
 (The dialHA24 program and friends do the ungetty -r for you.)
 
-	Thanks for all the work you've put into this over the years....
-	-John
+        Thanks for all the work you've put into this over the years....
+        -John
 
 ------------------------------
 

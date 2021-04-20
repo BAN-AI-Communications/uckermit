@@ -44,7 +44,7 @@
 /* Empty string (or for numeric variables, -1) = unused attribute. */
 
 struct zstr {             /* string format */
-    int len;	          /* length */
+    int len;              /* length */
     char *val;            /* value */
 };
 struct zattr {            /* Kermit File Attribute structure */
@@ -71,10 +71,10 @@ struct zattr {            /* Kermit File Attribute structure */
 
 /* signal() type, void or int? */
 #ifdef SVR3
-typedef void SIGTYP;			/* System V R3 and later */
+typedef void SIGTYP;                    /* System V R3 and later */
 #else
 #ifdef SUNOS4
-typedef void SIGTYP;			/* SUNOS V 4.0 and later */
+typedef void SIGTYP;                    /* SUNOS V 4.0 and later */
 #else
 typedef int SIGTYP;
 #endif
@@ -212,6 +212,6 @@ extern char myttystr[];
 
 /* special hack for os9/68k */
 #ifdef OSK
-#define SIGARB	5342			/* arbitrary user signal */
-#define SIGALRM 5343			/* and another */
+#define SIGARB  5342                    /* arbitrary user signal */
+#define SIGALRM 5343                    /* and another */
 #endif

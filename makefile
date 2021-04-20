@@ -1,4 +1,4 @@
-# CKUKER.MAK, Version 2.21, 28 Jul 89
+# makefile, version 2.23, 19 Apr 2021
 #
 # -- Makefile to build C-Kermit for Unix and Unix-like systems --
 #
@@ -201,7 +201,7 @@ wermit: ckcmai.o ckucmd.o ckuusr.o ckuus2.o ckuus3.o ckcpro.o ckcfns.o \
 		 ckcfn2.o ckcpro.o ckucmd.o ckuus2.o ckuus3.o ckuusr.o \
 		 ckucon.o ckudia.o ckuscr.o $(LIBS)
 
-ckcmai.o: ckcmai.c ckcker.h ckcdeb.h ckcsym.h
+ckcmai.o: ckcmai.c ckcker.h ckcdeb.h
 
 ckuusr.o: ckuusr.c ckucmd.h ckcker.h ckuusr.h ckcdeb.h
 
@@ -216,9 +216,9 @@ ckcpro.o: ckcpro.c ckcker.h ckcdeb.h
 ckcpro.c: ckcpro.w wart
 	./wart ckcpro.w ckcpro.c
 
-ckcfns.o: ckcfns.c ckcker.h ckcdeb.h ckcsym.h
+ckcfns.o: ckcfns.c ckcker.h ckcdeb.h
 
-ckcfn2.o: ckcfn2.c ckcker.h ckcdeb.h ckcsym.h
+ckcfn2.o: ckcfn2.c ckcker.h ckcdeb.h
 
 ckufio.o: ckufio.c ckcker.h ckcdeb.h
 
@@ -303,13 +303,11 @@ v7:
 
 #Modern Linux with GCC
 linux:
-	make wermit "CFLAGS = -DSVR3 -DUXIII -DDEBUG -DTLOG -DDTILDE \
-		-DTIMESTAMP -DFIONREAD -DO_NDELAY -DTIOCFLUSH -DTIOCFLUSH \
-		-DTIOCSINUSE -DFIONBIO -DTIOCEXCL -DPROFILE -DSIGTSTP \
-		-DNOT_YET -DB19200 -DB38400 -DB57600 -Wall -Wextra \
-		-Wno-return-type -Wno-unused-variable -Wno-implicit-int \
-		-Wno-implicit-function-declaration \
-		-Wno-implicit-fallthrough -O2"
+	make wermit "CFLAGS = -DSVR3 -DUXIII -DDEBUG -DTLOG -DFIONREAD -DO_NDELAY \
+		-DTIOCFLUSH -DTIOCFLUSH -DTIOCSINUSE -DFIONBIO -DTIOCEXCL -DPROFILE \
+		-DSIGTSTP -DNOT_YET -Wall -Wextra -Wno-return-type -Wno-unused-variable \
+		-Wno-implicit-int -Wno-implicit-function-declaration \
+		-Wno-implicit-fallthrough -O2 -mtune=native"
 
 #System V R3, some things changed since Sys V R2...
 sys5r3:
