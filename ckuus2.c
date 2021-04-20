@@ -1,14 +1,14 @@
 /*  C K U U S 2  --  "User Interface" STRINGS module for Unix Kermit  */
 
 /*
- Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
- Columbia University Center for Computing Activities.
- First released January 1985.
- Copyright (C) 1985, 1989, Trustees of Columbia University in the City of New
- York.  Permission is granted to any individual or institution to use, copy, or
- redistribute this software so long as it is not sold for profit, provided this
- copyright notice is retained.
-*/
+   Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
+   Columbia University Center for Computing Activities.
+   First released January 1985.
+   Copyright (C) 1985, 1989, Trustees of Columbia University in the City of New
+   York.  Permission is granted to any individual or institution to use, copy,
+   or redistribute this software so long as it is not sold for profit, provided
+   this copyright notice is retained.
+ */
 
 /*  This module separates long strings from the body of the ckuser module. */
 
@@ -212,157 +212,156 @@ dohlp(xx) int xx;
   int x, y;
 
   if (xx < 0)
-    return (xx);
+    return xx;
   switch (xx) {
 
   case XXBYE:
-    return (hmsg(hmxxbye));
+    return hmsg(hmxxbye);
 
   case XXCLO:
-    return (hmsg(hmxxclo));
+    return hmsg(hmxxclo);
 
   case XXCON:
-    return (hmsg(hmxxcon));
+    return hmsg(hmxxcon);
 
   case XXCWD:
 #ifdef vms
-    return (hmsg("\
-Change Working Directory, equivalent to VMS SET DEFAULT command"));
+    return hmsg("\
+Change Working Directory, equivalent to VMS SET DEFAULT command");
 #else
 #ifdef datageneral
-    return (hmsg("Change Working Directory, equivalent to DG 'dir' command"));
+    return hmsg("Change Working Directory, equivalent to DG 'dir' command");
 #else
 #ifdef OS2
-    return (
-        hmsg("Change Working Directory, equivalent to OS2 'chdir' command"));
+    return hmsg("Change Working Directory, equivalent to OS2 'chdir' command");
 #else
-    return (hmsg("Change Working Directory, equivalent to Unix 'cd' command"));
+    return hmsg("Change Working Directory, equivalent to Unix 'cd' command");
 #endif
 #endif
 #endif
 
   case XXDEL:
-    return (hmsg("Delete a local file or files"));
+    return hmsg("Delete a local file or files");
 
   case XXDIAL:
-    return (hmsg("Dial a number using modem autodialer"));
+    return hmsg("Dial a number using modem autodialer");
 
   case XXDIR:
-    return (hmsg("Display a directory of local files"));
+    return hmsg("Display a directory of local files");
 
   case XXECH:
-    return (hmsg("Display the rest of the command on the terminal,\n\
-useful in command files."));
+    return hmsg("Display the rest of the command on the terminal,\n\
+useful in command files.");
 
   case XXEXI:
   case XXQUI:
-    return (hmsg("Exit from the Kermit program, closing any open logs."));
+    return hmsg("Exit from the Kermit program, closing any open logs.");
 
   case XXFIN:
-    return (hmsg("\
-Tell the remote Kermit server to shut down without logging out."));
+    return hmsg("\
+Tell the remote Kermit server to shut down without logging out.");
 
   case XXGET:
-    return (hmsg(hmxxget));
+    return hmsg(hmxxget);
 
   case XXHAN:
-    return (hmsg("Hang up the phone."));
+    return hmsg("Hang up the phone.");
 
   case XXHLP:
-    return (hmsga(tophlp));
+    return hmsga(tophlp);
 
   case XXLOG:
-    return (hmsga(hmxxlg));
+    return hmsga(hmxxlg);
 
   case XXLOGI:
-    return (hmsga(hmxxlogi));
+    return hmsga(hmxxlogi);
 
   case XXREC:
-    return (hmsga(hmxxrc));
+    return hmsga(hmxxrc);
 
   case XXREM:
     if ((y = cmkey(remcmd, nrmt, "Remote command", "")) == -2)
-      return (y);
+      return y;
     if (y == -1)
-      return (y);
+      return y;
     if ((x = cmcfm()) < 0)
-      return (x);
-    return (dohrmt(y));
+      return x;
+    return dohrmt(y);
 
   case XXSEN:
-    return (hmsg(hmxxsen));
+    return hmsg(hmxxsen);
 
   case XXSER:
-    return (hmsg(hmxxser));
+    return hmsg(hmxxser);
 
   case XXSET:
     if ((y = cmkey(prmtab, nprm, "Parameter", "")) == -2)
-      return (y);
+      return y;
     if (y == -2)
-      return (y);
+      return y;
     if ((x = cmcfm()) < 0)
-      return (x);
-    return (dohset(y));
+      return x;
+    return dohset(y);
 
   case XXSHE:
 #ifdef vms
-    return (hmsg("\
-Issue a command to VMS (space required after '!')"));
+    return hmsg("\
+Issue a command to VMS (space required after '!')");
 #else
 #ifdef AMIGA
-    return (hmsg("\
-Issue a command to CLI (space required after '!')"));
+    return hmsg("\
+Issue a command to CLI (space required after '!')");
 #else
 #ifdef datageneral
-    return (hmsg("\
-Issue a command to the CLI (space required after '!')"));
+    return hmsg("\
+Issue a command to the CLI (space required after '!')");
 #else
 #ifdef OS2
-    return (hmsg("\
-Issue a command to CMD.EXE (space required after '!')"));
+    return hmsg("\
+Issue a command to CMD.EXE (space required after '!')");
 #else
-    return (hmsg("\
-Issue a command to the Unix shell (space required after '!')"));
+    return hmsg("\
+Issue a command to the Unix shell (space required after '!')");
 #endif
 #endif
 #endif
 #endif
 
   case XXSHO:
-    return (hmsg("\
+    return hmsg("\
 Display current values of 'set' parameters; 'show version' will display\n\
-program version information for each of the C-Kermit modules."));
+program version information for each of the C-Kermit modules.");
 
   case XXSPA:
 #ifdef datageneral
-    return (hmsg("\
+    return hmsg("\
 Display disk usage in current device, directory,\n\
-or return space for a specified device, directory."));
+or return space for a specified device, directory.");
 #else
-    return (hmsg("Display disk usage in current device, directory"));
+    return hmsg("Display disk usage in current device, directory");
 #endif
 
   case XXSTA:
-    return (hmsg("Display statistics about most recent file transfer"));
+    return hmsg("Display statistics about most recent file transfer");
 
   case XXTAK:
-    return (hmsg("\
+    return hmsg("\
 Take Kermit commands from the named file.  Kermit command files may\n\
-themselves contain 'take' commands, up to a reasonable depth of nesting."));
+themselves contain 'take' commands, up to a reasonable depth of nesting.");
 
   case XXTRA:
-    return (hmsg("\
+    return hmsg("\
 Raw upload. Send a file, a line at a time (text) or a character at a time.\n\
 For text, wait for turnaround character (default 10 = LF) after each line.\n\
-Specify 0 for no waiting."));
+Specify 0 for no waiting.");
 
   default:
     if ((x = cmcfm()) < 0)
-      return (x);
+      return x;
     printf("Not available yet - %s\n", cmdbuf);
     break;
   }
-  return (0);
+  return 0;
 }
 
 /*  H M S G  --  Get confirmation, then print the given message  */
@@ -371,20 +370,20 @@ hmsg(s) char *s;
 {
   int x;
   if ((x = cmcfm()) < 0)
-    return (x);
+    return x;
   puts(s);
-  return (0);
+  return 0;
 }
 
 hmsga(s) char *s[];
 { /* Same function, but for arrays */
   int x, i;
   if ((x = cmcfm()) < 0)
-    return (x);
+    return x;
   for (i = 0; *s[i]; i++)
     fputs(s[i], stdout);
   putc('\n', stdout);
-  return (0);
+  return 0;
 }
 
 /*  D O H S E T  --  Give help for SET command  */
@@ -393,58 +392,58 @@ dohset(xx) int xx;
 {
 
   if (xx == -3)
-    return (hmsga(hmhset));
+    return hmsga(hmhset);
   if (xx < 0)
-    return (xx);
+    return xx;
   switch (xx) {
 
   case XYATTR:
     puts("Turn Attribute packet exchange off or on");
-    return (0);
+    return 0;
 
   case XYIFD:
     puts("Discard or Keep incompletely received files, default is discard");
-    return (0);
+    return 0;
 
   case XYCHKT:
-    return (hmsga(hmxychkt));
+    return hmsga(hmxychkt);
 
   case XYDELA:
     puts("\
 Number of seconds to wait before sending first packet after 'send' command.");
-    return (0);
+    return 0;
 
   case XYTERM:
     puts("\
 'set terminal bytesize 7 or 8' to use 7- or 8-bit terminal characters.");
-    return (0);
+    return 0;
 
   case XYDUPL:
     puts("\
 During 'connect': 'full' means remote host echoes, 'half' means this program");
     puts("does its own echoing.");
-    return (0);
+    return 0;
 
   case XYESC:
     printf("%s", "\
 Decimal ASCII value for escape character during 'connect', normally 28\n\
 (Control-\\)\n");
-    return (0);
+    return 0;
 
   case XYFILE:
-    return (hmsga(hmxyf));
+    return hmsga(hmxyf);
 
   case XYFLOW:
     puts("\
 Type of flow control to be used.  Choices are 'xon/xoff' and 'none'.");
     puts("normally xon/xoff.");
-    return (0);
+    return 0;
 
   case XYHAND:
     puts("\
 Decimal ASCII value for character to use for half duplex line turnaround");
     puts("handshake.  Normally, handshaking is not done.");
-    return (0);
+    return 0;
 
   case XYLINE:
     printf("\
@@ -466,7 +465,7 @@ This can be used to wait for incoming calls.");
 To use the modem to dial out, first set modem-dialer (e.g., to hayes), then");
       puts("set line, next issue the dial command, and finally connect.");
     }
-    return (0);
+    return 0;
 
   case XYMODM:
     puts("\
@@ -477,21 +476,21 @@ be commanded to dial without 'carrier detect' from modem.  Many recently");
 manufactured modems use 'hayes' protocol.  Type 'set modem ?' to see what");
     puts("\
 types of modems are supported by this program.");
-    return (0);
+    return 0;
 
   case XYPARI:
     puts("Parity to use during terminal connection and file transfer:");
     puts("even, odd, mark, space, or none.  Normally none.");
-    return (0);
+    return 0;
 
   case XYPROM:
     puts("Prompt string for this program, normally 'C-Kermit>'.");
-    return (0);
+    return 0;
 
   case XYRETR:
     puts("\
 How many times to retransmit a particular packet before giving up");
-    return (0);
+    return 0;
 
   case XYSPEE:
     puts("\
@@ -519,7 +518,7 @@ Communication line speed for external tty line specified in most recent");
 #endif
 #endif
 #endif
-    return (0);
+    return 0;
 
   case XYRECV:
     puts("\
@@ -532,7 +531,7 @@ Padding (amount, 94 or less), Pad-Character (ASCII value),");
 Start-Of-Packet (ASCII value), and Timeout (94 seconds or less),");
     puts("\
 all specified as decimal numbers.");
-    return (0);
+    return 0;
 
   case XYSEND:
     puts("\
@@ -545,7 +544,7 @@ Padding (amount, 94 or less), Pad-Character (ASCII value),");
 Start-Of-Packet (ASCII value), and Timeout (94 seconds or less),");
     puts("\
 all specified as decimal numbers.");
-    return (0);
+    return 0;
 
   case XYSERV:
     puts("server timeout:");
@@ -553,11 +552,11 @@ all specified as decimal numbers.");
 Server command wait timeout interval, how often the C-Kermit server issues");
     puts("\
 a NAK while waiting for a command packet.  Specify 0 for no NAKs at all.");
-    return (0);
+    return 0;
 
   default:
     printf("Not available yet - %s\n", cmdbuf);
-    return (0);
+    return 0;
   }
 }
 
@@ -567,50 +566,50 @@ dohrmt(xx) int xx;
 {
   int x;
   if (xx == -3)
-    return (hmsga(hmhrmt));
+    return hmsga(hmhrmt);
   if (xx < 0)
-    return (xx);
+    return xx;
   switch (xx) {
 
   case XZCWD:
-    return (hmsg("\
-Ask remote Kermit server to change its working directory."));
+    return hmsg("\
+Ask remote Kermit server to change its working directory.");
 
   case XZDEL:
-    return (hmsg("\
-Ask remote Kermit server to delete the named file(s)."));
+    return hmsg("\
+Ask remote Kermit server to delete the named file(s).");
 
   case XZDIR:
-    return (hmsg("\
-Ask remote Kermit server to provide directory listing of the named file(s)."));
+    return hmsg("\
+Ask remote Kermit server to provide directory listing of the named file(s).");
 
   case XZHLP:
-    return (hmsg("\
-Ask remote Kermit server to tell you what services it provides."));
+    return hmsg("\
+Ask remote Kermit server to tell you what services it provides.");
 
   case XZHOS:
-    return (hmsg("\
+    return hmsg("\
 Send a command to the remote system in its own command language\n\
-through the remote Kermit server."));
+through the remote Kermit server.");
 
   case XZSPA:
-    return (hmsg("\
-Ask the remote Kermit server to tell you about its disk space."));
+    return hmsg("\
+Ask the remote Kermit server to tell you about its disk space.");
 
   case XZTYP:
-    return (hmsg("\
-Ask the remote Kermit server to type the named file(s) on your screen."));
+    return hmsg("\
+Ask the remote Kermit server to type the named file(s) on your screen.");
 
   case XZWHO:
-    return (hmsg("\
+    return hmsg("\
 Ask the remote Kermit server to list who's logged in, or to give information\n\
-about the specified user."));
+about the specified user.");
 
   default:
     if ((x = cmcfm()) < 0)
-      return (x);
+      return x;
     printf("Not working yet - %s\n", cmdbuf);
-    return (-2);
+    return -2;
   }
 }
 
@@ -656,15 +655,15 @@ dolog(x) int x;
 
   default:
     printf("\n?Unexpected log designator - %d\n", x);
-    return (-2);
+    return -2;
   }
   if (y < 0)
-    return (y);
+    return y;
 
   strcpy(line, s);
   s = line;
   if ((y = cmcfm()) < 0)
-    return (y);
+    return y;
 
   /* cont'd... */
 
@@ -673,7 +672,7 @@ dolog(x) int x;
   switch (x) {
 
   case LOGD:
-    return (deblog = debopn(s));
+    return deblog = debopn(s);
 
   case LOGP:
     zclose(ZPFILE);
@@ -682,7 +681,7 @@ dolog(x) int x;
       strcpy(pktfil, s);
     else
       *pktfil = '\0';
-    return (pktlog = y);
+    return pktlog = y;
 
   case LOGS:
     zclose(ZSFILE);
@@ -691,7 +690,7 @@ dolog(x) int x;
       strcpy(sesfil, s);
     else
       *sesfil = '\0';
-    return (seslog = y);
+    return seslog = y;
 
   case LOGT:
     zclose(ZTFILE);
@@ -704,10 +703,10 @@ dolog(x) int x;
       tlog(F100, s, "", 0l);
     } else
       *trafil = '\0';
-    return (tralog);
+    return tralog;
 
   default:
-    return (-2);
+    return -2;
   }
 }
 
@@ -728,9 +727,9 @@ debopn(s) char *s;
     debug(F100, tp, "", 0);
   } else
     *debfil = '\0';
-  return (deblog);
+  return deblog;
 #else
-  return (0);
+  return 0;
 #endif
 }
 
@@ -918,7 +917,7 @@ dostat() {
       printf("no\n\n");
   } else
     printf("\n");
-  return (0);
+  return 0;
 }
 
 /*  F S T A T S  --  Record file statistics in transaction log  */

@@ -3,39 +3,40 @@ char *userv = "User Interface 4G(074), 20 Apr 2021";
 /*  C K U U S R --  "User Interface" for Unix Kermit (Part 1)  */
 
 /*
- Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
- Columbia University Center for Computing Activities.
- First released January 1985.
- Copyright (C) 1985, 1989, Trustees of Columbia University in the City of New
- York.  Permission is granted to any individual or institution to use, copy, or
- redistribute this software so long as it is not sold for profit, provided this
- copyright notice is retained.
-*/
+   Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
+   Columbia University Center for Computing Activities.
+   First released January 1985.
+   Copyright (C) 1985, 1989, Trustees of Columbia University in the City of New
+   York.  Permission is granted to any individual or institution to use, copy,
+   or redistribute this software so long as it is not sold for profit, provided
+   this copyright notice is retained.
+ */
 
 /*
- The ckuusr module contains the terminal input and output functions for Unix
- Kermit.  It includes a simple Unix-style command line parser as well as
- an interactive prompting keyword command parser.  It depends on the existence
- of Unix facilities like fopen, fgets, feof, (f)printf, argv/argc, etc.  Other
- functions that are likely to vary among Unix implementations -- like setting
- terminal modes or interrupts -- are invoked via calls to functions that are
- defined in the system-dependent modules, ck?[ft]io.c.
+   The ckuusr module contains the terminal input and output functions for Unix
+   Kermit.  It includes a simple Unix-style command line parser as well as
+   an interactive prompting keyword command parser.  It depends on the existence
+   of Unix facilities like fopen, fgets, feof, (f)printf, argv/argc, etc.  Other
+   functions that are likely to vary among Unix implementations -- like setting
+   terminal modes or interrupts -- are invoked via calls to functions that are
+   defined in the system-dependent modules, ck?[ft]io.c.
 
- The command line parser processes any arguments found on the command line,
- as passed to main() via argv/argc.  The interactive parser uses the facilities
- of the cmd package (developed for this program, but usable by any program).
+   The command line parser processes any arguments found on the command line,
+   as passed to main() via argv/argc.  The interactive parser uses the
+   facilities of the cmd package (developed for this program, but usable by any
+   program).
 
- Any command parser may be substituted for this one.  The only requirements
- for the Kermit command parser are these:
+   Any command parser may be substituted for this one.  The only requirements
+   for the Kermit command parser are these:
 
- 1. Set parameters via global variables like duplex, speed, ttname, etc.
+   1. Set parameters via global variables like duplex, speed, ttname, etc.
     See ckmain.c for the declarations and descriptions of these variables.
 
- 2. If a command can be executed without the use of Kermit protocol, then
+   2. If a command can be executed without the use of Kermit protocol, then
     execute the command directly and set the variable sstate to 0. Examples
     include 'set' commands, local directory listings, the 'connect' command.
 
- 3. If a command requires the Kermit protocol, set the following variables:
+   3. If a command requires the Kermit protocol, set the following variables:
 
     sstate                             string data
       'x' (enter server mode)            (none)
@@ -60,12 +61,12 @@ char *userv = "User Interface 4G(074), 20 Apr 2021";
        0: stdin.
       >0: number of files to send, from cmlist.
 
- The screen() function is used to update the screen during file transfer.
- The tlog() function maintains a transaction log.
- The debug() function maintains a debugging log.
- The intmsg() and chkint() functions provide the user i/o for interrupting
+   The screen() function is used to update the screen during file transfer.
+   The tlog() function maintains a transaction log.
+   The debug() function maintains a debugging log.
+   The intmsg() and chkint() functions provide the user i/o for interrupting
    file transfers.
-*/
+ */
 
 /* Includes */
 
@@ -160,12 +161,13 @@ char cmdstr[100]; /* Place to build generic command */
 
 /*  C M D L I N  --  Get arguments from command line  */
 /*
- Simple Unix-style command line parser, conforming with 'A Proposed Command
- Syntax Standard for Unix Systems', Hemenway & Armitage, Unix/World, Vol.1,
- No.3, 1984.
-*/
+   Simple Unix-style command line parser, conforming with 'A Proposed Command
+   Syntax Standard for Unix Systems', Hemenway & Armitage, Unix/World, Vol.1,
+   No.3, 1984.
+ */
 cmdlin() {
-  char x;     /* Local general-purpose int */
+  char x; /* Local general-purpose int */
+
   cmarg = ""; /* Initialize globals */
   cmarg2 = "";
   action = cflg = 0;
@@ -183,18 +185,15 @@ cmdlin() {
     }
   }
   debug(F101, "action", "", action);
-  if (!local) {
+  if (!local)
     if ((action == 'g') || (action == 'r') || (action == 'c') || (cflg != 0))
       fatal("-l and -b required");
-  }
-  if (*cmarg2 != 0) {
+  if (*cmarg2 != 0)
     if ((action != 's') && (action != 'r') && (action != 'v'))
       fatal("-a without -s, -r, or -g");
-  }
-  if ((action == 'v') && (stdouf) && (!local)) {
+  if ((action == 'v') && (stdouf) && (!local))
     if (isatty(1))
       fatal("unredirected -k can only be used in local mode");
-  }
   if ((action == 's') || (action == 'v') || (action == 'r') ||
       (action == 'x')) {
     if (local)
@@ -218,7 +217,7 @@ cmdlin() {
   }
   if (displa)
     concb(escape); /* (for console "interrupts") */
-  return (action); /* Then do any requested protocol */
+  return action;   /* Then do any requested protocol */
 }
 
 /*  D O A R G  --  Do a command-line argument.  */
@@ -284,10 +283,9 @@ doarg(x) char x;
         else
           fatal("invalid mixture of filenames and '-' in -s");
       }
-      if (nfils == 0) {
+      if (nfils == 0)
         if (isatty(0))
           fatal("sending from terminal not allowed");
-      }
       debug(F101, *xargv, "", nfils);
       action = 's';
       break;
@@ -440,7 +438,7 @@ doarg(x) char x;
 
     x = *++xp; /* See if options are bundled */
   }
-  return (0);
+  return 0;
 }
 
 /* Misc */
@@ -612,9 +610,9 @@ cmdini() {
   if ((tfile[0] = fopen(line, "r")) != NULL) {
     tlevel = 0;
     debug(F110, "init file", line, 0);
-  } else {
+  } else
     debug(F100, "no init file", "", 0);
-  }
+
 #else
   homdir = zhome();
   lp = line;
@@ -702,10 +700,10 @@ parser() {
   concb(escape); /* Put console in cbreak mode. */
   conint(trap);  /* Turn on console terminal interrupts. */
                  /*
-                  sstate becomes nonzero when a command has been parsed that requires some
-                  action from the protocol module.  Any non-protocol actions, such as local
-                  directory listing or terminal emulation, are invoked directly from below.
-                 */
+                    sstate becomes nonzero when a command has been parsed that requires some
+                    action from the protocol module.  Any non-protocol actions, such as local
+                    directory listing or terminal emulation, are invoked directly from below.
+                  */
   if (local && !backgrd)
     printf("\n");       /*** Temporary kludge ***/
   sstate = 0;           /* Start with no start state. */
@@ -715,7 +713,7 @@ parser() {
       cmini(ckxech);    /* and clear the cmd buffer. */
       if (tlevel < 0) { /* Just popped out of cmd files? */
         conint(trap);   /* Check background stuff again. */
-        return (0);     /* End of init file or whatever. */
+        return 0;       /* End of init file or whatever. */
       }
     }
     debug(F101, "tlevel", "", tlevel);
@@ -778,7 +776,7 @@ parser() {
 
   if (!local)
     connoi(); /* Interrupts off only if remote */
-  return (sstate);
+  return sstate;
 }
 
 /*  D O E X I T  --  Exit from the program.  */
@@ -830,7 +828,7 @@ char *bldlen(str, dest) char *str, *dest;
   len = strlen(str);
   *dest = tochar(len);
   strcpy(dest + 1, str);
-  return (dest + len + 1);
+  return dest + len + 1;
 }
 
 /*  S E T G E N  --  Construct a generic command  */
@@ -853,17 +851,17 @@ setgen(type, arg1, arg2, arg3) char type, *arg1, *arg2, *arg3;
   cmarg = cmdstr;
   debug(F110, "setgen", cmarg, 0);
 
-  return ('g');
+  return 'g';
 }
 
 /*  D O C M D  --  Do a command  */
 
 /*
- Returns:
+   Returns:
    -2: user typed an illegal command
    -1: reparse needed
     0: parse was successful (even tho command may have failed).
-*/
+ */
 
 docmd(cx) int cx;
 {
@@ -882,35 +880,35 @@ docmd(cx) int cx;
 #endif /* OSK */
     doexit(GOOD_EXIT);
   case -3: /* Null command */
-    return (0);
+    return 0;
   case -2: /* Error */
   case -1: /* Reparse needed */
-    return (cx);
+    return cx;
 
   case XXBYE: /* bye */
     if ((x = cmcfm()) < 0)
-      return (x);
+      return x;
     if (!local) {
       printf("You have to 'set line' first\n");
-      return (0);
+      return 0;
     }
     sstate = setgen('L', "", "", "");
-    return (0);
+    return 0;
 
   case XXCOM: /* comment */
     if ((x = cmtxt("Text of comment line", "", &s)) < 0)
-      return (x);
-    return (0);
+      return x;
+    return 0;
 
   case XXCON: /* connect */
     if ((x = cmcfm()) < 0)
-      return (x);
-    return (doconect());
+      return x;
+    return doconect();
 
   case XXCWD:
 #ifdef AMIGA
     if (cmtxt("Name of local directory, or carriage return", "", &s) < 0)
-      return (-1);
+      return -1;
     /* if no name, just print directory name */
     if (*s) {
       if (chdir(s))
@@ -927,19 +925,18 @@ docmd(cx) int cx;
      */
     if ((x = cmdir("Name of local directory, or carriage return", homdir, &s)) <
         0)
-      return (x);
+      return x;
     if (x == 2) {
       printf("\n?Wildcards not allowed in directory name\n");
-      return (-2);
+      return -2;
     }
 #ifdef OS2
     if (s != NUL) {
       if (strlen(s) >= 2 && s[1] == ':') { /* Disk specifier */
         if (zchdsk(*s)) {                  /* Change disk successful */
-          if (strlen(s) >= 3 & (s[2] == '\\' || isalnum(s[2]))) {
+          if (strlen(s) >= 3 & (s[2] == '\\' || isalnum(s[2])))
             if (chdir(s))
               perror(s);
-          }
         } else
           perror(s);
       } else if (chdir(s))
@@ -956,89 +953,89 @@ docmd(cx) int cx;
     system(PWDCMD);
 #endif
 #endif
-    return (0);
+    return 0;
 
   case XXCLO:
     x = cmkey(logtab, nlog, "Which log to close", "");
     if (x == -3) {
       printf("?You must tell which log\n");
-      return (-2);
+      return -2;
     }
     if (x < 0)
-      return (x);
+      return x;
     if ((y = cmcfm()) < 0)
-      return (y);
+      return y;
     switch (x) {
 
     case LOGD:
       if (deblog == 0) {
         printf("?Debugging log wasn't open\n");
-        return (0);
+        return 0;
       }
       *debfil = '\0';
       deblog = 0;
-      return (zclose(ZDFILE));
+      return zclose(ZDFILE);
 
     case LOGP:
       if (pktlog == 0) {
         printf("?Packet log wasn't open\n");
-        return (0);
+        return 0;
       }
       *pktfil = '\0';
       pktlog = 0;
-      return (zclose(ZPFILE));
+      return zclose(ZPFILE);
 
     case LOGS:
       if (seslog == 0) {
         printf("?Session log wasn't open\n");
-        return (0);
+        return 0;
       }
       *sesfil = '\0';
       seslog = 0;
-      return (zclose(ZSFILE));
+      return zclose(ZSFILE);
 
     case LOGT:
       if (tralog == 0) {
         printf("?Transaction log wasn't open\n");
-        return (0);
+        return 0;
       }
       *trafil = '\0';
       tralog = 0;
-      return (zclose(ZTFILE));
+      return zclose(ZTFILE);
 
     default:
       printf("\n?Unexpected log designator - %ld\n", (long)x);
-      return (0);
+      return 0;
     }
 
   case XXDIAL: /* dial number */
     if ((x = cmtxt("Number to be dialed", "", &s)) < 0)
-      return (x);
+      return x;
     /***/ debug(F110, "ckuusr calling ckdial", s, 0);
-    return (ckdial(s));
+    return ckdial(s);
 
   case XXDIR: /* directory */
 #ifdef vms
     if ((x = cmtxt("Directory/file specification", "", &s)) < 0)
-      return (x);
+      return x;
     /* now do this the same as a shell command - helps with LAT  */
     conres(); /* make console normal */
     lp = line;
     sprintf(lp, "%s %s", DIRCMD, s);
     debug(F110, "Directory string: ", line, 0);
     concb(escape);
-    return (0);
+    return 0;
 #else
 #ifdef AMIGA
     if ((x = cmtxt("Directory/file specification", "", &s)) < 0)
-      return (x);
+      return x;
 #else
 #ifdef datageneral
     if ((x = cmtxt("Directory/file specification", "+", &s)) < 0)
-      return (x);
+      return x;
 #else
     if ((x = cmdir("Directory/file specification", "*", &s)) < 0)
-      return (x);
+      return x;
 #endif
 #endif
     lp = line;
@@ -1050,50 +1047,49 @@ docmd(cx) int cx;
 #else
     system(line);
 #endif
-    return (0);
+    return 0;
 #endif
 
   case XXECH: /* echo */
     if ((x = cmtxt("Material to be echoed", "", &s)) < 0)
-      return (x);
+      return x;
     for (; *s; s++) {
       if ((x = *s) == 0134) { /* Convert octal escapes */
         s++;                  /* up to 3 digits */
-        for (x = y = 0; *s >= '0' && *s <= '7' && y < 3; s++, y++) {
+        for (x = y = 0; *s >= '0' && *s <= '7' && y < 3; s++, y++)
           x = x * 8 + (int)*s - 48;
-        }
         s--;
       }
       putchar(x);
     }
     printf("\n");
-    return (0);
+    return 0;
 
   case XXQUI: /* quit, exit */
   case XXEXI:
     if ((x = cmcfm()) > -1)
       doexit(GOOD_EXIT);
     else
-      return (x);
+      return x;
 
   case XXFIN: /* finish */
     if ((x = cmcfm()) < 0)
-      return (x);
+      return x;
     if (!local) {
       printf("You have to 'set line' first\n");
-      return (0);
+      return 0;
     }
     sstate = setgen('F', "", "", "");
-    return (0);
+    return 0;
 
   case XXGET: /* get */
     if (!local) {
       printf("\nYou have to 'set line' first\n");
-      return (0);
+      return 0;
     }
     x = cmtxt("Name of remote file(s), or carriage return", "", &cmarg);
     if ((x == -2) || (x == -1))
-      return (x);
+      return x;
 
     /* If foreign file name omitted, get foreign and local names separately */
 
@@ -1137,12 +1133,12 @@ docmd(cx) int cx;
         }
         if (x < 0) {
           cmsetp(psave);
-          return (x);
+          return x;
         }
         if (*cmarg == NUL) {       /* If user types a bare CR, */
           printf("(cancelled)\n"); /* Forget about this. */
           cmsetp(psave);           /* Restore old prompt, */
-          return (0);              /* and return. */
+          return 0;                /* and return. */
         }
         strcpy(line, cmarg); /* Make a safe copy */
         cmarg = line;
@@ -1151,15 +1147,14 @@ docmd(cx) int cx;
         x = -1;
         if (!backgrd)
           prompt();
-        while (x == -1) { /* Again, parse till answered */
+        while (x == -1) /* Again, parse till answered */
           x = cmofi("Local file name", "", &cmarg2);
-        }
         if (x == -3) {             /* If bare CR, */
           printf("(cancelled)\n"); /* escape from this... */
           cmsetp(psave);           /* Restore old prompt, */
-          return (0);              /* and return. */
+          return 0;                /* and return. */
         } else if (x < 0)
-          return (x); /* Handle parse errors. */
+          return x; /* Handle parse errors. */
 
         x = -1; /* Get confirmation. */
         while (x == -1)
@@ -1172,75 +1167,73 @@ docmd(cx) int cx;
       if (local)
         displa = 1;
     }
-    return (x);
+    return x;
 
   case XXHLP: /* Help */
     x = cmkey(cmdtab, ncmd, "C-Kermit command", "help");
-    return (dohlp(x));
+    return dohlp(x);
 
   case XXHAN: /* Hangup */
     if ((x = cmcfm()) > -1)
-      return (tthang());
+      return tthang();
 
   case XXLOG: /* Log */
     x = cmkey(logtab, nlog, "What to log", "");
     if (x == -3) {
       printf("?You must specify what is to be logged\n");
-      return (-2);
+      return -2;
     }
     if (x < 0)
-      return (x);
-    return (dolog(x));
+      return x;
+    return dolog(x);
 
   case XXLOGI: /* Send script remote system */
     if ((x = cmtxt("Text of login script", "", &s)) < 0)
-      return (x);
-    return (login(s)); /* Return 0=completed, -2=failed */
+      return x;
+    return login(s); /* Return 0=completed, -2=failed */
 
   case XXREC: /* Receive */
     cmarg2 = "";
     x = cmofi("Name under which to store the file, or CR", "", &cmarg2);
     if ((x == -1) || (x == -2))
-      return (x);
+      return x;
     debug(F111, "cmofi cmarg2", cmarg2, x);
     if ((x = cmcfm()) < 0)
-      return (x);
+      return x;
     sstate = 'v';
     if (local)
       displa = 1;
-    return (0);
+    return 0;
 
   case XXREM: /* Remote */
     if (!local) {
       printf("\nYou have to 'set line' first\n");
-      return (-2);
+      return -2;
     }
     x = cmkey(remcmd, nrmt, "Remote Kermit server command", "");
     if (x == -3) {
       printf("?You must specify a command for the remote server\n");
-      return (-2);
+      return -2;
     }
-    return (dormt(x));
+    return dormt(x);
 
   case XXSEN: /* Send */
     cmarg = cmarg2 = "";
     if ((x = cmifi("File(s) to send", "", &s, &y)) < 0) {
       if (x == -3) {
         printf("?A file specification is required\n");
-        return (-2);
+        return -2;
       }
-      return (x);
+      return x;
     }
     nfils = -1;      /* Files come from internal list. */
     strcpy(line, s); /* Save copy of string just parsed. */
     debug(F101, "Send: wild", "", y);
     if (y == 0) {
       if ((x = cmtxt("Name to send it with", "", &cmarg2)) < 0)
-        return (x);
-    } else {
-      if ((x = cmcfm()) < 0)
-        return (x);
-    }
+        return x;
+    } else if ((x = cmcfm()) < 0)
+      return x;
     cmarg = line; /* File to send */
     debug(F110, "Sending:", cmarg, 0);
     if (*cmarg2 != '\0')
@@ -1248,48 +1241,48 @@ docmd(cx) int cx;
     sstate = 's'; /* Set start state */
     if (local)
       displa = 1;
-    return (0);
+    return 0;
 
   case XXSER: /* Server */
     if ((x = cmcfm()) < 0)
-      return (x);
+      return x;
     sstate = 'x';
     if (local)
       displa = 1;
 #ifdef AMIGA
     reqoff(); /* no DOS requestors while server */
 #endif
-    return (0);
+    return 0;
 
   case XXSET: /* Set */
     x = cmkey(prmtab, nprm, "Parameter", "");
     if (x == -3) {
       printf("?You must specify a parameter to set\n");
-      return (-2);
+      return -2;
     }
     if (x < 0)
-      return (x);
-    return (doprm(x));
+      return x;
+    return doprm(x);
 
   /* XXSHE code by H. Fischer; copyright rights assigned to Columbia Univ */
   /*
-   Adapted to use getpwuid to find login shell because many systems do not
-   have SHELL in environment, and to use direct calling of shell rather
-   than intermediate system() call. -- H. Fischer
-  */
+     Adapted to use getpwuid to find login shell because many systems do not
+     have SHELL in environment, and to use direct calling of shell rather
+     than intermediate system() call. -- H. Fischer
+   */
   case XXSHE: /* Local shell command */
   {
     int pid;
 #ifdef AMIGA
     if (cmtxt("Command to execute", "", &s) < 0)
-      return (-1);
+      return -1;
 #else
 #ifdef OS2
     if (cmtxt("OS2 command to execute", "", &s) < 0)
-      return (-1);
+      return -1;
 #else
     if (cmtxt("Unix shell command to execute", "", &s) < 0)
-      return (-1);
+      return -1;
 #endif /* Amiga */
 #endif /* OS2 */
 
@@ -1367,8 +1360,7 @@ docmd(cx) int cx;
       else                                    /* Otherwise, */
         execl(shpath, shname, "-c", s, NULL); /* exec the given command */
       exit(BAD_EXIT);
-    } /* Just punt if it didn't work */
-
+    }      /* Just punt if it didn't work */
     else { /* Parent */
 
       int wstat; /* Kermit must wait for child */
@@ -1390,15 +1382,15 @@ docmd(cx) int cx;
 #endif
 #endif
     concb(escape); /* Console back in cbreak mode */
-    return (0);
+    return 0;
   }
 
   case XXSHO: /* Show */
     x = cmkey(shotab, 2, "", "parameters");
     if (x < 0)
-      return (x);
+      return x;
     if ((y = cmcfm()) < 0)
-      return (y);
+      return y;
     switch (x) {
 
     case SHPAR:
@@ -1419,13 +1411,13 @@ docmd(cx) int cx;
       printf("\nNothing to show...\n");
       break;
     }
-    return (0);
+    return 0;
 
   case XXSPA: /* space */
 #ifdef datageneral
     /* The DG can take an argument after its "space" command. */
     if ((x = cmtxt("Confirm, or local directory name", "", &s)) < 0)
-      return (x);
+      return x;
     if (*s == NULL)
       system(SPACMD);
     else {
@@ -1437,7 +1429,7 @@ docmd(cx) int cx;
     }
 #else
     if ((x = cmcfm()) < 0)
-      return (x);
+      return x;
 #ifdef OS2
     concooked();
     system(SPACMD);
@@ -1446,74 +1438,74 @@ docmd(cx) int cx;
     system(SPACMD);
 #endif
 #endif
-    return (0);
+    return 0;
 
   case XXSTA: /* statistics */
     if ((x = cmcfm()) < 0)
-      return (x);
-    return (dostat());
+      return x;
+    return dostat();
 
   case XXTAK: /* take */
     if (tlevel > MAXTAKE - 1) {
       printf("?Take files nested too deeply\n");
-      return (-2);
+      return -2;
     }
     if ((y = cmifi("C-Kermit command file", "", &s, &x)) < 0) {
       if (y == -3) {
         printf("?A file specification is required\n");
-        return (-2);
+        return -2;
       } else
-        return (y);
+        return y;
     }
     if (x != 0) {
       printf("?Wildcards not allowed in command file name\n");
-      return (-2);
+      return -2;
     }
     strcpy(line, s); /* Make a safe copy of the string */
     if ((y = cmcfm()) < 0)
-      return (y);
+      return y;
     if ((tfile[++tlevel] = fopen(line, "r")) == NULL) {
       perror(line);
       debug(F110, "Failure to open", line, 0);
       tlevel--;
     }
-    return (0);
+    return 0;
 
   case XXTRA: /* transmit */
     if ((x = cmifi("File to transmit", "", &s, &y)) < 0) {
       if (x == -3) {
         printf("?Name of an existing file\n");
-        return (-2);
+        return -2;
       }
-      return (x);
+      return x;
     }
     if (y != 0) {
       printf("?Only a single file may be transmitted\n");
-      return (-2);
+      return -2;
     }
     strcpy(line, s); /* Save copy of string just parsed. */
     y = cmnum("Decimal ASCII value of line turnaround character", "10", 10, &x);
     debug(F101, "transmit parse turnaround", "", x);
     if (y < 0)
-      return (y);
+      return y;
     if (x < 0 || x > 127) {
       printf("?Decimal number between 0 and 127\n");
-      return (-2);
+      return -2;
     }
     if ((y = cmcfm()) < 0)
-      return (y); /* Confirm the command */
-                  /*
-                      if (!local) {
-                          printf("?Transmit requires prior SET LINE\n");
-                          return(-2);
-                      }
-                  */
+      return y; /* Confirm the command */
+                /*
+                    if (!local) {
+                        printf("?Transmit requires prior SET LINE\n");
+                        return(-2);
+                    }
+                 */
     debug(F110, "calling transmit", line, 0);
-    return (transmit(line, x)); /* Do the command */
+    return transmit(line, x); /* Do the command */
 
   default:
     printf("Not available - %s\n", cmdbuf);
-    return (-2);
+    return -2;
   }
 }
 
@@ -1525,10 +1517,11 @@ docmd(cx) int cx;
 
 doconect() {
   int x;
+
   conres();      /* Put console back to normal */
   x = conect();  /* Connect */
   concb(escape); /* Put console into cbreak mode, */
-  return (x);    /* for more command parsing. */
+  return x;      /* for more command parsing. */
 }
 
 /*  T R A N S M I T  --  Raw upload  */
@@ -1537,17 +1530,17 @@ doconect() {
 /*  Returns 0 upon apparent success, 1 on obvious failure.  */
 
 /***
- Things to add:
- . Make both text and binary mode obey set file bytesize.
- . Maybe allow user to specify terminators other than CR?
- . Maybe allow user to specify prompts other than single characters?
-***/
+   Things to add:
+   . Make both text and binary mode obey set file bytesize.
+   . Maybe allow user to specify terminators other than CR?
+   . Maybe allow user to specify prompts other than single characters?
+ ***/
 
 int tr_int; /* Flag if TRANSMIT interrupted */
 
 trtrap() { /* TRANSMIT interrupt trap */
   tr_int = 1;
-  return (0);
+  return 0;
 }
 
 transmit(s, t) char *s;
@@ -1568,17 +1561,17 @@ char t;
 
   if (zopeni(ZIFILE, s) == 0) { /* Open the file to be transmitted */
     printf("?Can't open %s\n", s);
-    return (1);
+    return 1;
   }
   x = -1;                               /* Open the communication line */
   if (ttopen(ttname, &x, mdmtyp) < 0) { /* (does no harm if already open) */
     printf("Can't open %s\n", ttname);
-    return (1);
+    return 1;
   }
   x = x ? speed : -1; /* Put the line in "packet mode" */
   if (ttpkt(x, flow, parity) < 0) {
     printf("Can't condition line\n");
-    return (1);
+    return 1;
   }
   i = 0; /* Beginning of buffer. */
 #ifndef OS2
@@ -1642,5 +1635,5 @@ char t;
 #endif /* OS2 */
   ttres();        /* Done, restore tty, */
   zclose(ZIFILE); /* close file, */
-  return (z);     /* and return successfully. */
+  return z;       /* and return successfully. */
 }

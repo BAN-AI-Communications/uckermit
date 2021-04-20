@@ -1,14 +1,14 @@
 /*  C K U U S 3 --  "User Interface" for Unix Kermit, part 3  */
 
 /*
- Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
- Columbia University Center for Computing Activities.
- First released January 1985.
- Copyright (C) 1985, 1989, Trustees of Columbia University in the City of New
- York.  Permission is granted to any individual or institution to use, copy, or
- redistribute this software so long as it is not sold for profit, provided this
- copyright notice is retained.
-*/
+   Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
+   Columbia University Center for Computing Activities.
+   First released January 1985.
+   Copyright (C) 1985, 1989, Trustees of Columbia University in the City of New
+   York.  Permission is granted to any individual or institution to use, copy,
+   or redistribute this software so long as it is not sold for profit, provided
+   this copyright notice is retained.
+ */
 
 /* SET and REMOTE commands; screen, debug, interrupt, and logging functions */
 
@@ -133,11 +133,11 @@ struct keytab srvtab[] = {"timeout", 0, 0};
 
 /*  D O P R M  --  Set a parameter.  */
 /*
- Returns:
-  -2: illegal input
-  -1: reparse needed
+   Returns:
+   -2: illegal input
+   -1: reparse needed
    0: success
-*/
+ */
 doprm(xx) int xx;
 {
   int x, y, z;
@@ -153,28 +153,28 @@ doprm(xx) int xx;
   case XYTIMO:
     printf("...Use 'set send' or 'set receive' instead.\n");
     printf("Type 'help set send' or 'help set receive' for more info.\n");
-    return (0);
+    return 0;
 
   case XYATTR: /* File Attribute packets */
-    return (seton(&atcapr));
+    return seton(&atcapr);
 
   case XYIFD: /* Incomplete file disposition */
     if ((y = cmkey(ifdtab, 2, "", "discard")) < 0)
-      return (y);
+      return y;
     if ((x = cmcfm()) < 0)
-      return (x);
+      return x;
     keep = y;
-    return (0);
+    return 0;
 
   case XYLINE:
     if ((x = cmtxt("Device name", dftty, &s)) < 0)
-      return (x);
+      return x;
     ttclos(); /* close old line, if any was open */
 
     x = strcmp(s, dftty) ? -1 : dfloc; /* Maybe let ttopen figure it out... */
     if (ttopen(s, &x, mdmtyp) < 0) {   /* Can we open the new line? */
       perror("Sorry, can't open line");
-      return (-2); /* If not, give bad return */
+      return -2; /* If not, give bad return */
     }
     if (x > -1)
       local = x;       /* Set local/remote status. */
@@ -182,114 +182,114 @@ doprm(xx) int xx;
     if (!local)
       speed = -1; /* If remote, say speed unknown. */
     debug(F111, "set line ", ttname, local);
-    return (0);
+    return 0;
 
   case XYCHKT:
     if ((y = cmkey(blktab, 3, "", "1")) < 0)
-      return (y);
+      return y;
     if ((x = cmcfm()) < 0)
-      return (x);
+      return x;
     bctr = y;
-    return (0);
+    return 0;
 
   case XYDEBU:
-    return (seton(&deblog));
+    return seton(&deblog);
 
   case XYDELA:
     y = cmnum("Number of seconds before starting to send", "5", 10, &x);
     debug(F101, "XYDELA: y", "", y);
-    return (setnum(&delay, x, y, 94));
+    return setnum(&delay, x, y, 94);
 
   case XYDUPL:
     if ((y = cmkey(dpxtab, 2, "", "full")) < 0)
-      return (y);
+      return y;
     if ((x = cmcfm()) < 0)
-      return (x);
+      return x;
     duplex = y;
-    return (0);
+    return 0;
 
   case XYESC:
     y = cmnum("Decimal ASCII code for escape character", "", 10, &x);
-    return (setcc(&escape, x, y));
+    return setcc(&escape, x, y);
 
   case XYFILE:
     if ((y = cmkey(filtab, nfilp, "File parameter", "")) < 0)
-      return (y);
+      return y;
     switch (y) {
-      /* int z; */ /* Use exterior version of z, */
-                   /* to avoid OS-9 C Compiler bug. */
-    case XYFILD:   /* Display */
+    /* int z; */ /* Use exterior version of z, */
+    /* to avoid OS-9 C Compiler bug. */
+    case XYFILD: /* Display */
       y = seton(&z);
       if (y < 0)
-        return (y);
+        return y;
       quiet = !z;
-      return (0);
+      return 0;
 
     case XYFILN: /* Names */
       if ((x = cmkey(fntab, 2, "how to handle filenames", "converted")) < 0)
-        return (x);
+        return x;
       if ((z = cmcfm()) < 0)
-        return (z);
+        return z;
       fncnv = x;
-      return (0);
+      return 0;
 
     case XYFILT: /* Type */
       if ((x = cmkey(fttab, 2, "type of file", "text")) < 0)
-        return (x);
+        return x;
       if ((y = cmnum("file byte size (7 or 8)", "8", 10, &z)) < 0)
-        return (y);
+        return y;
       if (z != 7 && z != 8) {
         printf("\n?The choices are 7 and 8\n");
-        return (-2);
+        return -2;
       }
       if ((y = cmcfm()) < 0)
-        return (y);
+        return y;
       binary = x;
       if (z == 7)
         fmask = 0177;
       else if (z == 8)
         fmask = 0377;
-      return (0);
+      return 0;
 
     case XYFILW: /* Warning/Write-Protect */
-      return (seton(&warn));
+      return seton(&warn);
 
     default:
       printf("?unexpected file parameter\n");
-      return (-2);
+      return -2;
     }
 
   case XYFLOW: /* Flow control */
     if ((y = cmkey(flotab, nflo, "", "xon/xoff")) < 0)
-      return (y);
+      return y;
     if ((x = cmcfm()) < 0)
-      return (x);
+      return x;
     flow = y;
-    return (0);
+    return 0;
 
   case XYHAND: /* Handshake */
     if ((y = cmkey(hshtab, nhsh, "", "none")) < 0)
-      return (y);
+      return y;
     if ((x = cmcfm()) < 0)
-      return (x);
+      return x;
     turn = (y > 0127) ? 0 : 1;
     turnch = y;
-    return (0);
+    return 0;
 
   case XYMODM:
     if ((x = cmkey(mdmtab, nmdm, "type of modem, direct means none",
                    "direct")) < 0)
-      return (x);
+      return x;
     if ((z = cmcfm()) < 0)
-      return (z);
+      return z;
     mdmtyp = x;
-    return (0);
+    return 0;
 
   case XYPARI: /* Parity */
     if ((y = cmkey(partab, npar, "", "none")) < 0)
-      return (y);
+      return y;
     if ((x = cmcfm()) < 0)
-      return (x);
+      return x;
 
     /* If parity not none, then we also want 8th-bit prefixing */
 
@@ -298,11 +298,11 @@ doprm(xx) int xx;
     else
       ebqflg = 0;
 
-    return (0);
+    return 0;
 
   case XYPROM:
     if ((x = cmtxt("Program's command prompt", "C-Kermit>", &s)) < 0)
-      return (x);
+      return x;
     if (*s == '\42') {       /* Quoted string? */
       x = strlen(s) - 1;     /* Yes, strip quotes. */
       if (*(s + x) == '\42') /* This allows leading or trailing */
@@ -310,53 +310,53 @@ doprm(xx) int xx;
       s++;
     }
     cmsetp(s);
-    return (0);
+    return 0;
 
   case XYRETR: /* Per-packet retry limit */
     y = cmnum("Maximum retries per packet", "10", 10, &x);
-    return (setnum(&maxtry, x, y, 94));
+    return setnum(&maxtry, x, y, 94);
 
   case XYSERV: /* Server timeout */
     if ((y = cmkey(srvtab, 1, "", "timeout")) < 0)
-      return (y);
+      return y;
     switch (y) {
       char tmp[20];
     case XYSERT:
       sprintf(tmp, "%d", DSRVTIM);
       if ((y = cmnum("interval for server NAKs, 0 = none", tmp, 10, &x)) < 0)
-        return (y);
+        return y;
       if (x < 0) {
         printf("\n?Specify a positive number, or 0 for no server NAKs\n");
-        return (-2);
+        return -2;
       }
       if ((y = cmcfm()) < 0)
-        return (y);
+        return y;
       srvtim = x; /* Set the server timeout variable */
-      return (y);
+      return y;
     default:
-      return (-2);
+      return -2;
     }
 
   case XYTERM: /* Terminal parameters */
     if ((y = cmkey(trmtab, 1, "", "bytesize")) < 0)
-      return (y);
+      return y;
     switch (y) {
     case 0:
       if ((y = cmnum("bytesize for terminal connection", "8", 10, &x)) < 0)
-        return (y);
+        return y;
       if (x != 7 && x != 8) {
         printf("\n?The choices are 7 and 8\n");
-        return (-2);
+        return -2;
       }
       if ((y = cmcfm()) < 0)
-        return (y);
+        return y;
       if (x == 7)
         cmask = 0177;
       else if (x == 8)
         cmask = 0377;
-      return (y);
+      return y;
     default: /* Add more cases when we think of more parameters */
-      return (-2);
+      return -2;
     }
 
     /* SET SEND/RECEIVE... */
@@ -369,90 +369,90 @@ doprm(xx) int xx;
       strcpy(line, "Parameter for outbound packets");
 
     if ((y = cmkey(srtab, nsrtab, line, "")) < 0)
-      return (y);
+      return y;
     switch (y) {
 
     case XYEOL:
       y = cmnum("Decimal ASCII code for packet terminator", "13", 10, &x);
       if ((y = setcc(&z, x, y)) < 0)
-        return (y);
+        return y;
       if (xx == XYRECV)
         eol = z;
       else
         seol = z;
-      return (y);
+      return y;
 
     case XYLEN:
       y = cmnum("Maximum number of characters in a packet", "90", 10, &x);
       if (xx == XYRECV) { /* Receive... */
         if ((y = setnum(&z, x, y, MAXRP)) < 0)
-          return (y);
+          return y;
         urpsiz = z;
         rpsiz = (z > 94) ? 94 : z;
       } else { /* Send... */
         if ((y = setnum(&z, x, y, MAXSP)) < 0)
-          return (y);
+          return y;
         spsiz = z;  /*   Set it and flag that it was set */
         spsizf = 1; /*   to allow overriding Send-Init. */
       }
       if (z > 94 && !backgrd)
         printf("Extended-length packets requested\n");
-      return (y);
+      return y;
 
     case XYMARK:
       y = cmnum("Decimal ASCII code for packet-start character", "1", 10, &x);
       if ((y = setcc(&z, x, y)) < 0)
-        return (y);
+        return y;
       if (xx == XYRECV)
         stchr = z;
       else
         mystch = z;
-      return (y);
+      return y;
 
     case XYNPAD: /* Padding */
       y = cmnum("How many padding characters for inbound packets", "0", 10, &x);
       if ((y = setnum(&z, x, y, 94)) < 0)
-        return (y);
+        return y;
       if (xx == XYRECV)
         mypadn = z;
       else
         npad = z;
-      return (y);
+      return y;
 
     case XYPADC: /* Pad character */
       y = cmnum("Decimal ASCII code for inbound pad character", "0", 10, &x);
       if ((y = setcc(&z, x, y)) < 0)
-        return (y);
+        return y;
       if (xx == XYRECV)
         mypadc = z;
       else
         padch = z;
-      return (y);
+      return y;
 
     case XYTIMO:
       y = cmnum("Interpacket timeout interval", "5", 10, &x);
       if ((y = setnum(&z, x, y, 94)) < 0)
-        return (y);
+        return y;
       if (xx == XYRECV) {
         timef = 1;
         timint = z;
       } else
         rtimo = z;
-      return (y);
+      return y;
     }
 
   case XYSPEE:
     if (!local) {
       printf("\nSpeed setting can only be done on an external line\n");
       printf("You must 'set line' before issuing this command\n");
-      return (0);
+      return 0;
     }
     lp = line;
     sprintf(lp, "Baud rate for %s", ttname);
     if ((y = cmnum(line, "", 10, &x)) < 0)
-      return (y);
+      return y;
     if ((y = cmcfm()) < 0)
-      return (y);
+      return y;
     y = chkspd(x);
     if (y < 0)
       printf("?Unsupported line speed - %d\n", x);
@@ -461,13 +461,13 @@ doprm(xx) int xx;
       if (!backgrd)
         printf("%s, %d baud\n", ttname, speed);
     }
-    return (0);
+    return 0;
 
   default:
     if ((x = cmcfm()) < 0)
-      return (x);
+      return x;
     printf("Not working yet - %s\n", cmdbuf);
-    return (0);
+    return 0;
   }
 }
 
@@ -515,21 +515,21 @@ chkspd(x) int x;
   case 19200:
   case 38400:
 #endif
-    return (x);
+    return x;
   default:
 #ifdef AMIGA
     if (ttsspd(x) > 0) {
       printf("Warning: non-standard baud rate - %d\n", x);
-      return (x);
+      return x;
     }
 #endif
 #ifdef VMS
     if (ttsspd(x) > 0) {
       printf("Warning: non-standard baud rate - %d\n", x);
-      return (x);
+      return x;
     }
 #endif
-    return (-1);
+    return -1;
   }
 }
 
@@ -539,30 +539,30 @@ seton(prm) int *prm;
 {
   int x, y;
   if ((y = cmkey(onoff, 2, "", "on")) < 0)
-    return (y);
+    return y;
   if ((x = cmcfm()) < 0)
-    return (x);
+    return x;
   *prm = y;
-  return (0);
+  return 0;
 }
 
 /*  S E T N U M  --  Set parameter to result of cmnum() parse.  */
 /*
- Call with x - number from cnum parse, y - return code from cmnum
-*/
+   Call with x - number from cnum parse, y - return code from cmnum
+ */
 setnum(prm, x, y, max) int x, y, *prm, max;
 {
   debug(F101, "setnum", "", y);
   if (y < 0)
-    return (y);
+    return y;
   if (x > max) {
     printf("\n?Sorry, %d is the maximum\n", max);
-    return (-2);
+    return -2;
   }
   if ((y = cmcfm()) < 0)
-    return (y);
+    return y;
   *prm = x;
-  return (0);
+  return 0;
 }
 
 /*  S E T C C  --  Set parameter to an ASCII control character value.  */
@@ -570,15 +570,15 @@ setnum(prm, x, y, max) int x, y, *prm, max;
 setcc(prm, x, y) int x, y, *prm;
 {
   if (y < 0)
-    return (y);
+    return y;
   if ((x > 037) && (x != 0177)) {
     printf("\n?Not in ASCII control range - %d\n", x);
-    return (-2);
+    return -2;
   }
   if ((y = cmcfm()) < 0)
-    return (y);
+    return y;
   *prm = x;
-  return (0);
+  return 0;
 }
 
 /*  D O R M T  --  Do a remote command  */
@@ -589,12 +589,12 @@ dormt(xx) int xx;
   char *s, sbuf[50], *s2;
 
   if (xx < 0)
-    return (xx);
+    return xx;
   switch (xx) {
 
   case XZCWD: /* CWD */
     if ((x = cmtxt("Remote directory name", "", &s)) < 0)
-      return (x);
+      return x;
     debug(F111, "XZCWD: ", s, x);
     *sbuf = NUL;
     s2 = sbuf;
@@ -640,54 +640,54 @@ dormt(xx) int xx;
       s2 = "";
     debug(F110, " password", s2, 0);
     sstate = setgen('C', s, s2, "");
-    return (0);
+    return 0;
 
   case XZDEL: /* Delete */
     if ((x = cmtxt("Name of remote file(s) to delete", "", &s)) < 0)
-      return (x);
-    return (sstate = rfilop(s, 'E'));
+      return x;
+    return sstate = rfilop(s, 'E');
 
   case XZDIR: /* Directory */
     if ((x = cmtxt("Remote directory or file specification", "", &s)) < 0)
-      return (x);
-    return (sstate = setgen('D', s, "", ""));
+      return x;
+    return sstate = setgen('D', s, "", "");
 
   case XZHLP: /* Help */
     if ((x = cmcfm()) < 0)
-      return (x);
+      return x;
     sstate = setgen('H', "", "", "");
-    return (0);
+    return 0;
 
   case XZHOS: /* Host */
     if ((x = cmtxt("Command for remote system", "", &cmarg)) < 0)
-      return (x);
-    return (sstate = 'c');
+      return x;
+    return sstate = 'c';
 
   case XZPRI: /* Print */
     if ((x = cmtxt("Remote file(s) to print on remote printer", "", &s)) < 0)
-      return (x);
-    return (sstate = rfilop(s, 'S'));
+      return x;
+    return sstate = rfilop(s, 'S');
 
   case XZSPA: /* Space */
     if ((x = cmtxt("Confirm, or remote directory name", "", &s)) < 0)
-      return (x);
-    return (sstate = setgen('U', s, "", ""));
+      return x;
+    return sstate = setgen('U', s, "", "");
 
   case XZTYP: /* Type */
     if ((x = cmtxt("Remote file specification", "", &s)) < 0)
-      return (x);
-    return (sstate = rfilop(s, 'T'));
+      return x;
+    return sstate = rfilop(s, 'T');
 
   case XZWHO:
     if ((x = cmtxt("Remote user name, or carriage return", "", &s)) < 0)
-      return (x);
-    return (sstate = setgen('W', s, "", ""));
+      return x;
+    return sstate = setgen('W', s, "", "");
 
   default:
     if ((x = cmcfm()) < 0)
-      return (x);
+      return x;
     printf("Not working yet - %s\n", cmdbuf);
-    return (-2);
+    return -2;
   }
 }
 
@@ -697,10 +697,10 @@ rfilop(s, t) char *s, t;
 {
   if (*s == NUL) {
     printf("?File specification required\n");
-    return (-2);
+    return -2;
   }
   debug(F111, "rfilop", s, t);
-  return (setgen(t, s, "", ""));
+  return setgen(t, s, "", "");
 }
 
 /*  S C R E E N  --  Screen display function  */
@@ -710,9 +710,9 @@ rfilop(s, t) char *s, t;
       c - a character or small integer
       n - a long integer
       s - a string.
- Fill in this routine with the appropriate display update for the system.
- This version is for a dumb tty.
-*/
+   Fill in this routine with the appropriate display update for the system.
+   This version is for a dumb tty.
+ */
 screen(f, c, n, s) int f;
 long n;
 char c;
@@ -926,7 +926,7 @@ chkint() {
   int ch, cn;
 
   if ((!local) || (quiet))
-    return (0); /* Only do this if local & not quiet */
+    return 0; /* Only do this if local & not quiet */
 #ifdef datageneral
   cn = (con_reads_mt) ? 1 : conchk(); /* Any input waiting? */
 #else
@@ -945,18 +945,16 @@ chkint() {
      */
     if (con_reads_mt) {
       if ((ch = conint_ch) <= 0)
-        return (0); /* I/O error, or no data */
+        return 0; /* I/O error, or no data */
       else if (conint_avl == 0)
-        return (0); /* Char already read */
+        return 0; /* Char already read */
       else
         conint_avl = 0; /* Flag character as read */
-    } else {
-      if ((ch = coninc(5)) < 0)
-        return (0);
-    }
+    } else if ((ch = coninc(5)) < 0)
+      return 0;
 #else
     if ((ch = coninc(5)) < 0)
-      return (0);
+      return 0;
 #endif
     switch (ch & 0177) {
     case 0001: /* CTRL-A */
@@ -983,19 +981,19 @@ chkint() {
     case 0022: /* CTRL-R */
       screen(SCR_TN, 0, 0l, "^R - Resending ");
       resend();
-      return (1);
+      return 1;
     default: /* Anything else, just ignore */
       screen(SCR_TU, 0, 0l, " [Ignored] ");
       continue;
     }
   }
-  return (0);
+  return 0;
 }
 
 /*  D E B U G  --  Enter a record in the debugging log  */
 
 /*
- Call with a format, two strings, and a number:
+   Call with a format, two strings, and a number:
    f  - Format, a bit string in range 0-7.
         If bit x is on, then argument number x is printed.
    s1 - String, argument number 1.  If selected, printed as is.
@@ -1003,7 +1001,7 @@ chkint() {
    n  - Int, argument 3.  If selected, printed preceded by equals sign.
 
    f=0 is special: print s1,s2, and interpret n as a char.
-*/
+ */
 #ifdef DEBUG
 #define DBUFL 1200
 debug(f, s1, s2, n) int f, n;
@@ -1075,11 +1073,11 @@ char *s1, *s2;
 #define TBUFL 300
 /*  T L O G  --  Log a record in the transaction file  */
 /*
- Call with a format and 3 arguments: two strings and a number:
+   Call with a format and 3 arguments: two strings and a number:
    f  - Format, a bit string in range 0-7, bit x is on, arg #x is printed.
    s1,s2 - String arguments 1 and 2.
    n  - Int, argument 3.
-*/
+ */
 tlog(f, s1, s2, n) int f;
 long n;
 char *s1, *s2;

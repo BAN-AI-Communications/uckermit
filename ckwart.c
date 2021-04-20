@@ -3,13 +3,13 @@ char *wartv = "Wart Version 1A(203) 20 Apr 2021";
 /* W A R T */
 
 /*
- pre-process a lex-like file into a C program.
+   pre-process a lex-like file into a C program.
 
- Author:Jeff Damens, Columbia University Center for Computing Activites, 11/84.
- Copyright (C) 1985, Trustees of Columbia University in the City of New York.
- Permission is granted to any individual or institution to use, copy, or
- redistribute this software so long as it is not sold for profit, provided this
- copyright notice is retained.
+   Author:Jeff Damens, Columbia University Center for Computing Activites,
+ 11/84. Copyright (C) 1985, Trustees of Columbia University in the City of New
+ York. Permission is granted to any individual or institution to use, copy, or
+   redistribute this software so long as it is not sold for profit, provided
+ this copyright notice is retained.
 
  * input format is:
  *  lines to be copied | %state <state names...>
@@ -28,11 +28,11 @@ char *wartv = "Wart Version 1A(203) 20 Apr 2021";
 #include <ctype.h>
 
 /*
- The following "CHAR" should be changed to "short", "int", or "long" if your
- wart program will generate more than 127 states.  Since wart is used mainly
- with C-Kermit, which has less than 50 states, "short" is adequate.  This
- keeps the program about 3K-4K smaller.
-*/
+   The following "CHAR" should be changed to "short", "int", or "long" if your
+   wart program will generate more than 127 states.  Since wart is used mainly
+   with C-Kermit, which has less than 50 states, "short" is adequate.  This
+   keeps the program about 3K-4K smaller.
+ */
 
 #define TBL_TYPE "CHAR" /* C data type of state table */
 
@@ -129,7 +129,7 @@ Trans t;
   int idx, msk;
   idx = state / 8;
   msk = 0x80 >> (state % 8);
-  return (t->states[idx] & msk);
+  return t->states[idx] & msk;
 }
 
 /*
@@ -156,7 +156,7 @@ Trans rdinput(infp, outfp) FILE *infp, *outfp;
   prolog(outfp);            /* write out our initial code */
   x = rdrules(infp, outfp); /* read rules */
   epilogue(outfp);          /* write out epilogue code */
-  return (x);
+  return x;
 }
 
 /*
@@ -195,13 +195,13 @@ int c;
 {
   for (; *s != '\0'; s++)
     if (*s == c)
-      return (1);
-  return (0);
+      return 1;
+  return 0;
 }
 isword(c) int c;
 {
   static char special[] = ".%_-$@"; /* these are allowable */
-  return (isalnum(c) || isin(special, c));
+  return isalnum(c) || isin(special, c);
 }
 
 /*
@@ -246,12 +246,13 @@ rdstates(fp, ofp) FILE *fp, *ofp;
 Trans newtrans() {
   Trans new;
   int i;
+
   new = (Trans)malloc(sizeof(struct trans));
   for (i = 0; i < SBYTES; i++)
     new->states[i] = 0;
   new->anyst = 0;
   new->nxt = NULL;
-  return (new);
+  return new;
 }
 
 /*
@@ -296,7 +297,7 @@ Trans rdrules(fp, out) FILE *fp, *out;
       fatal("bad input format");
     }
 
-  return (head);
+  return head;
 }
 
 /*
@@ -370,10 +371,10 @@ int state, chr;
   while (hd != NULL) {
     if (hd->anyst || teststate(state, hd))
       if (hd->inchr == '.' || hd->inchr == chr)
-        return (hd->actno);
+        return hd->actno;
     hd = hd->nxt;
   }
-  return (-1);
+  return -1;
 }
 
 /*
@@ -382,6 +383,7 @@ int state, chr;
  */
 emptytbl() {
   int i;
+
   for (i = 0; i < nstates * 128; i++)
     tbl[i] = -1;
 }
@@ -515,20 +517,20 @@ gettoken(fp) FILE *fp;
     } while ((isspace(c) || c == C_L)); /* skip whitespace */
     switch (c) {
     case EOF:
-      return (SEP);
+      return SEP;
     case '%':
       if ((c = getc(fp)) == '%')
-        return (SEP);
+        return SEP;
       tokval[0] = '%';
       tokval[1] = c;
       rdword(fp, tokval + 2);
-      return (WORD);
+      return WORD;
     case '<':
-      return (LBRACK);
+      return LBRACK;
     case '>':
-      return (RBRACK);
+      return RBRACK;
     case ',':
-      return (COMMA);
+      return COMMA;
     case '/':
       if ((c = getc(fp)) == '*') {
         rdcmnt(fp); /* skip over the comment */
@@ -543,7 +545,7 @@ gettoken(fp) FILE *fp;
       if (isword(c)) {
         ungetc(c, fp);
         rdword(fp, tokval);
-        return (WORD);
+        return WORD;
       } else
         fatal("Invalid character in input");
     }
@@ -594,6 +596,7 @@ struct sym {
  */
 clrhash() {
   int i;
+
   for (i = 0; i < HASHSIZE; i++)
     htab[i] = NULL;
 }
@@ -610,7 +613,7 @@ hash(name) char *name;
   sum %= HASHSIZE; /* take sum mod hashsize */
   if (sum < 0)
     sum += HASHSIZE; /* disallow negative hash value */
-  return (sum);
+  return sum;
 }
 
 /*
@@ -622,7 +625,7 @@ char *copy(s) char *s;
   char *new;
   new = (char *)malloc(strlen(s) + 1);
   strcpy(new, s);
-  return (new);
+  return new;
 }
 
 /*
@@ -656,6 +659,6 @@ lkup(name) char *name;
   struct sym *cur;
   for (cur = htab[hash(name)]; cur != NULL; cur = cur->hnxt)
     if (strcmp(cur->name, name) == 0)
-      return (cur->val);
-  return (-1);
+      return cur->val;
+  return -1;
 }

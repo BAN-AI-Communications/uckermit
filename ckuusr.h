@@ -1,14 +1,14 @@
 /*  C K U U S R . H  --  Symbol definitions for C-Kermit ckuus*.c modules  */
 
 /*
- Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
- Columbia University Center for Computing Activities.
- First released January 1985.
- Copyright (C) 1985, 1989, Trustees of Columbia University in the City of New
- York.  Permission is granted to any individual or institution to use, copy, or
- redistribute this software so long as it is not sold for profit, provided this
- copyright notice is retained.
-*/
+   Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
+   Columbia University Center for Computing Activities.
+   First released January 1985.
+   Copyright (C) 1985, 1989, Trustees of Columbia University in the City of New
+   York.  Permission is granted to any individual or institution to use, copy,
+   or redistribute this software so long as it is not sold for profit, provided
+   this copyright notice is retained.
+ */
 
 /* Name of C-Kermit program initialization file. */
 #ifdef vms
