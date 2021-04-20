@@ -1,4 +1,4 @@
-char *ckzv = "Unix file support, 4G(040) 19 Apr 21";
+char *ckzv = "Unix file support, 4G(041) 19 Apr 21";
 
 /* C K U F I O  --  Kermit file system support for Unix systems */
 
@@ -998,7 +998,7 @@ zfcdat(name) char *name; {
     }
     time_stamp = localtime(&(buffer.st_mtime));
     if (time_stamp->tm_year < 1900) time_stamp->tm_year += 1900;
-    sprintf(datbuf,"%-4.4d%02.2d%02.2d %002.2d:%002.2d:%002.2d",
+    sprintf(datbuf,"%-4.4d%2.2d%2.2d %2.2d:%2.2d:%2.2d",
 	    time_stamp->tm_year,
 	    time_stamp->tm_mon + 1,
 	    time_stamp->tm_mday,

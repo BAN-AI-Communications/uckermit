@@ -1,4 +1,4 @@
-char *ckxv = "Unix tty I/O, 4G(057), 19 Apr 21";
+char *ckxv = "Unix tty I/O, 4G(058), 19 Apr 21";
 
 /*  C K U T I O  */
 
@@ -2284,11 +2284,12 @@ conbin(esc) char esc; {
  *** override the current settings and stop doing parity, then their terminals
  *** will display blotches for characters whose parity is wrong.  Therefore,
  *** the following two lines are commented out (Larry Afrin, Clemson U):
- ***
- ***   ccraw.c_cflag &= ~(PARENB|CSIZE);
- ***   ccraw.c_cflag |= (CS8|CREAD);
- ***
- *** Sys III/V sites that have trouble with this can restore these lines.
+ ***/
+#ifdef __linux__
+       ccraw.c_cflag &= ~(PARENB|CSIZE);
+       ccraw.c_cflag |= (CS8|CREAD);
+#endif
+/*** Sys III/V sites that have trouble with this can restore these lines.
  ***/
     ccraw.c_cc[0] = 003;		/* Interrupt char is Ctrl-C */
     ccraw.c_cc[1] = escchr;		/* Escape during packet mode */

@@ -483,6 +483,14 @@ chkspd(x) int x; {
 	case 38400:
 	case 57600:
 #endif
+#ifdef __linux__
+	case 38400:
+	case 57600:
+	case 115200:
+	case 230400:
+	case 460800:
+	case 921600:
+#endif
 #endif
 
 #ifdef datageneral

@@ -1,4 +1,4 @@
-char *cmdv = "Unix cmd package V2(026), 19 Apr 21";
+char *cmdv = "Unix cmd package V2(028), 19 Apr 21";
  
 /*  C K U C M D  --  Interactive command package for Unix  */
 
@@ -354,6 +354,8 @@ cmifi(xhlp,xdef,xp,wild) char *xhlp, *xdef, **xp; int *wild; {
  
  
             case 2:                     /* ESC */
+				if (cc <= 2)
+					break;
                 if (xc == 0) {
                     if (*xdef != '\0') {
                         printf("%s ",xdef); /* If at beginning of field, */
