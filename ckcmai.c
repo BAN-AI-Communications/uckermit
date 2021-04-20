@@ -1,4 +1,4 @@
-char *versio = "C-Kermit, 4G(103) 20 Apr 2021";
+char *versio = "C-Kermit, 4G(104) 20 Apr 2021";
 
 /*  C K C M A I  --  C-Kermit Main program  */
 
@@ -6,10 +6,10 @@ char *versio = "C-Kermit, 4G(103) 20 Apr 2021";
  Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
  Columbia University Center for Computing Activities.
  First released January 1985.
- Copyright (C) 1985, 1989, Trustees of Columbia University in the City of New 
+ Copyright (C) 1985, 1989, Trustees of Columbia University in the City of New
  York.  Permission is granted to any individual or institution to use, copy, or
  redistribute this software so long as it is not sold for profit, provided this
- copyright notice is retained. 
+ copyright notice is retained.
 */
 /*
  The Kermit file transfer protocol was developed at the Columbia University
@@ -102,8 +102,8 @@ char *versio = "C-Kermit, 4G(103) 20 Apr 2021";
    John Zeeff, Ann Arbor, MI
 */
 
-#include "ckcker.h"                     /* Kermit symbols */
-#include "ckcdeb.h"                     /* Debug & other symbols */
+#include "ckcdeb.h" /* Debug & other symbols */
+#include "ckcker.h" /* Kermit symbols */
 
 /* Text message definitions.. each should be 256 chars long, or less. */
 #ifdef MAC
@@ -163,161 +163,161 @@ FINISH or BYE command and then reconnect.\n\
 
 /* Declarations for Send-Init Parameters */
 
-int spsiz = DSPSIZ,                     /* curent packet size to send */
-    spmax = DSPSIZ,             /* (PWP) Biggest packet size we can send */
-                                /* (see rcalcpsz()) */
-    spsizf = 0,                         /* Flag to override what you ask for */
-    rpsiz = DRPSIZ,                     /* Biggest we want to receive */
-    urpsiz = DRPSIZ,                    /* User-requested rpsiz */
-    maxrps = MAXRP,                     /* Maximum incoming long packet size */
-    maxsps = MAXSP,                     /* Maximum outbound l.p. size */
-    maxtry = MAXTRY,                    /* Maximum retries per packet */
-    wslots = 1,                         /* Window size */
-    timint = DMYTIM,                    /* Timeout interval I use */
-    srvtim = DSRVTIM,                   /* Server command wait timeout */
-    rtimo = URTIME,                     /* Timeout I want you to use */
-    timef = 0,                          /* Flag to override what you ask */
-    npad = MYPADN,                      /* How much padding to send */
-    mypadn = MYPADN,                    /* How much padding to ask for */
-    bctr = 1,                           /* Block check type requested */
-    bctu = 1,                           /* Block check type used */
-    ebq =  MYEBQ,                       /* 8th bit prefix */
-    ebqflg = 0,                         /* 8th-bit quoting flag */
-    rqf = -1,                           /* Flag used in 8bq negotiation */
-    rq = 0,                             /* Received 8bq bid */
-    sq = 'Y',                           /* Sent 8bq bid */
-    rpt = 0,                            /* Repeat count */
-    rptq = MYRPTQ,                      /* Repeat prefix */
-    rptflg = 0;                         /* Repeat processing flag */
+int spsiz = DSPSIZ,   /* curent packet size to send */
+    spmax = DSPSIZ,   /* (PWP) Biggest packet size we can send */
+                      /* (see rcalcpsz()) */
+    spsizf = 0,       /* Flag to override what you ask for */
+    rpsiz = DRPSIZ,   /* Biggest we want to receive */
+    urpsiz = DRPSIZ,  /* User-requested rpsiz */
+    maxrps = MAXRP,   /* Maximum incoming long packet size */
+    maxsps = MAXSP,   /* Maximum outbound l.p. size */
+    maxtry = MAXTRY,  /* Maximum retries per packet */
+    wslots = 1,       /* Window size */
+    timint = DMYTIM,  /* Timeout interval I use */
+    srvtim = DSRVTIM, /* Server command wait timeout */
+    rtimo = URTIME,   /* Timeout I want you to use */
+    timef = 0,        /* Flag to override what you ask */
+    npad = MYPADN,    /* How much padding to send */
+    mypadn = MYPADN,  /* How much padding to ask for */
+    bctr = 1,         /* Block check type requested */
+    bctu = 1,         /* Block check type used */
+    ebq = MYEBQ,      /* 8th bit prefix */
+    ebqflg = 0,       /* 8th-bit quoting flag */
+    rqf = -1,         /* Flag used in 8bq negotiation */
+    rq = 0,           /* Received 8bq bid */
+    sq = 'Y',         /* Sent 8bq bid */
+    rpt = 0,          /* Repeat count */
+    rptq = MYRPTQ,    /* Repeat prefix */
+    rptflg = 0;       /* Repeat processing flag */
 
-int capas = 10,                         /* Position of Capabilities */
-    atcapb = 8,                         /* Attribute capability */
-    atcapr = 1,                         /*  requested */
-    atcapu = 0,                         /*  used */
-    swcapb = 4,                         /* Sliding Window capability */
-    swcapr = 0,                         /*  requested */
-    swcapu = 0,                         /*  used */
-    lpcapb = 2,                         /* Long Packet capability */
-    lpcapr = 1,                         /*  requested */
-    lpcapu = 0;                         /*  used */
+int capas = 10, /* Position of Capabilities */
+    atcapb = 8, /* Attribute capability */
+    atcapr = 1, /*  requested */
+    atcapu = 0, /*  used */
+    swcapb = 4, /* Sliding Window capability */
+    swcapr = 0, /*  requested */
+    swcapu = 0, /*  used */
+    lpcapb = 2, /* Long Packet capability */
+    lpcapr = 1, /*  requested */
+    lpcapu = 0; /*  used */
 
-CHAR padch = MYPADC,                    /* Padding character to send */
-    mypadc = MYPADC,                    /* Padding character to ask for */
-    seol = MYEOL,                       /* End-Of-Line character to send */
-    eol = MYEOL,                        /* End-Of-Line character to look for */
-    ctlq = CTLQ,                        /* Control prefix in incoming data */
-    myctlq = CTLQ;                      /* Outbound control character prefix */
+CHAR padch = MYPADC, /* Padding character to send */
+    mypadc = MYPADC, /* Padding character to ask for */
+    seol = MYEOL,    /* End-Of-Line character to send */
+    eol = MYEOL,     /* End-Of-Line character to look for */
+    ctlq = CTLQ,     /* Control prefix in incoming data */
+    myctlq = CTLQ;   /* Outbound control character prefix */
 
-struct zattr iattr;                     /* Incoming file attributes */
+struct zattr iattr; /* Incoming file attributes */
 
 /* Packet-related variables */
 
-int pktnum = 0,                         /* Current packet number */
-    prvpkt = -1,                        /* Previous packet number */
-    sndtyp,                             /* Type of packet just sent */
-    rsn,                                /* Received packet sequence number */
-    rln,                                /* Received packet length */
-    size,                               /* Current size of output pkt data */
-    osize,                              /* Previous output packet data size */
-    maxsize,                            /* Max size for building data field */
-    spktl = 0;                          /* Length packet being sent */
+int pktnum = 0,  /* Current packet number */
+    prvpkt = -1, /* Previous packet number */
+    sndtyp,      /* Type of packet just sent */
+    rsn,         /* Received packet sequence number */
+    rln,         /* Received packet length */
+    size,        /* Current size of output pkt data */
+    osize,       /* Previous output packet data size */
+    maxsize,     /* Max size for building data field */
+    spktl = 0;   /* Length packet being sent */
 
-CHAR sndpkt[MAXSP+100],                 /* Entire packet being sent */
-    recpkt[MAXRP+200],                  /* Packet most recently received */
-    *rdatap,                            /* Pointer to received packet data */
-    data[MAXSP+4],                      /* Packet data buffer */
-    srvcmd[MAXRP+4],                    /* Where to decode server command */
-    *srvptr,                            /* Pointer to above */
-    mystch = SOH,                       /* Outbound packet-start character */
-    stchr = SOH;                        /* Incoming packet-start character */
+CHAR sndpkt[MAXSP + 100], /* Entire packet being sent */
+    recpkt[MAXRP + 200],  /* Packet most recently received */
+    *rdatap,              /* Pointer to received packet data */
+    data[MAXSP + 4],      /* Packet data buffer */
+    srvcmd[MAXRP + 4],    /* Where to decode server command */
+    *srvptr,              /* Pointer to above */
+    mystch = SOH,         /* Outbound packet-start character */
+    stchr = SOH;          /* Incoming packet-start character */
 
 /* File-related variables */
 
 #ifdef datageneral
-CHAR filnam[256];                       /* Name of current file. */
+CHAR filnam[256]; /* Name of current file. */
 #else
-CHAR filnam[50];                        /* Name of current file. */
+CHAR filnam[50]; /* Name of current file. */
 #endif
 
-int nfils;                              /* Number of files in file group */
-long fsize;                             /* Size of current file */
+int nfils;  /* Number of files in file group */
+long fsize; /* Size of current file */
 
 /* Communication line variables */
 
-CHAR ttname[50];                        /* Name of communication line. */
+CHAR ttname[50]; /* Name of communication line. */
 
-int parity,                             /* Parity specified, 0,'e','o',etc */
-    flow,                               /* Flow control, 1 = xon/xoff */
-    speed = -1,                         /* Line speed */
-    turn = 0,                           /* Line turnaround handshake flag */
-    turnch = XON,                       /* Line turnaround character */
-    duplex = 0,                         /* Duplex, full by default */
+int parity,       /* Parity specified, 0,'e','o',etc */
+    flow,         /* Flow control, 1 = xon/xoff */
+    speed = -1,   /* Line speed */
+    turn = 0,     /* Line turnaround handshake flag */
+    turnch = XON, /* Line turnaround character */
+    duplex = 0,   /* Duplex, full by default */
 #ifdef OS2
-    escape = 035,                       /* Escape character for connect */
+    escape = 035, /* Escape character for connect */
 #else
-    escape = 034,                       /* Escape character for connect */
+    escape = 034, /* Escape character for connect */
 #endif
-    delay = DDELAY,                     /* Initial delay before sending */
-    mdmtyp = 0;                         /* Modem type (initially none)  */
+    delay = DDELAY, /* Initial delay before sending */
+    mdmtyp = 0;     /* Modem type (initially none)  */
 
-    int tlevel = -1;                    /* Take-file command level */
+int tlevel = -1; /* Take-file command level */
 
 /* Statistics variables */
 
-long filcnt,                    /* Number of files in transaction */
-    flci,                       /* Characters from line, current file */
-    flco,                       /* Chars to line, current file  */
-    tlci,                       /* Chars from line in transaction */
-    tlco,                       /* Chars to line in transaction */
-    ffc,                        /* Chars to/from current file */
-    tfc;                        /* Chars to/from files in transaction */
+long filcnt, /* Number of files in transaction */
+    flci,    /* Characters from line, current file */
+    flco,    /* Chars to line, current file  */
+    tlci,    /* Chars from line in transaction */
+    tlco,    /* Chars to line in transaction */
+    ffc,     /* Chars to/from current file */
+    tfc;     /* Chars to/from files in transaction */
 
-int tsecs;                      /* Seconds for transaction */
+int tsecs; /* Seconds for transaction */
 
 /* Flags */
 
-int deblog = 0,                         /* Flag for debug logging */
-    pktlog = 0,                         /* Flag for packet logging */
-    seslog = 0,                         /* Session logging */
-    tralog = 0,                         /* Transaction logging */
-    displa = 0,                         /* File transfer display on/off */
-    stdouf = 0,                         /* Flag for output to stdout */
-    xflg   = 0,                         /* Flag for X instead of F packet */
-    hcflg  = 0,                         /* Doing Host command */
-    fncnv  = 1,                         /* Flag for file name conversion */
-    binary = 0,                         /* Flag for binary file */
-    savmod = 0,                         /* Saved file mode (whole session) */
-    bsave  = 0,                         /* Saved file mode (per file) */
-    bsavef = 0,                         /* Flag if bsave was used. */
-    cmask  = 0177,                      /* Connect byte mask */
-    fmask  = 0377,                      /* File byte mask */
-    warn   = 0,                         /* Flag for file warning */
-    quiet  = 0,                         /* Be quiet during file transfer */
-    local  = 0,                         /* Flag for external tty vs stdout */
-    server = 0,                         /* Flag for being a server */
-    cnflg  = 0,                         /* Connect after transaction */
-    cxseen = 0,                         /* Flag for cancelling a file */
-    czseen = 0,                         /* Flag for cancelling file group */
-    keep = 0,                           /* Keep incomplete files */
-    nakstate = 0;                       /* In a state where we can send NAKs */
+int deblog = 0,   /* Flag for debug logging */
+    pktlog = 0,   /* Flag for packet logging */
+    seslog = 0,   /* Session logging */
+    tralog = 0,   /* Transaction logging */
+    displa = 0,   /* File transfer display on/off */
+    stdouf = 0,   /* Flag for output to stdout */
+    xflg = 0,     /* Flag for X instead of F packet */
+    hcflg = 0,    /* Doing Host command */
+    fncnv = 1,    /* Flag for file name conversion */
+    binary = 0,   /* Flag for binary file */
+    savmod = 0,   /* Saved file mode (whole session) */
+    bsave = 0,    /* Saved file mode (per file) */
+    bsavef = 0,   /* Flag if bsave was used. */
+    cmask = 0177, /* Connect byte mask */
+    fmask = 0377, /* File byte mask */
+    warn = 0,     /* Flag for file warning */
+    quiet = 0,    /* Be quiet during file transfer */
+    local = 0,    /* Flag for external tty vs stdout */
+    server = 0,   /* Flag for being a server */
+    cnflg = 0,    /* Connect after transaction */
+    cxseen = 0,   /* Flag for cancelling a file */
+    czseen = 0,   /* Flag for cancelling file group */
+    keep = 0,     /* Keep incomplete files */
+    nakstate = 0; /* In a state where we can send NAKs */
 
 /* Variables passed from command parser to protocol module */
 
-char parser();                          /* The parser itself */
-char sstate  = 0;                       /* Starting state for automaton */
-char *cmarg  = "";                      /* Pointer to command data */
-char *cmarg2 = "";                      /* Pointer to 2nd command data */
-char **cmlist;                          /* Pointer to file list in argv */
+char parser();     /* The parser itself */
+char sstate = 0;   /* Starting state for automaton */
+char *cmarg = "";  /* Pointer to command data */
+char *cmarg2 = ""; /* Pointer to 2nd command data */
+char **cmlist;     /* Pointer to file list in argv */
 
 /* Miscellaneous */
 
-char **xargv;                           /* Global copies of argv */
-int  xargc;                             /* and argc  */
+char **xargv; /* Global copies of argv */
+int xargc;    /* and argc  */
 
-extern char *dftty;                     /* Default tty name from ckx???.c */
-extern int dfloc;                       /* Default location: remote/local */
-extern int dfprty;                      /* Default parity */
-extern int dfflow;                      /* Default flow control */
+extern char *dftty; /* Default tty name from ckx???.c */
+extern int dfloc;   /* Default location: remote/local */
+extern int dfprty;  /* Default parity */
+extern int dfflow;  /* Default flow control */
 
 /* (PWP) buffered input and output buffers; see ckcfns.c getpkt(). */
 CHAR zinbuffer[INBUFSIZE], zoutbuffer[INBUFSIZE];
@@ -328,54 +328,64 @@ int zincnt, zoutcnt;
 
 #ifdef aegis
 /* On the Apollo, intercept main to insert a cleanup handler */
-ckcmai(argc,argv) int argc; char **argv; {
+ckcmai(argc, argv) int argc;
+char **argv;
+{
 #else
-main(argc,argv) int argc; char **argv; {
+main(argc, argv) int argc;
+char **argv;
+{
 #endif
 
-    char *strcpy();
+  char *strcpy();
 
-/* Do some initialization */
+  /* Do some initialization */
 
-    xargc = argc;                       /* Make global copies of argc */
-    xargv = argv;                       /* ...and argv. */
-    sstate = 0;                         /* No default start state. */
-    if (sysinit() < 0) doexit(BAD_EXIT); /* System-dependent initialization. */
-    strcpy(ttname,dftty);               /* Set up default tty name. */
-    local = dfloc;                      /* And whether it's local or remote. */
-    parity = dfprty;                    /* Set initial parity, */
-    flow = dfflow;                      /* and flow control. */
+  xargc = argc; /* Make global copies of argc */
+  xargv = argv; /* ...and argv. */
+  sstate = 0;   /* No default start state. */
+  if (sysinit() < 0)
+    doexit(BAD_EXIT);    /* System-dependent initialization. */
+  strcpy(ttname, dftty); /* Set up default tty name. */
+  local = dfloc;         /* And whether it's local or remote. */
+  parity = dfprty;       /* Set initial parity, */
+  flow = dfflow;         /* and flow control. */
 
-/*** attempt to take ini file before doing command line ***/
+  /*** attempt to take ini file before doing command line ***/
 
-    cmdini();                           /* Sets tlevel */
-    while (tlevel > -1) {               /* Execute init file. */
-        sstate = parser();              /* Loop getting commands. */
-        if (sstate) proto();            /* Enter protocol if requested. */
+  cmdini();             /* Sets tlevel */
+  while (tlevel > -1) { /* Execute init file. */
+    sstate = parser();  /* Loop getting commands. */
+    if (sstate)
+      proto(); /* Enter protocol if requested. */
+  }
+
+  /* Look for a UNIX-style command line... */
+
+  if (argc > 1) {      /* Command line arguments? */
+    sstate = cmdlin(); /* Yes, parse. */
+    if (sstate) {
+      proto(); /* Take any requested action, then */
+      if (!quiet)
+        conoll(""); /* put cursor back at left margin, */
+      if (cnflg)
+        conect();        /* connect if requested, */
+      doexit(GOOD_EXIT); /* and then exit with status 0. */
     }
-
-/* Look for a UNIX-style command line... */
-
-    if (argc > 1) {                     /* Command line arguments? */
-        sstate = cmdlin();              /* Yes, parse. */
-        if (sstate) {
-            proto();                    /* Take any requested action, then */
-            if (!quiet) conoll("");     /* put cursor back at left margin, */
-            if (cnflg) conect();        /* connect if requested, */
-            doexit(GOOD_EXIT);          /* and then exit with status 0. */
-        }
-    }
+  }
 
 #ifdef OS2
-    if (speed==-1) speed = ttspeed();   /* Unless explicitly changed,
-                                           use the current line speed */
+  if (speed == -1)
+    speed = ttspeed(); /* Unless explicitly changed,
+                          use the current line speed */
 #endif
 
-/* If no action requested on command line, enter interactive parser */
+  /* If no action requested on command line, enter interactive parser */
 
-    herald();                           /* Display program herald. */
-    while(1) {                          /* Loop getting commands. */
-        sstate = parser();
-        if (sstate) proto();            /* Enter protocol if requested. */
-    }
+  herald();   /* Display program herald. */
+  while (1) { /* Loop getting commands. */
+    sstate = parser();
+    if (sstate)
+      proto(); /* Enter protocol if requested. */
+  }
 }

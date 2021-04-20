@@ -1,4 +1,4 @@
-char *ckzv = "Unix file support, 4G(045) 19 Apr 2021";
+char *ckzv = "Unix file support, 4G(046) 20 Apr 2021";
 
 /* C K U F I O  --  Kermit file system support for Unix systems */
 
@@ -6,28 +6,28 @@ char *ckzv = "Unix file support, 4G(045) 19 Apr 2021";
  Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
  Columbia University Center for Computing Activities.
  First released January 1985.
- Copyright (C) 1985, 1989, Trustees of Columbia University in the City of New 
+ Copyright (C) 1985, 1989, Trustees of Columbia University in the City of New
  York.  Permission is granted to any individual or institution to use, copy, or
  redistribute this software so long as it is not sold for profit, provided this
- copyright notice is retained. 
+ copyright notice is retained.
 */
 /* Includes */
 
-#include <sys/types.h>                  /* Data types */
-#include "ckcker.h"                     /* Kermit definitions */
-#include "ckcdeb.h"                     /* Typedefs, debug formats, etc */
-#include <ctype.h>                      /* Character types */
-#include <stdio.h>                      /* Standard i/o */
+#include "ckcdeb.h" /* Typedefs, debug formats, etc */
+#include "ckcker.h" /* Kermit definitions */
+#include <ctype.h> /* Character types */
 #include <errno.h>
-#include <sys/dir.h>                    /* Directory structure */
-#include <pwd.h>                        /* Password file for shell name */
+#include <pwd.h> /* Password file for shell name */
+#include <stdio.h> /* Standard i/o */
+#include <sys/dir.h> /* Directory structure */
+#include <sys/types.h> /* Data types */
 
 /* File date material */
 
 #ifdef BSD4
 #define TIMESTAMP
-#include <time.h>
 #include <sys/timeb.h>
+#include <time.h>
 #ifdef NOT_YET
 static long timezone;
 #endif /* NOT_YET - see comments in front of mktime() below */
@@ -51,16 +51,13 @@ extern long timezone;
 #define leap(y) (((y) % 4 == 0 && (y) % 100 != 0) || (y) % 400 == 0)
 
 /* Number of leap years from 1970 to `y' (not including `y' itself). */
-#define nleap(y) (((y) - 1969) / 4 - ((y) - 1901) / 100 + ((y) - 1601) / 400)
+#define nleap(y) (((y)-1969) / 4 - ((y)-1901) / 100 + ((y)-1601) / 400)
 
 /* Number of days in each month of the year. */
-static char monlens[] =
-{
-  31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
-};
+static char monlens[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 #ifdef CIE
-#include <stat.h>                       /* File status */
+#include <stat.h> /* File status */
 #else
 #include <sys/stat.h>
 #endif
@@ -68,11 +65,11 @@ static char monlens[] =
 /* Support for tilde-expansion in file and directory names */
 
 #ifdef BSD4
-#define NAMEENV "USER"                  /* Environment variable for tilde */
+#define NAMEENV "USER" /* Environment variable for tilde */
 #endif /* BSD4 */
 
 #ifdef UXIII
-#define NAMEENV "LOGNAME"               /* Environment variable for tilde */
+#define NAMEENV "LOGNAME" /* Environment variable for tilde */
 #endif /* UXIII */
 
 /* Berkeley Unix Version 4.x */
@@ -167,15 +164,15 @@ char *ckzsys = " AT&T System III/System V";
 
 /* Definitions of some Unix system commands */
 
-char *DELCMD = "rm -f ";                /* For file deletion */
-char *PWDCMD = "pwd ";                  /* For saying where I am */
+char *DELCMD = "rm -f "; /* For file deletion */
+char *PWDCMD = "pwd ";   /* For saying where I am */
 
 #ifdef FT18
-char *DIRCMD = "ls -l | more ";         /* For directory listing */
-char *TYPCMD = "more ";                 /* For typing a file */
+char *DIRCMD = "ls -l | more "; /* For directory listing */
+char *TYPCMD = "more ";         /* For typing a file */
 #else
-char *TYPCMD = "cat ";                  /* For typing a file */
-char *DIRCMD = "ls -l ";                /* For directory listing */
+char *TYPCMD = "cat ";   /* For typing a file */
+char *DIRCMD = "ls -l "; /* For directory listing */
 #endif
 
 #ifdef FT18
@@ -183,7 +180,7 @@ char *DIRCMD = "ls -l ";                /* For directory listing */
 #endif
 
 #ifdef BSD4
-char *SPACMD = "pwd ; quota ; df .";    /* Space/quota of current directory */
+char *SPACMD = "pwd ; quota ; df ."; /* Space/quota of current directory */
 #else
 #ifdef FT18
 char #SPACMD = "pwd ; du ; df .";
@@ -192,16 +189,16 @@ char *SPACMD = "df ";
 #endif
 #endif
 
-char *SPACM2 = "df ";                   /* For space in specified directory */
+char *SPACM2 = "df "; /* For space in specified directory */
 
 #ifdef FT18
 #define BSD4
 #endif
 
 #ifdef BSD4
-char *WHOCMD = "finger ";               /* For seeing who's logged in */
+char *WHOCMD = "finger "; /* For seeing who's logged in */
 #else
-char *WHOCMD = "who ";                  /* For seeing who's logged in */
+char *WHOCMD = "who "; /* For seeing who's logged in */
 #endif
 
 /*
@@ -243,7 +240,7 @@ char *WHOCMD = "who ";                  /* For seeing who's logged in */
 #ifndef unos
 /* Watch out, some versions of Xenix might need to do this include, */
 /* but reportedly SCO Xenix 2.2 on an 80x86 system does not. */
-#include <sys/file.h>                   /* File access */
+#include <sys/file.h> /* File access */
 #endif
 #endif
 #endif
@@ -256,7 +253,7 @@ char *WHOCMD = "who ";                  /* For seeing who's logged in */
 
 /* Some systems define these symbols in include files, others don't... */
 #ifndef R_OK
-#define R_OK 4                          /* For access */
+#define R_OK 4 /* For access */
 #endif
 
 #ifndef W_OK
@@ -264,7 +261,7 @@ char *WHOCMD = "who ";                  /* For seeing who's logged in */
 #endif
 
 #ifdef PROVX1
-#define MAXNAMLEN DIRSIZ                /* Max file name length */
+#define MAXNAMLEN DIRSIZ /* Max file name length */
 #endif
 
 #ifdef UXIII
@@ -279,14 +276,14 @@ char *WHOCMD = "who ";                  /* For seeing who's logged in */
 #endif
 
 #ifndef MAXNAMLEN
-#define MAXNAMLEN 14                    /* If still not defined... */
+#define MAXNAMLEN 14 /* If still not defined... */
 #endif
 
 #ifdef PROVX1
-#define MAXWLD 50                       /* Maximum wildcard filenames */
+#define MAXWLD 50 /* Maximum wildcard filenames */
 #else
 #ifdef BSD29
-#define MAXWLD 50                       /* Maximum wildcard filenames */
+#define MAXWLD 50 /* Maximum wildcard filenames */
 #else
 #define MAXWLD 500
 #endif
@@ -294,52 +291,52 @@ char *WHOCMD = "who ";                  /* For seeing who's logged in */
 
 /* Declarations */
 
-FILE *fp[ZNFILS] = {                    /* File pointers */
-    NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+FILE *fp[ZNFILS] = {/* File pointers */
+                    NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 
 /* (PWP) external def. of things used in buffered file input and output */
 extern CHAR zinbuffer[], zoutbuffer[];
 extern CHAR *zinptr, *zoutptr;
 extern int zincnt, zoutcnt;
 
-static long iflen = -1;                 /* Input file length */
-static long oflen = -1;                 /* Output file length */
+static long iflen = -1; /* Input file length */
+static long oflen = -1; /* Output file length */
 
-static int pid = 0;                     /* pid of child fork */
-static int fcount;                      /* Number of files in wild group */
-static char nambuf[MAXNAMLEN+2];        /* Buffer for a filename */
-static char zmbuf[200];                 /* For mail, remote print strings */
+static int pid = 0;                /* pid of child fork */
+static int fcount;                 /* Number of files in wild group */
+static char nambuf[MAXNAMLEN + 2]; /* Buffer for a filename */
+static char zmbuf[200];            /* For mail, remote print strings */
 #ifndef __linux__
 char *malloc();
 #endif
-char *getenv(), *strcpy();      /* System functions */
-extern errno;                           /* System error code */
+char *getenv(), *strcpy(); /* System functions */
+extern errno;              /* System error code */
 
-static char *mtchs[MAXWLD],             /* Matches found for filename */
-     **mtchptr;                         /* Pointer to current match */
+static char *mtchs[MAXWLD], /* Matches found for filename */
+    **mtchptr;              /* Pointer to current match */
 
 /*  Z K S E L F  --  Kill Self: log out own job, if possible.  */
 
 /* Note, should get current pid, but if your system doesn't have */
 /* getppid(), then just kill(0,9)...  */
 
-zkself() {                              /* For "bye", but no guarantee! */
+zkself() { /* For "bye", but no guarantee! */
 #ifdef PROVX1
-    return(kill(0,9));
+  return (kill(0, 9));
 #else
 #ifdef V7
-    return(kill(0,9));
+  return (kill(0, 9));
 #else
 #ifdef TOWER1
-    return(kill(0,9));
+  return (kill(0, 9));
 #else
 #ifdef FT18
-    return(kill(0,9));
+  return (kill(0, 9));
 #else
 #ifdef aegis
-    return(kill(0,9));
+  return (kill(0, 9));
 #else
-    return(kill(getppid(),1));
+  return (kill(getppid(), 1));
 #endif
 #endif
 #endif
@@ -349,114 +346,128 @@ zkself() {                              /* For "bye", but no guarantee! */
 
 /*  Z O P E N I  --  Open an existing file for input. */
 
-zopeni(n,name) int n; char *name; {
-    debug(F111," zopeni",name,n);
-    debug(F101,"  fp","",(int) fp[n]);
-    if (chkfn(n) != 0) return(0);
-    zincnt = 0;                         /* Reset input buffer */
-    if (n == ZSYSFN) {                  /* Input from a system function? */
-        debug(F110," invoking zxcmd",name,0);
-        *nambuf = '\0';                 /* No filename this time... */
-        return(zxcmd(name));            /* Try to fork the command */
+zopeni(n, name) int n;
+char *name;
+{
+  debug(F111, " zopeni", name, n);
+  debug(F101, "  fp", "", (int)fp[n]);
+  if (chkfn(n) != 0)
+    return (0);
+  zincnt = 0;        /* Reset input buffer */
+  if (n == ZSYSFN) { /* Input from a system function? */
+    debug(F110, " invoking zxcmd", name, 0);
+    *nambuf = '\0';       /* No filename this time... */
+    return (zxcmd(name)); /* Try to fork the command */
+  }
+  if (n == ZSTDIO) { /* Standard input? */
+    if (isatty(0)) {
+      ermsg("Terminal input not allowed");
+      debug(F110, "zopeni: attempts input from unredirected stdin", "", 0);
+      return (0);
     }
-    if (n == ZSTDIO) {                  /* Standard input? */
-        if (isatty(0)) {
-            ermsg("Terminal input not allowed");
-            debug(F110,"zopeni: attempts input from unredirected stdin","",0);
-            return(0);
-        }
-        fp[ZIFILE] = stdin;
-        return(1);
-    }
-    fp[n] = fopen(name,"r");            /* Real file. */
-    debug(F111," zopeni", name, (int) fp[n]);
-    if (fp[n] == NULL) perror("zopeni");
-    return((fp[n] != NULL) ? 1 : 0);
+    fp[ZIFILE] = stdin;
+    return (1);
+  }
+  fp[n] = fopen(name, "r"); /* Real file. */
+  debug(F111, " zopeni", name, (int)fp[n]);
+  if (fp[n] == NULL)
+    perror("zopeni");
+  return ((fp[n] != NULL) ? 1 : 0);
 }
 
 /*  Z O P E N O  --  Open a new file for output.  */
 
-zopeno(n,name) int n; char *name; {
+zopeno(n, name) int n;
+char *name;
+{
 
-/** suid stuff commented out, probably needs work to apply to all the Unix **/
-/** variants supported by this program.  Maybe use setreuid()? **/
-/** The code shown allegedly works in 4.xBSD, Ultrix, etc.     **/
+  /** suid stuff commented out, probably needs work to apply to all the Unix **/
+  /** variants supported by this program.  Maybe use setreuid()? **/
+  /** The code shown allegedly works in 4.xBSD, Ultrix, etc.     **/
 
-/*  int uid, euid; */                   /** suid variables...  */
-    
+  /*  int uid, euid; */ /** suid variables...  */
+
+  if (n != ZDFILE)
+    debug(F111, " zopeno", name, n);
+  if (chkfn(n) != 0)
+    return (0);
+  if ((n == ZCTERM) || (n == ZSTDIO)) { /* Terminal or standard output */
+    fp[ZOFILE] = stdout;
     if (n != ZDFILE)
-      debug(F111," zopeno",name,n);
-    if (chkfn(n) != 0) return(0);
-    if ((n == ZCTERM) || (n == ZSTDIO)) {   /* Terminal or standard output */
-        fp[ZOFILE] = stdout;
-        if (n != ZDFILE)
-          debug(F101," fp[]=stdout", "", (int) fp[n]);
-        zoutcnt = 0;
-        zoutptr = zoutbuffer;
-        return(1);
-    }
-/*  uid = getuid(); euid = geteuid(); */        /** In case running suid to uucp, */
-/*  seteuid(uid); */                    /** etc, get user's own id.  */
-    fp[n] = fopen(name,"w");            /* A real file, try to open. */
-/*  seteuid(uid); */                    /** Put back program's suid. */
-    if (fp[n] == NULL) {
-        perror("zopeno can't open");
-    } else {
-        chown(name, getuid(), getgid());     /* In case set[gu]id */
-        if (n == ZDFILE) setbuf(fp[n],NULL); /* Debugging file unbuffered */
-    }
-    zoutcnt = 0;                /* (PWP) reset output buffer */
+      debug(F101, " fp[]=stdout", "", (int)fp[n]);
+    zoutcnt = 0;
     zoutptr = zoutbuffer;
-    if (n != ZDFILE)
-      debug(F101, " fp[n]", "", (int) fp[n]);
-    return((fp[n] != NULL) ? 1 : 0);
+    return (1);
+  }
+  /*  uid = getuid(); euid = geteuid(); */ /** In case running suid to uucp, */
+  /*  seteuid(uid); */                     /** etc, get user's own id.  */
+  fp[n] = fopen(name, "w");                /* A real file, try to open. */
+  /*  seteuid(uid); */                     /** Put back program's suid. */
+  if (fp[n] == NULL) {
+    perror("zopeno can't open");
+  } else {
+    chown(name, getuid(), getgid()); /* In case set[gu]id */
+    if (n == ZDFILE)
+      setbuf(fp[n], NULL); /* Debugging file unbuffered */
+  }
+  zoutcnt = 0; /* (PWP) reset output buffer */
+  zoutptr = zoutbuffer;
+  if (n != ZDFILE)
+    debug(F101, " fp[n]", "", (int)fp[n]);
+  return ((fp[n] != NULL) ? 1 : 0);
 }
 
 /*  Z C L O S E  --  Close the given file.  */
 
 /*  Returns 0 if arg out of range, 1 if successful, -1 if close failed.  */
 
-zclose(n) int n; {
-    int x, x2;
-    if (chkfn(n) < 1) return(0);        /* Check range of n */
+zclose(n) int n;
+{
+  int x, x2;
+  if (chkfn(n) < 1)
+    return (0); /* Check range of n */
 
-    if ((n == ZOFILE) && (zoutcnt > 0)) /* (PWP) output leftovers */
-      x2 = zoutdump();
-    else
-      x2 = 0;
+  if ((n == ZOFILE) && (zoutcnt > 0)) /* (PWP) output leftovers */
+    x2 = zoutdump();
+  else
+    x2 = 0;
 
-    x = 0;                              /* Initialize return code */
-    if ((n == ZIFILE) && fp[ZSYSFN]) {  /* If system function */
-        x = zclosf();                   /* do it specially */
-    } else {
-        if ((fp[n] != stdout) && (fp[n] != stdin)) x = fclose(fp[n]);
-        fp[n] = NULL;
-    }
-    iflen = -1;                         /* Invalidate file length */
-    if (x == EOF)                       /* if we got a close error */
-        return (-1);
-    else if (x2 < 0)            /* or an error flushing the last buffer */
-        return (-1);            /* then return an error */
-    else
-        return (1);
+  x = 0;                             /* Initialize return code */
+  if ((n == ZIFILE) && fp[ZSYSFN]) { /* If system function */
+    x = zclosf();                    /* do it specially */
+  } else {
+    if ((fp[n] != stdout) && (fp[n] != stdin))
+      x = fclose(fp[n]);
+    fp[n] = NULL;
+  }
+  iflen = -1;   /* Invalidate file length */
+  if (x == EOF) /* if we got a close error */
+    return (-1);
+  else if (x2 < 0) /* or an error flushing the last buffer */
+    return (-1);   /* then return an error */
+  else
+    return (1);
 }
 
 /*  Z C H I N  --  Get a character from the input file.  */
 
 /*  Returns -1 if EOF, 0 otherwise with character returned in argument  */
 
-zchin(n,c) int n; char *c; {
-    int a;
+zchin(n, c) int n;
+char *c;
+{
+  int a;
 
-    /* (PWP) Just in case this gets called when it shoudn't */
-    if (n == ZIFILE)
-        return (zminchar());
+  /* (PWP) Just in case this gets called when it shoudn't */
+  if (n == ZIFILE)
+    return (zminchar());
 
-    /* if (chkfn(n) < 1) return(-1); */
-    a = getc(fp[n]);
-    if (a == EOF) return(-1);
-    *c = a & 0377;
-    return(0);
+  /* if (chkfn(n) < 1) return(-1); */
+  a = getc(fp[n]);
+  if (a == EOF)
+    return (-1);
+  *c = a & 0377;
+  return (0);
 }
 
 /*
@@ -466,77 +477,86 @@ zchin(n,c) int n; char *c; {
  */
 
 zinfill() {
-    zincnt = fread(zinbuffer, sizeof (char), INBUFSIZE, fp[ZIFILE]);
-    if (zincnt == 0) return (-1); /* end of file */
-    zinptr = zinbuffer;    /* set pointer to beginning, (== &zinbuffer[0]) */
-    zincnt--;                   /* one less char in buffer */
-    return((int)(*zinptr++) & 0377); /* because we return the first */
+  zincnt = fread(zinbuffer, sizeof(char), INBUFSIZE, fp[ZIFILE]);
+  if (zincnt == 0)
+    return (-1);      /* end of file */
+  zinptr = zinbuffer; /* set pointer to beginning, (== &zinbuffer[0]) */
+  zincnt--;           /* one less char in buffer */
+  return ((int)(*zinptr++) & 0377); /* because we return the first */
 }
 
 /*  Z S O U T  --  Write a string out to the given file, buffered.  */
 
-zsout(n,s) int n; char *s; {
-    if (chkfn(n) < 1) return(-1); /* Keep this here, prevents memory faults */
-    fputs(s,fp[n]);
-    return(0);
+zsout(n, s) int n;
+char *s;
+{
+  if (chkfn(n) < 1)
+    return (-1); /* Keep this here, prevents memory faults */
+  fputs(s, fp[n]);
+  return (0);
 }
 
 /*  Z S O U T L  --  Write string to file, with line terminator, buffered  */
 
-zsoutl(n,s) int n; char *s; {
-    /* if (chkfn(n) < 1) return(-1); */
-    fputs(s,fp[n]);
-    fputs("\n",fp[n]);
-    return(0);
+zsoutl(n, s) int n;
+char *s;
+{
+  /* if (chkfn(n) < 1) return(-1); */
+  fputs(s, fp[n]);
+  fputs("\n", fp[n]);
+  return (0);
 }
 
 /*  Z S O U T X  --  Write x characters to file, unbuffered.  */
 
-zsoutx(n,s,x) int n, x; char *s; {
-    /* if (chkfn(n) < 1) return(-1); */
-/*  return(write(fp[n]->_file,s,x));  */
-    return(write(fileno(fp[n]),s,x));
+zsoutx(n, s, x) int n, x;
+char *s;
+{
+  /* if (chkfn(n) < 1) return(-1); */
+  /*  return(write(fp[n]->_file,s,x));  */
+  return (write(fileno(fp[n]), s, x));
 }
-
 
 /*  Z C H O U T  --  Add a character to the given file.  */
 
 /*  Should return 0 or greater on success, -1 on failure (e.g. disk full)  */
 
-zchout(n,c) register int n; char c; {
-    /* if (chkfn(n) < 1) return(-1); */
-    if (n == ZSFILE)
-        return(write(fileno(fp[n]),&c,1)); /* Use unbuffered for session log */
-    else {                              /* Buffered for everything else */
-        if (putc(c,fp[n]) == EOF)       /* If true, maybe there was an error */
-            return(ferror(fp[n])?-1:0); /* Check to make sure */
-        else                            /* Otherwise... */
-            return(0);                  /* There was no error. */
-    }
+zchout(n, c) register int n;
+char c;
+{
+  /* if (chkfn(n) < 1) return(-1); */
+  if (n == ZSFILE)
+    return (write(fileno(fp[n]), &c, 1)); /* Use unbuffered for session log */
+  else {                                  /* Buffered for everything else */
+    if (putc(c, fp[n]) == EOF)         /* If true, maybe there was an error */
+      return (ferror(fp[n]) ? -1 : 0); /* Check to make sure */
+    else                               /* Otherwise... */
+      return (0);                      /* There was no error. */
+  }
 }
 
 /* (PWP) buffered character output routine to speed up file IO */
 
 zoutdump() {
-    int x;
-    zoutptr = zoutbuffer;               /* reset buffer pointer in all cases */
-    debug(F101,"zoutdump chars","",zoutcnt);
-    if (zoutcnt == 0) {                 /* nothing to output */
-        return(0);
-    } else if (zoutcnt < 0) {           /* unexpected negative value */
-        zoutcnt = 0;                    /* reset output buffer count */
-        return(-1);                     /* and fail. */
-    }
-    if ( ( x = fwrite(zoutbuffer, 1, zoutcnt, fp[ZOFILE]) ) ) {
-        debug(F101,"zoutdump fwrite wrote","",x);
-        zoutcnt = 0;                    /* reset output buffer count */
-        return(0);                      /* things worked OK */
-    } else {
-        zoutcnt = 0;                    /* reset output buffer count */
-        x = ferror(fp[ZOFILE]);         /* get error code */
-        debug(F101,"zoutdump fwrite error","",x);
-        return(x ? -1 : 0);             /* return failure if error */
-    }
+  int x;
+  zoutptr = zoutbuffer; /* reset buffer pointer in all cases */
+  debug(F101, "zoutdump chars", "", zoutcnt);
+  if (zoutcnt == 0) { /* nothing to output */
+    return (0);
+  } else if (zoutcnt < 0) { /* unexpected negative value */
+    zoutcnt = 0;            /* reset output buffer count */
+    return (-1);            /* and fail. */
+  }
+  if ((x = fwrite(zoutbuffer, 1, zoutcnt, fp[ZOFILE]))) {
+    debug(F101, "zoutdump fwrite wrote", "", x);
+    zoutcnt = 0; /* reset output buffer count */
+    return (0);  /* things worked OK */
+  } else {
+    zoutcnt = 0;            /* reset output buffer count */
+    x = ferror(fp[ZOFILE]); /* get error code */
+    debug(F101, "zoutdump fwrite error", "", x);
+    return (x ? -1 : 0); /* return failure if error */
+  }
 }
 
 /*  C H K F N  --  Internal function to verify file number is ok  */
@@ -547,23 +567,25 @@ zoutdump() {
    0: n is in range, but file is not open
    1: n in range and file is open
 */
-chkfn(n) int n; {
-    switch (n) {
-        case ZCTERM:
-        case ZSTDIO:
-        case ZIFILE:
-        case ZOFILE:
-        case ZDFILE:
-        case ZTFILE:
-        case ZPFILE:
-        case ZSFILE:
-        case ZSYSFN: break;
-        default:
-            debug(F101,"chkfn: file number out of range","",n);
-            fprintf(stderr,"?File number out of range - %d\n",n);
-            return(-1);
-    }
-    return( (fp[n] == NULL) ? 0 : 1 );
+chkfn(n) int n;
+{
+  switch (n) {
+  case ZCTERM:
+  case ZSTDIO:
+  case ZIFILE:
+  case ZOFILE:
+  case ZDFILE:
+  case ZTFILE:
+  case ZPFILE:
+  case ZSFILE:
+  case ZSYSFN:
+    break;
+  default:
+    debug(F101, "chkfn: file number out of range", "", n);
+    fprintf(stderr, "?File number out of range - %d\n", n);
+    return (-1);
+  }
+  return ((fp[n] == NULL) ? 0 : 1);
 }
 
 /*  Z C H K I  --  Check if input file exists and is readable  */
@@ -579,32 +601,33 @@ chkfn(n) int n; {
  For Berkeley Unix, a file must be of type "regular" to be readable.
  Directory files, special files, and symbolic links are not readable.
 */
-long
-zchki(name) char *name; {
-    struct stat buf;
-    int x; long y; 
+long zchki(name) char *name;
+{
+  struct stat buf;
+  int x;
+  long y;
 
-    x = stat(name,&buf);
-    if (x < 0) {
-        debug(F111,"zchki stat fails",name,errno);
-        return(-1);
-    }
-    x = buf.st_mode & S_IFMT;           /* Isolate file format field */
-    if ((x != 0) && (x != S_IFREG)) {
-        debug(F111,"zchki skipping:",name,x);
-        return(-2);
-    }
-    debug(F111,"zchki stat ok:",name,x);
+  x = stat(name, &buf);
+  if (x < 0) {
+    debug(F111, "zchki stat fails", name, errno);
+    return (-1);
+  }
+  x = buf.st_mode & S_IFMT; /* Isolate file format field */
+  if ((x != 0) && (x != S_IFREG)) {
+    debug(F111, "zchki skipping:", name, x);
+    return (-2);
+  }
+  debug(F111, "zchki stat ok:", name, x);
 
-    if ((x = access(name,R_OK)) < 0) {  /* Is the file accessible? */
-        debug(F111," access failed:",name,x); /* No */
-        return(-3);                     
-    } else {
-        iflen = buf.st_size;                  /* Yes, remember size */
-        strncpy(nambuf,name,MAXNAMLEN);       /* and name globally. */
-        debug(F111," access ok:",name,(int) iflen);
-        return( (iflen > -1) ? iflen : 0 );
-    }
+  if ((x = access(name, R_OK)) < 0) {        /* Is the file accessible? */
+    debug(F111, " access failed:", name, x); /* No */
+    return (-3);
+  } else {
+    iflen = buf.st_size;              /* Yes, remember size */
+    strncpy(nambuf, name, MAXNAMLEN); /* and name globally. */
+    debug(F111, " access ok:", name, (int)iflen);
+    return ((iflen > -1) ? iflen : 0);
+  }
 }
 
 /*  Z C H K O  --  Check if output file can be created  */
@@ -612,126 +635,132 @@ zchki(name) char *name; {
 /*
  Returns -1 if write permission for the file would be denied, 0 otherwise.
 */
-zchko(name) char *name; {
-    int i, x;
-    char s[50], *sp;    
+zchko(name) char *name;
+{
+  int i, x;
+  char s[50], *sp;
 
-    sp = s;                             /* Make a copy, get length */
-    x = 0;
-    while ((*sp++ = *name++) != '\0')
-        x++;
-    if (x == 0) return(-1);             /* If no filename, fail. */
+  sp = s; /* Make a copy, get length */
+  x = 0;
+  while ((*sp++ = *name++) != '\0')
+    x++;
+  if (x == 0)
+    return (-1); /* If no filename, fail. */
 
-    debug(F101," length","",x);
-    for (i = x; i > 0; i--)             /* Strip filename. */
-        if (s[i-1] == '/') break;
-    
-    debug(F101," i","",i);
-    if (i == 0)                         /* If no path, use current directory */
-        strcpy(s,"./");                 
-    else                                /* Otherwise, use given one. */
-        s[i] = '\0';
+  debug(F101, " length", "", x);
+  for (i = x; i > 0; i--) /* Strip filename. */
+    if (s[i - 1] == '/')
+      break;
 
-    x = access(s,W_OK);                 /* Check access of path. */
-    if (x < 0) {
-        debug(F111,"zchko access failed:",s,errno);
-        return(-1);
-    } else {
-        debug(F111,"zchko access ok:",s,x);
-        return(0);
-    }
+  debug(F101, " i", "", i);
+  if (i == 0) /* If no path, use current directory */
+    strcpy(s, "./");
+  else /* Otherwise, use given one. */
+    s[i] = '\0';
+
+  x = access(s, W_OK); /* Check access of path. */
+  if (x < 0) {
+    debug(F111, "zchko access failed:", s, errno);
+    return (-1);
+  } else {
+    debug(F111, "zchko access ok:", s, x);
+    return (0);
+  }
 }
 
 /*  Z D E L E T  --  Delete the named file.  */
 
-zdelet(name) char *name; {
-    unlink(name);
-}
-
+zdelet(name) char *name;
+{ unlink(name); }
 
 /*  Z R T O L  --  Convert remote filename into local form  */
 
 /*  For UNIX, this means changing uppercase letters to lowercase.  */
 
-zrtol(name,name2) char *name, *name2; {
-    for ( ; *name != '\0'; name++) {
-        *name2++ = isupper(*name) ? tolower(*name) : *name;
-    }
-    *name2 = '\0';
-    debug(F110,"zrtol:",name2,0);
+zrtol(name, name2) char *name, *name2;
+{
+  for (; *name != '\0'; name++) {
+    *name2++ = isupper(*name) ? tolower(*name) : *name;
+  }
+  *name2 = '\0';
+  debug(F110, "zrtol:", name2, 0);
 }
-
 
 /*  Z L T O R  --  Local TO Remote */
 
 /*  Convert filename from local format to common (remote) form.  */
 
-zltor(name,name2) char *name, *name2; {
-    char work[100], *cp, *pp;
-    int dc = 0;
+zltor(name, name2) char *name, *name2;
+{
+  char work[100], *cp, *pp;
+  int dc = 0;
 #ifdef aegis
-    char *getenv(), *index(), *namechars;
-    int tilde = 0, bslash = 0;
+  char *getenv(), *index(), *namechars;
+  int tilde = 0, bslash = 0;
 
-    if ((namechars = getenv("NAMECHARS")) != NULL) {
-        if (index(namechars, '~' ) != NULL) tilde  = '~';
-        if (index(namechars, '\\') != NULL) bslash = '\\';
-    } else {
-        tilde = '~';
-        bslash = '\\';
-    }
+  if ((namechars = getenv("NAMECHARS")) != NULL) {
+    if (index(namechars, '~') != NULL)
+      tilde = '~';
+    if (index(namechars, '\\') != NULL)
+      bslash = '\\';
+  } else {
+    tilde = '~';
+    bslash = '\\';
+  }
 #endif
 
-    debug(F110,"zltor",name,0);
-    pp = work;
+  debug(F110, "zltor", name, 0);
+  pp = work;
 #ifdef aegis
-    cp = name;
-    if (tilde && *cp == tilde)
-        ++cp;
-    for (; *cp != '\0'; cp++) { /* strip path name */
-        if (*cp == '/' || *cp == bslash) {
+  cp = name;
+  if (tilde && *cp == tilde)
+    ++cp;
+  for (; *cp != '\0'; cp++) { /* strip path name */
+    if (*cp == '/' || *cp == bslash) {
 #else
-    for (cp = name; *cp != '\0'; cp++) {        /* strip path name */
-        if (*cp == '/') {
+  for (cp = name; *cp != '\0'; cp++) { /* strip path name */
+    if (*cp == '/') {
 #endif
-            dc = 0;
-            pp = work;
-        }
-        else if (islower(*cp)) *pp++ = toupper(*cp); /* Uppercase letters */
-        else if (*cp == '~') *pp++ = 'X';       /* Change tilde to 'X' */
-        else if (*cp == '#') *pp++ = 'X';       /* Change number sign to 'X' */
-        else if ((*cp == '.') && (++dc > 1)) *pp++ = 'X'; /* & extra dots */
-        else *pp++ = *cp;
-    }
-    *pp = '\0';                         /* Tie it off. */
-    cp = name2;                         /* If nothing before dot, */
-    if (*work == '.') *cp++ = 'X';      /* insert 'X' */
-    strcpy(cp,work);
-    debug(F110," name2",name2,0);
-}    
-
+      dc = 0;
+      pp = work;
+    } else if (islower(*cp))
+      *pp++ = toupper(*cp); /* Uppercase letters */
+    else if (*cp == '~')
+      *pp++ = 'X'; /* Change tilde to 'X' */
+    else if (*cp == '#')
+      *pp++ = 'X'; /* Change number sign to 'X' */
+    else if ((*cp == '.') && (++dc > 1))
+      *pp++ = 'X'; /* & extra dots */
+    else
+      *pp++ = *cp;
+  }
+  *pp = '\0'; /* Tie it off. */
+  cp = name2; /* If nothing before dot, */
+  if (*work == '.')
+    *cp++ = 'X'; /* insert 'X' */
+  strcpy(cp, work);
+  debug(F110, " name2", name2, 0);
+}
 
 /*  Z C H D I R  --  Change directory  */
 
-zchdir(dirnam) char *dirnam; {
-    char *hd;
-    if (*dirnam == '\0') hd = getenv("HOME");
-    else hd = dirnam;
-    return((chdir(hd) == 0) ? 1 : 0);
+zchdir(dirnam) char *dirnam;
+{
+  char *hd;
+  if (*dirnam == '\0')
+    hd = getenv("HOME");
+  else
+    hd = dirnam;
+  return ((chdir(hd) == 0) ? 1 : 0);
 }
-
 
 /*  Z H O M E  --  Return pointer to user's home directory  */
 
-char *
-zhome() {
-    return(getenv("HOME"));
-}
+char *zhome() { return (getenv("HOME")); }
 
 /*  Z G T D I R  --  Return pointer to user's current directory  */
 
-char *
-zgtdir() {
+char *zgtdir() {
 
 #ifdef MAXPATHLEN
 #define CWDBL MAXPATHLEN
@@ -740,116 +769,123 @@ zgtdir() {
 #endif
 
 #ifdef UXIII
-    char cwdbuf[CWDBL+1];
-    char *buf;
-    char *getcwd();
-    buf = cwdbuf;
-    return(getcwd(buf,CWDBL));
+  char cwdbuf[CWDBL + 1];
+  char *buf;
+  char *getcwd();
+  buf = cwdbuf;
+  return (getcwd(buf, CWDBL));
 #else
 #ifdef BSD4
-    char cwdbuf[CWDBL+1];
-    char *buf;
-    char *getwd();
-    buf = cwdbuf;
-    return(getwd(buf));
+  char cwdbuf[CWDBL + 1];
+  char *buf;
+  char *getwd();
+  buf = cwdbuf;
+  return (getwd(buf));
 #else
-    return("(directory unknown)");
+  return ("(directory unknown)");
 #endif
 #endif
 }
 
 /*  Z X C M D -- Run a system command so its output can be read like a file */
 
-zxcmd(comand) char *comand; {
-    int pipes[2];
-    if (pipe(pipes) != 0) {
-        debug(F100,"zxcmd pipe failure","",0);
-        return(0);                      /* can't make pipe, fail */
-    }
+zxcmd(comand) char *comand;
+{
+  int pipes[2];
+  if (pipe(pipes) != 0) {
+    debug(F100, "zxcmd pipe failure", "", 0);
+    return (0); /* can't make pipe, fail */
+  }
 #ifdef aegis
-    if ((pid = vfork()) == 0) {         /* child */
+  if ((pid = vfork()) == 0) { /* child */
 #else
-    if ((pid = fork()) == 0) {          /* child */
+  if ((pid = fork()) == 0) { /* child */
 #endif
 
-
-/* #if BSD4 */          /* Code from Dave Tweten@AMES-NAS */
-                        /* readapted to use getpwuid to find login shell */
-                        /*   -- H. Fischer */
-        char *shpath, *shname, *shptr;  /* to find desired shell */
+    /* #if BSD4 */ /* Code from Dave Tweten@AMES-NAS */
+                   /* readapted to use getpwuid to find login shell */
+                   /*   -- H. Fischer */
+    char *shpath, *shname, *shptr; /* to find desired shell */
 #ifndef aegis
-        struct passwd *p;
-        extern struct passwd * getpwuid();
-        extern int getuid();
-        char *defShel = "/bin/sh";      /* default shell */
+    struct passwd *p;
+    extern struct passwd *getpwuid();
+    extern int getuid();
+    char *defShel = "/bin/sh"; /* default shell */
 #endif
 
-        close(pipes[0]);                /* close input side of pipe */
-        close(0);                       /* close stdin */
-        if (open("/dev/null",0) < 0) return(0); /* replace input by null */
+    close(pipes[0]); /* close input side of pipe */
+    close(0);        /* close stdin */
+    if (open("/dev/null", 0) < 0)
+      return (0); /* replace input by null */
 
 #ifndef UXIII
-        dup2(pipes[1],1);               /* replace stdout & stderr */
-        dup2(pipes[1],2);               /* by the pipe */
+    dup2(pipes[1], 1); /* replace stdout & stderr */
+    dup2(pipes[1], 2); /* by the pipe */
 #else
-        close(1);                       /* simulate dup2 */
-        if (dup(pipes[1]) != 1 )
-            conol("trouble duping stdout in routine zxcmd\n");
-        close(2);                       /* simulate dup2 */
-        if (dup(pipes[1]) != 2 )
-            conol("trouble duping stderr in routine zxcmd\n");
+    close(1); /* simulate dup2 */
+    if (dup(pipes[1]) != 1)
+      conol("trouble duping stdout in routine zxcmd\n");
+    close(2); /* simulate dup2 */
+    if (dup(pipes[1]) != 2)
+      conol("trouble duping stderr in routine zxcmd\n");
 #endif
 
-        close(pipes[1]);                /* get rid of this copy of the pipe */
+    close(pipes[1]); /* get rid of this copy of the pipe */
 
 #ifdef aegis
-        if ((shpath = getenv("SERVERSHELL")) == NULL) shpath = "/bin/sh";
+    if ((shpath = getenv("SERVERSHELL")) == NULL)
+      shpath = "/bin/sh";
 #else
-        shpath = getenv("SHELL");       /* What shell? */
-        if (shpath == NULL) {
-          p = getpwuid( getuid() );     /* get login data */
-          if (p == (struct passwd *) NULL || !*(p->pw_shell)) shpath = defShel;
-          else shpath = p->pw_shell;
-        }
+    shpath = getenv("SHELL"); /* What shell? */
+    if (shpath == NULL) {
+      p = getpwuid(getuid()); /* get login data */
+      if (p == (struct passwd *)NULL || !*(p->pw_shell))
+        shpath = defShel;
+      else
+        shpath = p->pw_shell;
+    }
 #endif
-        shptr = shname = shpath;
-        while (*shptr != '\0') if (*shptr++ == '/') shname = shptr;
-        debug(F100,"zxcmd...","",0);
-        debug(F110,shpath,shname,0);
+    shptr = shname = shpath;
+    while (*shptr != '\0')
+      if (*shptr++ == '/')
+        shname = shptr;
+    debug(F100, "zxcmd...", "", 0);
+    debug(F110, shpath, shname, 0);
 
 /* Remove the following uid calls if they cause trouble... */
 #ifdef BSD4
 #ifndef BSD41
-        setegid(getgid());              /* Override 4.3BSD csh */
-        seteuid(getuid());              /*  security checks */
+    setegid(getgid()); /* Override 4.3BSD csh */
+    seteuid(getuid()); /*  security checks */
 #endif /* bsd41 */
 #endif /* bsd4 */
 
-        execl(shpath,shname,"-c",comand,(char *)NULL); /* Execute the cmd */
-        exit(0);                        /* just punt if it failed. */
-    } else if (pid == -1) {
-        debug(F100,"zxcmd fork failure","",0);
-        return(0);
-    }
-    close(pipes[1]);                    /* don't need the output side */
-    fp[ZIFILE] = fdopen(pipes[0],"r");  /* open a stream for it */
-    fp[ZSYSFN] = fp[ZIFILE];            /* Remember. */
-    return(1);
+    execl(shpath, shname, "-c", comand, (char *)NULL); /* Execute the cmd */
+    exit(0); /* just punt if it failed. */
+  } else if (pid == -1) {
+    debug(F100, "zxcmd fork failure", "", 0);
+    return (0);
+  }
+  close(pipes[1]);                    /* don't need the output side */
+  fp[ZIFILE] = fdopen(pipes[0], "r"); /* open a stream for it */
+  fp[ZSYSFN] = fp[ZIFILE];            /* Remember. */
+  return (1);
 }
 
 /*  Z C L O S F  - wait for the child fork to terminate and close the pipe. */
 
 zclosf() {
-    int wstat;
-    if (pid != 0) {
-        debug(F101,"zclosf pid =","",pid);
-        kill(pid,9);
-        while ((wstat = wait((int *)0)) != pid && wstat != -1) ;
-        pid = 0;
-    }
-    fclose(fp[ZIFILE]);
-    fp[ZIFILE] = fp[ZSYSFN] = NULL;
-    return(1);
+  int wstat;
+  if (pid != 0) {
+    debug(F101, "zclosf pid =", "", pid);
+    kill(pid, 9);
+    while ((wstat = wait((int *)0)) != pid && wstat != -1)
+      ;
+    pid = 0;
+  }
+  fclose(fp[ZIFILE]);
+  fp[ZIFILE] = fp[ZSYSFN] = NULL;
+  return (1);
 }
 
 /*  Z X P A N D  --  Expand a wildcard string into an array of strings  */
@@ -857,77 +893,82 @@ zclosf() {
   Returns the number of files that match fn1, with data structures set up
   so that first file (if any) will be returned by the next znext() call.
 */
-zxpand(fn) char *fn; {
-    fcount = fgen(fn,mtchs,MAXWLD);     /* Look up the file. */
-    if (fcount > 0) {
-        mtchptr = mtchs;                /* Save pointer for next. */
-    }
-    debug(F111,"zxpand",mtchs[0],fcount);
-    return(fcount);
+zxpand(fn) char *fn;
+{
+  fcount = fgen(fn, mtchs, MAXWLD); /* Look up the file. */
+  if (fcount > 0) {
+    mtchptr = mtchs; /* Save pointer for next. */
+  }
+  debug(F111, "zxpand", mtchs[0], fcount);
+  return (fcount);
 }
-
 
 /*  Z N E X T  --  Get name of next file from list created by zxpand(). */
 /*
  Returns >0 if there's another file, with its name copied into the arg string,
  or 0 if no more files in list.
 */
-znext(fn) char *fn; {
-    if (fcount-- > 0) strcpy(fn,*mtchptr++);
-    else *fn = '\0';
-    debug(F111,"znext",fn,fcount+1);
-    return(fcount+1);
+znext(fn) char *fn;
+{
+  if (fcount-- > 0)
+    strcpy(fn, *mtchptr++);
+  else
+    *fn = '\0';
+  debug(F111, "znext", fn, fcount + 1);
+  return (fcount + 1);
 }
-
 
 /*  Z N E W N  --  Make a new name for the given file  */
 
-znewn(fn,s) char *fn, **s; {
+znewn(fn, s) char *fn, **s;
+{
 #ifdef BSD4
-    static char buf[256];
+  static char buf[256];
 #else
-    static char buf[100];
+  static char buf[100];
 #endif
-    char *bp, *xp;
-    int len = 0, n = 0, d = 0, t, i, power = 1;
+  char *bp, *xp;
+  int len = 0, n = 0, d = 0, t, i, power = 1;
 #ifdef MAXNAMLEN
-    int max = MAXNAMLEN;
+  int max = MAXNAMLEN;
 #else
-    int max = 14;
+  int max = 14;
 #endif
-    bp = buf;
-    while (*fn) {                       /* Copy name into buf */
-        *bp++ = *fn++;
-        len++;
+  bp = buf;
+  while (*fn) { /* Copy name into buf */
+    *bp++ = *fn++;
+    len++;
+  }
+  if (len > max - 2) { /* Don't let it get too long */
+    bp = buf + max - 2;
+    len = max - 2;
+  }
+
+  for (i = 1; i < 4; i++) { /* Try up to 999 times */
+    power *= 10;
+    *bp++ = '*'; /* Put a star on the end */
+    *bp-- = '\0';
+
+    n = zxpand(buf); /* Expand the resulting wild name */
+
+    while (n-- > 0) { /* Find any existing name~d files */
+      xp = *mtchptr++;
+      xp += len;
+      if (*xp == '~') {
+        t = atoi(xp + 1);
+        if (t > d)
+          d = t; /* Get maximum d */
+      }
     }
-    if (len > max-2) {                  /* Don't let it get too long */
-        bp = buf + max-2;
-        len = max - 2;
+    if (d < power - 1) {
+      sprintf(bp, "~%d", d + 1); /* Make name~(d+1) */
+      *s = buf;
+      return;
     }
-        
-    for (i = 1; i < 4; i++) {           /* Try up to 999 times */
-        power *= 10;
-        *bp++ = '*';                    /* Put a star on the end */
-        *bp-- = '\0';
-        
-        n = zxpand(buf);                /* Expand the resulting wild name */
-    
-        while (n-- > 0) {               /* Find any existing name~d files */
-            xp = *mtchptr++;
-            xp += len;
-            if (*xp == '~') {
-                t = atoi(xp+1);
-                if (t > d) d = t;       /* Get maximum d */
-            }
-        }
-        if (d < power-1) {
-            sprintf(bp,"~%d",d+1);      /* Make name~(d+1) */
-            *s = buf;
-            return;
-        }
-        bp--; len--;
-    }
-/* If we ever get here, we'll overwrite the xxx~100 file... */
+    bp--;
+    len--;
+  }
+  /* If we ever get here, we'll overwrite the xxx~100 file... */
 }
 
 /*  Z S A T T R */
@@ -937,82 +978,81 @@ znewn(fn,s) char *fn, **s; {
  If any string member is null, then it should be ignored.
  If any numeric member is -1, then it should be ignored.
 */
-zsattr(xx) struct zattr *xx; {
-    long k;
-    char *zfcdat();
+zsattr(xx) struct zattr *xx;
+{
+  long k;
+  char *zfcdat();
 
-    k = iflen % 1024L;                  /* File length in K */
-    if (k != 0L) k = 1L;
-    xx->lengthk = (iflen / 1024L) + k;
-    xx->type.len = 0;                   /* File type can't be filled in here */
-    xx->type.val = "";
-debug(F110,"before calling zfcdat",nambuf,0);
-    if (nambuf) {
-        xx->date.val = zfcdat(nambuf);  /* File creation date */
-        xx->date.len = strlen(xx->date.val);
-    } else {
-        xx->date.len = 0;
-        xx->date.val = "";
-    }
-debug(F111,"attr date",xx->date.val,xx->date.len);
-    xx->creator.len = 0;                /* File creator */
-    xx->creator.val = "";
-    xx->account.len = 0;                /* File account */
-    xx->account.val = "";
-    xx->area.len = 0;                   /* File area */
-    xx->area.val = "";
-    xx->passwd.len = 0;                 /* Area password */
-    xx->passwd.val = "";
-    xx->blksize = -1L;                  /* File blocksize */
-    xx->access.len = 0;                 /* File access */
-    xx->access.val = "";
-    xx->encoding.len = 0;               /* Transfer syntax */
-    xx->encoding.val = 0;
-    xx->disp.len = 0;                   /* Disposition upon arrival */
-    xx->disp.val = "";
-    xx->lprotect.len = 0;               /* Local protection */
-    xx->lprotect.val = "";
-    xx->gprotect.len = 0;               /* Generic protection */
-    xx->gprotect.val = "";
-    xx->systemid.len = 2;               /* System ID */
-    xx->systemid.val = "U1";
-    xx->recfm.len = 0;                  /* Record format */
-    xx->recfm.val = "";
-    xx->sysparam.len = 0;               /* System-dependent parameters */
-    xx->sysparam.val = "";
-    xx->length = iflen;                 /* Length */
-    return(0);
+  k = iflen % 1024L; /* File length in K */
+  if (k != 0L)
+    k = 1L;
+  xx->lengthk = (iflen / 1024L) + k;
+  xx->type.len = 0; /* File type can't be filled in here */
+  xx->type.val = "";
+  debug(F110, "before calling zfcdat", nambuf, 0);
+  if (nambuf) {
+    xx->date.val = zfcdat(nambuf); /* File creation date */
+    xx->date.len = strlen(xx->date.val);
+  } else {
+    xx->date.len = 0;
+    xx->date.val = "";
+  }
+  debug(F111, "attr date", xx->date.val, xx->date.len);
+  xx->creator.len = 0; /* File creator */
+  xx->creator.val = "";
+  xx->account.len = 0; /* File account */
+  xx->account.val = "";
+  xx->area.len = 0; /* File area */
+  xx->area.val = "";
+  xx->passwd.len = 0; /* Area password */
+  xx->passwd.val = "";
+  xx->blksize = -1L;  /* File blocksize */
+  xx->access.len = 0; /* File access */
+  xx->access.val = "";
+  xx->encoding.len = 0; /* Transfer syntax */
+  xx->encoding.val = 0;
+  xx->disp.len = 0; /* Disposition upon arrival */
+  xx->disp.val = "";
+  xx->lprotect.len = 0; /* Local protection */
+  xx->lprotect.val = "";
+  xx->gprotect.len = 0; /* Generic protection */
+  xx->gprotect.val = "";
+  xx->systemid.len = 2; /* System ID */
+  xx->systemid.val = "U1";
+  xx->recfm.len = 0; /* Record format */
+  xx->recfm.val = "";
+  xx->sysparam.len = 0; /* System-dependent parameters */
+  xx->sysparam.val = "";
+  xx->length = iflen; /* Length */
+  return (0);
 }
 
 /* Z F C D A T -- Return a string containing the time stamp for a file */
 
-char *
-zfcdat(name) char *name; {
+char *zfcdat(name) char *name;
+{
 
 #ifdef TIMESTAMP
 
-    struct stat buffer;
-    struct tm *time_stamp, *localtime();
-    static char datbuf[20];
+  struct stat buffer;
+  struct tm *time_stamp, *localtime();
+  static char datbuf[20];
 
-    datbuf[0] = '\0';
-    if(stat(name,&buffer) != 0) {
-        debug(F110,"zcfdat stat failed",name,0);
-        return("");
-    }
-    time_stamp = localtime(&(buffer.st_mtime));
-    if (time_stamp->tm_year < 1900) time_stamp->tm_year += 1900;
-    sprintf(datbuf,"%-4.4d%2.2d%2.2d %2.2d:%2.2d:%2.2d",
-            time_stamp->tm_year,
-            time_stamp->tm_mon + 1,
-            time_stamp->tm_mday,
-            time_stamp->tm_hour,
-            time_stamp->tm_min,
-            time_stamp->tm_sec);
-    debug(F111,"zcfdat",datbuf,strlen(datbuf));
-    return(datbuf);
+  datbuf[0] = '\0';
+  if (stat(name, &buffer) != 0) {
+    debug(F110, "zcfdat stat failed", name, 0);
+    return ("");
+  }
+  time_stamp = localtime(&(buffer.st_mtime));
+  if (time_stamp->tm_year < 1900)
+    time_stamp->tm_year += 1900;
+  sprintf(datbuf, "%-4.4d%2.2d%2.2d %2.2d:%2.2d:%2.2d", time_stamp->tm_year,
+          time_stamp->tm_mon + 1, time_stamp->tm_mday, time_stamp->tm_hour,
+          time_stamp->tm_min, time_stamp->tm_sec);
+  debug(F111, "zcfdat", datbuf, strlen(datbuf));
+  return (datbuf);
 #else
-    return("");
+  return ("");
 #endif /* TIMESTAMP */
 }
 
@@ -1024,7 +1064,7 @@ zfcdat(name) char *name; {
   with Ultrix, it's declared in <time.h> as "char * timezone()" for BSD,
   or as "extern long timezone" for System V.  So to use this, it looks
   like we'll need an #ifdef per system, OS version, etc.
-*/  
+*/
 /*
   ANSI C mktime for Unix
   by David MacKenzie <edf@rocky2.rockefeller.edu>
@@ -1038,42 +1078,42 @@ zfcdat(name) char *name; {
   Doesn't return -1 if passed invalid values.
 */
 #ifdef TIMESTAMP
-time_t
-mktime (tm) struct tm *tm; {
-    int years, months, days, hours, minutes, seconds;
+time_t mktime(tm) struct tm *tm;
+{
+  int years, months, days, hours, minutes, seconds;
 
 #ifdef ANYBSD
-    struct timeb *tbp;
+  struct timeb *tbp;
 
-    ftime(tbp);
-    timezone = tbp->timezone * 60;
-    if (tbp->dstflag)
-      timezone -= 3600;
+  ftime(tbp);
+  timezone = tbp->timezone * 60;
+  if (tbp->dstflag)
+    timezone -= 3600;
 #endif
 
 #ifdef UXIII
-    tzset ();                           /* Set `timezone'. */
+  tzset(); /* Set `timezone'. */
 #endif
 
-    years = tm->tm_year + 1900;         /* year - 1900 -> year */
-    months = tm->tm_mon;                /* 0..11 */
-    days = tm->tm_mday - 1;             /* 1..31 -> 0..30 */
-    hours = tm->tm_hour;                /* 0..23 */
-    minutes = tm->tm_min;               /* 0..59 */
-    seconds = tm->tm_sec;               /* 0..59 */
+  years = tm->tm_year + 1900; /* year - 1900 -> year */
+  months = tm->tm_mon;        /* 0..11 */
+  days = tm->tm_mday - 1;     /* 1..31 -> 0..30 */
+  hours = tm->tm_hour;        /* 0..23 */
+  minutes = tm->tm_min;       /* 0..59 */
+  seconds = tm->tm_sec;       /* 0..59 */
 
-    /* Set `days' to the number of days into the year. */
-    if (months > 1 && leap (years))
-      ++days;
-    while (months-- > 0)
-      days += monlens[months];
-    tm->tm_yday = days;
+  /* Set `days' to the number of days into the year. */
+  if (months > 1 && leap(years))
+    ++days;
+  while (months-- > 0)
+    days += monlens[months];
+  tm->tm_yday = days;
 
-    /* Now set `days' to the number of days since Jan 1, 1970. */
-    days += 365 * (years - 1970) + nleap (years);
-    tm->tm_wday = (days + 4) % 7;       /* Jan 1, 1970 was Thursday. */
+  /* Now set `days' to the number of days since Jan 1, 1970. */
+  days += 365 * (years - 1970) + nleap(years);
+  tm->tm_wday = (days + 4) % 7; /* Jan 1, 1970 was Thursday. */
 
-    return 86400 * days + 3600 * hours + 60 * minutes + seconds + timezone;
+  return 86400 * days + 3600 * hours + 60 * minutes + seconds + timezone;
 }
 #endif /* TIMESTAMP */
 #endif /* NOT_YET */
@@ -1081,50 +1121,53 @@ mktime (tm) struct tm *tm; {
 /* Find initialization file. */
 
 zkermini() {
-/*  nothing here for Unix.  This function added for benefit of VMS Kermit.  */
-    return(0);
+  /*  nothing here for Unix.  This function added for benefit of VMS Kermit.  */
+  return (0);
 }
 
-zmail(p,f) char *p; char *f; {          /* Send file f as mail to address p */
+zmail(p, f) char *p;
+char *f;
+{ /* Send file f as mail to address p */
 
 #ifdef BSD4
-/* The idea is to use /usr/ucb/mail, rather than regular mail, so that   */
-/* a subject line can be included with -s.  Since we can't depend on the */
-/* user's path, we use the convention that /usr/ucb/Mail = /usr/ucb/mail */
-/* and even if Mail has been moved to somewhere else, this should still  */
-/* find it... But there really should be a better way... */
+  /* The idea is to use /usr/ucb/mail, rather than regular mail, so that   */
+  /* a subject line can be included with -s.  Since we can't depend on the */
+  /* user's path, we use the convention that /usr/ucb/Mail = /usr/ucb/mail */
+  /* and even if Mail has been moved to somewhere else, this should still  */
+  /* find it... But there really should be a better way... */
 
-/* Should also make some check on zmbuf overflow... */
+  /* Should also make some check on zmbuf overflow... */
 
-    sprintf(zmbuf,"Mail -s %cfile %s%c %s < %s", '"', f, '"', p, f);
-    system(zmbuf);
+  sprintf(zmbuf, "Mail -s %cfile %s%c %s < %s", '"', f, '"', p, f);
+  system(zmbuf);
 #else
 #ifdef UXIII
-    sprintf(zmbuf,"mail %s < %s", p, f);
-    system(zmbuf);
+  sprintf(zmbuf, "mail %s < %s", p, f);
+  system(zmbuf);
 #else
-    *zmbuf = '\0';
+  *zmbuf = '\0';
 #endif
-#endif    
-    return(0);
+#endif
+  return (0);
 }
 
-zprint(p,f) char *p; char *f; {         /* Print file f with options p */
+zprint(p, f) char *p;
+char *f;
+{ /* Print file f with options p */
 
 #ifdef BSD4
-    sprintf(zmbuf,"lpr %s %s", p, f); /* Construct print command */
-    system(zmbuf);
+  sprintf(zmbuf, "lpr %s %s", p, f); /* Construct print command */
+  system(zmbuf);
 #else
 #ifdef UXIII
-    sprintf(zmbuf,"lp %s %s", p, f);
-    system(zmbuf);    
+  sprintf(zmbuf, "lp %s %s", p, f);
+  system(zmbuf);
 #else
-    *zmbuf = '\0';
+  *zmbuf = '\0';
 #endif
 #endif
-    return(0);
+  return (0);
 }
-
 
 /* Directory Functions for Unix, written by Jeff Damens, CUCCA, 1984. */
 
@@ -1136,9 +1179,9 @@ zprint(p,f) char *p; char *f; {         /* Print file f with options p */
  */
 
 struct path {
-              char npart[MAXNAMLEN];    /* name part of path segment */
-              struct path *fwd;         /* forward ptr */
-            };
+  char npart[MAXNAMLEN]; /* name part of path segment */
+  struct path *fwd;      /* forward ptr */
+};
 
 #ifdef PROVX1
 #define SSPACE 500
@@ -1147,17 +1190,17 @@ struct path {
 #define SSPACE 500
 #else
 #ifdef aegis
-#define SSPACE 10000                    /* size of string-generating buffer */
-static char bslash;                     /* backslash character if active */
+#define SSPACE 10000 /* size of string-generating buffer */
+static char bslash; /* backslash character if active */
 #else
-#define SSPACE 2000                     /* size of string-generating buffer */
+#define SSPACE 2000 /* size of string-generating buffer */
 #endif
 #endif
 #endif
-static char sspace[SSPACE];             /* buffer to generate names in */
-static char *freeptr,**resptr;          /* copies of caller's arguments */
-static int remlen;                      /* remaining length in caller's array*/
-static int numfnd;                      /* number of matches found */
+static char sspace[SSPACE];     /* buffer to generate names in */
+static char *freeptr, **resptr; /* copies of caller's arguments */
+static int remlen;              /* remaining length in caller's array*/
+static int numfnd;              /* number of matches found */
 
 /*
  * splitpath:
@@ -1170,44 +1213,51 @@ static int numfnd;                      /* number of matches found */
  * Returns: A linked list of the slash-separated segments of the input.
  */
 
-struct path *
-splitpath(p)
-char *p;
+struct path *splitpath(p) char *p;
 {
- struct path *head,*cur,*prv;
- int i;
- head = prv = NULL;
- if (*p == '/') p++;            /* skip leading slash */
- while (*p != '\0')
- {
-   cur = (struct path *) malloc(sizeof (struct path));
-   debug(F101,"splitpath malloc","",cur);
-   if (cur == NULL) fatal("malloc fails in splitpath()");
-   cur -> fwd = NULL;
-   if (head == NULL) head = cur;
-   else prv -> fwd = cur;       /* link into chain */
-   prv = cur;
+  struct path *head, *cur, *prv;
+  int i;
+  head = prv = NULL;
+  if (*p == '/')
+    p++; /* skip leading slash */
+  while (*p != '\0') {
+    cur = (struct path *)malloc(sizeof(struct path));
+    debug(F101, "splitpath malloc", "", cur);
+    if (cur == NULL)
+      fatal("malloc fails in splitpath()");
+    cur->fwd = NULL;
+    if (head == NULL)
+      head = cur;
+    else
+      prv->fwd = cur; /* link into chain */
+    prv = cur;
 #ifdef aegis
-   /* treat backslash as "../" */
-   if (bslash && *p == bslash) {
-     strcpy(cur->npart, "..");
-     ++p;
-   } else {
-     for (i=0; i < MAXNAMLEN-1 && *p && *p != '/' && *p != bslash; i++)
-       cur -> npart[i] = *p++;
-     cur -> npart[i] = '\0';      /* end this segment */
-     if (i >= MAXNAMLEN) while (*p && *p != '/' && *p != bslash) p++;
-   }
-   if (*p == '/') p++;
+    /* treat backslash as "../" */
+    if (bslash && *p == bslash) {
+      strcpy(cur->npart, "..");
+      ++p;
+    } else {
+      for (i = 0; i < MAXNAMLEN - 1 && *p && *p != '/' && *p != bslash; i++)
+        cur->npart[i] = *p++;
+      cur->npart[i] = '\0'; /* end this segment */
+      if (i >= MAXNAMLEN)
+        while (*p && *p != '/' && *p != bslash)
+          p++;
+    }
+    if (*p == '/')
+      p++;
 #else
-   for (i=0; i < MAXNAMLEN-1 && *p != '/' && *p != '\0'; i++)
-     cur -> npart[i] = *p++;
-   cur -> npart[i] = '\0';      /* end this segment */
-   if (i >= MAXNAMLEN) while (*p != '/' && *p != '\0') p++;
-   if (*p == '/') p++;
+    for (i = 0; i < MAXNAMLEN - 1 && *p != '/' && *p != '\0'; i++)
+      cur->npart[i] = *p++;
+    cur->npart[i] = '\0'; /* end this segment */
+    if (i >= MAXNAMLEN)
+      while (*p != '/' && *p != '\0')
+        p++;
+    if (*p == '/')
+      p++;
 #endif
- }
- return(head);
+  }
+  return (head);
 }
 
 /*
@@ -1229,59 +1279,60 @@ char *p;
  * By: Jeff Damens, CUCCA, 1984.
  */
 
-fgen(pat,resarry,len)
-char *pat,*resarry[];
+fgen(pat, resarry, len) char *pat, *resarry[];
 int len;
 {
- struct path *head;
- char scratch[100],*sptr;
+  struct path *head;
+  char scratch[100], *sptr;
 #ifdef aegis
- char *getenv(), *index(), *namechars;
- int tilde = 0, bquote = 0;
+  char *getenv(), *index(), *namechars;
+  int tilde = 0, bquote = 0;
 
- if ((namechars = getenv("NAMECHARS")) != NULL) {
-  if (index(namechars, '~' ) != NULL) tilde  = '~';
-  if (index(namechars, '\\') != NULL) bslash = '\\';
-  if (index(namechars, '`' ) != NULL) bquote = '`';
- }
- else { tilde = '~'; bslash = '\\'; bquote = '`'; }
+  if ((namechars = getenv("NAMECHARS")) != NULL) {
+    if (index(namechars, '~') != NULL)
+      tilde = '~';
+    if (index(namechars, '\\') != NULL)
+      bslash = '\\';
+    if (index(namechars, '`') != NULL)
+      bquote = '`';
+  } else {
+    tilde = '~';
+    bslash = '\\';
+    bquote = '`';
+  }
 
- sptr = scratch;
- /* copy "`node_data", etc. anchors */
- if (bquote && *pat == bquote)
-  while (*pat && *pat != '/' && *pat != bslash)
-   *sptr++ = *pat++;
- else if (tilde && *pat == tilde)
-  *sptr++ = *pat++;
- while (*pat == '/')
-  *sptr++ = *pat++;
- if (sptr == scratch)
- {
-  strcpy(scratch,"./");
-  sptr = scratch+2;
- }                                      /* init buffer correctly */
- head = splitpath(pat);
+  sptr = scratch;
+  /* copy "`node_data", etc. anchors */
+  if (bquote && *pat == bquote)
+    while (*pat && *pat != '/' && *pat != bslash)
+      *sptr++ = *pat++;
+  else if (tilde && *pat == tilde)
+    *sptr++ = *pat++;
+  while (*pat == '/')
+    *sptr++ = *pat++;
+  if (sptr == scratch) {
+    strcpy(scratch, "./");
+    sptr = scratch + 2;
+  } /* init buffer correctly */
+  head = splitpath(pat);
 #else
- head = splitpath(pat);
- if (*pat == '/')
- {
-  scratch[0] = '/';
-  sptr = scratch+1;
- }
- else
- {
-  strcpy(scratch,"./");
-  sptr = scratch+2;
- }                                      /* init buffer correctly */
+  head = splitpath(pat);
+  if (*pat == '/') {
+    scratch[0] = '/';
+    sptr = scratch + 1;
+  } else {
+    strcpy(scratch, "./");
+    sptr = scratch + 2;
+  } /* init buffer correctly */
 #endif
- numfnd = 0;                            /* none found yet */
- freeptr = sspace;                      /* this is where matches are copied */
- resptr = resarry;                      /* static copies of these so*/
- remlen = len;                          /* recursive calls can alter them */
- traverse(head,scratch,sptr);           /* go walk the directory tree */
- for (; head != NULL; head = head -> fwd)
-   free(head);                          /* return the path segments */
- return(numfnd);                        /* and return the number of matches */
+  numfnd = 0;                    /* none found yet */
+  freeptr = sspace;              /* this is where matches are copied */
+  resptr = resarry;              /* static copies of these so*/
+  remlen = len;                  /* recursive calls can alter them */
+  traverse(head, scratch, sptr); /* go walk the directory tree */
+  for (; head != NULL; head = head->fwd)
+    free(head);    /* return the path segments */
+  return (numfnd); /* and return the number of matches */
 }
 
 /* traverse:
@@ -1309,86 +1360,89 @@ int len;
  *        in the previous argument.
  * Returns: nothing.
  */
-traverse(pl,sofar,endcur)
-struct path *pl;
-char *sofar,*endcur;
+traverse(pl, sofar, endcur) struct path *pl;
+char *sofar, *endcur;
 {
 #ifdef BSD42
- DIR *fd, *opendir();
- struct direct *dirbuf;
+  DIR *fd, *opendir();
+  struct direct *dirbuf;
 #else
 #ifdef BSD29
- DIR *fd, *opendir();
- struct direct *dirbuf;
+  DIR *fd, *opendir();
+  struct direct *dirbuf;
 #else
- int fd;
- struct direct dir_entry;
- struct direct *dirbuf = &dir_entry;
+  int fd;
+  struct direct dir_entry;
+  struct direct *dirbuf = &dir_entry;
 #endif
 #endif
- struct stat statbuf;
- if (pl == NULL)
- {
-  *--endcur = '\0';                    /* end string, overwrite trailing / */
-  addresult(sofar);
-  return;
- }
- if (!iswild(pl -> npart))
- {
-  strcpy(endcur,pl -> npart);
-  endcur += strlen(pl -> npart);
-  *endcur = '\0';                       /* end current string */
-  if (stat(sofar,&statbuf) == 0)        /* if current piece exists */
+  struct stat statbuf;
+  if (pl == NULL) {
+    *--endcur = '\0'; /* end string, overwrite trailing / */
+    addresult(sofar);
+    return;
+  }
+  if (!iswild(pl->npart)) {
+    strcpy(endcur, pl->npart);
+    endcur += strlen(pl->npart);
+    *endcur = '\0';                 /* end current string */
+    if (stat(sofar, &statbuf) == 0) /* if current piece exists */
+    {
+      *endcur++ = '/'; /* add slash to end */
+      *endcur = '\0';  /* and end the string */
+      traverse(pl->fwd, sofar, endcur);
+    }
+    return;
+  }
+  /* cont'd... */
+
+  /*...traverse, cont'd */
+
+  /* segment contains wildcards, have to search directory */
+  *endcur = '\0'; /* end current string */
+  if (stat(sofar, &statbuf) == -1)
+    return; /* doesn't exist, forget it */
+  if ((statbuf.st_mode & S_IFDIR) == 0)
+    return;  /* not a directory, skip */
+#ifdef BSD42 /* ==BSD4 */
+  if ((fd = opendir(sofar)) == NULL)
+    return; /* can't open, forget it */
+  while (dirbuf = readdir(fd))
+#else
+#ifdef BSD29 /* ==BSD29 */
+  if ((fd = opendir(sofar)) == NULL)
+    return; /* can't open, forget it */
+  while (dirbuf = readdir(fd))
+#else
+
+  if ((fd = open(sofar, O_RDONLY)) < 0)
+    return; /* can't open, forget it */
+  while (read(fd, dirbuf, sizeof dir_entry))
+#endif
+#endif
   {
-      *endcur++ = '/';                  /* add slash to end */
-      *endcur = '\0';                   /* and end the string */
-      traverse(pl -> fwd,sofar,endcur);
+    strncpy(nambuf, dirbuf->d_name,
+            MAXNAMLEN); /* Get a null terminated copy!!! */
+    nambuf[MAXNAMLEN] = '\0';
+#ifdef unos
+    if (dirbuf->d_ino != -1 && match(pl->npart, nambuf)) {
+#else
+    if (dirbuf->d_ino != 0 && match(pl->npart, nambuf)) {
+#endif
+      char *eos;
+      strcpy(endcur, nambuf);
+      eos = endcur + strlen(nambuf);
+      *eos = '/'; /* end this segment */
+      traverse(pl->fwd, sofar, eos + 1);
+    }
   }
-  return;
- }
-/* cont'd... */
-
-/*...traverse, cont'd */
-
-/* segment contains wildcards, have to search directory */
- *endcur = '\0';                                /* end current string */
- if (stat(sofar,&statbuf) == -1) return;        /* doesn't exist, forget it */
- if ((statbuf.st_mode & S_IFDIR) == 0) return;  /* not a directory, skip */
-#ifdef BSD42                    /* ==BSD4 */
- if ((fd = opendir(sofar)) == NULL) return;     /* can't open, forget it */
- while (dirbuf = readdir(fd))
-#else
-#ifdef BSD29                    /* ==BSD29 */
- if ((fd = opendir(sofar)) == NULL) return;     /* can't open, forget it */
- while (dirbuf = readdir(fd))
-#else
-
- if ((fd = open(sofar,O_RDONLY)) < 0) return;   /* can't open, forget it */
- while ( read(fd,dirbuf,sizeof dir_entry) )
-#endif
-#endif
-{
-  strncpy(nambuf,dirbuf->d_name,MAXNAMLEN); /* Get a null terminated copy!!! */
-  nambuf[MAXNAMLEN] = '\0';
-#ifdef unos  
-  if (dirbuf->d_ino != -1 && match(pl -> npart,nambuf)) {
-#else
-  if (dirbuf->d_ino != 0 && match(pl -> npart,nambuf)) {
-#endif
-    char *eos;
-    strcpy(endcur,nambuf);
-    eos = endcur + strlen(nambuf);
-    *eos = '/';                    /* end this segment */
-    traverse(pl -> fwd,sofar,eos+1);
-  }
-}
-#ifdef BSD42                    /* ==BSD4 */
- closedir(fd);
+#ifdef BSD42 /* ==BSD4 */
+  closedir(fd);
 #else
 #ifdef BSD29
- closedir(fd);
+  closedir(fd);
 #else
- close(fd);
+  close(fd);
 #endif
 #endif
 }
@@ -1404,33 +1458,33 @@ char *sofar,*endcur;
  * Returns: nothing.
  */
 
-addresult(str)
-char *str;
+addresult(str) char *str;
 {
- int l;
- if (strncmp(str,"./",2) == 0) str += 2;
- if (--remlen < 0) {
-  numfnd = -1;
-  return;
- }
- l = strlen(str) + 1;                   /* size this will take up */
- if ((freeptr + l) > &sspace[SSPACE-1]) {
-    numfnd = -1;                        /* do not record if not enough space */
+  int l;
+  if (strncmp(str, "./", 2) == 0)
+    str += 2;
+  if (--remlen < 0) {
+    numfnd = -1;
     return;
   }
- strcpy(freeptr,str);
- *resptr++ = freeptr;
- freeptr += l;
- numfnd++;
+  l = strlen(str) + 1; /* size this will take up */
+  if ((freeptr + l) > &sspace[SSPACE - 1]) {
+    numfnd = -1; /* do not record if not enough space */
+    return;
+  }
+  strcpy(freeptr, str);
+  *resptr++ = freeptr;
+  freeptr += l;
+  numfnd++;
 }
 
-iswild(str)
-char *str;
+iswild(str) char *str;
 {
- char c;
- while ((c = *str++) != '\0')
-   if (c == '*' || c == '?') return(1);
- return(0);
+  char c;
+  while ((c = *str++) != '\0')
+    if (c == '*' || c == '?')
+      return (1);
+  return (0);
 }
 
 /*
@@ -1444,30 +1498,33 @@ char *str;
  * Returns: 1 if match, 0 if no match.
  */
 
-match(pattern,string) char *pattern,*string; {
-    char *psave,*ssave;                 /* back up pointers for failure */
-    psave = ssave = NULL;
-    while (1) {
-        for (; *pattern == *string; pattern++,string++)  /* skip first */
-            if (*string == '\0') return(1);     /* end of strings, succeed */
-        if (*string != '\0' && *pattern == '?') {
-            pattern++;                  /* '?', let it match */
-            string++;
-        } else if (*pattern == '*') {   /* '*' ... */
-            psave = ++pattern;          /* remember where we saw it */
-            ssave = string;             /* let it match 0 chars */
-        } else if (ssave != NULL && *ssave != '\0') {   /* if not at end  */
-                                        /* ...have seen a star */
-            string = ++ssave;           /* skip 1 char from string */
-            pattern = psave;            /* and back up pattern */
-        } else return(0);               /* otherwise just fail */
-    }
+match(pattern, string) char *pattern, *string;
+{
+  char *psave, *ssave; /* back up pointers for failure */
+  psave = ssave = NULL;
+  while (1) {
+    for (; *pattern == *string; pattern++, string++) /* skip first */
+      if (*string == '\0')
+        return (1); /* end of strings, succeed */
+    if (*string != '\0' && *pattern == '?') {
+      pattern++; /* '?', let it match */
+      string++;
+    } else if (*pattern == '*') {                 /* '*' ... */
+      psave = ++pattern;                          /* remember where we saw it */
+      ssave = string;                             /* let it match 0 chars */
+    } else if (ssave != NULL && *ssave != '\0') { /* if not at end  */
+                                                  /* ...have seen a star */
+      string = ++ssave;                           /* skip 1 char from string */
+      pattern = psave;                            /* and back up pattern */
+    } else
+      return (0); /* otherwise just fail */
+  }
 }
 
 /* The following two functions are for expanding tilde in filenames */
 /* Contributed by Howie Kaye, CUCCA, developed for CCMD package. */
 
-/* 
+/*
  * WHOAMI:
  * 1) Get real uid
  * 2) See if the $USER environment variable is set ($LOGNAME on AT&T)
@@ -1477,51 +1534,50 @@ match(pattern,string) char *pattern,*string; {
  * 6) Otherwise, get a name for realuid from /etc/passwd
  */
 
-char *
-whoami () {
+char *whoami() {
 #ifdef DTILDE
-  static char realname[256];            /* user's name */
-  static int realuid = -1;              /* user's real uid */
-  char loginname[256], envname[256];    /* temp storage */
+  static char realname[256];         /* user's name */
+  static int realuid = -1;           /* user's real uid */
+  char loginname[256], envname[256]; /* temp storage */
   char *getlogin(), *getenv(), *c;
   struct passwd *p, *getpwnam(), *getpwuid(), *getpwent();
 
   if (realuid != -1)
-    return(realname);
+    return (realname);
 
-  realuid = getuid ();                  /* get our uid */
+  realuid = getuid(); /* get our uid */
 
   /* how about $USER or $LOGNAME? */
-  if ((c = getenv(NAMEENV)) != NULL) {  /* check the env variable */
-    strcpy (envname, c);                
+  if ((c = getenv(NAMEENV)) != NULL) { /* check the env variable */
+    strcpy(envname, c);
     p = getpwnam(envname);
-    if (p->pw_uid == (unsigned int)realuid) {           /* get passwd entry */
-                                        /* for envname */
-      strcpy (realname, envname);       /* if the uid's are the same */
-      return(realname);
+    if (p->pw_uid == (unsigned int)realuid) { /* get passwd entry */
+                                              /* for envname */
+      strcpy(realname, envname);              /* if the uid's are the same */
+      return (realname);
     }
   }
 
   /* can we use loginname() ? */
-  if ((c =  getlogin()) != NULL) {      /* name from utmp file */
-    strcpy (loginname, c);      
-    if ((p = getpwnam(loginname)) != NULL) /* get passwd entry */
-      if (p->pw_uid == (unsigned int)realuid) { /* for loginname */ 
-        strcpy (realname, loginname);   /* if the uid's are the same */
-        return(realname);
+  if ((c = getlogin()) != NULL) { /* name from utmp file */
+    strcpy(loginname, c);
+    if ((p = getpwnam(loginname)) != NULL)      /* get passwd entry */
+      if (p->pw_uid == (unsigned int)realuid) { /* for loginname */
+        strcpy(realname, loginname);            /* if the uid's are the same */
+        return (realname);
       }
   }
 
   /* Use first name we get for realuid */
   if ((p = getpwuid(realuid)) == NULL) { /* name for uid */
-    realname[0] = '\0';                 /* no user name */
+    realname[0] = '\0';                  /* no user name */
     realuid = -1;
-    return(NULL);
+    return (NULL);
   }
-  strcpy (realname, p->pw_name);        
-  return(realname);
+  strcpy(realname, p->pw_name);
+  return (realname);
 #else
-  return(NULL);
+  return (NULL);
 #endif /* dtilde */
 }
 
@@ -1531,8 +1587,8 @@ whoami () {
 
 #define DIRSEP '/'
 
-char *
-tilde_expand(dirname) char *dirname; {
+char *tilde_expand(dirname) char *dirname;
+{
 #define BUFLEN 256
 #ifdef DTILDE
   struct passwd *user, *getpwuid(), *getpwnam();
@@ -1542,38 +1598,39 @@ tilde_expand(dirname) char *dirname; {
   int i, j;
   char *whoami();
 
-  debug(F111,"tilde_expand dirname",dirname,dirname[0]);
+  debug(F111, "tilde_expand dirname", dirname, dirname[0]);
 
-  if (dirname[0] != '~') return(dirname); /* not a tilde...return param */
-  if (!strcmp(olddir,dirname)) return(oldrealdir); /* same as last time. */
-                                        /* so return old answer */
+  if (dirname[0] != '~')
+    return (dirname); /* not a tilde...return param */
+  if (!strcmp(olddir, dirname))
+    return (oldrealdir); /* same as last time. */
+                         /* so return old answer */
   else {
 
     j = strlen(dirname);
-    for (i = 0; i < j; i++)             /* find username part of string */
+    for (i = 0; i < j; i++) /* find username part of string */
       if (dirname[i] != DIRSEP)
         temp[i] = dirname[i];
-      else break;
-    temp[i] = '\0';                     /* tie off with a NULL */
-    if (i == 1) {                       /* if just a "~" */
-      user = getpwnam(whoami());        /*  get info on current user */
-    }
-    else {
-      user = getpwnam(&temp[1]);        /* otherwise on the specified user */
+      else
+        break;
+    temp[i] = '\0';              /* tie off with a NULL */
+    if (i == 1) {                /* if just a "~" */
+      user = getpwnam(whoami()); /*  get info on current user */
+    } else {
+      user = getpwnam(&temp[1]); /* otherwise on the specified user */
     }
   }
-  if (user != NULL) {                   /* valid user? */
-    strcpy(olddir, dirname);            /* remember the directory */
-    strcpy(oldrealdir,user->pw_dir);    /* and their home directory */
-    strcat(oldrealdir,&dirname[i]);
-    return(oldrealdir);
-  }
-  else {                                /* invalid? */
-    strcpy(olddir, dirname);            /* remember for next time */
+  if (user != NULL) {                 /* valid user? */
+    strcpy(olddir, dirname);          /* remember the directory */
+    strcpy(oldrealdir, user->pw_dir); /* and their home directory */
+    strcat(oldrealdir, &dirname[i]);
+    return (oldrealdir);
+  } else {                   /* invalid? */
+    strcpy(olddir, dirname); /* remember for next time */
     strcpy(oldrealdir, dirname);
-    return(oldrealdir);
+    return (oldrealdir);
   }
 #else
-  return(NULL);
+  return (NULL);
 #endif /* dtilde */
 }
