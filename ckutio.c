@@ -1,4 +1,4 @@
-char *ckxv = "Unix tty I/O, 4G(061), 20 Apr 2021";
+char *ckxv = "Unix tty I/O, 4G(062), 20 Apr 2021";
 
 /*  C K U T I O  */
 
@@ -317,77 +317,85 @@ char *ckxsys = " AT&T System III/System V";
    gtimer()  -- Get elapsed time since last call to rtimer()
  */
 
-/* Conditional Includes */
+/*
+ * Conditional
+ * Includes
+ */
 
 #ifdef FT18
-#include <sys/file.h> /* File information */
-#endif /* ft18 */
+#include <sys/file.h>             /* File information */
+#endif
 
-/* Whether to #include <sys/file.h>... */
+/*
+ * Whether to include
+ * <sys/file.h>...
+ */
+
 #ifndef PROVX1
 #ifndef aegis
 #ifndef XENIX
 #ifndef unos
-#include <sys/file.h> /* File information */
-#endif /* unos */
-#endif /* xenix */
-#endif /* aegis */
-#endif /* provx1 */
+#include <sys/file.h>             /* File information */
+#endif
+#endif
+#endif
+#endif
 
 #ifdef aegis
-/* #include <sys/file.h> */
 #include <fcntl.h>
-#endif /* aegis */
+#endif
 
 #ifdef BSD4
 #include <fcntl.h>
 #include <sys/file.h>
-#endif /* BSD4 */
+#endif
 
-/* System III, System V */
+/*
+ * System III
+ * or System V
+ */
 
 #ifdef UXIII
 #include <termio.h>
-/* #ifdef unos */        /* This UNOS-specific include applied to */
-/* #include <ioctl.h> */ /* an ancient version of UNOS.  Uncomment */
-/* #else */              /* these lines if you need them. */
 #include <sys/ioctl.h>
-/* #endif */ /* unos */
-#include <errno.h> /* error numbers for system returns */
-#include <fcntl.h> /* directory reading for locking */
+#include <errno.h>                /* error numbers for system returns */
+#include <fcntl.h>                /* directory reading for locking */
 #ifdef ATT7300
-#include <sys/phone.h> /* Unix PC, internal modem dialer */
-#endif /* att7300 */
-#endif /* uxiii */
+#include <sys/phone.h>            /* UNIX PC, internal modem dialer */
+#endif
+#endif
 
 #ifdef HPUX
 #include <sys/modem.h>
 #endif
 
-/* Not Sys III/V */
+/*
+ * Not System III
+ * or System V
+ */
 
 #ifndef UXIII
-#include <sgtty.h> /* Set/Get tty modes */
+#include <sgtty.h>                /* Set/Get tty modes */
 #ifndef PROVX1
 #ifndef V7
 #ifndef BSD41
-#include <sys/time.h> /* Clock info (for break generation) */
-#endif /* not bsd41 */
-#endif /* not v7 */
-#endif /* not provx1 */
-#endif /* not uxiii */
+#include <sys/time.h>             /* Clock info (for break generation) */
+#endif
+#endif
+#endif
+#endif
 
 #ifdef BSD41
-#include <sys/timeb.h> /* BSD 4.1 ... ceb */
-#endif /* bsd41 */
+#include <sys/timeb.h>            /* BSD 4.1 ... ceb */
+#endif
 
 #ifdef BSD29
-#include <sys/timeb.h> /* BSD 2.9 (Vic Abell, Purdue) */
-#endif /* bsd29 */
+#include <sys/timeb.h>            /* BSD 2.9 (Vic Abell, Purdue) */
+#endif
 
 #ifdef TOWER1
-#include <sys/timeb.h> /* Clock info for NCR Tower */
-#endif /* tower1 */
+#include <sys/timeb.h>            /* Clock info for NCR Tower */
+#endif
 
 #ifdef ultrix
 #include <sys/ioctl.h>
@@ -409,8 +417,11 @@ char *ckxsys = " AT&T System III/System V";
 #undef FIONREAD
 #endif
 
-/* The following two conditional #defines are catch-alls for those systems */
-/* that didn't have or couldn't find <file.h>... */
+/*
+ * The following two conditional #defines
+ * are catch-alls for those systems that
+ * didn't have or couldn't find <file.h>
+ */
 
 #ifndef FREAD
 #define FREAD 0x01
@@ -422,81 +433,94 @@ char *ckxsys = " AT&T System III/System V";
 
 /* Declarations */
 
-long time();      /* All Unixes should have this... */
-extern int errno; /* System call error code. */
+long time();                      /* All UNIXes should have this... */
+extern int errno;                 /* System call error code. */
 
-/* Special stuff for V7 input buffer peeking */
+/*
+ * Special stuff for V7
+ * input buffer peeking
+ */
 
 #ifdef V7
 int kmem[2] = {-1, -1};
 char *initrawq(), *qaddr[2] = {0, 0};
 #define CON 0
 #define TTY 1
-#endif /* v7 */
-
-/* dftty is the device name of the default device for file transfer */
-/* dfloc is 0 if dftty is the user's console terminal, 1 if an external line */
-
-#ifdef PROVX1
-char *dftty = "/dev/com1.dout"; /* Only example so far of a system */
-int dfloc = 1;                  /* that goes in local mode by default */
-#else
-char *dftty = CTTNAM; /* Remote by default, use normal */
-int dfloc = 0;        /* controlling terminal name. */
-#endif /* provx1 */
-
-#ifdef RTU
-int rtu_bug = 0; /* set to 1 when returning from SIGTSTP */
 #endif
 
-int dfprty = 0;   /* Default parity (0 = none) */
-int ttprty = 0;   /* Parity in use. */
-int ttmdm = 0;    /* Modem in use. */
-int dfflow = 1;   /* Xon/Xoff flow control */
-int backgrd = 0;  /* Assume in foreground (no '&' ) */
-int iniflags = 0; /* fcntl flags for ttyfd */
+/*
+ * dftty is the device name of the default
+ * device for file transfer. dfloc is 0 if
+ * dftty is the user's console terminal,
+ * and 1 if an external line
+ */
 
-int ckxech = 0; /* 0 if system normally echoes console characters, else 1 */
+#ifdef PROVX1
+char *dftty = "/dev/com1.dout";   /* Only example so far of a system */
+int dfloc = 1;                    /* that goes in local mode by default */
+#else
+char *dftty = CTTNAM;             /* Remote by default, use normal */
+int dfloc = 0;                    /* controlling terminal name. */
+#endif
 
-/* Declarations of variables global within this module */
+#ifdef RTU
+int rtu_bug = 0;                  /* set to 1 when returning from SIGTSTP */
+#endif
 
-static long tcount; /* Elapsed time counter */
+int dfprty = 0;                   /* Default parity (0 = none) */
+int ttprty = 0;                   /* Parity in use. */
+int ttmdm = 0;                    /* Modem in use. */
+int dfflow = 1;                   /* Xon/Xoff flow control */
+int backgrd = 0;                  /* Assume in foreground (no '&' ) */
+int iniflags = 0;                 /* fcntl flags for ttyfd */
+int ckxech = 0;                   /* 0 if system normally echoes
+								   * console characters, else 1 */
+
+/*
+ * Declarations of variables
+ * global within this module
+ */
+
+static long tcount;               /* Elapsed time counter */
 
 static char *brnuls = "\0\0\0\0\0\0\0"; /* A string of nulls */
 
-static jmp_buf sjbuf, jjbuf; /* Longjump buffer */
-static int lkf = 0,          /* Line lock flag */
-    conif = 0,               /* Console interrupts on/off flag */
-    cgmf = 0,                /* Flag that console modes saved */
-    xlocal = 0,              /* Flag for tty local or remote */
-    ttyfd = -1;              /* TTY file descriptor */
-static char escchr;          /* Escape or attn character */
+static jmp_buf sjbuf, jjbuf;      /* Longjump buffer */
+static int lkf = 0,               /* Line lock flag */
+    conif = 0,                    /* Console interrupts on/off flag */
+    cgmf = 0,                     /* Flag that console modes saved */
+    xlocal = 0,                   /* Flag for tty local or remote */
+    ttyfd = -1;                   /* TTY file descriptor */
+static char escchr;               /* Escape or attn character */
 
 #ifdef BSD42
-static struct timeval tv; /* For getting time, from sys/time.h */
+static struct timeval tv;         /* For getting time, from sys/time.h */
 static struct timezone tz;
-#endif /* bsd42 */
+#endif
 
 #ifdef BSD29
-static long clock;       /* For getting time from sys/time.h */
-static struct timeb ftp; /* And from sys/timeb.h */
-#endif /* bsd29 */
+static long clock;                /* For getting time from sys/time.h */
+static struct timeb ftp;          /* And from sys/timeb.h */
+#endif
 
 #ifdef BSD41
-static long clock;       /* For getting time from sys/time.h */
-static struct timeb ftp; /* And from sys/timeb.h */
-#endif /* bsd41 */
+static long clock;                /* For getting time from sys/time.h */
+static struct timeb ftp;          /* And from sys/timeb.h */
+#endif
 
 #ifdef TOWER1
-static long clock;       /* For getting time from sys/time.h */
-static struct timeb ftp; /* And from sys/timeb.h */
-#endif /* tower1 */
+static long clock;                /* For getting time from sys/time.h */
+static struct timeb ftp;          /* And from sys/timeb.h */
+#endif
 
 #ifdef V7
 static long clock;
-#endif /* v7 */
+#endif
 
-/* sgtty/termio information... */
+/*
+ * sgtty/termio
+ * information...
+ */
 
 #ifdef UXIII
 static struct termio ttold = {0}; /* Init'd for word alignment, */
@@ -506,41 +530,43 @@ static struct termio ccold = {0};
 static struct termio ccraw = {0};
 static struct termio cccbrk = {0};
 #else
-static struct sgttyb /* sgtty info... */
-    ttold,
-    ttraw, tttvt, ttbuf,           /* for communication line */
-    ccold, ccraw, cccbrk, vanilla; /* and for console */
-#endif /* uxiii */
+static struct sgttyb              /* sgtty info... */
+  ttold,
+  ttraw, tttvt, ttbuf,            /* for communication line */
+  ccold, ccraw, cccbrk, vanilla;  /* and for console */
+#endif
 
 #ifdef ATT7300
-static int attmodem = 0; /* ATT7300 internal-modem status */
-#endif /* att7300 */
+static int attmodem = 0;          /* ATT7300 internal-modem status */
+#endif
 
-static char flfnam[80]; /* uucp lock file path name */
-static int hasLock = 0; /* =1 if this kermit locked uucp */
-static int inbufc = 0;  /* stuff for efficient SIII raw line */
-static int ungotn = -1; /* pushback to unread character */
-static int conesc = 0;  /* set to 1 if esc char (^\) typed */
+static char flfnam[80];           /* UUCP lock file path name */
+static int hasLock = 0;           /* =1 if this kermit locked uucp */
+static int inbufc = 0;            /* stuff for efficient SIII raw line */
+static int ungotn = -1;           /* pushback to unread character */
+static int conesc = 0;            /* set to 1 if esc char (^\) typed */
 
-static int ttlock();           /* definition of ttlock subprocedure */
-static int ttunlck();          /* and unlock subprocedure */
-static char ttnmsv[DEVNAMLEN]; /* copy of open path for tthang */
+static int ttlock();              /* definition of ttlock subprocedure */
+static int ttunlck();             /* and unlock subprocedure */
+static char ttnmsv[DEVNAMLEN+1];  /* copy of open path for tthang */
 
 #ifdef aegis
-static status_$t st;     /* error status return value */
-static short concrp = 0; /* true if console is CRP pad */
+static status_$t st;              /* error status return value */
+static short concrp = 0;          /* true if console is CRP pad */
 #define CONBUFSIZ 10
-static char conbuf[CONBUFSIZ]; /* console readahead buffer */
-static int conbufn = 0;        /* # chars in readahead buffer */
-static char *conbufp;          /* next char in readahead buffer */
-static uid_$t ttyuid;          /* tty type uid */
-static uid_$t conuid;          /* stdout type uid */
+static char conbuf[CONBUFSIZ+1];  /* console readahead buffer */
+static int conbufn = 0;           /* # chars in readahead buffer */
+static char *conbufp;             /* next char in readahead buffer */
+static uid_$t ttyuid;             /* tty type uid */
+static uid_$t conuid;             /* stdout type uid */
 
-/* APOLLO Aegis main()
+/*
+ * APOLLO Aegis main()
  * establish acl usage and cleanup handling
  *    this makes sure that CRP pads
  *    get restored to a usable mode
  */
+
 main(argc, argv) int argc;
 char **argv;
 {
@@ -695,11 +721,14 @@ int *lcl, modem;
     perror(ttname);
     return -1;
   }
-#endif /* aegis */
+#endif
 
   strncpy(ttnmsv, ttname, DEVNAMLEN); /* Open, keep copy of name locally. */
 
-  /* Caller wants us to figure out if line is controlling tty */
+  /*
+   * Caller wants us to figure out
+   * if line is controlling tty
+   */
 
   debug(F111, "ttopen ok", ttname, *lcl);
   if (*lcl != 0) {

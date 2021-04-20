@@ -194,12 +194,14 @@ CC2= cc
 #
 make:
 	@echo 'Make what?  You must tell which system to make C-Kermit for.'
+	@false
 
 wermit: ckcmai.o ckucmd.o ckuusr.o ckuus2.o ckuus3.o ckcpro.o ckcfns.o \
-		 ckcfn2.o ckucon.o ckutio.o ckufio.o ckudia.o ckuscr.o
-	$(CC2) $(LNKFLAGS) -o wermit ckcmai.o ckutio.o ckufio.o ckcfns.o \
-		 ckcfn2.o ckcpro.o ckucmd.o ckuus2.o ckuus3.o ckuusr.o \
-		 ckucon.o ckudia.o ckuscr.o $(LIBS)
+		ckcfn2.o ckucon.o ckutio.o ckufio.o ckudia.o ckuscr.o
+	$(CC2) $(LNKFLAGS) -o wermit \
+		ckcmai.o ckutio.o ckufio.o ckcfns.o ckcfn2.o ckcpro.o ckucmd.o \
+		ckuus2.o ckuus3.o ckuusr.o ckucon.o ckudia.o ckuscr.o \
+		$(LIBS)
 
 ckcmai.o: ckcmai.c ckcker.h ckcdeb.h
 
@@ -253,7 +255,8 @@ bsd41:
 bsd:
 	make wermit "CFLAGS= -DBSD4 -DDEBUG -DTLOG"
 
-#Berkeley Unix 4.2 or 4.3 with lock directory /usr/spool/uucp/LCK/LCK..tty??,
+#Berkeley Unix 4.2 or 4.3 with lock directory
+#/usr/spool/uucp/LCK/LCK..tty??,
 #but without acucntrl program
 bsdlck:
 	make wermit "CFLAGS= -DLCKDIR -DBSD4 -DDEBUG -DTLOG"
@@ -303,9 +306,10 @@ v7:
 
 #Modern Linux with GCC
 linux:
-	make wermit "CFLAGS = -DSVR3 -DUXIII -DDEBUG -DTLOG -DFIONREAD -DO_NDELAY \
-		-DTIOCFLUSH -DTIOCFLUSH -DTIOCSINUSE -DFIONBIO -DTIOCEXCL -DPROFILE \
-		-DSIGTSTP -DNOT_YET -Wall -Wextra -Wno-return-type -Wno-unused-variable \
+	make wermit "CFLAGS = -DSVR3 -DUXIII -DDEBUG -DTLOG -DFIONREAD \
+		-DO_NDELAY -DTIOCFLUSH -DTIOCFLUSH -DTIOCSINUSE -DFIONBIO \
+		-DTIOCEXCL -DPROFILE -DSIGTSTP -DNOT_YET \
+		-Wall -Wextra -Wno-return-type -Wno-unused-variable \
 		-Wno-implicit-int -Wno-implicit-function-declaration \
 		-Wno-implicit-fallthrough -O2 -mtune=native"
 

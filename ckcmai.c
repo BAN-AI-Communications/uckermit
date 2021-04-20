@@ -1,4 +1,4 @@
-char *versio = "C-Kermit, 4G(105) 20 Apr 2021";
+char *versio = "C-Kermit, 4G(106) 20 Apr 2021";
 
 /* C K C M A I -- C-Kermit Main program  */
 
@@ -10,6 +10,7 @@ char *versio = "C-Kermit, 4G(105) 20 Apr 2021";
  *
  * Copyright (C) 1985, 1989,
  *   Trustees of Columbia University in the City of New York.
+ *
  * Permission is granted to any individual or institution to use, copy,
  *   or redistribute this software so long as it is not sold for profit,
  *   provided this copyright notice is retained.
@@ -225,7 +226,10 @@ CHAR padch = MYPADC,      /* Padding character to send */
 
 struct zattr iattr;       /* Incoming file attributes */
 
-/* Packet-related variables */
+/*
+ * Packet-related
+ * variables
+ */
 
 int pktnum = 0,           /* Current packet number */
     prvpkt = -1,          /* Previous packet number */
@@ -246,7 +250,10 @@ CHAR sndpkt[MAXSP + 100], /* Entire packet being sent */
      mystch = SOH,        /* Outbound packet-start character */
      stchr = SOH;         /* Incoming packet-start character */
 
-/* File-related variables. */
+/*
+ * File-related
+ * variables.
+ */
 
 #ifdef datageneral
 CHAR filnam[256];         /* Name of current file. */
@@ -257,7 +264,10 @@ CHAR filnam[50];          /* Name of current file. */
 int nfils;                /* Number of files in file group */
 long fsize;               /* Size of current file */
 
-/* Communication line variables */
+/*
+ * Communication
+ * line variables
+ */
 
 CHAR ttname[50];          /* Name of communication line. */
 
@@ -277,7 +287,10 @@ int parity,               /* Parity specified, 0, 'e', 'o', etc. */
 
 int tlevel = -1;          /* Take-file command level */
 
-/* Statistics variables */
+/*
+ * Statistics
+ * variables
+ */
 
 long filcnt,              /* Number of files in transaction */
      flci,                /* Characters from line, current file */
@@ -289,7 +302,9 @@ long filcnt,              /* Number of files in transaction */
 
 int  tsecs;               /* Seconds for transaction */
 
-/* Flags */
+/*
+ * Flags
+ */
 
 int deblog   = 0,         /* Flag for debug logging */
     pktlog   = 0,         /* Flag for packet logging */
@@ -327,7 +342,9 @@ char   *cmarg = "";       /* Pointer to command data */
 char  *cmarg2 = "";       /* Pointer to 2nd command data */
 char **cmlist;            /* Pointer to file list in argv */
 
-/* Miscellaneous */
+/*
+ * Miscellaneous
+ */
 
 char **xargv;             /* Global copies of argv */
 int    xargc;             /* and argc  */
@@ -347,8 +364,8 @@ CHAR *zinptr, *zoutptr;
 int zincnt, zoutcnt;
 
 /* M A I N -- C-Kermit main program */
-
 #ifdef aegis
+
 /*
  * On the Apollo, intercept main
  * to insert a cleanup handler.
@@ -365,7 +382,10 @@ char **argv;
 
   char *strcpy();
 
-  /* Do some initialization */
+  /*
+   * Do some
+   * initialization
+   */
 
   xargc  = argc;          /* Make global copies of argc */
   xargv  = argv;          /* ...and argv. */

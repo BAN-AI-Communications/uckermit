@@ -1,6 +1,9 @@
 /* C K C F N 2 -- System-independent Kermit protocol support functions */
 
-/* ...Part 2 (continued from ckcfns.c) */
+/*
+ * ...Part 2
+ * (continued from ckcfns.c)
+ */
 
 /*
  * Author: Frank da Cruz (fdc@cunixc.cc.columbia.edu, FDCCU@CUVMA.BITNET),
@@ -10,6 +13,7 @@
  *
  * Copyright (C) 1985, 1989,
  *   Trustees of Columbia University in the City of New York.
+ *
  * Permission is granted to any individual or institution to use, copy,
  *   or redistribute this software so long as it is not sold for profit,
  *   provided this copyright notice is retained.
@@ -70,7 +74,10 @@ static CHAR partab[] = { /* Even parity table for dopar() */
         '\167', '\170', '\371', '\372', '\173', '\374', '\175',
         '\176', '\377'};
 
-/* CRC generation tables */
+/*
+ * CRC generation
+ * tables
+ */
 
 static unsigned int crcta[16] = {
     0,       010201,  020402,  030603,  041004,  051205,  061406,  071607,
@@ -80,7 +87,7 @@ static unsigned int crctb[16] = {
     0,       010611,  021422,  031233,  043044,  053655,  062466,  072277,
     0106110, 0116701, 0127532, 0137323, 0145154, 0155745, 0164576, 0174367};
 
-/*  I N P U T -- Attempt to read packet number 'pktnum' */
+/* I N P U T -- Attempt to read packet number 'pktnum' */
 
 /*
  * This is the function that feeds input to Kermit's finite state machine.
@@ -114,7 +121,11 @@ input() {
 
   debug(F111, "input", rdatap, type);
 
-  /* If it's the same packet we just sent, it's an echo.  Read another. */
+  /*
+   * If it's the same packet we 
+   * just sent, it's an echo.
+   * Read another.
+   */
 
   if (type == sndtyp)
     type = rpack();
@@ -266,7 +277,11 @@ register char *d;
   sndpkt[i++] = seol;             /* End of line (packet terminator) */
   sndpkt[i] = '\0';               /* Terminate string */
 
-  /* (PWP) add the parity quickly at the end */
+  /*
+   * (PWP) add the parity
+   * quickly at the end
+   */
+
   switch (parity) {
   case 'e':                       /* Even */
     for (cp = &sndpkt[i - 1]; cp >= sndpkt; cp--)
@@ -340,7 +355,10 @@ unsigned int chk3(pkt) register CHAR *pkt;
   return crc & 0xFFFF;
 }
 
-/* Functions for sending various kinds of packets */
+/*
+ * Functions for sending
+ * various kinds of packets
+ */
 
 ack() {                             /* Send an ordinary acknowledgment. */
   spack('Y', pktnum, 0, "");        /* No data. */
@@ -383,21 +401,29 @@ rcalcpsz() {
   /*
    * Overhead on a data packet is npad+5+bctr,
    * plus 3 if extended packet; an ACK is 5+bctr.
+   *
+   * First set x = per packet overhead
    */
-
-  /* first set x = per packet overhead */
 
 #ifdef COMMENT                         /* (PWP) hook for windowing code */
   if (window)                          /* only the packet, */
     x = (long)(npad + 5 + bctr);       /* don't count the ack */
   else
-#endif                                 /* COMMENT */
+#endif
     x = (long)(npad + 5 + 3 + bctr + 5 + bctr);
 
-  /* then, set x = packet length ** 2 */
+  /*
+   * Then,
+   * set x = packet length ** 2
+   */
+
   x = x * ((long)ffc / (long)numerrs); /* careful of overflow */
 
-  /* calculate the long integer sqrt(x) quickly */
+  /*
+   * Calculate the long 
+   * integer sqrt(x) quickly
+   */
+
   q = 500;
   q = (q + x / q) >> 1;
   q = (q + x / q) >> 1;
@@ -550,12 +576,10 @@ rpack() {
     debug(F101, "packet sticks out too far", "", j);
     return 'Q';                               /* Find block check */
   }
-  /** debug(F101,"block check at","",j); **/
   for (x = 0; x < bctu; x++)                  /* Copy it */
     pbc[x] = recpkt[j + x];
 
   pbc[x] = '\0';
-  /** debug(F110,"block check",pbc,bctu); **/
   recpkt[j] = '\0';                           /* Null-terminate data */
 
   switch (bctu) {                             /* Check the block check */
@@ -577,7 +601,10 @@ rpack() {
     }
     break;
   case 3:
-    crc = (xunchar(pbc[0]) << 12) | (xunchar(pbc[1]) << 6) | (xunchar(pbc[2]));
+    crc = \
+	  (xunchar(pbc[0]) << 12) | \
+	    (xunchar(pbc[1]) << 6) | \
+		  (xunchar(pbc[2]));
     if (crc != chk3(recpkt + lp)) {
       debug(F110, "checked chars", recpkt + lp, 0);
       debug(F101, "block check", "", xunchar(*pbc));
@@ -592,7 +619,10 @@ rpack() {
   return type;                                /* Return packet type */
 }
 
-/* Attribute Packets */
+/*
+ * Attribute
+ * Packets
+ */
 
 /*
  * Call with xp == 0 if we're sending a real file (F packet),
@@ -681,7 +711,10 @@ struct zattr *yy;
 #define SPBUFL 512                  /* System-dependent parameters */
   static char spbuf[SPBUFL];
 
-  /* Fill in the attributes we have received */
+  /*
+   * Fill in the attributes
+   * we have received
+   */
 
   while ((c = *s++)) {               /* Get attribute tag */
     aln = xunchar(*s++);             /* Length of attribute string */
@@ -755,7 +788,11 @@ struct zattr *yy;
     }
   }
 
-  /* (PWP) Show the info */
+  /*
+   * (PWP) Show
+   * the info
+   */
+
   if (yy->length > 0) {
     fsize = yy->length;             /* Let the world know */
     screen(SCR_QE, 0, fsize, " Size");

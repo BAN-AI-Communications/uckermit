@@ -1,82 +1,90 @@
-char *cmdv = "Unix cmd package V2(032), 20 Apr 2021";
+char *cmdv = "Unix cmd package V2(033), 20 Apr 2021";
 
-/*  C K U C M D  --  Interactive command package for Unix  */
+/* C K U C M D -- Interactive command package for Unix  */
 
 /*
- Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
- Columbia University Center for Computing Activities.
- First released January 1985.
- Copyright (C) 1985, 1989, Trustees of Columbia University in the City of New
- York.  Permission is granted to any individual or institution to use, copy, or
- redistribute this software so long as it is not sold for profit, provided this
- copyright notice is retained.
+ * Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
+ * Columbia University Center for Computing Activities.
+ *
+ * First released January 1985.
+ * 
+ * Copyright (C) 1985, 1989,
+ *   Trustees of Columbia University in the City of New York.
+ *
+ * Permission is granted to any individual or institution to use, copy,
+ * or redistribute this software so long as it is not sold for profit,
+ * provided this copyright notice is retained.
+ */
+
+/*
+ * Modelled after the DECSYSTEM-20 command parser (the COMND JSYS)
+ *
+ * Features:
+ *  . parses and verifies keywords, filenames,
+ *    text strings, numbers, other data
+ *  . displays appropriate menu or help message when user types "?"
+ *  . does keyword and filename completion when user types ESC or TAB
+ *  . accepts any unique abbreviation for a keyword
+ *  . allows keywords to have attributes, like "invisible"
+ *  . can supply defaults for fields omitted by user
+ *  . provides command line editing (character, word, and line deletion)
+ *  . accepts input from keyboard, command files, or redirected stdin
+ *  . allows for full or half duplex operation, character or line input
+ *  . settable prompt, protected from deletion
+ *
+ * Functions:
+ *  cmsetp - Set prompt (cmprom is prompt string, cmerrp is error prefix)
+ *  cmsavp - Save current prompt
+ *  prompt - Issue prompt
+ *  cmini  - Clear the command buffer (before parsing a new command)
+ *  cmres  - Reset command buffer pointers (before reparsing)
+ *  cmkey  - Parse a keyword
+ *  cmnum  - Parse a number
+ *  cmifi  - Parse an input file name
+ *  cmofi  - Parse an output file name
+ *  cmdir  - Parse a directory name (UNIX only)
+ *  cmfld  - Parse an arbitrary field
+ *  cmtxt  - Parse a text string
+ *  cmcfm  - Parse command confirmation (end of line)
+ *  stripq - Strip out backslash quotes from a string.
+ *
+ * Return codes:
+ *  -3: no input provided when required
+ *  -2: input was invalid
+ *  -1: reparse required (user deleted into a preceding field)
+ *   0: (or greater) success
+ *
+ * See individual functions for greater detail.
+ *
+ * Before using these routines, the caller should #include ckucmd.h, and
+ * set the program's prompt by calling cmsetp().  If the file parsing
+ * functions cmifi and cmofi are to be used, this module must be linked
+ * with a ck?fio file system support module for the appropriate system,
+ * e.g. ckufio for UNIX.  If the caller puts the terminal in character
+ * wakeup ("cbreak") mode with no echo, then these functions will provide
+ * line editing -- character, word, and line deletion, as well as keyword
+ * and filename completion upon ESC and help strings, keyword, or file
+ * menus upon '?'. If the caller puts the terminal into character
+ * wakeup/noecho mode, care should be taken to restore it before exit
+ * from or interruption of the program. If the character wakeup mode is
+ * not set, the system's own line editor may be used.
 */
 
 /*
- Modelled after the DECSYSTEM-20 command parser (the COMND JSYS)
-
- Features:
- . parses and verifies keywords, filenames, text strings, numbers, other data
- . displays appropriate menu or help message when user types "?"
- . does keyword and filename completion when user types ESC or TAB
- . accepts any unique abbreviation for a keyword
- . allows keywords to have attributes, like "invisible"
- . can supply defaults for fields omitted by user
- . provides command line editing (character, word, and line deletion)
- . accepts input from keyboard, command files, or redirected stdin
- . allows for full or half duplex operation, character or line input
- . settable prompt, protected from deletion
-
- Functions:
-  cmsetp - Set prompt (cmprom is prompt string, cmerrp is error msg prefix)
-  cmsavp - Save current prompt
-  prompt - Issue prompt
-  cmini  - Clear the command buffer (before parsing a new command)
-  cmres  - Reset command buffer pointers (before reparsing)
-  cmkey  - Parse a keyword
-  cmnum  - Parse a number
-  cmifi  - Parse an input file name
-  cmofi  - Parse an output file name
-  cmdir  - Parse a directory name (UNIX only)
-  cmfld  - Parse an arbitrary field
-  cmtxt  - Parse a text string
-  cmcfm  - Parse command confirmation (end of line)
-  stripq - Strip out backslash quotes from a string.
-
- Return codes:
-  -3: no input provided when required
-  -2: input was invalid
-  -1: reparse required (user deleted into a preceding field)
-   0 or greater: success
-  See individual functions for greater detail.
-
- Before using these routines, the caller should #include ckucmd.h, and
- set the program's prompt by calling cmsetp().  If the file parsing
- functions cmifi and cmofi are to be used, this module must be linked
- with a ck?fio file system support module for the appropriate system,
- e.g. ckufio for Unix.  If the caller puts the terminal in
- character wakeup ("cbreak") mode with no echo, then these functions will
- provide line editing -- character, word, and line deletion, as well as
- keyword and filename completion upon ESC and help strings, keyword, or
- file menus upon '?'.  If the caller puts the terminal into character
- wakeup/noecho mode, care should be taken to restore it before exit from
- or interruption of the program.  If the character wakeup mode is not
- set, the system's own line editor may be used.
-*/
-
-/* Includes */
+ * Includes
+ */
 
 #include "ckucmd.h" /* Command parsing definitions */
 #include "ckcdeb.h" /* Formats for debug(), etc. */
-#include <ctype.h> /* Character types */
-#include <stdio.h> /* Standard C I/O package */
+#include <ctype.h>  /* Character types */
+#include <stdio.h>  /* Standard C I/O package */
 #ifdef OS2
 #define INCL_SUB
 #include <os2.h>
-#endif /* OS2 */
+#endif
 
 #ifdef OSK
-#define cc ccount /* OS-9/68K compiler bug */
+#define cc ccount   /* OS-9/68K compiler bug */
 #endif
 
 #ifdef __linux__
@@ -84,40 +92,44 @@ char *cmdv = "Unix cmd package V2(032), 20 Apr 2021";
 #include <string.h>
 #endif
 
-/* Local variables */
+/*
+ * Local
+ * variables
+ */
 
-int psetf = 0, /* Flag that prompt has been set */
-    cc = 0,    /* Character count */
-    dpx = 0;   /* Duplex (0 = full) */
+int psetf = 0,               /* Flag that prompt has been set */
+    cc = 0,                  /* Character count */
+    dpx = 0;                 /* Duplex (0 = full) */
 
-int hw = HLPLW, /* Help line width */
-    hc = HLPCW, /* Help line column width */
-    hh,         /* Current help column number */
-    hx;         /* Current help line position */
+int hw = HLPLW,              /* Help line width */
+    hc = HLPCW,              /* Help line column width */
+    hh,                      /* Current help column number */
+    hx;                      /* Current help line position */
 
-#define PROML 60 /* Maximum length for prompt */
+#define PROML 60             /* Maximum length for prompt */
 
-char cmprom[PROML + 1];     /* Program's prompt */
-char *dfprom = "Command? "; /* Default prompt */
+char cmprom[PROML + 1];      /* Program's prompt */
+char *dfprom = "Command? ";  /* Default prompt */
+char cmerrp[PROML + 1];      /* Program's error message prefix */
+int cmflgs;                  /* Command flags */
 
-char cmerrp[PROML + 1]; /* Program's error message prefix */
+char cmdbuf[CMDBL + 4];      /* Command buffer */
+char hlpbuf[HLPBL + 4];      /* Help string buffer */
+char atmbuf[ATMBL + 4];      /* Atom buffer */
+char filbuf[ATMBL + 4];      /* File name buffer */
 
-int cmflgs; /* Command flags */
+/*
+ * Command buffer
+ * pointers
+ */
 
-char cmdbuf[CMDBL + 4]; /* Command buffer */
-char hlpbuf[HLPBL + 4]; /* Help string buffer */
-char atmbuf[ATMBL + 4]; /* Atom buffer */
-char filbuf[ATMBL + 4]; /* File name buffer */
+static char *bp,             /* Current command buffer position */
+    *pp,                     /* Start of current field */
+    *np;                     /* Start of next field */
 
-/* Command buffer pointers */
+long zchki();                /* From ck?fio.c. */
 
-static char *bp, /* Current command buffer position */
-    *pp,         /* Start of current field */
-    *np;         /* Start of next field */
-
-long zchki(); /* From ck?fio.c. */
-
-/*  C M S E T P  --  Set the program prompt.  */
+/* C M S E T P -- Set the program prompt */
 
 cmsetp(s) char *s;
 {
@@ -126,53 +138,60 @@ cmsetp(s) char *s;
   strncpy(cmprom, s, PROML - 1); /* Copy the string. */
   cmprom[PROML] = NUL;           /* Ensure null terminator. */
   sx = cmprom;
-  sy = cmerrp; /* Also use as error message prefix. */
+  sy = cmerrp;                   /* Also use as error message prefix. */
   while ((*sy++ = *sx++))
-    ; /* Copy. */
+    ;                            /* Copy. */
   sy -= 2;
   if (*sy == '>')
-    *sy = NUL; /* Delete any final '>'. */
+    *sy = NUL;                   /* Delete any final '>'. */
 }
-/*  C M S A V P  --  Save a copy of the current prompt.  */
+
+/* C M S A V P -- Save a copy of the current prompt */
 
 cmsavp(s, n) int n;
 char s[];
 {
-  extern char *strncpy(); /* +1   */
+  extern char *strncpy();        /* +1 */
   strncpy(s, cmprom, n - 1);
   s[n] = NUL;
 }
 
-/*  P R O M P T  --  Issue the program prompt.  */
+/* P R O M P T -- Issue the program prompt */
 
-prompt() {
+prompt()
+{
   if (psetf == 0)
-    cmsetp(dfprom); /* If no prompt set, set default. */
+    cmsetp(dfprom);              /* If no prompt set, set default. */
 #ifdef OSK
   fputs(cmprom, stdout);
 #else
-  printf("\r%s", cmprom); /* Print the prompt. */
+  printf("\r%s", cmprom);        /* Print the prompt. */
 #endif
 }
 
-/*  C M R E S  --  Reset pointers to beginning of command buffer.  */
+/* C M R E S -- Reset pointers to beginning of command buffer */
 
-cmres() {
-  cc = 0;                /* Reset character counter. */
-  pp = np = bp = cmdbuf; /* Point to command buffer. */
-  cmflgs = -5;           /* Parse not yet started. */
+cmres()
+{
+  cc = 0;                        /* Reset character counter. */
+  pp = np = bp = cmdbuf;         /* Point to command buffer. */
+  cmflgs = -5;                   /* Parse not yet started. */
 }
 
-/*  C M I N I  --  Clear the command and atom buffers, reset pointers.  */
+/* C M I N I -- Clear the command and atom buffers, reset pointers */
 
 /*
-The argument specifies who is to echo the user's typein --
-  1 means the cmd package echoes
-  0 somebody else (system, front end, terminal) echoes
-*/
+ * The argument specifies who is to echo the user's typein --
+ *  1 means the cmd package echoes
+ *  0 somebody else (system, front end, terminal) echoes
+ */
+
 cmini(d) int d;
 {
-  for (bp = cmdbuf; bp < cmdbuf + CMDBL; bp++)
+  for (
+	bp = cmdbuf;
+	  bp < cmdbuf + CMDBL;
+	    bp++)
     *bp = NUL;
   *atmbuf = NUL;
   dpx = d;
@@ -180,66 +199,85 @@ cmini(d) int d;
 }
 
 stripq(s) char *s;
-{ /* Function to strip '\' quotes */
+{                                /* Function to strip '\' quotes */
   char *t;
   while (*s) {
     if (*s == '\\') {
-      for (t = s; *t != '\0'; t++)
+      for (
+		t = s;
+		  *t != '\0';
+		    t++)
         *t = *(t + 1);
     }
     s++;
   }
 }
 
-/*  C M N U M  --  Parse a number in the indicated radix  */
-
-/*  For now, only works for positive numbers in base 10.  */
+/* C M N U M -- Parse a number in the indicated radix */
 
 /*
- Returns
-   -3 if no input present when required,
-   -2 if user typed an illegal number,
-   -1 if reparse needed,
-    0 otherwise, with n set to number that was parsed
-*/
+ * For now only works for positive
+ * numbers in base 10.
+ */
+
+/*
+ * Returns
+ *   -3 if no input present when required,
+ *   -2 if user typed an illegal number,
+ *   -1 if reparse needed,
+ *    0 otherwise, with n set to number that was parsed
+ */
+
 cmnum(xhlp, xdef, radix, n) char *xhlp, *xdef;
 int radix, *n;
 {
   int x;
   char *s;
 
-  if (radix != 10) { /* Just do base 10 for now */
+  if (radix != 10) {              /* Just do base 10 for now */
     printf("cmnum: illegal radix - %d\n", radix);
     return (-1);
   }
 
   x = cmfld(xhlp, xdef, &s);
-  debug(F101, "cmnum: cmfld", "", x);
-  debug(F111, "cmnum: atmbuf", atmbuf, cc);
+  debug(
+	F101,
+	  "cmnum: cmfld",
+	    "",
+		  x);
+  debug(
+	F111,
+	  "cmnum: atmbuf",
+	    atmbuf,
+		  cc);
   if (x < 0)
-    return (x); /* Parse a field */
+    return (x);                   /* Parse a field */
 
-  if (rdigits(atmbuf)) { /* Convert to number */
+  if (rdigits(atmbuf)) {          /* Convert to number */
     *n = atoi(atmbuf);
     return (x);
   } else {
-    printf("\n?not a number - %s\n", s);
+    printf(
+	  "\n?not a number - %s\n",
+	    s);
     return (-2);
   }
 }
 
-/*  C M O F I  --  Parse the name of an output file  */
+/* C M O F I -- Parse the name of an output file */
 
 /*
- Depends on the external function zchko(); if zchko() not available, use
- cmfld() to parse output file names.
+ * Depends on the external function zchko();
+ * if zchko() not available, use
+ * cmfld() to parse output file names.
+ *
+ * Returns
+ *   -3 if no input present when required,
+ *   -2 if permission would be denied to create the file,
+ *   -1 if reparse needed,
+ *    0 or 1 otherwise, with xp pointing to name.
+ */
 
- Returns
-   -3 if no input present when required,
-   -2 if permission would be denied to create the file,
-   -1 if reparse needed,
-    0 or 1 otherwise, with xp pointing to name.
-*/
 cmofi(xhlp, xdef, xp) char *xhlp, *xdef, **xp;
 {
   int x;
@@ -256,17 +294,21 @@ cmofi(xhlp, xdef, xp) char *xhlp, *xdef, **xp;
     return (x);
 
 #ifdef DTILDE
-  dirp = tilde_expand(s); /* Expand tilde, if any, */
+  dirp = tilde_expand(s);         /* Expand tilde, if any, */
   if (*dirp != '\0')
-    setatm(dirp); /* right in the atom buffer. */
+    setatm(dirp);                 /* right in the atom buffer. */
 #endif
 
   if (chkwld(s)) {
-    printf("\n?Wildcards not allowed - %s\n", s);
+    printf(
+	  "\n?Wildcards not allowed - %s\n",
+	    s);
     return (-2);
   }
   if (zchko(s) < 0) {
-    printf("\n?Write permission denied - %s\n", s);
+    printf(
+	  "\n?Write permission denied - %s\n",
+	    s);
     return (-2);
   } else {
     *xp = s;
@@ -274,25 +316,28 @@ cmofi(xhlp, xdef, xp) char *xhlp, *xdef, **xp;
   }
 }
 
-/*  C M I F I  --  Parse the name of an existing file  */
+/* C M I F I -- Parse the name of an existing file */
 
 /*
- This function depends on the external functions:
-   zchki()  - Check if input file exists and is readable.
-   zxpand() - Expand a wild file specification into a list.
-   znext()  - Return next file name from list.
- If these functions aren't available, then use cmfld() to parse filenames.
-*/
-/*
- Returns
-   -4 EOF
-   -3 if no input present when required,
-   -2 if file does not exist or is not readable,
-   -1 if reparse needed,
-    0 or 1 otherwise, with:
-        xp pointing to name,
-        wild = 1 if name contains '*' or '?', 0 otherwise.
-*/
+ * This function depends on the external functions:
+ *  zchki()  - Check if input file exists and is readable.
+ *  zxpand() - Expand a wild file specification into a list.
+ *  znext()  - Return next file name from list.
+ *
+ * If these functions aren't available, then use
+ * cmfld() to parse filenames.
+ *
+ *  Returns
+ *   -4 EOF
+ *   -3 if no input present when required,
+ *   -2 if file does not exist or is not readable,
+ *   -1 if reparse needed,
+ *    0 or 1 otherwise, with:
+ *        xp pointing to name,
+ *        wild = 1 if name contains
+ *        '*' or '?', 0 otherwise.
+ */
+
 cmifi(xhlp, xdef, xp, wild) char *xhlp, *xdef, **xp;
 int *wild;
 {
@@ -303,44 +348,46 @@ int *wild;
   char *tilde_expand(), *dirp;
 #endif
 
-  cc = xc = 0; /* Initialize counts & pointers */
+  cc = xc = 0;                    /* Initialize counts & pointers */
   *xp = "";
-  if ((x = cmflgs) != 1) { /* Already confirmed? */
-    x = gtword();          /* No, get a word */
+  if ((x = cmflgs) != 1) {        /* Already confirmed? */
+    x = gtword();                 /* No, get a word */
   } else {
-    cc = setatm(xdef); /* If so, use default, if any. */
+    cc = setatm(xdef);            /* If so, use default, if any. */
   }
-  *xp = atmbuf; /* Point to result. */
+  *xp = atmbuf;                   /* Point to result. */
   *wild = chkwld(*xp);
 
   while (1) {
-    xc += cc; /* Count the characters. */
-    debug(F111, "cmifi: gtword", atmbuf, xc);
+    xc += cc;                     /* Count the characters. */
+    debug(
+	  F111,
+	    "cmifi: gtword",
+		  atmbuf,
+		    xc);
     switch (x) {
-    case -4: /* EOF */
-    case -2: /* Out of space. */
-    case -1: /* Reparse needed */
+    case -4:                      /* EOF */
+    case -2:                      /* Out of space. */
+    case -1:                      /* Reparse needed */
       return (x);
-
-      /* cont'd... */
-
-      /* ...cmifi(), cont'd */
-
-    case 0: /* SP or NL */
+    case 0:                       /* SP or NL */
     case 1:
       if (xc == 0)
-        *xp = xdef; /* If no input, return default. */
+        *xp = xdef;               /* If no input, return default. */
       else
         *xp = atmbuf;
       if (**xp == NUL)
-        return (-3); /* If field empty, return -3. */
+        return (-3);              /* If field empty, return -3. */
 
 #ifdef DTILDE
-      dirp = tilde_expand(*xp); /* Expand tilde, if any, */
+      dirp = tilde_expand(*xp);   /* Expand tilde, if any, */
       if (*dirp != '\0')
-        setatm(dirp); /* right in atom buffer. */
+        setatm(dirp);             /* right in atom buffer. */
 #endif
-      /* If filespec is wild, see if there are any matches */
+      /*
+	   * If filespec is wild, see
+	   * if there are any matches
+	   */
 
       *wild = chkwld(*xp);
       debug(F101, " *wild", "", *wild);
@@ -356,90 +403,97 @@ int *wild;
           return (x);
       }
 
-      /* If not wild, see if it exists and is readable. */
+      /*
+	   * If not wild, see if it
+	   * exists and is readable.
+	   */
 
       y = zchki(*xp);
 
       if (y == -3) {
-        printf("\n?Read permission denied - %s\n", *xp);
+        printf(
+		  "\n?Read permission denied - %s\n",
+		    *xp);
         return (-2);
       } else if (y == -2) {
-        printf("\n?File not readable - %s\n", *xp);
+        printf(
+		  "\n?File not readable - %s\n",
+		    *xp);
         return (-2);
       } else if (y < 0) {
-        printf("\n?File not found - %s\n", *xp);
+        printf(
+		  "\n?File not found - %s\n",
+		    *xp);
         return (-2);
       }
       return (x);
-      /* cont'd... */
-
-      /* ...cmifi(), cont'd */
-
-    case 2: /* ESC */
+    case 2:                       /* ESC, HT */
       if (cc <= 2)
         break;
       if (xc == 0) {
         if (*xdef != '\0') {
-          printf("%s ", xdef); /* If at beginning of field, */
-          addbuf(xdef);        /* supply default. */
+          printf("%s ", xdef);    /* If at beginning of field, */
+          addbuf(xdef);           /* supply default. */
           cc = setatm(xdef);
-        } else { /* No default */
+        } else {                  /* No default */
           putchar(BEL);
         }
         break;
       }
 #ifdef DTILDE
-      dirp = tilde_expand(*xp); /* Expand tilde, if any, */
+      dirp = tilde_expand(*xp);  /* Expand tilde, if any, */
       if (*dirp != '\0')
-        setatm(dirp); /* in the atom buffer. */
+        setatm(dirp);            /* in the atom buffer. */
 #endif
-      if ((*wild = chkwld(*xp))) { /* No completion if wild */
-        putchar(BEL);
-        break;
+      if (
+		(*wild = chkwld(*xp))) { /* No completion if wild */
+          putchar(BEL);
+          break;
       }
       sp = atmbuf + cc;
       *sp++ = '*';
       *sp-- = '\0';
-      y = zxpand(atmbuf); /* Add * and expand list. */
-      *sp = '\0';         /* Remove *. */
+      y = zxpand(atmbuf);        /* Add * and expand list. */
+      *sp = '\0';                /* Remove *. */
 
       if (y == 0) {
-        printf("\n?No files match - %s\n", atmbuf);
+        printf(
+		  "\n?No files match - %s\n",
+		    atmbuf);
         return (-2);
       } else if (y < 0) {
-        printf("\n?Too many files match - %s\n", atmbuf);
+        printf(
+		  "\n?Too many files match - %s\n",
+		    atmbuf);
         return (-2);
-      } else if (y > 1) { /* Not unique, just beep. */
+      } else if (y > 1) {        /* Not unique, just beep. */
         putchar(BEL);
-      } else {             /* Unique, complete it.  */
-        znext(filbuf);     /* Get whole name of file. */
-        sp = filbuf + cc;  /* Point past what user typed. */
-        printf("%s ", sp); /* Complete the name. */
-        addbuf(sp);        /* Add the characters to cmdbuf. */
-        setatm(pp);        /* And to atmbuf. */
-        *xp = atmbuf;      /* Return pointer to atmbuf. */
+      } else {                   /* Unique, complete it.  */
+        znext(filbuf);           /* Get whole name of file. */
+        sp = filbuf + cc;        /* Point past what user typed. */
+        printf("%s ", sp);       /* Complete the name. */
+        addbuf(sp);              /* Add the characters to cmdbuf. */
+        setatm(pp);              /* And to atmbuf. */
+        *xp = atmbuf;            /* Return pointer to atmbuf. */
         return (cmflgs = 0);
       }
       break;
-
-      /* cont'd... */
-
-      /* ...cmifi(), cont'd */
-
-    case 3: /* Question mark */
+    case 3:                      /* Question mark */
       if (*xhlp == NUL)
-        printf(" Input file specification");
+        printf(
+		  " Input file specification");
       else
         printf(" %s", xhlp);
       if (xc > 0) {
 #ifdef DTILDE
-        dirp = tilde_expand(*xp); /* Expand tilde, if any */
+        dirp = \
+		  tilde_expand(*xp);     /* Expand tilde, if any */
         if (*dirp != '\0')
           setatm(dirp);
 #endif
-        sp = atmbuf + cc; /* Insert "*" at end */
+        sp = atmbuf + cc;        /* Insert "*" at end */
 #ifdef datageneral
-        *sp++ = '+'; /* Insert +, the DG wild card */
+        *sp++ = '+';             /* Insert +, the DG wild card */
 #else
         *sp++ = '*';
 #endif
@@ -447,15 +501,23 @@ int *wild;
         y = zxpand(atmbuf);
         *sp = '\0';
         if (y == 0) {
-          printf("\n?No files match - %s\n", atmbuf);
+          printf(
+			"\n?No files match - %s\n",
+			  atmbuf);
           return (-2);
         } else if (y < 0) {
-          printf("\n?Too many file match - %s\n", atmbuf);
+          printf(
+			"\n?Too many file match - %s\n",
+			  atmbuf);
           return (-2);
         } else {
-          printf(", one of the following:\n");
+          printf(
+			", one of the following:\n");
           clrhlp();
-          for (i = 0; i < y; i++) {
+          for (
+			i = 0;
+			  i < y;
+			    i++) {
             znext(filbuf);
             addhlp(filbuf);
           }
@@ -463,7 +525,10 @@ int *wild;
         }
       } else
         printf("\n");
-      printf("%s%s", cmprom, cmdbuf);
+      printf(
+		"%s%s"
+		  cmprom
+		    cmdbuf);
       break;
     }
     x = gtword();

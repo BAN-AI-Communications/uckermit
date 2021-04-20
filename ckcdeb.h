@@ -12,6 +12,7 @@
 /*
  * Copyright (C) 1987, 1989, 
  *   Trustees of Columbia University in the City of New York.
+ *
  * Permission is granted to any individual or institution to use, copy,
  *   or redistribute this software so long as it is not sold for profit,
  *   provided this copyright notice is retained.
@@ -51,7 +52,7 @@
  */
 
 struct zstr {           /* String format */
-  int len;              /* Length */
+  int  len;             /* Length */
   char *val;            /* Value */
 };
 struct zattr {          /* Kermit File Attribute structure */
@@ -62,7 +63,7 @@ struct zattr {          /* Kermit File Attribute structure */
   struct zstr account;  /* (%) File account */
   struct zstr area;     /* (&) Area (e.g. directory) for file */
   struct zstr passwd;   /* (') Password for area */
-  long blksize;         /* (() File blocksize */
+  long   blksize;       /* (() File blocksize */
   struct zstr access;   /* ()) File access: new, supersede, append, warn */
   struct zstr encoding; /* (*) Encoding (transfer syntax) */
   struct zstr disp;     /* (+) Disposition (mail, message, print, etc) */
@@ -71,12 +72,19 @@ struct zattr {          /* Kermit File Attribute structure */
   struct zstr systemid; /* (.) ID for system of origin */
   struct zstr recfm;    /* (/) Record format */
   struct zstr sysparam; /* (0) System-dependent parameter string */
-  long length;          /* (1) Exact length (on system of origin) */
+  long   length;        /* (1) Exact length (on system of origin) */
 };
 
-/* Unix Version Dependencies */
+/*
+ * Unix Version
+ * Dependencies
+ */
 
-/* signal() type, void or int? */
+/*
+ * signal() type
+ * void or int?
+ */
+
 #ifdef SVR3
 typedef void SIGTYP;    /* System V R3 and later */
 #else
@@ -102,15 +110,17 @@ typedef int SIGTYP;
 #define DTILDE
 #endif
 
-/* C Compiler Dependencies */
+/*
+ * C Compiler
+ * Dependencies
+ */
 
 #ifdef ZILOG
 #define setjmp setret
 #define longjmp longret
 #define jmp_buf ret_buf
 #define getcwd curdir
-/* typedef int ret_buf[10]; */    /* (apparently duplicated in setret.h) */
-#endif /* zilog */
+#endif
 
 #ifdef PROVX1
 typedef char CHAR;
@@ -129,8 +139,13 @@ typedef long LONG;
 typedef char CHAR;
 typedef long LONG;
 #else
+#ifdef __linux__
+typedef char CHAR;
+typedef long LONG;
+#else
 typedef unsigned char CHAR;
 typedef long LONG;
+#endif
 #endif
 #endif
 #endif
@@ -140,7 +155,10 @@ typedef long LONG;
 typedef int void;
 #endif
 
-/* Line delimiter for text files */
+/*
+ * Line delimiter
+ * for text files
+ */
 
 /*
  * If the system uses a single character for text file line delimitation,
@@ -190,9 +208,12 @@ extern char myttystr[];
 #endif
 #endif
 
-/* Some special includes for VAX/VMS */
+/*
+ * Some special includes
+ * for DEC VAX/VMS
+ */
 
-#ifndef vms /* Commented. causes problems for some preprocessors */
+#ifndef vms /* Commented, causes problems for some preprocessors */
 /*
  * #endif
  * #ifdef vms
@@ -203,7 +224,10 @@ extern char myttystr[];
  */
 #endif
 
-/* Program return codes for VMS, DECUS C, and UNIX */
+/*
+ * Program return codes for 
+ * VMS, DECUS C, and UNIX
+ */
 
 #ifdef vms
 #define GOOD_EXIT (SS$_NORMAL | STS$M_INHIB_MSG)
@@ -214,7 +238,7 @@ extern char myttystr[];
 #define BAD_EXIT IO_ERROR
 #else
 #define GOOD_EXIT 0
-#define BAD_EXIT 1
+#define BAD_EXIT  1
 #endif
 #endif
 
@@ -224,13 +248,16 @@ extern char myttystr[];
  */
 
 #ifdef FT18
-#define FREAD 0x01
+#define FREAD  0x01
 #define FWRITE 0x10
 #endif
 
-/* Special hack for OS-9/68k */
+/*
+ * Special hack
+ * for OS-9/68K
+ */
 
 #ifdef OSK
-#define SIGARB 5342     /* Arbitrary user signal */
-#define SIGALRM 5343    /* and another */
+#define SIGARB  5342     /* Arbitrary user signal */
+#define SIGALRM 5343     /* and another */
 #endif

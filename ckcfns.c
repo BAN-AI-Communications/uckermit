@@ -1,16 +1,21 @@
-char *fnsv = "C-Kermit functions, 4G(065) 20 Apr 2021";
+char *fnsv = "C-Kermit functions, 4G(066) 20 Apr 2021";
 
 /* C K C F N S -- System-independent Kermit protocol support functions */
 
-/* ...Part 1 (others moved to ckcfn2 to make this module small enough) */
+/*
+ * ...Part 1
+ * (others moved to ckcfn2 to make this module small enough)
+ */
 
 /*
  * Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
  * Columbia University Center for Computing Activities.
  *
  * First released January 1985.
+ *
  * Copyright (C) 1985, 1989,
  *   Trustees of Columbia University in the City of New York.
+ *
  * Permission is granted to any individual or institution to use, copy,
  *   or redistribute this software so long as it is not sold for profit,
  *   provided this copyright notice is retained.
@@ -35,24 +40,24 @@ char *fnsv = "C-Kermit functions, 4G(065) 20 Apr 2021";
 #define NULL 0
 #endif
 
-/* Externals from ckcmai.c */
-extern int spsiz, spmax, rpsiz, timint, srvtim, rtimo;
-extern int npad, ebq, ebqflg, rpt, rptq, rptflg, capas, keep;
-extern int pktnum, prvpkt, sndtyp, bctr, bctu, fmask, size;
-extern int osize, maxsize, spktl, nfils, stdouf, warn, timef, spsizf;
-extern int parity, speed, turn, turnch, delay, displa, pktlog;
-extern int tralog, seslog, xflg, mypadn;
+/*
+ * Externals
+ * from ckcmai.c
+ */
+
+extern int  spsiz, spmax, rpsiz, timint, srvtim, rtimo;
+extern int  npad, ebq, ebqflg, rpt, rptq, rptflg, capas, keep;
+extern int  pktnum, prvpkt, sndtyp, bctr, bctu, fmask, size;
+extern int  osize, maxsize, spktl, nfils, stdouf, warn, timef, spsizf;
+extern int  parity, speed, turn, turnch, delay, displa, pktlog;
+extern int  tralog, seslog, xflg, mypadn;
 extern long filcnt, ffc, flci, flco, tlci, tlco, tfc, fsize;
-extern int tsecs;
-extern int deblog, hcflg, binary, savmod, fncnv;
-extern int local, server, cxseen, czseen;
-extern int nakstate;
-extern int rq, rqf, sq, wslots, urpsiz, rln;
-extern int atcapr, atcapb, atcapu;
-extern int lpcapr, lpcapb, lpcapu;
-extern int swcapr, swcapb, swcapu;
-extern int bsave, bsavef;
-extern int numerrs;
+extern int  tsecs;
+extern int  deblog, hcflg, binary, savmod, fncnv;
+extern int  local, server, cxseen, czseen;
+extern int  nakstate, rq, rqf, sq, wslots, urpsiz, rln;
+extern int  atcapr, atcapb, atcapu, lpcapr, lpcapb, lpcapu;
+extern int  swcapr, swcapb, swcapu, bsave, bsavef, numerrs;
 extern CHAR padch, mypadc, eol, seol, ctlq, myctlq, sstate;
 extern CHAR filnam[], sndpkt[], recpkt[], data[];
 extern CHAR srvcmd[], stchr, mystch;
@@ -72,24 +77,27 @@ extern CHAR zinbuffer[], zoutbuffer[];
 extern CHAR *zinptr, *zoutptr;
 extern int zincnt, zoutcnt;
 
-/* Variables local to this module */
+/*
+ * Variables local
+ * to this module
+ */
 
 static char *memptr;       /* Pointer for memory strings */
 
 static char cmdstr[100];   /* UNIX system command string */
 
-static int sndsrc;         /* Flag for where to send from: */
-                           /*   -1: name in cmdata         */
-                           /*    0: stdin                  */
-                           /*   >0: list in cmlist         */
+static int  sndsrc;        /* Flag for where to send from: */
+                           /*      -1: name in cmdata      */
+                           /*       0: stdin               */
+                           /*      >0: list in cmlist      */
 
-static int n_len;          /* (PWP) packet encode-ahead length (& flag) */
+static int  n_len;         /* (PWP) packet encode-ahead length (& flag) */
                            /* if < 0, no pre-encoded data. */
 
-static int memstr,         /* Flag for input from memory string */
-    first;                 /* Flag for first char from input */
+static int  memstr,        /* Flag for input from memory string */
+            first;         /* Flag for first char from input */
 static CHAR t,             /* Current character */
-    next;                  /* Next character */
+            next;          /* Next character */
 #ifdef datageneral
 extern int quiet;
 #endif
@@ -172,7 +180,10 @@ encode(a) CHAR a;
   data[size] = '\0';                 /* itself, and mark the end. */
 }
 
-/* Output functions passed to 'decode' */
+/*
+ * Output functions
+ * passed to 'decode'
+ */
 
 putsrv(c) register char c;
 {                  /* Put character in server command buffer */
@@ -216,22 +227,33 @@ register int (*fn)();
 
   while ((a = *buf++) != '\0') {
     if (rptflg) {                    /* Repeat processing? */
-      if (a == (unsigned int)rptq) { /* Yes, got a repeat prefix? */
+      if (
+		(unsigned int)a == \
+		  (unsigned int)rptq)
+	        {                        /* Yes, got a repeat prefix? */
         rpt = xunchar(*buf++);       /* Yes, get the repeat count, */
         a = *buf++;                  /* and get the prefixed character. */
       }
     }
     b8 = 0;                          /* Check high order "8th" bit */
     if (ebqflg) {                    /* 8th-bit prefixing? */
-      if (a == (unsigned int)ebq) {  /* Yes, got an 8th-bit prefix? */
+      if (
+	    (unsigned int)a == \
+		  (unsigned int)ebq)
+	        {                        /* Yes, got an 8th-bit prefix? */
         b8 = 0200;                   /* Yes, remember this, */
         a = *buf++;                  /* and get the prefixed character. */
       }
     }
-    if (a == ctlq) {                 /* If control prefix, */
+    if (
+	  (unsigned int)a == \
+	    (unsigned int)ctlq)
+	      {                          /* If control prefix, */
       a = *buf++;                    /* get its operand. */
       a7 = a & 0177;                 /* Only look at low 7 bits. */
-      if ((a7 >= 0100 && a7 <= 0137) || a7 == '?') /* Uncontrollify, */
+      if (
+		(a7 >= 0100 && a7 <= 0137) \
+		  || a7 == '?')              /* Uncontrollify, */
         a = ctl(a);                  /* if in control range */
     }
     a |= b8;                         /* Or, in the 8th bit */
@@ -327,7 +349,10 @@ getpkt(bufmax) int bufmax;
   } else if ((first == -1) && (*leftover == '\0')) /* EOF from last time? */
     return size = 0;
 
-  /* Do any leftovers */
+  /*
+   * Do any
+   * leftovers
+   */
 
   dp = data;
   for (p1 = leftover; (*dp = *p1) != '\0'; p1++, dp++) /* Copy leftovers */
@@ -336,7 +361,10 @@ getpkt(bufmax) int bufmax;
   if (first == -1)
     return size = (dp - data);           /* Handle final leftovers */
 
-  /* Now, fill up the rest of the packet. */
+  /*
+   * Now, fill up the
+   * rest of the packet.
+   */
 
   rpt = 0;                               /* Clear out old repeat count. */
   while (first > -1) {                   /* Until EOF... */
@@ -382,7 +410,7 @@ getpkt(bufmax) int bufmax;
            */
 
           (binary || (rnext != NLCHAR)) &&
-#endif                                   /* NLCHAR */
+#endif
           rt == rnext && (first == 0)) { /* Got a run... */
         if (++rpt < 94) {                /* Below max, just count */
           continue;                      /* go back and get another */
@@ -406,7 +434,6 @@ getpkt(bufmax) int bufmax;
         rpt = 0;               /* Reset repeat counter. */
       }
     }
-
 #ifdef NLCHAR
 
     /*
@@ -496,7 +523,8 @@ canned(buf) char *buf;
 
 /* R E S E T C -- Reset per-transaction character counters */
 
-resetc() {
+resetc()
+{
   flci = flco = 0;
   tfc = tlci = tlco = 0;        /* Total file chars, line chars in & out */
 }
@@ -722,8 +750,8 @@ struct zattr *zz;
       tlog(F100, " mode: text", "", 0l);
     screen(SCR_AN, 0, 0l, f);
     intmsg(filcnt);
-
 #ifdef datageneral
+
     /*
 	 * Need to turn on multi-tasking console
 	 * interrupt task here, since multiple
@@ -781,7 +809,7 @@ reof(yy) struct zattr *yy;
 /* R E O T -- Receive End Of Transaction */
 
 reot() {
-  cxseen = czseen = 0;          /* Reset interruption flags */
+  cxseen = czseen = 0;                 /* Reset interruption flags */
   tstats();
 }
 
@@ -985,7 +1013,10 @@ spar(s) char *s;
     timint = (x < 0) ? 5 : x;
   }
 
-  /* Outbound Padding */
+  /*
+   * Outbound
+   * Padding
+   */
 
   npad = 0;
   padch = '\0';
@@ -997,18 +1028,27 @@ spar(s) char *s;
       padch = 0;
   }
 
-  /* Outbound Packet Terminator */
+  /*
+   * Outbound Packet
+   * Terminator
+   */
 
   seol = (rln >= 5) ? xunchar(s[5]) : '\r';
   if ((seol < 2) || (seol > 31))
     seol = '\r';
 
-  /* Control prefix */
+  /*
+   * Control
+   * prefix
+   */
 
   x = (rln >= 6) ? s[6] : '#';
   myctlq = ((x > 32 && x < 63) || (x > 95 && x < 127)) ? x : '#';
 
-  /* 8th-bit prefix */
+  /*
+   * 8th-bit
+   * prefix
+   */
 
   rq = (rln >= 7) ? s[7] : 0;
   if (rq == 'Y')
@@ -1032,7 +1072,10 @@ spar(s) char *s;
       ebq = rq;
   }
 
-  /* Block check */
+  /*
+   * Block
+   * check
+   */
 
   x = 1;
   if (rln >= 8) {
@@ -1042,15 +1085,22 @@ spar(s) char *s;
   }
   bctr = x;
 
-  /* Repeat prefix */
+  /*
+   * Repeat
+   * prefix
+   */
 
   if (rln >= 9) {
     rptq = s[9];
-    rptflg = ((rptq > 32 && rptq < 63) || (rptq > 95 && rptq < 127));
+    rptflg = (
+	  (rptq > 32 && rptq < 63) || \
+	    (rptq > 95 && rptq < 127));
   } else
     rptflg = 0;
 
-  /* Capabilities */
+  /*
+   * Capabilities
+   */
 
   atcapu = lpcapu = swcapu = 0;
   if (rln >= 10) {
@@ -1058,15 +1108,23 @@ spar(s) char *s;
     atcapu = (x & atcapb) && atcapr;
     lpcapu = (x & lpcapb) && lpcapr;
     swcapu = (x & swcapb) && swcapb;
-    for (capas = 10; (xunchar(s[capas]) & 1) && (rln >= capas); capas++)
+    for (
+	  capas = 10;
+	    (xunchar(s[capas]) & 1) && \
+		  (rln >= capas);
+		    capas++)
       ;
   }
 
-  /* Long Packets */
+  /*
+   * Long
+   * Packets
+   */
 
   if (lpcapu) {
     if (rln > capas + 2) {
-      x = xunchar(s[capas + 2]) * 95 + xunchar(s[capas + 3]);
+      x = xunchar(s[capas + 2]) * \
+		95 + xunchar(s[capas + 3]);
       if (spsizf) {                       /* If overriding negotiations */
         spsiz = (x < lpsiz) ? x : lpsiz;  /* do this, */
       } else {                            /* otherwise */
@@ -1085,7 +1143,10 @@ spar(s) char *s;
   spmax = spsiz;
   numerrs = 0;
 
-  /* Sliding Windows */
+  /*
+   * Sliding
+   * Windows
+   */
 
   if (swcapu) {
     if (rln > capas + 1) {
@@ -1116,7 +1177,7 @@ gnfile() {
 
   /* 
    * If file group interruption
-   * (C-Z) occured, the  fail.
+   * (C-Z) occured, then fail.
    */
 
   debug(F101, "gnfile: czseen", "", czseen);
@@ -1134,7 +1195,8 @@ gnfile() {
   if (sndsrc == 0)
     return 0;
 
-  /* If file list comes from command
+  /*
+   * If file list comes from command
    * line argunents, then get the
    * next list element.
    */
@@ -1144,8 +1206,8 @@ gnfile() {
 
     if (sndsrc > 0) {
       if (nfils-- > 0) {
-
 #ifdef datageneral
+
         /* 
 		 * The DG does not internally expand
 		 * the file names when a string of
@@ -1284,14 +1346,16 @@ openo(name) char *name;
 
 /* O P E N T -- Open the terminal for output, in place of a file */
 
-opent() {
+opent()
+{
   ffc = tfc = 0;
   return zopeno(ZCTERM, "");
 }
 
 /* C L S I F -- Close the current input file */
 
-clsif() {
+clsif()
+{
 #ifdef datageneral
   if ((local) && (!quiet)) /* Only do this if local & not quiet */
     if (nfils < 1)         /* More files to send ... leave it on! */
@@ -1325,7 +1389,11 @@ clsof(disp) int disp;
   int x;
 
   if (bsavef) {                          /* If we saved global file type */
-    debug(F101, "clsof restoring binary", "", binary);
+    debug(
+	  F101,
+	    "clsof restoring binary",
+		  "",
+		    binary);
     binary = bsave;                      /* restore it */
     bsavef = 0;                          /* only this once. */
   }
@@ -1334,7 +1402,11 @@ clsof(disp) int disp;
     connoi_mt();                         /* and not quiet. */
 #endif
   if ((x = zclose(ZOFILE)) < 0) {        /* Try to close the file */
-    tlog(F100, "Failure to close", filnam, 0l);
+    tlog(
+	  F100,
+	    "Failure to close",
+		  filnam,
+		    0l);
     screen(SCR_ST, ST_ERR, 0l, "");
   } else if (disp && (keep == 0)) {      /* Delete it if interrupted, */
     if (*filnam)
@@ -1417,8 +1489,8 @@ syscmd(prefix, suffix) char *prefix, *suffix;
 
   if (prefix == NULL || *prefix == '\0')
     return 0;
-
 #ifdef datageneral
+
   /* 
    * A kludge for now; the real change
    * needs to be done elsewhere...

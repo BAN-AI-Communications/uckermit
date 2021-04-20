@@ -8,12 +8,16 @@
  * 
  * Copyright (C) 1985, 1989,
  *   Trustees of Columbia University in the City of New York.
- * Permission is granted to any individual or institution to use, copy, or
- *   redistribute this software so long as it is not sold for profit,
+ *
+ * Permission is granted to any individual or institution to use, copy,
+ *   or redistribute this software so long as it is not sold for profit,
  *   provided this copyright notice is retained.
  */
 
-/* Mnemonics for ASCII characters */
+/*
+ * Mnemonics for
+ * ASCII characters
+ */
 
 #define NUL 000        /* ASCII NULL */
 #define SOH 001        /* ASCII Start of Header */
@@ -38,7 +42,10 @@
 #endif
 #define MAXWS 1        /* Maximum window size */
 
-/* Kermit parameters and defaults */
+/*
+ * Kermit parameters
+ * and defaults
+ */
 
 #define MAXPACK 94     /* Maximum unextended packet size */
 #define CTLQ    '#'    /* Control char prefix I will use */
@@ -68,7 +75,9 @@
 #define DSPEED  9600   /* Default line speed. */
 #endif
 
-/* Files */
+/*
+ * Files
+ */
 
 #define ZCTERM 0       /* Console terminal */
 #define ZSTDIO 1       /* Standard input/output */
@@ -103,7 +112,10 @@
 #define zmchout(c) \
   ((*zoutptr++ = (CHAR)(c)), ((++zoutcnt) >= INBUFSIZE) ? zoutdump() : 0)
 
-/* Screen functions */
+/*
+ * Screen
+ * functions
+ */
 
 #define SCR_FN  1          /* filename */
 #define SCR_AN  2          /* as-name */
@@ -125,7 +137,9 @@
 #define SCR_TZ 13          /* arbitrary text, delimited at end */
 #define SCR_QE 14          /* quantity equals (e.g. "foo: 7") */
 
-/* Macros */
+/*
+ * Macros
+ */
 
 #define tochar(ch) ((ch) + SP)           /* Number to character */
 #define xunchar(ch) ((ch)-SP)            /* Character to number */

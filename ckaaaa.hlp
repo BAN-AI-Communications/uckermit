@@ -1,14 +1,17 @@
-C-Kermit Version 4E(070), Jan 88
+C-Kermit Version 4
 
-C-Kermit is a family of Kermit programs for many different systems, which
-share a common set of system-independent file transfer protocol modules,
-written in the C language.  C-Kermit may be built for Unix (BSD, ATT, Ultrix,
-SUNOS, Xenix, many others), VAX/VMS, Data General AOS/VS, the Apple Macintosh,
-the Commodore Amiga, and OS/9.  Additional systems will be supported in the
-future.
+C-Kermit is a family of Kermit programs for many different systems,
+which share a common set of system-independent file transfer protocol
+modules, written in the C language.
 
-File names are lowercase on Unix systems, and are uppercase on most other
-systems.  C-Kermit file names are of the form:
+C-Kermit may be built for Unix (BSD, ATT, Ultrix, SUNOS, Xenix, many
+others), VAX/VMS, Data General AOS/VS, the Apple Macintosh, the Commodore
+Amiga, and OS-9. Additional systems will be supported in the future.
+
+File names are lowercase on Unix systems, and are uppercase on most
+other systems.
+
+C-Kermit file names are of the form:
 
 ck<system><what>.<type>  (for experimental releases, xk instead of ck)
 
@@ -116,9 +119,9 @@ Minimal source files for building selected versions:
 
 To build the Unix version, collect the appropriate files together into
 their own directory, rename (mv) ckuker.mak to makefile (or Makefile),
-and then type "make bsd" (for Berkeley-based systems) or "make sys3" (for
-most AT&T System 3 for System 5 Unix implementations), or "make xxx", where
-xxx is one of the other options provided in the makefile (read the comments
-at the beginning of the makefile for further information).
+and then type "make bsd" (for Berkeley-based systems), or "make sys3"
+(for most AT&T System 3 for System 5 Unix implementations), or "make xxx",
+where xxx is one of the other options provided in the makefile (read the
+comments at the beginning of the makefile for further information).
 
 (end of ckaaaa.hlp)
