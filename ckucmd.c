@@ -526,8 +526,8 @@ int *wild;
       } else
         printf("\n");
       printf(
-		"%s%s"
-		  cmprom
+		"%s%s",
+		  cmprom,
 		    cmdbuf);
       break;
     }
