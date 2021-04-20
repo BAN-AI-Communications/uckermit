@@ -1277,7 +1277,7 @@ ttpkt(speed,flow,parity) int speed, flow, parity; {
 /*  T T V T -- Condition communication line for use as virtual terminal  */
 
 ttvt(speed,flow) int speed, flow; {
-    int s;
+    int s = -1;
     if (ttyfd < 0) return(-1);          /* Not open. */
 
     s = ttsspd(speed);                  /* Check the speed */

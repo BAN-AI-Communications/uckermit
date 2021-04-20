@@ -785,7 +785,7 @@ shopar() {
     printf(", Incomplete File Disposition: ");
     if (keep) printf("keep"); else printf("discard");
 #ifdef KERMRC    
-    printf(", Init file: %s",KERMRC);
+    printf("\n Init file: %s",KERMRC);
 #endif
     puts("\n");
 }

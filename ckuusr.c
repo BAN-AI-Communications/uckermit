@@ -1,4 +1,4 @@
-char *userv = "User Interface 4G(072), 19 Apr 2021";
+char *userv = "User Interface 4G(073), 20 Apr 2021";
 
 /*  C K U U S R --  "User Interface" for Unix Kermit (Part 1)  */
 
