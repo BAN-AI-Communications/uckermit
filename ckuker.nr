@@ -8,7 +8,7 @@ kermit \- kermit file transfer
 .I Kermit
 is a file transfer program that allows files to be moved
 between machines of many different operating systems and architectures.
-This man page describes version 4F(082) of the program.  See the C-Kermit
+This man page describes version 4G of the program.  See the C-Kermit
 documentation (ckuker.doc) or the Kermit book for further information.
 .PP
 Arguments are optional. If

@@ -1,4 +1,4 @@
-char *versio = "C-Kermit, 4G(107) 20 Apr 2021";
+char *versio = "C-Kermit, 4G(108) 21 Apr 2021";
 
 /* C K C M A I -- C-Kermit Main program  */
 

@@ -1,16 +1,23 @@
-/*  C K U U S 2  --  "User Interface" STRINGS module for Unix Kermit  */
+/* C K U U S 2 -- "User Interface" STRINGS module for UNIX Kermit */
 
 /*
-   Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
-   Columbia University Center for Computing Activities.
-   First released January 1985.
-   Copyright (C) 1985, 1989, Trustees of Columbia University in the City of New
-   York.  Permission is granted to any individual or institution to use, copy,
-   or redistribute this software so long as it is not sold for profit, provided
-   this copyright notice is retained.
+ * Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
+ * Columbia University Center for Computing Activities.
+ *
+ * First released January 1985.
+ *
+ * Copyright (C) 1985, 1989,
+ *   Trustees of Columbia University in the City of New York.
+ *
+ * Permission is granted to any individual or institution to use, copy,
+ *   or redistribute this software so long as it is not sold for profit,
+ *   provided this copyright notice is retained.
  */
 
-/*  This module separates long strings from the body of the ckuser module. */
+/*
+ * This module separates long strings from
+ * the body of the ckuser module.
+ */
 
 #include "ckcdeb.h"
 #include "ckcker.h"
@@ -66,11 +73,17 @@ static char *hlp1[] = {
     " If no action command is included, enter interactive dialog.\n",
     ""};
 
-/*  U S A G E */
+/* U S A G E */
 
-usage() { conola(hlp1); }
+usage()
+{ 
+	conola(hlp1);
+}
 
-/*  Help string definitions  */
+/* 
+ * Help string
+ * definitions
+ */
 
 static char *tophlp[] = {"\n\
 Type ? for a list of commands, type 'help x' for any command x.\n\
@@ -205,7 +218,7 @@ The 'remote' command is used to send file management instructions to a\n",
     "further information about a particular remote command 'x'.\n",
     ""};
 
-/*  D O H L P  --  Give a help message  */
+/* D O H L P -- Give a help message */
 
 dohlp(xx) int xx;
 {
@@ -364,7 +377,7 @@ Specify 0 for no waiting.");
   return 0;
 }
 
-/*  H M S G  --  Get confirmation, then print the given message  */
+/* H M S G -- Get confirmation, then print the given message */
 
 hmsg(s) char *s;
 {
@@ -386,7 +399,7 @@ hmsga(s) char *s[];
   return 0;
 }
 
-/*  D O H S E T  --  Give help for SET command  */
+/* D O H S E T -- Give help for SET command */
 
 dohset(xx) int xx;
 {
@@ -560,7 +573,7 @@ a NAK while waiting for a command packet.  Specify 0 for no NAKs at all.");
   }
 }
 
-/*  D O H R M T  --  Give help about REMOTE command  */
+/* D O H R M T -- Give help about REMOTE command */
 
 dohrmt(xx) int xx;
 {
@@ -613,10 +626,13 @@ about the specified user.");
   }
 }
 
-/*** The following functions moved here from ckuusr.c because that module ***/
-/*** got too big for PDP-11s. ***/
+/*
+ * The following functions moved here
+ * from ckuusr.c because that module
+ * got too big for PDP-11s. 
+ */
 
-/*  D O L O G  --  Do the log command  */
+/* D O L O G -- Do the log command */
 
 dolog(x) int x;
 {
@@ -665,10 +681,6 @@ dolog(x) int x;
   if ((y = cmcfm()) < 0)
     return y;
 
-  /* cont'd... */
-
-  /* ...dolog, cont'd */
-
   switch (x) {
 
   case LOGD:
@@ -710,7 +722,7 @@ dolog(x) int x;
   }
 }
 
-/*  D E B O P N  --  Open a debugging file  */
+/* D E B O P N -- Open a debugging file */
 
 debopn(s) char *s;
 {
@@ -733,9 +745,10 @@ debopn(s) char *s;
 #endif
 }
 
-/*  S H O P A R  --  Show Parameters  */
+/* S H O P A R -- Show Parameters */
 
-shopar() {
+shopar()
+{
 
   int i;
   extern struct keytab mdmtab[];
@@ -883,9 +896,10 @@ shopar() {
   puts("\n");
 }
 
-/*  D O S T A T  --  Display file transfer statistics.  */
+/* D O S T A T -- Display file transfer statistics */
 
-dostat() {
+dostat()
+{
   printf("\nMost recent transaction --\n");
   printf(" files: %ld\n", filcnt);
   printf(" total file characters  : %ld\n", tfc);
@@ -920,9 +934,10 @@ dostat() {
   return 0;
 }
 
-/*  F S T A T S  --  Record file statistics in transaction log  */
+/* F S T A T S -- Record file statistics in transaction log */
 
-fstats() {
+fstats()
+{
   tfc += ffc;
   tlog(F100, " end of file", "", 0l);
   tlog(F101, "  file characters        ", "", ffc);
@@ -930,9 +945,10 @@ fstats() {
   tlog(F101, "  communication line out ", "", flco);
 }
 
-/*  T S T A T S  --  Record statistics in transaction log  */
+/* T S T A T S -- Record statistics in transaction log */
 
-tstats() {
+tstats()
+{
   char *tp;
   int x;
 
@@ -942,7 +958,10 @@ tstats() {
   if (filcnt < 1)
     return; /* If no files, done. */
 
-  /* If multiple files, record character totals for all files */
+  /*
+   * If multiple files, record
+   * character totals for all files
+   */
 
   if (filcnt > 1) {
     tlog(F101, " files", "", filcnt);
@@ -951,7 +970,10 @@ tstats() {
     tlog(F101, " communication line out  ", "", tlco);
   }
 
-  /* Record timing info for one or more files */
+  /*
+   * Record timing info
+   * for one or more files
+   */
 
   tlog(F101, " elapsed time (seconds)  ", "", (long)tsecs);
   if (tsecs > 0) {
@@ -966,7 +988,7 @@ tstats() {
   tlog(F100, "", "", 0L); /* Leave a blank line */
 }
 
-/*  S D E B U  -- Record spar results in debugging log  */
+/* S D E B U -- Record spar results in debugging log */
 
 sdebu(len) int len;
 {
@@ -987,7 +1009,7 @@ sdebu(len) int len;
   debug(F101, " swcapu", "", swcapu);
   debug(F101, " wslots", "", wslots);
 }
-/*  R D E B U -- Debugging display of rpar() values  */
+/* R D E B U -- Debugging display of rpar() values */
 
 rdebu(len) int len;
 {

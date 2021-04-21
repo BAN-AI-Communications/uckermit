@@ -1,4 +1,4 @@
-char *ckzv = "Unix file support, 4G(047) 20 Apr 2021";
+char *ckzv = "Unix file support, 4G(048) 21 Apr 2021";
 
 /* C K U F I O -- Kermit file system support for Unix systems */
 
@@ -10,12 +10,15 @@ char *ckzv = "Unix file support, 4G(047) 20 Apr 2021";
  *
  * Copyright (C) 1985, 1989,
  *   Trustees of Columbia University in the City of New York.
+ *
  * Permission is granted to any individual or institution to use, copy,
  *   or redistribute this software so long as it is not sold for profit,
  *   provided this copyright notice is retained.
  */
 
-/* Includes */
+/*
+ * Includes
+ */
 
 #include "ckcdeb.h"               /* Typedefs, debug formats, etc */
 #include "ckcker.h"               /* Kermit definitions */
@@ -26,7 +29,10 @@ char *ckzv = "Unix file support, 4G(047) 20 Apr 2021";
 #include <sys/dir.h>              /* Directory structure */
 #include <sys/types.h>            /* Data types */
 
-/* File date material */
+/*
+ * File date
+ * material
+ */
 
 #ifdef BSD4
 #define TIMESTAMP
@@ -283,7 +289,10 @@ char *WHOCMD = "who ";               /* For seeing who's logged in */
 #define PROVX1
 #endif
 
-/* Which systems include <sys/file.h>... */
+/*
+ * Which systems include
+ * <sys/file.h>...
+ */
 
 #ifndef PROVX1
 #ifndef aegis
@@ -350,7 +359,9 @@ char *WHOCMD = "who ";               /* For seeing who's logged in */
 #endif
 #endif
 
-/* Declarations */
+/*
+ * Declarations
+ */
 
 FILE *fp[ZNFILS] = {         /* File pointers */
                     NULL,
@@ -1299,8 +1310,8 @@ zkermini() {
 zmail(p, f) char *p;
 char *f;
 {                                      /* E-mail file f to address p */
-
 #ifdef BSD4
+
   /*
    * The idea is to use /usr/ucb/mail, rather
    * than regular mail, so that a subject line

@@ -8,12 +8,16 @@
  *
  * Copyright (C) 1985, 1989,
  *   Trustees of Columbia University in the City of New York.
+ *
  * Permission is granted to any individual or institution to use, copy,
  *   or redistribute this software so long as it is not sold for profit,
  *   provided this copyright notice is retained.
  */
 
-/* Special getchars... */
+/*
+ * Special
+ * getchars...
+ */
 
 #ifdef vax11c
 #define getchar() vms_getchar()
@@ -29,7 +33,10 @@
 #define getchar() coninc(0)
 #endif
 
-/* Sizes of things */
+/*
+ * Sizes of
+ * things
+ */
 
 #define HLPLW 78                     /* Width of ?-help line */
 #define HLPCW 19                     /* Width of ?-help column */
@@ -37,7 +44,10 @@
 #define HLPBL 100                    /* Help string buffer length */
 #define ATMBL 256                    /* Command atom buffer length*/
 
-/* Special characters */
+/*
+ * Special
+ * characters
+ */
 
 #ifndef   NUL
 #define   NUL '\0'                   /* NULL */
@@ -66,11 +76,17 @@
 #define   SP 0040                    /* Space */
 #endif
 
-/* Keyword table flags */
+/*
+ * Keyword table
+ * flags
+ */
 
 #define CM_INV 1                     /* Invisible keyword */
 
-/* Keyword Table Template */
+/*
+ * Keyword Table
+ * Template
+ */
 
 struct keytab {                      /* Keyword table */
   char *kwd;                         /* Pointer to keyword string */

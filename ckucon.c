@@ -1,4 +1,4 @@
-char *connv = "Connect Command for Unix, 4G(024) 20 Apr 2021";
+char *connv = "Connect Command for Unix, 4G(025) 21 Apr 2021";
 
 /* C K U C O N -- Dumb terminal connection to remote system, for UNIX */
 
@@ -10,6 +10,7 @@ char *connv = "Connect Command for Unix, 4G(024) 20 Apr 2021";
  *
  * Copyright (C) 1985, 1989,
  *   Trustees of Columbia University in the City of New York.
+ *
  * Permission is granted to any individual or institution to use, copy,
  *   or redistribute this software so long as it is not sold for profit,
  *   provided this copyright notice is retained.
@@ -99,7 +100,10 @@ conect() {
   if (seslog)
     printf("(Session logged to %s.)\r\n", sesfil);
 
-  /* Condition console terminal and communication line */
+  /*
+   * Condition console terminal
+   * and communication line
+   */
 
   if (conbin(escape) < 0) {
     printf("Sorry, can't condition console terminal\n");

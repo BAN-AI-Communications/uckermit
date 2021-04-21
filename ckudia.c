@@ -1,4 +1,4 @@
-char *dialv = "Dial Command, V2.0(019) 20 Apr 2021";
+char *dialv = "Dial Command, V2.0(020) 21 Apr 2021";
 
 /* C K U D I A -- Dialing program for connection to remote system */
 
@@ -1031,7 +1031,10 @@ ckdial(telnbr) char *telnbr;
   msleep(500);                       /* give things settling time */
   alarm(10);                         /* alarm on dialing prompts */
 
-  /* Dial the number */
+  /*
+   * Dial the
+   * number
+   */
 
   ttolSlow(pmdminf->dmode_str, pmdminf->dial_rate);
   if (pmdminf->dmode_prompt) {       /* wait for prompt, if any expected */

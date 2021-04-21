@@ -1,4 +1,4 @@
-char *cmdv = "Unix cmd package V2(033), 20 Apr 2021";
+char *cmdv = "Unix cmd package V2(034), 21 Apr 2021";
 
 /* C K U C M D -- Interactive command package for Unix  */
 
@@ -538,22 +538,22 @@ int *wild;
 /*  C M D I R  --  Parse a directory specification  */
 
 /*
- This function depends on the external functions:
-   zchki()  - Check if input file exists and is readable.
- If these functions aren't available, then use cmfld() to parse dir names.
- Note: this function quickly cobbled together, mainly by deleting lots of
- lines from cmifi().  It seems to work, but various services are missing,
- like completion, lists of matching directories on "?", etc.
-*/
-/*
- Returns
-   -4 EOF
-   -3 if no input present when required,
-   -2 if out of space or other internal error,
-   -1 if reparse needed,
-    0 or 1, with xp pointing to name, if directory specified,
-    2 if a wildcard was included.
-*/
+ * This function depends on the external functions:
+ *   zchki()  - Check if input file exists and is readable.
+ * If these functions aren't available, then use cmfld() to parse dir names.
+ * Note: this function quickly cobbled together, mainly by deleting lots of
+ * lines from cmifi().  It seems to work, but various services are missing,
+ * like completion, lists of matching directories on "?", etc.
+ *
+ * Returns
+ *   -4 EOF
+ *   -3 if no input present when required,
+ *   -2 if out of space or other internal error,
+ *   -1 if reparse needed,
+ *    0 or 1, with xp pointing to name, if directory specified,
+ *    2 if a wildcard was included.
+ */
+
 cmdir(xhlp, xdef, xp) char *xhlp, *xdef, **xp;
 {
   int i, x, xc;
@@ -563,58 +563,65 @@ cmdir(xhlp, xdef, xp) char *xhlp, *xdef, **xp;
   char *tilde_expand(), *dirp;
 #endif
 
-  cc = xc = 0; /* Initialize counts & pointers */
+  cc = xc = 0;                     /* Initialize counts & pointers */
   *xp = "";
-  if ((x = cmflgs) != 1) { /* Already confirmed? */
-    x = gtword();          /* No, get a word */
+  if ((x = cmflgs) != 1) {         /* Already confirmed? */
+    x = gtword();                  /* No, get a word */
   } else {
-    cc = setatm(xdef); /* If so, use default, if any. */
+    cc = setatm(xdef);             /* If so, use default, if any. */
   }
-  *xp = atmbuf; /* Point to result. */
+  *xp = atmbuf;                    /* Point to result. */
 
   while (1) {
-    xc += cc; /* Count the characters. */
-    debug(F111, "cmifi: gtword", atmbuf, xc);
+    xc += cc;                      /* Count the characters. */
+    debug(
+	  F111,
+	    "cmifi: gtword",
+		  atmbuf,
+		    xc);
     switch (x) {
-    case -4: /* EOF */
-    case -2: /* Out of space. */
-    case -1: /* Reparse needed */
+    case -4:                       /* EOF */
+    case -2:                       /* Out of space. */
+    case -1:                       /* Reparse needed */
       return (x);
-    case 0: /* SP or NL */
+    case 0:                        /* SP or NL */
     case 1:
       if (xc == 0)
-        *xp = xdef; /* If no input, return default. */
+        *xp = xdef;                /* If no input, return default. */
       else
         *xp = atmbuf;
       if (**xp == NUL)
-        return (-3); /* If field empty, return -3. */
+        return (-3);               /* If field empty, return -3. */
 #ifdef DTILDE
-      dirp = tilde_expand(*xp); /* Expand tilde, if any, */
+      dirp = tilde_expand(*xp);    /* Expand tilde, if any, */
       if (*dirp != '\0')
-        setatm(dirp); /* in the atom buffer. */
+        setatm(dirp);              /* in the atom buffer. */
 #endif
-      if (chkwld(*xp) != 0) /* If wildcard included... */
+      if (chkwld(*xp) != 0)        /* If wildcard included... */
         return (2);
 
-      /* If not wild, see if it exists and is readable. */
+      /*
+	   * If not wild, see if it
+	   * exists and is readable.
+	   */
 
       y = zchki(*xp);
 
       if (y == -3) {
         printf("\n?Read permission denied - %s\n", *xp);
         return (-2);
-      } else if (y == -2) { /* Probably a directory... */
+      } else if (y == -2) {        /* Probably a directory... */
         return (x);
       } else if (y < 0) {
         printf("\n?Not found - %s\n", *xp);
         return (-2);
       }
       return (x);
-    case 2: /* ESC */
+    case 2:                        /* ESC */
       putchar(BEL);
       break;
 
-    case 3: /* Question mark */
+    case 3:                        /* Question mark */
       if (*xhlp == NUL)
         printf(" Directory name");
       else
@@ -626,14 +633,19 @@ cmdir(xhlp, xdef, xp) char *xhlp, *xdef, **xp;
   }
 }
 
-/*  C H K W L D  --  Check for wildcard characters '*' or '?'  */
+/* C H K W L D -- Check for wildcard characters '*' or '?' */
 
 chkwld(s) char *s;
 {
 
   for (; *s != '\0'; s++) {
 #ifdef datageneral
-    /* Valid DG wild cards are '-', '+', '#', or '*' */
+
+    /*
+	 * Valid DG wild cards are:
+	 * '-', '+', '#', or '*'
+	 */
+
     if ((*s <= '-') && (*s >= '#') &&
         ((*s == '-') || (*s == '+') || (*s == '#') || (*s == '*')))
 #else
@@ -644,57 +656,59 @@ chkwld(s) char *s;
   return (0);
 }
 
-/*  C M F L D  --  Parse an arbitrary field  */
+/* C M F L D -- Parse an arbitrary field */
+
 /*
- Returns
-   -3 if no input present when required,
-   -2 if field too big for buffer,
-   -1 if reparse needed,
-    0 otherwise, xp pointing to string result.
-*/
+ * Returns
+ *  -3 if no input present when required,
+ *  -2 if field too big for buffer,
+ *  -1 if reparse needed,
+ *   0 otherwise, xp pointing to string result.
+ */
+
 cmfld(xhlp, xdef, xp) char *xhlp, *xdef, **xp;
 {
   int x, xc;
 
   debug(F110, "cmfld: xdef", xdef, 0);
-  cc = xc = 0; /* Initialize counts & pointers */
+  cc = xc = 0;                     /* Initialize counts & pointers */
   *xp = "";
   debug(F101, "cmfld: cmflgs", "", cmflgs);
-  if ((x = cmflgs) != 1) { /* Already confirmed? */
-    x = gtword();          /* No, get a word */
+  if ((x = cmflgs) != 1) {         /* Already confirmed? */
+    x = gtword();                  /* No, get a word */
   } else {
-    cc = setatm(xdef); /* If so, use default, if any. */
+    cc = setatm(xdef);             /* If so, use default, if any. */
   }
-  *xp = atmbuf; /* Point to result. */
+  *xp = atmbuf;                    /* Point to result. */
 
   while (1) {
-    xc += cc; /* Count the characters. */
+    xc += cc;                      /* Count the characters. */
     debug(F111, "cmfld: gtword", atmbuf, xc);
     debug(F101, " x", "", x);
     switch (x) {
-    case -4: /* EOF */
-    case -2: /* Out of space. */
-    case -1: /* Reparse needed */
+    case -4:                       /* EOF */
+    case -2:                       /* Out of space. */
+    case -1:                       /* Reparse needed */
       return (x);
-    case 0: /* SP or NL */
+    case 0:                        /* SP or NL */
     case 1:
-      if (xc == 0) /* If no input, return default. */
+      if (xc == 0)                 /* If no input, return default. */
         cc = setatm(xdef);
       *xp = atmbuf;
       if (**xp == NUL)
-        x = -3; /* If field empty, return -3. */
+        x = -3;                    /* If field empty, return -3. */
       return (x);
-    case 2: /* ESC */
+    case 2:                        /* ESC */
       if (xc == 0) {
-        printf("%s ", xdef); /* If at beginning of field, */
-        addbuf(xdef);        /* supply default. */
-        cc = setatm(xdef);   /* Return as if whole field */
-        return (0);          /* typed, followed by space. */
+        printf("%s ", xdef);       /* If at beginning of field, */
+        addbuf(xdef);              /* supply default. */
+        cc = setatm(xdef);         /* Return as if whole field */
+        return (0);                /* typed, followed by space. */
       } else {
-        putchar(BEL); /* Beep if already into field. */
+        putchar(BEL);              /* Beep if already into field. */
       }
       break;
-    case 3: /* Question mark */
+    case 3:                        /* Question mark */
       if (*xhlp == NUL)
         printf(" Please complete this field");
       else
@@ -706,17 +720,17 @@ cmfld(xhlp, xdef, xp) char *xhlp, *xdef, **xp;
   }
 }
 
-/*  C M T X T  --  Get a text string, including confirmation  */
+/* C M T X T -- Get a text string, including confirmation */
 
 /*
-  Print help message 'xhlp' if ? typed, supply default 'xdef' if null
-  string typed.  Returns
-
-   -1 if reparse needed or buffer overflows.
-    1 otherwise.
-
-  with cmflgs set to return code, and xp pointing to result string.
-*/
+ *  Print help message 'xhlp' if ? typed, supply default 'xdef' if null
+ *  string typed.  Returns
+ *
+ *   -1 if reparse needed or buffer overflows.
+ *    1 otherwise.
+ *
+ *  with cmflgs set to return code, and xp pointing to result string.
+ */
 
 cmtxt(xhlp, xdef, xp) char *xhlp;
 char *xdef;
@@ -727,35 +741,35 @@ char **xp;
   static int xc;
 
   debug(F101, "cmtxt, cmflgs", "", cmflgs);
-  cc = 0;             /* Start atmbuf counter off at 0 */
-  if (cmflgs == -1) { /* If reparsing, */
-    xc = strlen(*xp); /* get back the total text length, */
-  } else {            /* otherwise, */
-    *xp = "";         /* start fresh. */
+  cc = 0;                          /* Start atmbuf counter off at 0 */
+  if (cmflgs == -1) {              /* If reparsing, */
+    xc = strlen(*xp);              /* get back the total text length, */
+  } else {                         /* otherwise, */
+    *xp = "";                      /* start fresh. */
     xc = 0;
   }
-  *atmbuf = NUL; /* And empty atom buffer. */
+  *atmbuf = NUL;                   /* And empty atom buffer. */
   if ((x = cmflgs) != 1) {
-    x = gtword(); /* Get first word. */
-    *xp = pp;     /* Save pointer to it. */
+    x = gtword();                  /* Get first word. */
+    *xp = pp;                      /* Save pointer to it. */
   }
   while (1) {
-    xc += cc; /* Char count for all words. */
+    xc += cc;                      /* Char count for all words. */
     debug(F111, "cmtxt: gtword", atmbuf, xc);
     debug(F101, " x", "", x);
     switch (x) {
-    case -4: /* EOF */
-    case -2: /* Overflow */
-    case -1: /* Deletion */
+    case -4:                       /* EOF */
+    case -2:                       /* Overflow */
+    case -1:                       /* Deletion */
       return (x);
-    case 0: /* Space */
-      xc++; /* Just count it */
+    case 0:                        /* Space */
+      xc++;                        /* Just count it */
       break;
-    case 1: /* CR or LF */
+    case 1:                        /* CR or LF */
       if (xc == 0)
         *xp = xdef;
       return (x);
-    case 2: /* ESC */
+    case 2:                        /* ESC */
       if (xc == 0) {
         printf("%s ", xdef);
         cc = addbuf(xdef);
@@ -763,7 +777,7 @@ char **xp;
         putchar(BEL);
       }
       break;
-    case 3: /* Question Mark */
+    case 3:                        /* Question Mark */
       if (*xhlp == NUL)
         printf(" Text string");
       else
@@ -837,11 +851,6 @@ char *xhlp, *xdef;
         break;
       }
       return (y);
-
-      /* cont'd... */
-
-      /* ...cmkey(), cont'd */
-
     case 2: /* User terminated word with ESC */
       if (cc == 0) {
         if (*xdef != NUL) {    /* Nothing in atmbuf */
@@ -869,11 +878,6 @@ char *xhlp, *xdef;
       addbuf(xp);
       debug(F110, "cmkey: addbuf", cmdbuf, 0);
       return (y);
-
-      /* cont'd... */
-
-      /* ...cmkey(), cont'd */
-
     case 3: /* User terminated word with "?" */
       y = lookup(table, atmbuf, n, &z);
       if (y > -1) {
@@ -962,7 +966,8 @@ cmcfm() {
 
 /*  C L R H L P -- Initialize/Clear the help line buffer  */
 
-clrhlp() { /* Clear the help buffer */
+clrhlp()
+{ /* Clear the help buffer */
   hlpbuf[0] = NUL;
   hh = hx = 0;
 }
@@ -1189,11 +1194,6 @@ gtword() {
 
       if (c == HT)
         c = ESC; /* Substitute ESC for tab. */
-
-      /* cont'd... */
-
-      /* ...gtword(), cont'd */
-
       if (c == SP) { /* If space */
         *bp++ = c;   /* deposit it in buffer. */
         if (echof)
@@ -1287,11 +1287,6 @@ gtword() {
         inword = 0;
         return (cmflgs = -1);
       }
-
-      /* cont'd... */
-
-      /* ...gtword(), cont'd */
-
       if (c == WDEL) {      /* ^W, word deletion */
         if (bp <= cmdbuf) { /* Beep if nothing to delete */
           putchar(BEL);

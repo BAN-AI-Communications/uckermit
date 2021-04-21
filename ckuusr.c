@@ -1,80 +1,93 @@
-char *userv = "User Interface 4G(074), 20 Apr 2021";
+char *userv = "User Interface 4G(075), 21 Apr 2021";
 
-/*  C K U U S R --  "User Interface" for Unix Kermit (Part 1)  */
+/* C K U U S R -- "User Interface" for Unix Kermit (Part 1) */
 
 /*
-   Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
-   Columbia University Center for Computing Activities.
-   First released January 1985.
-   Copyright (C) 1985, 1989, Trustees of Columbia University in the City of New
-   York.  Permission is granted to any individual or institution to use, copy,
-   or redistribute this software so long as it is not sold for profit, provided
-   this copyright notice is retained.
+ *  Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
+ *  Columbia University Center for Computing Activities.
+ *
+ *  First released January 1985.
+ *
+ *  Copyright (C) 1985, 1989, 
+ *    Trustees of Columbia University in the City of New York.
+ *
+ *  Permission is granted to any individual or institution to use, copy,
+ *    or redistribute this software so long as it is not sold for profit,
+ *    provided this copyright notice is retained.
  */
 
 /*
-   The ckuusr module contains the terminal input and output functions for Unix
-   Kermit.  It includes a simple Unix-style command line parser as well as
-   an interactive prompting keyword command parser.  It depends on the existence
-   of Unix facilities like fopen, fgets, feof, (f)printf, argv/argc, etc.  Other
-   functions that are likely to vary among Unix implementations -- like setting
-   terminal modes or interrupts -- are invoked via calls to functions that are
-   defined in the system-dependent modules, ck?[ft]io.c.
-
-   The command line parser processes any arguments found on the command line,
-   as passed to main() via argv/argc.  The interactive parser uses the
-   facilities of the cmd package (developed for this program, but usable by any
-   program).
-
-   Any command parser may be substituted for this one.  The only requirements
-   for the Kermit command parser are these:
-
-   1. Set parameters via global variables like duplex, speed, ttname, etc.
-    See ckmain.c for the declarations and descriptions of these variables.
-
-   2. If a command can be executed without the use of Kermit protocol, then
-    execute the command directly and set the variable sstate to 0. Examples
-    include 'set' commands, local directory listings, the 'connect' command.
-
-   3. If a command requires the Kermit protocol, set the following variables:
-
-    sstate                             string data
-      'x' (enter server mode)            (none)
-      'r' (send a 'get' command)         cmarg, cmarg2
-      'v' (enter receive mode)           cmarg2
-      'g' (send a generic command)       cmarg
-      's' (send files)                   nfils, cmarg & cmarg2 OR cmlist
-      'c' (send a remote host command)   cmarg
-
-    cmlist is an array of pointers to strings.
-    cmarg, cmarg2 are pointers to strings.
-    nfils is an integer.
-
-    cmarg can be a filename string (possibly wild), or
-       a pointer to a prefabricated generic command string, or
-       a pointer to a host command string.
-    cmarg2 is the name to send a single file under, or
-       the name under which to store an incoming file; must not be wild.
-    cmlist is a list of nonwild filenames, such as passed via argv.
-    nfils is an integer, interpreted as follows:
-      -1: argument string is in cmarg, and should be expanded internally.
-       0: stdin.
-      >0: number of files to send, from cmlist.
-
-   The screen() function is used to update the screen during file transfer.
-   The tlog() function maintains a transaction log.
-   The debug() function maintains a debugging log.
-   The intmsg() and chkint() functions provide the user i/o for interrupting
-   file transfers.
+ *  The ckuusr module contains the terminal input and output functions
+ *  for UNIX Kermit.  It includes a simple Unix-style command line
+ *  parser as well as an interactive prompting keyword command parser.
+ *  It depends on the existence of Unix facilities like fopen, fgets,
+ *  feof, (f)printf, argv/argc, etc.  Other functions that are likely
+ *  to vary among Unix implementations -- like setting terminal modes
+ *  or interrupts -- are invoked via calls to functions that are defined
+ *  in the system-dependent modules, ck?[ft]io.c.
+ *
+ *  The command line parser processes any arguments found on the command
+ *  line, as passed to main() via argv/argc.  The interactive parser uses
+ *  the facilities of the cmd package (developed for this program, but
+ *  usable by any program).
+ *
+ *  Any command parser may be substituted for this one.  The only
+ *  requirements for the Kermit command parser are these:
+ *
+ * 1. Set parameters via global variables like duplex, speed, ttname, etc.
+ *  See ckmain.c for the declarations and descriptions of these variables.
+ *
+ * 2. If a command can be executed without the use of Kermit protocol, then
+ *  execute the command directly and set the variable sstate to 0. Examples
+ *  include 'set' commands, local directory listings, the 'connect' command.
+ *
+ * 3. If a command requires the Kermit protocol, set the following
+ *  variables:
+ *
+ *  sstate                             string data
+ *     'x' (enter server mode)            (none)
+ *     'r' (send a 'get' command)         cmarg, cmarg2
+ *     'v' (enter receive mode)           cmarg2
+ *     'g' (send a generic command)       cmarg
+ *     's' (send files)                   nfils, cmarg & cmarg2 OR cmlist
+ *     'c' (send a remote host command)   cmarg
+ *
+ *   cmlist is an array of pointers to strings.
+ *   cmarg, cmarg2 are pointers to strings.
+ *   nfils is an integer.
+ *
+ *   cmarg can be a filename string (possibly wild), or
+ *      a pointer to a prefabricated generic command string, or
+ *      a pointer to a host command string.
+ *   cmarg2 is the name to send a single file under, or
+ *      the name under which to store an incoming file; must not be wild.
+ *   cmlist is a list of nonwild filenames, such as passed via argv.
+ *   nfils is an integer, interpreted as follows:
+ *     -1: argument string is in cmarg, and should be expanded internally.
+ *      0: stdin.
+ *     >0: number of files to send, from cmlist.
+ *
+ *  The screen() function is used to update the screen during file transfer.
+ *  The tlog() function maintains a transaction log.
+ *  The debug() function maintains a debugging log.
+ *  The intmsg() and chkint() functions provide the
+ *    user i/o for interrupting file transfers.
  */
 
-/* Includes */
+/*
+ * Includes
+ */
 
 #include "ckcdeb.h"
 #include <ctype.h>
 #include <stdio.h>
 #ifndef AMIGA
-/* Apparently these should be included for OS/2 C-Kermit after all... */
+
+/*
+ * Apparently these should be included
+ * for OS/2 C-Kermit after all...
+ */
+
 /* #ifndef OS2 */
 #include <setjmp.h>
 #include <signal.h>
@@ -94,21 +107,27 @@ char *userv = "User Interface 4G(074), 20 Apr 2021";
 #ifdef datageneral
 #define fgets(stringbuf, max, fd) dg_fgets(stringbuf, max, fd)
 #define fork() vfork()
-/* DG version 3.21 of C has bugs in the following routines, since they
+
+/*
+ * DG version 3.21 of C has bugs in the following routines, since they
  * depend on /etc/passwd.  In the context where the routines are used,
  * we don't need them anyway.
  */
+
 #define getgid() -1
 #define getuid() -1
 #define geteuid() -1
 #endif
 
-/* External Kermit Variables, see ckmain.c for description. */
+/*
+ * External Kermit Variables,
+ * see ckmain.c for description.
+ */
 
-extern int size, rpsiz, urpsiz, speed, local, server, displa, binary, parity,
-    deblog, escape, xargc, flow, turn, duplex, nfils, ckxech, pktlog, seslog,
-    tralog, stdouf, turnch, dfloc, keep, maxrps, warn, quiet, cnflg, tlevel,
-    mdmtyp, zincnt;
+extern int   size,  rpsiz, urpsiz,  speed,  local, server, displa, binary,
+	       parity, deblog, escape,  xargc,   flow,   turn, duplex,  nfils,
+		   ckxech, pktlog, seslog, tralog, stdouf, turnch,  dfloc,   keep,
+		   maxrps,   warn,  quiet,  cnflg, tlevel, mdmtyp, zincnt;
 
 extern char *versio, *protv, *ckxv, *ckzv, *fnsv, *connv, *dftty, *cmdv;
 extern char *dialv, *loginv;
@@ -124,11 +143,17 @@ char *getcwd();
 char *getcwd();
 #endif
 
-/* Declarations from cmd package */
+/*
+ * Declarations from
+ * cmd package
+ */
 
 extern char cmdbuf[]; /* Command buffer */
 
-/* Declarations from ck?fio.c module */
+/*
+ * Declarations from
+ * ck?fio.c module
+ */
 
 extern char *SPACMD, *zhome(); /* Space command, home directory. */
 extern int backgrd;            /* Kermit executing in background */
@@ -136,10 +161,17 @@ extern int backgrd;            /* Kermit executing in background */
 extern char *zfindfile();
 #endif
 
-/* The background flag is set by ckutio.c (via conint() ) to note whether */
-/* this kermit is executing in background ('&' on shell command line).    */
+/*
+ * The background flag is set by ckutio.c
+ * ( via conint() ) to note whether 
+ * this kermit is executing in background 
+ * ( '&' on shell command line ).
+ */
 
-/* Variables and symbols local to this module */
+/*
+ * Variables and symbols
+ * local to this module
+ */
 
 char line[CMDBL + 10], *lp; /* Character buffer for anything */
 char debfil[50];            /* Debugging log file name */
@@ -159,13 +191,16 @@ FILE *tfile[MAXTAKE]; /* File pointers for TAKE command */
 char *homdir;     /* Pointer to home directory string */
 char cmdstr[100]; /* Place to build generic command */
 
-/*  C M D L I N  --  Get arguments from command line  */
+/* C M D L I N -- Get arguments from command line */
+
 /*
-   Simple Unix-style command line parser, conforming with 'A Proposed Command
-   Syntax Standard for Unix Systems', Hemenway & Armitage, Unix/World, Vol.1,
-   No.3, 1984.
+ * Simple UNIX-style command line parser, conforming with
+ *   'A Proposed Command Syntax Standard for UNIX Systems',
+ *   Hemenway & Armitage, UNIX/World, Vol.1, No.3, 1984.
  */
-cmdlin() {
+
+cmdlin()
+{
   char x; /* Local general-purpose int */
 
   cmarg = ""; /* Initialize globals */
@@ -186,8 +221,9 @@ cmdlin() {
   }
   debug(F101, "action", "", action);
   if (!local)
-    if ((action == 'g') || (action == 'r') || (action == 'c') || (cflg != 0))
-      fatal("-l and -b required");
+    if (
+	  (action == 'g') || (action == 'r') || (action == 'c') || (cflg != 0))
+        fatal("-l and -b required");
   if (*cmarg2 != 0)
     if ((action != 's') && (action != 'r') && (action != 'v'))
       fatal("-a without -s, -r, or -g");
@@ -220,7 +256,7 @@ cmdlin() {
   return action;   /* Then do any requested protocol */
 }
 
-/*  D O A R G  --  Do a command-line argument.  */
+/* D O A R G -- Do a command-line argument */
 
 doarg(x) char x;
 {
@@ -289,10 +325,6 @@ doarg(x) char x;
       debug(F101, *xargv, "", nfils);
       action = 's';
       break;
-
-      /* cont'd... */
-
-      /* ...doarg(), cont'd */
 
     case 'g': /* get */
       if (action)
@@ -372,10 +404,6 @@ doarg(x) char x;
       binary = 1;
       break;
 
-      /* cont'd... */
-
-      /* ...doarg(), cont'd */
-
     case 'w': /* File warning */
       warn = 1;
       break;
@@ -441,7 +469,9 @@ doarg(x) char x;
   return 0;
 }
 
-/* Misc */
+/*
+ * Misc
+ */
 
 fatal(msg) char *msg;
 { /* Fatal error message */
@@ -466,9 +496,15 @@ ermsg(msg) char *msg;
   tlog(F110, "Error -", msg, 0l);
 }
 
-/* Interactive command parser */
+/*
+ * Interactive command
+ * parser
+ */
 
-/* Top-Level Keyword Table */
+/*
+ * Top-Level Keyword
+ * Table
+ */
 
 struct keytab cmdtab[] = {
     "!",          XXSHE,  0,      "%",         XXCOM, CM_INV,
@@ -489,7 +525,10 @@ struct keytab cmdtab[] = {
     "transmit",   XXTRA,  0};
 int ncmd = (sizeof(cmdtab) / sizeof(struct keytab));
 
-/* Parameter keyword table */
+/*
+ * Parameter keyword
+ * table
+ */
 
 struct keytab prmtab[] = {
     "attributes",
@@ -571,9 +610,13 @@ struct keytab prmtab[] = {
     XYTIMO,
     CM_INV /* moved to send/receive */
 };
-int nprm = (sizeof(prmtab) / sizeof(struct keytab)); /* How many parameters */
+int nprm = \
+	  (sizeof(prmtab) / sizeof(struct keytab)); /* How many parameters */
 
-/* Remote Command Table */
+/*
+ * Remote Command
+ * Table
+ */
 
 struct keytab remcmd[] = {
     "cd",        XZCWD, CM_INV, "cwd",  XZCWD, 0, "delete", XZDEL, 0,
@@ -585,16 +628,20 @@ struct keytab logtab[] = {"debugging", LOGD, 0, "packets",      LOGP, 0,
                           "session",   LOGS, 0, "transactions", LOGT, 0};
 int nlog = (sizeof(logtab) / sizeof(struct keytab));
 
-/* Show command arguments */
+/*
+ * Show command
+ * arguments
+ */
 
 #define SHPAR 0 /* Parameters */
 #define SHVER 1 /* Versions */
 
 struct keytab shotab[] = {"parameters", SHPAR, 0, "versions", SHVER, 0};
 
-/*  C M D I N I  --  Initialize the interactive command parser  */
+/* C M D I N I -- Initialize the interactive command parser */
 
-cmdini() {
+cmdini()
+{
 
 #ifdef AMIGA
   congm();
@@ -603,7 +650,11 @@ cmdini() {
   tlevel = -1;         /* Take file level */
   cmsetp("C-Kermit>"); /* Set default prompt */
 
-/* Look for init file in home or current directory. */
+/*
+ * Look for init file in
+ * home or current directory.
+ */
+
 #ifdef OS2
   lp = zfindfile(KERMRC);
   strcpy(line, lp);
@@ -647,14 +698,17 @@ cmdini() {
 #endif
 }
 
-/* Display version herald and initial prompt */
+/*
+ * Display version herald
+ * and initial prompt
+ */
 
 herald() {
   if (!backgrd)
     printf("%s,%s\nType ? for help\n", versio, ckxsys);
 }
 
-/*  T R A P  --  Terminal interrupt handler */
+/* T R A P -- Terminal interrupt handler */
 
 trap(sig, code) int sig, code;
 {
@@ -688,9 +742,10 @@ stptrap(sig, code) int sig, code;
     prompt(); /* Reissue prompt when fg'd */
 }
 
-/*  P A R S E R  --  Top-level interactive command parser.  */
+/* P A R S E R -- Top-level interactive command parser */
 
-parser() {
+parser()
+{
   int xx, cbn;
   char *cbp;
 
@@ -699,11 +754,13 @@ parser() {
 #endif
   concb(escape); /* Put console in cbreak mode. */
   conint(trap);  /* Turn on console terminal interrupts. */
-                 /*
-                    sstate becomes nonzero when a command has been parsed that requires some
-                    action from the protocol module.  Any non-protocol actions, such as local
-                    directory listing or terminal emulation, are invoked directly from below.
-                  */
+
+/*
+ * sstate becomes nonzero when a command has been parsed that requires some
+ * action from the protocol module.  Any non-protocol actions, such as local
+ * directory listing or terminal emulation, are invoked directly from below
+ */
+
   if (local && !backgrd)
     printf("\n");       /*** Temporary kludge ***/
   sstate = 0;           /* Start with no start state. */
@@ -721,8 +778,11 @@ parser() {
       cbp = cmdbuf;    /* Get the next line. */
       cbn = CMDBL;
 
-      /* Loop to get next command line and all continuation lines from take
-       * file. */
+      /*
+	   * Loop to get next command line and
+	   * all continuation lines from take
+       * file.
+	   */
 
     again:
       if (fgets(line, cbn, tfile[tlevel]) == NULL)
@@ -771,7 +831,10 @@ parser() {
       }
     }
   }
-  /* Got an action command; disable terminal interrupts and return start state
+
+  /*
+   * Got an action command; disable terminal
+   * interrupts and return start state
    */
 
   if (!local)
@@ -779,7 +842,7 @@ parser() {
   return sstate;
 }
 
-/*  D O E X I T  --  Exit from the program.  */
+/* D O E X I T -- Exit from the program. */
 
 doexit(exitstat) int exitstat;
 {
@@ -820,7 +883,7 @@ doexit(exitstat) int exitstat;
   exit(exitstat); /* Exit from the program. */
 }
 
-/*  B L D L E N  --  Make length-encoded copy of string  */
+/* B L D L E N -- Make length-encoded copy of string */
 
 char *bldlen(str, dest) char *str, *dest;
 {
@@ -831,7 +894,7 @@ char *bldlen(str, dest) char *str, *dest;
   return dest + len + 1;
 }
 
-/*  S E T G E N  --  Construct a generic command  */
+/* S E T G E N -- Construct a generic command */
 
 setgen(type, arg1, arg2, arg3) char type, *arg1, *arg2, *arg3;
 {
@@ -854,13 +917,13 @@ setgen(type, arg1, arg2, arg3) char type, *arg1, *arg2, *arg3;
   return 'g';
 }
 
-/*  D O C M D  --  Do a command  */
+/* D O C M D -- Do a command */
 
 /*
-   Returns:
-   -2: user typed an illegal command
-   -1: reparse needed
-    0: parse was successful (even tho command may have failed).
+ *  Returns:
+ *  -2: user typed an illegal command
+ *  -1: reparse needed
+ *   0: parse was successful (even tho command may have failed).
  */
 
 docmd(cx) int cx;
@@ -920,11 +983,17 @@ docmd(cx) int cx;
     else if (!backgrd)
       printf("%s\n", line);
 #else
-    /*    if (cmtxt("Name of local directory, or carriage return",homdir,&s) <
-     * 0) return(-1);     <-- this replaced by new cmdir() function, below.
-     */
-    if ((x = cmdir("Name of local directory, or carriage return", homdir, &s)) <
-        0)
+
+/*
+ * if (
+ *  cmtxt("Name of local directory, or carriage return",homdir,&s) < 0)
+ *    return(-1);     <-- this replaced by new cmdir() function, below.
+ */
+
+    if ((x = cmdir(
+			   "Name of local directory, or carriage return",
+			     homdir,
+				   &s)) < 0)
       return x;
     if (x == 2) {
       printf("\n?Wildcards not allowed in directory name\n");
@@ -1018,7 +1087,12 @@ docmd(cx) int cx;
 #ifdef vms
     if ((x = cmtxt("Directory/file specification", "", &s)) < 0)
       return x;
-    /* now do this the same as a shell command - helps with LAT  */
+
+	/*
+	 * Now do this the same as
+	 * a shell command - helps with LAT
+	 */
+
     conres(); /* make console normal */
     lp = line;
     sprintf(lp, "%s %s", DIRCMD, s);
@@ -1091,7 +1165,10 @@ docmd(cx) int cx;
     if ((x == -2) || (x == -1))
       return x;
 
-    /* If foreign file name omitted, get foreign and local names separately */
+    /*
+	 * If foreign file name omitted, get
+	 * foreign and local names separately
+	 */
 
     x = 0; /* For some reason cmtxt returns 1 */
     if (*cmarg == NUL) {
@@ -1264,12 +1341,17 @@ docmd(cx) int cx;
       return x;
     return doprm(x);
 
-  /* XXSHE code by H. Fischer; copyright rights assigned to Columbia Univ */
   /*
-     Adapted to use getpwuid to find login shell because many systems do not
-     have SHELL in environment, and to use direct calling of shell rather
-     than intermediate system() call. -- H. Fischer
+   * XXSHE code by H. Fischer;
+   *   Copyright rights assigned to Columbia Univ
+   *
+   * Adapted to use getpwuid to find login shell because
+   * many systems do not have SHELL in environment, and
+   * to use direct calling of shell rather than
+   * intermediate system() call.
+   *                                     -- H. Fischer
    */
+
   case XXSHE: /* Local shell command */
   {
     int pid;
@@ -1348,14 +1430,18 @@ docmd(cx) int cx;
         if (*shptr++ == '/')
           shname = shptr;
 
-/* Remove following uid calls if they cause trouble */
+/*
+ * Remove following uid calls
+ * if they cause trouble
+ */
+
 #ifdef BSD4
 #ifndef BSD41
       setegid(getgid()); /* Override 4.3BSD csh security */
       seteuid(getuid()); /*  checks. */
 #endif
 #endif
-      if (*s == NUL)                          /* Interactive shell requested? */
+      if (*s == NUL)                          /* Interactive sh requested */
         execl(shpath, shname, "-i", NULL);    /* Yes, do that */
       else                                    /* Otherwise, */
         execl(shpath, shname, "-c", s, NULL); /* exec the given command */
@@ -1371,7 +1457,11 @@ docmd(cx) int cx;
 
       while (((wstat = wait((int *)0)) != pid) && (wstat != -1))
         ;
-      /* Wait for fork */
+
+	  /*
+	   * Wait for fork
+	   */
+	
       signal(SIGINT, istat); /* Restore interrupts */
       signal(SIGQUIT, qstat);
     }
@@ -1415,7 +1505,12 @@ docmd(cx) int cx;
 
   case XXSPA: /* space */
 #ifdef datageneral
-    /* The DG can take an argument after its "space" command. */
+
+    /*
+	 * The DG can take an argument
+	 * after its "space" command.
+	 */
+
     if ((x = cmtxt("Confirm, or local directory name", "", &s)) < 0)
       return x;
     if (*s == NULL)
@@ -1495,10 +1590,10 @@ docmd(cx) int cx;
     if ((y = cmcfm()) < 0)
       return y; /* Confirm the command */
                 /*
-                    if (!local) {
-                        printf("?Transmit requires prior SET LINE\n");
-                        return(-2);
-                    }
+                 *   if (!local) {
+                 *       printf("?Transmit requires prior SET LINE\n");
+                 *       return(-2);
+                 *   }
                  */
     debug(F110, "calling transmit", line, 0);
     return transmit(line, x); /* Do the command */
@@ -1509,11 +1604,14 @@ docmd(cx) int cx;
   }
 }
 
-/*  D O C O N E C T  --  Do the connect command  */
+/* D O C O N E C T -- Do the connect command */
 
-/*  Note, we don't call this directly from dial, because we need to give */
-/*  the user a chance to change parameters (e.g. parity) after the */
-/*  connection is made. */
+/*
+ * Note, we don't call this directly from dial,
+ * because we need to give the user a chance to
+ * change parameters (e.g. parity) after the
+ * connection is made.
+ */
 
 doconect() {
   int x;
@@ -1524,17 +1622,22 @@ doconect() {
   return x;      /* for more command parsing. */
 }
 
-/*  T R A N S M I T  --  Raw upload  */
+/* T R A N S M I T -- Raw upload */
 
-/*  Obey current line, duplex, parity, flow, text/binary settings. */
-/*  Returns 0 upon apparent success, 1 on obvious failure.  */
+/*
+ * Obey current line, duplex, parity,
+ * flow, text/binary settings.
+ *
+ * Returns 0 upon apparent success,
+ * 1 on obvious failure.
+ */
 
-/***
-   Things to add:
-   . Make both text and binary mode obey set file bytesize.
-   . Maybe allow user to specify terminators other than CR?
-   . Maybe allow user to specify prompts other than single characters?
- ***/
+/*
+ * Things to add:
+ *  . Make both text and binary mode obey set file bytesize.
+ *  . Maybe allow user to specify terminators other than CR?
+ *  . Maybe allow user to specify prompts other than single characters?
+ */
 
 int tr_int; /* Flag if TRANSMIT interrupted */
 

@@ -1,4 +1,4 @@
-char *loginv = "Script Command, V2.0(012) 20 Apr 2021";
+char *loginv = "Script Command, V2.0(013) 21 Apr 2021";
 
 /* C K U S C R -- Login script for logging onto remote system */
 
@@ -23,6 +23,7 @@ char *loginv = "Script Command, V2.0(012) 20 Apr 2021";
  *
  * Copyright (C) 1985,
  *   Herman Fischer, 16400 Ventura Blvd, Encino CA 91436
+ *
  * Permission is granted to any individual or institution to use, copy,
  *   or redistribute this software so long as it is not sold for profit,
  *   provided this copyright notice is retained.

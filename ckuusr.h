@@ -1,16 +1,24 @@
-/*  C K U U S R . H  --  Symbol definitions for C-Kermit ckuus*.c modules  */
+/* C K U U S R . H -- Symbol definitions for C-Kermit ckuus*.c modules */
 
 /*
-   Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
-   Columbia University Center for Computing Activities.
-   First released January 1985.
-   Copyright (C) 1985, 1989, Trustees of Columbia University in the City of New
-   York.  Permission is granted to any individual or institution to use, copy,
-   or redistribute this software so long as it is not sold for profit, provided
-   this copyright notice is retained.
+ * Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
+ * Columbia University Center for Computing Activities.
+ *
+ * First released January 1985.
+ *
+ * Copyright (C) 1985, 1989,
+ *   Trustees of Columbia University in the City of New York.
+ *
+ * Permission is granted to any individual or institution to use, copy,
+ *   or redistribute this software so long as it is not sold for profit,
+ *   provided this copyright notice is retained.
  */
 
-/* Name of C-Kermit program initialization file. */
+/*
+ * Name of C-Kermit program
+ * initialization file.
+ */
+
 #ifdef vms
 #define KERMRC "ckermit4.ini"
 #else
@@ -33,7 +41,10 @@
 #endif
 #endif
 
-/* Values associated with top-level commands, must be 0 or greater. */
+/*
+ * Values associated with top-level
+ * commands, must be 0 or greater.
+ */
 
 #define XXBYE 0   /* BYE */
 #define XXCLE 1   /* CLEAR */
@@ -80,7 +91,10 @@
 #define XXCOM 42  /* Comment */
 #define XXHAN 43  /* HANGUP */
 
-/* SET parameters */
+/*
+ * SET
+ * parameters
+ */
 
 #define XYBREA 0 /* BREAK simulation */
 #define XYCHKT 1 /* Block check type */
@@ -94,7 +108,12 @@
 #define XYFILT 1 /*  Type    */
 #define XYFILW 2 /*  Warning */
 #define XYFILD 3 /*  ...     */
-/* empty space to add something */
+
+/*
+ * Empty space to
+ * add something
+ */
+
 #define XYFLOW 9  /* Flow Control */
 #define XYHAND 10 /* Handshake */
 #define XYIFD 11  /* Incomplete File Disposition */
@@ -125,7 +144,10 @@
 #define XYSERT 0  /*  Server timeout   */
 #define XYWIND 36 /* Window size */
 
-/* REMOTE command symbols */
+/*
+ * REMOTE command
+ * symbols
+ */
 
 #define XZCPY 0  /* Copy */
 #define XZCWD 1  /* Change Working Directory */
@@ -147,7 +169,10 @@
 #define XZTYP 17 /* Type */
 #define XZWHO 18 /* Who */
 
-/* Symbols for logs */
+/*
+ * Symbols for
+ * logs
+ */
 
 #define LOGD 0 /* Debugging */
 #define LOGP 1 /* Packets */

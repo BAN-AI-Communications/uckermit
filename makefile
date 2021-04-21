@@ -1,4 +1,4 @@
-# makefile, version 2.23, 19 Apr 2021
+# makefile, version 2.24, 21 Apr 2021
 #
 # -- Makefile to build C-Kermit for Unix and Unix-like systems --
 #
@@ -17,13 +17,13 @@
 # for AT&T 3B2, 3B20 systems, "make att3bx"
 # for AT&T 3B1, 7300 Unix PC, "make sys3upc"
 # for AT&T generic System III/System V, "make sys3" or "make sys3nid"
-# for AT&T System V R3, use "make sys5r3".  This is different from the above.
+# for AT&T System V R3, use "make sys5r3". This is different from the above.
 # for BBN C/70 with IOS 2.0, "make c70"
 # for Bell Unix Version 7 (aka 7th Edition), "make v7" (but see below)
 # for Berkeley Unix 4.1, "make bsd41"
 # for Berkeley Unix 4.2, "make bsd" (tested with 4.2 and 4.3)
 # for Berkeley Unix 4.3, "make bsd43" (uses acucntrl program)
-# for Berkeley Unix 4.3 without acucntrl program, "make bsdlck" or "make bsd"
+# for Berkeley Unix 4.3 w/o acucntrl program, "make bsdlck" or "make bsd"
 # for Berkeley Unix 4.2 or 4.3 with HoneyDanBer UUCP, "make bsdhdb"
 # for Berkeley Unix 2.9 (DEC PDP-11 or Pro-3xx), "make bsd29"
 # for Berkeley Unix 2.10, "make bsd210"
@@ -55,7 +55,7 @@
 # for NCR Tower 1632 with System V, "make sys3"
 # for NeXT, "make next"
 # for SCO Xenix 2.2.1 with development system 2.2 on 8086/8 "make sco86"
-# for SCO Xenix/286 2.2.1 with development system 2.2 on 80286, "make sco286"
+# for SCO Xenix/286 2.2.1 w/ development system 2.2 on 80286, "make sco286"
 # for SCO Xenix/386 2.2.2, "make sco386"
 # for Sequent Balance 8000 or B8 with DYNIX 3.0.14, "make bsdlck"
 # for Sequent Symmetry S81 running DYNIX 3.0.12, "make bsdlck"
@@ -69,64 +69,68 @@
 # directory.  After satisfactory testing, you can rename wermit to "kermit" 
 # and put it where users can find it.
 #
-# To remove intermediate and object files, "make clean".
+# To remove compiled output, intermediate, and object files, "make clean".
+#
 # To run lint on the source files, "make lint".
 #
 ##############################################################################
 #
 # Notes:
 #
-#  In many cases, the -O (optimize) compiler switch is omitted.  Feel free
-#  to add it if you trust your optimizer.  The ckuus2.c module, in particular,
+#  In many cases, the -O (optimize) compiler switch is omitted. Feel free
+#  to add it if you trust the optimizer. The ckuus2.c module, in particular,
 #  tends to make optimizers blow up.
 #
 #  "make bsd" should produce a working C-Kermit for 4.1, 4.2, and 4.3bsd on
 #  VAX, SUN-3, SUN-4, Pyramid, and other 4.x systems, and also VAX/Ultrix.
 #
-#  Either "make sys3" or "make sys3nid" tends to produce a working version on
-#  any ATT System III or System V R2 or earlier system, including Motorola Four
-#  Phase, Callan, Unistar, Cadmus, NCR Tower, HP9836 Series 200, Plexus,
-#  Heurikon, etc etc (for exceptions, see below; some AT&T 3Bx systems have 
-#  their own entry).  As far as C-Kermit goes, there is no functional 
-#  difference between ATT System III and System V R2, so there is no need for 
-#  a separate "make sys5" entry (but there is one anyway; it merely invokes
-#  "make sys3"). But for ATT System V R3, use "make sys5r3".  This is 
-#  different from the above because of the redefinition of signal().
+#  Either "make sys3" or "make sys3nid" tends to mame a working version on
+#  any ATT System III or System V R2 or earlier system, including Motorola
+#  Four Phase, Callan, Unistar, Cadmus, NCR Tower, HP9836 Series 200,
+#  Plexus, Heurikon, etc etc (for exceptions, see below; some AT&T 3Bx
+#  systems have their own entry). As far as C-Kermit goes, there is no
+#  functional difference between ATT System III and System V R2, so there
+#  is no need for a separate "make sys5" entry (but there is one anyway;
+#  it merely invokes "make sys3"). But for ATT System V R3, use
+#  "make sys5r3". This is different from the above because of the
+#  redefinition of signal().
 #
 #  "make sys3nid" is equivalent to "make sys3" but leaves out the -i option,
-#  which is used indicate that separate instruction and data (text) spaces are
-#  to be used, as on a PDP-11.  Some systems don't support this option, others
-#  may require it.  If one of these options doesn't work on your System III
-#  or System V system, try the other.
+#  which is used indicate that separate instruction and data (text) spaces
+#  are to be used, as on a PDP-11. Some systems don't support this option,
+#  others may require it. If one of these options doesn't work on your
+#  System III or System V system, try the other.
 #
-#  For Xenix...  What's Xenix?  There are so many different products & versions
-#  sold under this name, the name "xenix" is almost meaningless.  IBM, SCO,
-#  Microsoft, etc, IBM Xenix 1.0 =(?) Microsoft Xenix 3.0 = ???  Nevertheless,
-#  try "make xenix" for IBM or Microsoft, or "make sco286" or "make sco86" for
-#  for SCO Xenix.  If these don't work, try the following modifications to
-#  this Makefile:
+#  For Xenix...  What's Xenix?  There are so many different products and
+#  versions sold under this name, the name "xenix" is almost meaningless.
+#  IBM, SCO, Microsoft, etc, IBM Xenix 1.0 =(?) Microsoft Xenix 3.0 = ???
+#  Nevertheless, try "make xenix" for IBM or Microsoft, or "make sco286"
+#  or "make sco86" for for SCO Xenix. If these don't work, try the
+#  following modifications to this Makefile:
+#
 #    Change "CC= cc" to "CC = cc -LARGE"
 #    In the "xenix:" make entry, add "-M2m -UM_I86" to the compiler switches
 #    (for the IBM PC family), and "-Mm -lx" to the link switches.
 #
 #  For Unix Version 7, several variables must be defined to the values
-#  associated with your system.  BOOTNAME=/edition7 is the kernel image on
-#  okstate's Perkin-Elmer 3230.  Others will probably be /unix.  PROCNAME=proc
-#  is the name of the structure assigned to each process on okstate's system.
-#  This may be "_proc" or some other variation.  See <sys/proc.h> for more info
-#  on your systems name conventions.  NPROCNAME=nproc is the name of a
-#  Kernal variable that tells how many "proc" structures there are.  Again
-#  this may be different on your system, but nproc will probably be somewhere.
-#  The variable NPTYPE is the type of the nproc variable -- int, short, etc.
-#  which can probably be gleaned from <sys/param.h>.
-#  The definition of DIRECT is a little more complicated.  If nlist() returns,
-#  for "proc" only, the address of the array, then you should define DIRECT
-#  as it is below.  If however, nlist() returns the address of a pointer to
-#  the array, then you should give DIRECT a null definition (DIRECT= ).  The
-#  extern declaration in <sys/proc.h> should clarify this for you.  If it
-#  is "extern struct proc *proc", then you should NOT define DIRECT.  If it
-#  is "extern struct proc proc[]", then you should probably define DIRECT as
-#  it is below.  See ckuv7.hlp for further information.
+#  associated with your system. BOOTNAME=/edition7 is the kernel image on
+#  okstate's Perkin-Elmer 3230. Others will probably be /unix.
+#  PROCNAME=proc is the name of the structure assigned to each process on
+#  okstate's system. This may be "_proc" or some other variation.
+#  See <sys/proc.h> for more info on your systems name conventions.
+#  NPROCNAME=nproc is the name of a Kernal variable that tells how many
+#  "proc" structures there are. Again this may be different on your
+#  system, but nproc will probably be somewhere. The variable NPTYPE is
+#  the type of the nproc variable -- int, short, etc. which can probably
+#  be gleaned from <sys/param.h>. The definition of DIRECT is a little
+#  more complicated.  If nlist() returns, for "proc" only, the address of
+#  the array, then you should define DIRECT as it is below. If however,
+#  nlist() returns the address of a pointer to the array, then you should
+#  give DIRECT a null definition (DIRECT= ).  The extern declaration
+#  in <sys/proc.h> should clarify this for you.  If it is "extern struct
+#  proc *proc", then you should NOT define DIRECT.  If it is "extern
+#  struct proc proc[]", then you should probably define DIRECT as it is
+#  below.  See ckuv7.hlp for further information.
 #
 #  For 2.9bsd, the makefile may use pcc rather than cc for compiles;
 #  that's what the CC and CC2 definitions are for (the current version
@@ -147,14 +151,20 @@
 #  2. Don't #include <sys/file.h> in cku[tf]io.c.
 #
 #  For Whitechapel MG-1 Genix 1.3, use "make bsd", but
-#  1. In ckufio.c, have zkself() return 0 or call getpid, rather than getppid,
-#     or simply do "return(kill(0,9))" rather than "return(kill getppid(),1)".
-#  2. Wart reportedly can't process ckcpro.w; just work directly from ckcpro.c.
+#
+#  1. In ckufio.c, have zkself() return 0 or call getpid, rather
+#  than getppid, or simply do "return(kill(0,9))" rather
+#  than "return(kill getppid(),1)".
+#
+#  2. Wart reportedly can't process ckcpro.w; just work directly
+#  from ckcpro.c.
 #
 #  For Pixel 1000, use "make bsd", do step 1 for Whitechapel MG-1, above.
 #
 #  For Altos 986 with Xenix 3.0, use "make sys3", but
+#
 #  1. Get rid of any "(void)"'s (they're only there for Lint anyway)
+#
 #  2. In ckcdeb.h, define CHAR to be "char" rather than "unsigned char".
 #
 #  For Tandy 6000 running Sys III based Xenix (Xenix 3.xxx), use "make sys3"
