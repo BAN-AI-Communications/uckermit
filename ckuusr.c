@@ -1,4 +1,4 @@
-char *userv = "User Interface 4G(075), 21 Apr 2021";
+char *userv = "User Interface 4G(076), 22 Apr 2021";
 
 /* C K U U S R -- "User Interface" for Unix Kermit (Part 1) */
 
@@ -130,7 +130,9 @@ extern int   size,  rpsiz, urpsiz,  speed,  local, server, displa, binary,
 		   maxrps,   warn,  quiet,  cnflg, tlevel, mdmtyp, zincnt;
 
 extern char *versio, *protv, *ckxv, *ckzv, *fnsv, *connv, *dftty, *cmdv;
+#ifndef NOCKUDIA
 extern char *dialv, *loginv;
+#endif
 extern char *ckxsys, *ckzsys, *cmarg, *cmarg2, **xargv, **cmlist;
 extern char *DIRCMD, *PWDCMD, cmerrp[];
 extern CHAR sstate, ttname[];
@@ -507,21 +509,44 @@ ermsg(msg) char *msg;
  */
 
 struct keytab cmdtab[] = {
-    "!",          XXSHE,  0,      "%",         XXCOM, CM_INV,
-    "bye",        XXBYE,  0,      "c",         XXCON, CM_INV,
-    "cd",         XXCWD,  0,      "close",     XXCLO, 0,
-    "connect",    XXCON,  0,      "cwd",       XXCWD, 0,
-    "dial",       XXDIAL, 0,      "directory", XXDIR, 0,
-    "echo",       XXECH,  0,      "exit",      XXEXI, 0,
-    "finish",     XXFIN,  0,      "get",       XXGET, 0,
-    "hangup",     XXHAN,  0,      "help",      XXHLP, 0,
-    "log",        XXLOG,  0,      "quit",      XXQUI, 0,
-    "r",          XXREC,  CM_INV, "receive",   XXREC, 0,
-    "remote",     XXREM,  0,      "s",         XXSEN, CM_INV,
-    "script",     XXLOGI, 0,      "send",      XXSEN, 0,
-    "server",     XXSER,  0,      "set",       XXSET, 0,
-    "show",       XXSHO,  0,      "space",     XXSPA, 0,
-    "statistics", XXSTA,  0,      "take",      XXTAK, 0,
+#ifndef NOPUSH
+    "!",          XXSHE,  0,
+#endif
+	"%",          XXCOM, CM_INV,
+    "bye",        XXBYE,  0,
+	"c",          XXCON, CM_INV,
+    "cd",         XXCWD,  0,
+	"close",      XXCLO, 0,
+    "connect",    XXCON,  0,
+	"cwd",        XXCWD, 0,
+#ifndef NOCKUDIA
+    "dial",       XXDIAL, 0,
+#endif
+	"directory",  XXDIR, 0,
+    "echo",       XXECH,  0,
+	"exit",       XXEXI, 0,
+    "finish",     XXFIN,  0,
+	"get",        XXGET, 0,
+#ifndef NOCKUDIA
+    "hangup",     XXHAN,  0,
+#endif
+#ifndef NODOHLP
+	"help",       XXHLP, 0,
+#endif
+    "log",        XXLOG,  0,
+	"quit",       XXQUI, 0,
+    "r",          XXREC,  CM_INV,
+	"receive",    XXREC, 0,
+    "remote",     XXREM,  0,
+	"s",          XXSEN, CM_INV,
+    "script",     XXLOGI, 0,
+	"send",       XXSEN, 0,
+    "server",     XXSER,  0,
+	"set",        XXSET, 0,
+    "show",       XXSHO,  0,
+	"space",      XXSPA, 0,
+    "statistics", XXSTA,  0,
+	"take",       XXTAK, 0,
     "transmit",   XXTRA,  0};
 int ncmd = (sizeof(cmdtab) / sizeof(struct keytab));
 
@@ -567,9 +592,11 @@ struct keytab prmtab[] = {
     "line",
     XYLINE,
     0,
+#ifndef NOCKUDIA
     "modem-dialer",
     XYMODM,
     0,
+#endif
     "packet-length",
     XYLEN,
     CM_INV, /* moved to send/receive */
@@ -668,9 +695,6 @@ cmdini()
   homdir = zhome();
   lp = line;
   lp[0] = '\0';
-#ifdef vms
-  zkermini(line, sizeof(line), KERMRC);
-#else
   if (homdir) {
     strcpy(lp, homdir);
     if (lp[0] == '/')
@@ -690,7 +714,6 @@ cmdini()
     if ((tfile[0] = fopen(line, "r")) != NULL)
       tlevel = 0;
   }
-#endif
 #ifdef AMIGA
   reqpop(); /* restore requestors */
 #else
@@ -704,8 +727,12 @@ cmdini()
  */
 
 herald() {
-  if (!backgrd)
-    printf("%s,%s\nType ? for help\n", versio, ckxsys);
+  if (!backgrd) {
+    printf("%s,%s\n", versio, ckxsys);
+#ifndef NODOHLP
+	printf("Type ? for help\n");
+#endif
+  }
 }
 
 /* T R A P -- Terminal interrupt handler */
@@ -1078,10 +1105,12 @@ docmd(cx) int cx;
     }
 
   case XXDIAL: /* dial number */
+#ifndef NOCKUDIA
     if ((x = cmtxt("Number to be dialed", "", &s)) < 0)
       return x;
     /***/ debug(F110, "ckuusr calling ckdial", s, 0);
     return ckdial(s);
+#endif
 
   case XXDIR: /* directory */
 #ifdef vms
@@ -1245,14 +1274,16 @@ docmd(cx) int cx;
         displa = 1;
     }
     return x;
-
+#ifndef NODOHLP
   case XXHLP: /* Help */
     x = cmkey(cmdtab, ncmd, "C-Kermit command", "help");
     return dohlp(x);
-
+#endif
   case XXHAN: /* Hangup */
+#ifndef NOCKUDIA
     if ((x = cmcfm()) > -1)
       return tthang();
+#endif
 
   case XXLOG: /* Log */
     x = cmkey(logtab, nlog, "What to log", "");
@@ -1341,6 +1372,7 @@ docmd(cx) int cx;
       return x;
     return doprm(x);
 
+#ifndef NOPUSH
   /*
    * XXSHE code by H. Fischer;
    *   Copyright rights assigned to Columbia Univ
@@ -1474,6 +1506,7 @@ docmd(cx) int cx;
     concb(escape); /* Console back in cbreak mode */
     return 0;
   }
+#endif
 
   case XXSHO: /* Show */
     x = cmkey(shotab, 2, "", "parameters");
@@ -1494,7 +1527,9 @@ docmd(cx) int cx;
       printf(" %s for%s\n", ckxv, ckxsys);
       printf(" %s for%s\n", ckzv, ckzsys);
       printf(" %s\n", connv);
+#ifndef NOCKUDIA
       printf(" %s\n %s\n\n", dialv, loginv);
+#endif
       break;
 
     default:

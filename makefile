@@ -1,4 +1,4 @@
-# makefile, version 2.24, 21 Apr 2021
+# makefile, version 2.27, 22 Apr 2021
 #
 # -- Makefile to build C-Kermit for Unix and Unix-like systems --
 #
@@ -314,14 +314,31 @@ v7:
 	-DBOOTNAME=\\\"$(BOOTFILE)\\\" -DNPROCNAME=\\\"$(NPROC)\\\" \
 	-DNPTYPE=$(NPTYPE) $(DIRECT)"
 
-#Modern Linux with GCC
+#Modern Linux with GCC or clang
 linux:
-	make wermit "CFLAGS = -DSVR3 -DUXIII -DDEBUG -DTLOG -DFIONREAD \
+	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DDEBUG -DTLOG \
 		-DO_NDELAY -DTIOCFLUSH -DTIOCFLUSH -DTIOCSINUSE -DFIONBIO \
-		-DTIOCEXCL -DPROFILE -DSIGTSTP -DNOT_YET \
+		-DTIOCEXCL -DSIGTSTP -DFIONREAD -DDIRENT -DUXIII -DNOT_YET \
 		-Wall -Wextra -Wno-return-type -Wno-unused-variable \
 		-Wno-implicit-int -Wno-implicit-function-declaration \
-		-Wno-implicit-fallthrough -O2 -mtune=native"
+		-Wno-implicit-fallthrough -Os"
+
+#Linux WIP size-reduction target
+linux-small:
+	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DNOT_YET \
+		-DO_NDELAY -DTIOCFLUSH -DTIOCFLUSH -DTIOCSINUSE -DFIONBIO \
+		-DTIOCEXCL -DSIGTSTP -DFIONREAD -DDIRENT -DUXIII \
+		-DNOCKUDIA -DNODOHLP \
+		-Wall -Wextra -Wno-return-type -Wno-unused-variable \
+		-Wno-implicit-int -Wno-implicit-function-declaration \
+		-Wno-implicit-fallthrough -fomit-frame-pointer \
+		-fno-asynchronous-unwind-tables -fno-unwind-tables \
+		-fno-exceptions -Os -fdata-sections -ffunction-sections" \
+			"LNKFLAGS = -Wl,--gc-sections -Wl,--print-gc-sections"
+	strip wermit || true
+	strip -s wermit || true
+	strip --strip-all wermit || true
+	strip -R .note.ABI-tag -R .comment -R .note.gnu.build-id -R .gnu.version -R .gnu.hash -R .gnu.build.attributes -R .rel.eh_frame -R .eh_frame_hdr -R .eh_frame -R .rela.eh_frame wermit || true
 
 #System V R3, some things changed since Sys V R2...
 sys5r3:
@@ -482,11 +499,11 @@ trs16:
 	-DM_VOID -Dvoid=int -F 3000 -n" \
 		"LNKFLAGS = -F 3000 -n"
 
-#Clean up intermediate and object files
+#Clean up intermediate, executable, debug, and object files
 clean:
 	-rm -f ckcmai.o ckucmd.o ckuusr.o ckuus2.o ckuus3.o ckcpro.o \
 	ckcfns.o ckcfn2.o ckucon.o ckutio.o ckufio.o ckudia.o ckuscr.o \
-	ckwart.o ckcpro.c kermit wermit wart
+	ckwart.o ckcpro.c kermit wermit wart debug.log
 
 #Run Lint on this mess for the BSD version.
 lint:

@@ -142,8 +142,10 @@ struct keytab fntab[] = {/* File naming */
 struct keytab fttab[] = {/* File types */
                          "binary", 1, 0, "text", 0, 0};
 
+#ifndef NOCKUDIA
 extern struct keytab mdmtab[]; /* Modem types (in module ckudia.c) */
 extern int nmdm;
+#endif
 
 /*
  * Parity keyword
@@ -335,9 +337,11 @@ doprm(xx) int xx;
     return 0;
 
   case XYMODM:
+#ifndef NOCKUDIA
     if ((x = cmkey(mdmtab, nmdm, "type of modem, direct means none",
                    "direct")) < 0)
       return x;
+#endif
     if ((z = cmcfm()) < 0)
       return z;
     mdmtyp = x;

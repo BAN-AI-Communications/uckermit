@@ -1,4 +1,4 @@
-char *cmdv = "Unix cmd package V2(034), 21 Apr 2021";
+char *cmdv = "Unix cmd package V2(035), 22 Apr 2021";
 
 /* C K U C M D -- Interactive command package for Unix  */
 
@@ -792,7 +792,7 @@ char **xp;
   }
 }
 
-/*  C M K E Y  --  Parse a keyword  */
+/* C M K E Y -- Parse a keyword */
 
 /*
  Call with:
@@ -895,8 +895,10 @@ char *xhlp, *xdef;
 
       clrhlp();
       for (i = 0; i < n; i++) {
-        if (!strncmp(table[i].kwd, atmbuf, cc) && !test(table[i].flgs, CM_INV))
-          addhlp(table[i].kwd);
+        if (
+		  !strncmp(table[i].kwd, atmbuf, cc) && \
+		    !test(table[i].flgs, CM_INV))
+              addhlp(table[i].kwd);
       }
       dmphlp();
       printf("%s%s", cmprom, cmdbuf);

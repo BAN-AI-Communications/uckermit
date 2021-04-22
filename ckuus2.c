@@ -30,6 +30,108 @@
 #include <string.h>
 #endif
 
+/*    
+ * Conditional
+ * Includes       
+ */   
+           
+#ifdef FT18           
+#include <sys/file.h>             /* File information */
+#endif
+
+/*
+ * Whether to include
+ * <sys/file.h>...
+ */
+
+#ifndef PROVX1
+#ifndef aegis
+#ifndef XENIX
+#ifndef unos
+#include <sys/file.h>             /* File information */
+#endif
+#endif
+#endif
+#endif
+
+#ifdef aegis
+#include <fcntl.h>
+#endif
+
+#ifdef BSD4
+#include <fcntl.h>
+#include <sys/file.h>
+#endif
+
+/*
+ * System III
+ * or System V
+ */
+
+#ifdef UXIII
+#include <termio.h>
+#include <sys/ioctl.h>
+#include <errno.h>                /* error numbers for system returns */
+#include <fcntl.h>                /* directory reading for locking */
+#ifdef ATT7300
+#ifndef NOCKUDIA
+#include <sys/phone.h>            /* UNIX PC, internal modem dialer */
+#endif
+#endif
+#endif
+
+#ifdef HPUX
+#include <sys/modem.h>
+#endif
+
+/*
+ * Not System III
+ * or System V
+ */
+
+#ifndef UXIII
+#include <sgtty.h>                /* Set/Get tty modes */
+#ifndef PROVX1
+#ifndef V7
+#ifndef BSD41
+#include <sys/time.h>             /* Clock info (for break generation) */
+#endif
+#endif
+#endif
+#endif
+
+#ifdef BSD41
+#include <sys/timeb.h>            /* BSD 4.1 ... ceb */
+#endif
+
+#ifdef BSD29
+#include <sys/timeb.h>            /* BSD 2.9 (Vic Abell, Purdue) */
+#endif
+
+#ifdef TOWER1
+#include <sys/timeb.h>            /* Clock info for NCR Tower */
+#endif
+
+#ifdef ultrix
+#include <sys/ioctl.h>
+#endif
+
+#ifdef aegis
+#include "/sys/ins/base.ins.c"
+#include "/sys/ins/ec2.ins.c"
+#include "/sys/ins/error.ins.c"
+#include "/sys/ins/ios.ins.c"
+#include "/sys/ins/pad.ins.c"
+#include "/sys/ins/pfm.ins.c"
+#include "/sys/ins/pgm.ins.c"
+#include "/sys/ins/sio.ins.c"
+#include "/sys/ins/time.ins.c"
+#include "/sys/ins/type_uids.ins.c"
+#include <default_acl.h>
+#undef TIOCEXCL
+#undef FIONREAD
+#endif
+
 extern CHAR mystch, stchr, eol, seol, padch, mypadc, ctlq;
 extern CHAR data[], *rdatap, ttname[];
 extern char cmdbuf[], line[], debfil[], pktfil[], sesfil[], trafil[];
@@ -44,6 +146,7 @@ extern long filcnt, tfc, tlci, tlco, ffc, flci, flco;
 extern char *dftty, *versio, *ckxsys;
 extern struct keytab prmtab[];
 extern struct keytab remcmd[];
+int bcharc;
 
 static char *hlp1[] = {
     "\n",
@@ -228,6 +331,7 @@ dohlp(xx) int xx;
     return xx;
   switch (xx) {
 
+#ifndef NODOHLP
   case XXBYE:
     return hmsg(hmxxbye);
 
@@ -257,7 +361,9 @@ Change Working Directory, equivalent to VMS SET DEFAULT command");
     return hmsg("Delete a local file or files");
 
   case XXDIAL:
+#ifndef NOCKUDIA
     return hmsg("Dial a number using modem autodialer");
+#endif
 
   case XXDIR:
     return hmsg("Display a directory of local files");
@@ -278,7 +384,9 @@ Tell the remote Kermit server to shut down without logging out.");
     return hmsg(hmxxget);
 
   case XXHAN:
+#ifndef NOCKUDIA
     return hmsg("Hang up the phone.");
+#endif
 
   case XXHLP:
     return hmsga(tophlp);
@@ -316,6 +424,7 @@ Tell the remote Kermit server to shut down without logging out.");
       return x;
     return dohset(y);
 
+#ifndef NOPUSH
   case XXSHE:
 #ifdef vms
     return hmsg("\
@@ -335,6 +444,7 @@ Issue a command to CMD.EXE (space required after '!')");
 #else
     return hmsg("\
 Issue a command to the Unix shell (space required after '!')");
+#endif
 #endif
 #endif
 #endif
@@ -367,7 +477,7 @@ themselves contain 'take' commands, up to a reasonable depth of nesting.");
 Raw upload. Send a file, a line at a time (text) or a character at a time.\n\
 For text, wait for turnaround character (default 10 = LF) after each line.\n\
 Specify 0 for no waiting.");
-
+#endif
   default:
     if ((x = cmcfm()) < 0)
       return x;
@@ -399,17 +509,230 @@ hmsga(s) char *s[];
   return 0;
 }
 
+/* B C A R C B -- Help format help for baud rates */
+
+bcarcb(calsp) long calsp;
+{
+#ifndef NODOHLP
+#ifndef MAXBRATE
+#ifdef B4000000
+#define MAXBRATE 4000000
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B3500000
+#define MAXBRATE 3500000
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B2500000
+#define MAXBRATE 2500000
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B2000000
+#define MAXBRATE 2000000
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B1152000
+#define MAXBRATE 1152000
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B1000000
+#define MAXBRATE 1000000
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B921600
+#define MAXBRATE 921600
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B576000
+#define MAXBRATE 576000
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B500000
+#define MAXBRATE 500000
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B460000
+#define MAXBRATE 460000
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B230000
+#define MAXBRATE 230000
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B115200
+#define MAXBRATE 115200
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B76800
+#define MAXBRATE 76800
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B57600
+#define MAXBRATE 57600
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B38400
+#define MAXBRATE 38400
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B19200
+#define MAXBRATE 19200
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B9600
+#define MAXBRATE 9600
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B4800
+#define MAXBRATE 4800
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B2400
+#define MAXBRATE 2400
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B1800
+#define MAXBRATE 1800
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B1200
+#define MAXBRATE 1200
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B600
+#define MAXBRATE 600
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B300
+#define MAXBRATE 300
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B200
+#define MAXBRATE 200
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B150
+#define MAXBRATE 150
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B134
+#define MAXBRATE 134
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B110
+#define MAXBRATE 110
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B75
+#define MAXBRATE 75
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B50
+#define MAXBRATE 50
+#endif
+#endif
+
+#ifndef MAXBRATE
+#ifdef B0
+#define MAXBRATE 0
+#endif
+#endif
+
+#ifndef MAXBRATE
+#define MAXBRATE 19200
+#endif
+
+  int brpln = 0;
+
+  if (calsp < 0) brpln = 4;
+  if (calsp > 10) brpln = 5;
+  if (calsp > 100) brpln = 6;
+  if (calsp > 1000) brpln = 7;
+  if (calsp > 10000) brpln = 8;
+  if (calsp > 100000) brpln = 9;
+  if (calsp > 1000000) brpln = 10;
+  if (calsp > 10000000) brpln = 11;
+  
+  printf (" %ld",calsp);
+  if (calsp >= MAXBRATE)
+	  printf(".\n");
+  else
+	  printf(",");
+  bcharc=bcharc+brpln;
+  if (bcharc >= 66) {
+    printf("\n");
+    bcharc = 0;
+  }
+#endif
+}
+
 /* D O H S E T -- Give help for SET command */
 
 dohset(xx) int xx;
 {
-
   if (xx == -3)
     return hmsga(hmhset);
   if (xx < 0)
     return xx;
   switch (xx) {
 
+#ifndef NODOHLP
   case XYATTR:
     puts("Turn Attribute packet exchange off or on");
     return 0;
@@ -468,6 +791,7 @@ If you set the line to other than %s, then Kermit\n",
              dftty);
       printf("\
 will be in 'local' mode; 'set line' will reset Kermit to remote mode.\n");
+#ifndef NOCKUDIA
       puts("\
 If the line has a modem, and if the modem-dialer is set to direct, this");
       puts("\
@@ -477,10 +801,12 @@ This can be used to wait for incoming calls.");
       puts("\
 To use the modem to dial out, first set modem-dialer (e.g., to hayes), then");
       puts("set line, next issue the dial command, and finally connect.");
+#endif
     }
     return 0;
 
   case XYMODM:
+#ifndef NOCKUDIA
     puts("\
 Type of modem for dialing remote connections.  Needed to indicate modem can");
     puts("\
@@ -489,6 +815,7 @@ be commanded to dial without 'carrier detect' from modem.  Many recently");
 manufactured modems use 'hayes' protocol.  Type 'set modem ?' to see what");
     puts("\
 types of modems are supported by this program.");
+#endif
     return 0;
 
   case XYPARI:
@@ -527,7 +854,96 @@ Communication line speed for external tty line specified in most recent");
     puts(" 0, 110, 150, 300, 600, 1200, 2400, 4800, 9600, 19200.");
     puts("The highest speed available is hardware-dependant");
 #else
-    puts(" 0, 110, 150, 300, 600, 1200, 1800, 2400, 4800, 9600, 19200.");
+#ifdef B0
+	bcarcb(0);
+#endif
+#ifdef B50
+	bcarcb(50);
+#endif
+#ifdef B75
+	bcarcb(75);
+#endif
+#ifdef B110
+	bcarcb(110);
+#endif
+#ifdef B134
+	bcarcb(134);
+#endif
+#ifdef B150
+	bcarcb(150);
+#endif
+#ifdef B200
+	bcarcb(200);
+#endif
+#ifdef B300
+	bcarcb(300);
+#endif
+#ifdef B600
+	bcarcb(600);
+#endif
+#ifdef B1200
+	bcarcb(1200);
+#endif
+#ifdef B1800
+	bcarcb(1800);
+#endif
+#ifdef B2400
+	bcarcb(2400);
+#endif
+#ifdef B4800
+	bcarcb(4800);
+#endif
+#ifdef B9600
+	bcarcb(9600);
+#endif
+#ifdef B19200
+	bcarcb(19200);
+#endif
+#ifdef B38400
+	bcarcb(38400);
+#endif
+#ifdef B57600
+	bcarcb(57600);
+#endif
+#ifdef B115200
+	bcarcb(115200);
+#endif
+#ifdef B230400
+	bcarcb(230400);
+#endif
+#ifdef B460800
+	bcarcb(460800);
+#endif
+#ifdef B500000
+	bcarcb(500000);
+#endif
+#ifdef B921600
+	bcarcb(921600);
+#endif
+#ifdef B1000000
+	bcarcb(1000000);
+#endif
+#ifdef B1152000
+	bcarcb(1152000);
+#endif
+#ifdef B1500000
+	bcarcb(1500000);
+#endif
+#ifdef B2000000
+	bcarcb(2000000);
+#endif
+#ifdef B2500000
+	bcarcb(2500000);
+#endif
+#ifdef B3000000
+	bcarcb(3000000);
+#endif
+#ifdef B3500000
+	bcarcb(3500000);
+#endif
+#ifdef B4000000
+	bcarcb(4000000);
+#endif
 #endif
 #endif
 #endif
@@ -566,7 +982,7 @@ Server command wait timeout interval, how often the C-Kermit server issues");
     puts("\
 a NAK while waiting for a command packet.  Specify 0 for no NAKs at all.");
     return 0;
-
+#endif
   default:
     printf("Not available yet - %s\n", cmdbuf);
     return 0;
@@ -583,7 +999,7 @@ dohrmt(xx) int xx;
   if (xx < 0)
     return xx;
   switch (xx) {
-
+#ifndef NODOHLP
   case XZCWD:
     return hmsg("\
 Ask remote Kermit server to change its working directory.");
@@ -617,7 +1033,7 @@ Ask the remote Kermit server to type the named file(s) on your screen.");
     return hmsg("\
 Ask the remote Kermit server to list who's logged in, or to give information\n\
 about the specified user.");
-
+#endif
   default:
     if ((x = cmcfm()) < 0)
       return x;
@@ -751,8 +1167,10 @@ shopar()
 {
 
   int i;
+#ifndef NOCKUDIA
   extern struct keytab mdmtab[];
   extern int nmdm;
+#endif
 
   printf("\n%s,%s, ", versio, ckxsys);
   puts("Communications Parameters:");
@@ -762,12 +1180,14 @@ shopar()
   else
     printf("remote");
 
+#ifndef NOCKUDIA
   for (i = 0; i < nmdm; i++) {
     if (mdmtab[i].val == mdmtyp) {
       printf(", modem-dialer: %s", mdmtab[i].kwd);
       break;
     }
   }
+#endif
   printf("\n Bits: %d", (parity) ? 7 : 8);
   printf(", parity: ");
   switch (parity) {

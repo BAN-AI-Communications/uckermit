@@ -1,4 +1,4 @@
-char *ckxv = "Unix tty I/O, 4G(063), 21 Apr 2021";
+char *ckxv = "Unix tty I/O, 4G(064), 22 Apr 2021";
 
 /*  C K U T I O  */
 
@@ -459,7 +459,9 @@ char *ckxsys = " AT&T System III/System V";
 #include <errno.h>                /* error numbers for system returns */
 #include <fcntl.h>                /* directory reading for locking */
 #ifdef ATT7300
+#ifndef NOCKUDIA
 #include <sys/phone.h>            /* UNIX PC, internal modem dialer */
+#endif
 #endif
 #endif
 
@@ -572,7 +574,9 @@ int ttprty = 0;                   /* Parity in use. */
 int ttmdm = 0;                    /* Modem in use. */
 int dfflow = 1;                   /* Xon/Xoff flow control */
 int backgrd = 0;                  /* Assume in foreground (no '&' ) */
+#ifdef ultrix
 int iniflags = 0;                 /* fcntl flags for ttyfd */
+#endif
 int ckxech = 0;                   /* 0 if system normally echoes
 								   * console characters, else 1 */
 
@@ -583,7 +587,9 @@ int ckxech = 0;                   /* 0 if system normally echoes
 
 static long tcount;               /* Elapsed time counter */
 
+#ifdef PROVX1
 static char *brnuls = "\0\0\0\0\0\0\0"; /* A string of nulls */
+#endif
 
 static jmp_buf sjbuf, jjbuf;      /* Longjump buffer */
 static int lkf = 0,               /* Line lock flag */
@@ -594,6 +600,8 @@ static int lkf = 0,               /* Line lock flag */
 static char escchr;               /* Escape or attn character */
 
 #ifdef BSD42
+#include <time.h>
+#include <sys/time.h>
 static struct timeval tv;         /* For getting time, from sys/time.h */
 static struct timezone tz;
 #endif
@@ -847,8 +855,18 @@ int *lcl, modem;
     } else if (isatty(0)) {         /* Else, if stdin not redirected */
       x = ttyname(0);               /* then compare its device name */
       strncpy(cname, x, DEVNAMLEN); /* (copy from internal static buf) */
+#ifdef __linux__
+	  x = cname;
+#else
       x = ttyname(ttyfd);           /* ...with real name of ttname. */
+#endif
+	  if (x == NULL)
+		  return;
+#ifdef __linux__
+      xlocal = 1;
+#else
       xlocal = (strncmp(x, cname, DEVNAMLEN) == 0) ? 0 : 1;
+#endif
       debug(F111, " ttyname", x, xlocal);
     } else { /* Else, if stdin redirected... */
 #ifdef UXIII
@@ -1286,7 +1304,7 @@ static look4lk(ttname) char *ttname;
 #endif /* isiii */
 
   if (access(lockdir, 04) < 0) { /* read access denied on lock dir */
-    fprintf(stderr, "Warning, read access to lock directory denied\n");
+    fprintf(stderr, "Warning, read access to lock directory \"%s\" denied\n", lockdir);
     return 1; /* cannot check or set lock file */
   }
 
@@ -1683,6 +1701,71 @@ ttsspd(speed) {
   case 38400:
     s = B38400;
     break;
+#endif
+#ifdef B57600
+  case 57600:
+	s = B57600;
+    break;
+#endif
+#ifdef B115200
+  case 115200:
+	s = B115200;
+    break;
+#endif
+#ifdef B230400
+  case 230400:
+	s = B230400;
+	break;
+#endif
+#ifdef B460800
+  case 460800:
+	s = B460800;
+	break;
+#endif
+#ifdef B921600
+  case 921600:
+	s = B921600;
+	break;
+#endif
+#ifdef B1000000
+  case 1000000:
+	s = B1000000;
+	break;
+#endif
+#ifdef B1152000
+  case 1152000:
+	s = B1152000;
+	break;
+#endif
+#ifdef B1500000
+  case 1500000:
+	s = B1500000;
+	break;
+#endif
+#ifdef B2000000
+  case 2000000:
+	s = B2000000;
+	break;
+#endif
+#ifdef B2500000
+  case 2500000:
+	s = B2500000;
+	break;
+#endif
+#ifdef B3000000
+  case 3000000:
+	s = B3000000;
+	break;
+#endif
+#ifdef B3500000
+  case 3500000:
+	s = B3500000;
+	break;
+#endif
+#ifdef B4000000
+  case 4000000:
+	s = B4000000;
+	break;
 #endif
   default:
     spdok = 0;
@@ -2984,6 +3067,7 @@ coninc(timo) int timo;
  * Uses information in <sys/phone.h> and our status int attmodem.
  */
 
+#ifndef NOCKUIA
 struct updata dialer = {0}; /* Condition Dialer for Data call */
 
 attdial(ttname, speed, telnbr) char *ttname, *telnbr;
@@ -3088,6 +3172,7 @@ atthang(ttname) char *ttname;
   attmodem &= ~ISMODEM; /* phone not in use */
   return 0;             /* ttyfd is unchanged */
 }
+#endif
 
 /*
  *       Offgetty, ongetty functions. These function get the 'getty(1m)' off

@@ -1,4 +1,5 @@
-char *dialv = "Dial Command, V2.0(020) 21 Apr 2021";
+#ifndef NOCKUDIA
+char *dialv = "Dial Command, V2.0(021) 22 Apr 2021";
 
 /* C K U D I A -- Dialing program for connection to remote system */
 
@@ -785,7 +786,10 @@ ckdial(telnbr) char *telnbr;
   pmdminf = ptrtab[mdmtyp - 1];             /* Set pointer to modem info */
   augmdmtyp = mdmtyp;                       /* Init augmented modem type */
 
-  /* interdigit waits for tone dial */
+  /*
+   * interdigit waits
+   * for tone dial
+   */
 
   waitct = 1 * strlen(telnbr);        /* compute time to dial worst case */
   waitct += pmdminf->dial_time;       /* dialtone + completion wait times */
@@ -1318,3 +1322,4 @@ ckdial(telnbr) char *telnbr;
     printf("Call completed.\07\n");
   return 0;                           /* return, and presumably connect */
 }
+#endif

@@ -1,4 +1,4 @@
-char *ckzv = "Unix file support, 4G(048) 21 Apr 2021";
+char *ckzv = "Unix file support, 4G(052) 22 Apr 2021";
 
 /* C K U F I O -- Kermit file system support for Unix systems */
 
@@ -346,7 +346,11 @@ char *WHOCMD = "who ";               /* For seeing who's logged in */
 #endif
 
 #ifndef MAXNAMLEN
+#ifdef __linux__
+#define MAXNANLEN 255
+#else
 #define MAXNAMLEN 14         /* If still not defined... */
+#endif
 #endif
 
 #ifdef PROVX1
@@ -439,11 +443,13 @@ char *name;
   if (chkfn(n) != 0)
     return 0;
   zincnt = 0;                      /* Reset input buffer */
+#ifndef NOPUSH
   if (n == ZSYSFN) {               /* Input from a system function? */
     debug(F110, " invoking zxcmd", name, 0);
     *nambuf = '\0';                /* No filename this time... */
     return zxcmd(name);            /* Try to fork the command */
   }
+#endif
   if (n == ZSTDIO) {               /* Standard input? */
     if (isatty(0)) {
       ermsg("Terminal input not allowed");
@@ -526,13 +532,17 @@ zclose(n) int n;
     x2 = 0;
 
   x = 0;                                  /* Initialize return code */
+#ifndef NOPUSH
   if ((n == ZIFILE) && fp[ZSYSFN]) {      /* If system function */
     x = zclosf();                         /* do it specially */
   } else {
+#endif
     if ((fp[n] != stdout) && (fp[n] != stdin))
       x = fclose(fp[n]);
     fp[n] = NULL;
+#ifndef NOPUSH
   }
+#endif
   iflen = -1;                             /* Invalidate file length */
   if (x == EOF)                           /* if we got a close error */
     return -1;
@@ -689,8 +699,10 @@ chkfn(n) int n;
   case ZTFILE:
   case ZPFILE:
   case ZSFILE:
+#ifndef NOPUSH
   case ZSYSFN:
     break;
+#endif
   default:
     debug(F101, "chkfn: file number out of range", "", n);
     fprintf(stderr, "?File number out of range - %d\n", n);
@@ -915,6 +927,7 @@ char *zgtdir() {
 
 /* Z X C M D -- Run system command so its output can be read like a file */
 
+#ifndef NOPUSH
 zxcmd(comand) char *comand;
 {
   int pipes[2];
@@ -1027,6 +1040,7 @@ zclosf() {
   fp[ZIFILE] = fp[ZSYSFN] = NULL;
   return 1;
 }
+#endif
 
 /* Z X P A N D -- Expand a wildcard string into an array of strings */
 
@@ -1043,7 +1057,6 @@ zxpand(fn) char *fn;
   if (fcount > 0) {
     mtchptr = mtchs;                           /* Save pointer for next */
   }
-  debug(F111, "zxpand", mtchs[0], fcount);
   return fcount;
 }
 
@@ -1294,19 +1307,6 @@ time_t mktime(tm) struct tm *tm;
 #endif
 #endif
 
-/* Find initialization file. */
-
-zkermini() {
-
-  /*
-   * Nothing here for UNIX.
-   * This function was added
-   * for benefit of VMS Kermit
-   */
-
-  return 0;
-}
-
 zmail(p, f) char *p;
 char *f;
 {                                      /* E-mail file f to address p */
@@ -1463,6 +1463,7 @@ struct path *splitpath(p) char *p;
       p++;
 #endif
   }
+  debug(F101, "splitpath head", "", head);
   return head;
 }
 
@@ -1584,8 +1585,13 @@ char *sofar, *endcur;
   struct direct *dirbuf;
 #else
   int fd;
+#ifdef DIRENT
+  struct dirent dir_entry;
+  struct dirent *dirbuf = &dir_entry;
+#else
   struct direct dir_entry;
   struct direct *dirbuf = &dir_entry;
+#endif
 #endif
 #endif
   struct stat statbuf;
@@ -1626,7 +1632,6 @@ char *sofar, *endcur;
     return;                           /* can't open, forget it */
   while (dirbuf = readdir(fd))
 #else
-
   if ((fd = open(sofar, O_RDONLY)) < 0)
     return;                           /* can't open, forget it */
   while (read(fd, dirbuf, sizeof dir_entry))

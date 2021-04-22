@@ -1,4 +1,4 @@
-char *fnsv = "C-Kermit functions, 4G(066) 20 Apr 2021";
+char *fnsv = "C-Kermit functions, 4G(067) 22 Apr 2021";
 
 /* C K C F N S -- System-independent Kermit protocol support functions */
 
@@ -1507,6 +1507,7 @@ syscmd(prefix, suffix) char *prefix, *suffix;
   while ((*cp++ = *suffix++))
     ;
 
+#ifndef NOPUSH
   debug(F110, "syscmd", cmdstr, 0);
   if (zopeni(ZSYSFN, cmdstr) > 0) {
     debug(F100, "syscmd zopeni ok", cmdstr, 0);
@@ -1518,9 +1519,12 @@ syscmd(prefix, suffix) char *prefix, *suffix;
     }
     return sinit();                   /* Send S packet */
   } else {
+#endif
     debug(F100, "syscmd zopeni failed", cmdstr, 0);
     return 0;
+#ifndef NOPUSH
   }
+#endif
 }
 
 /* A D E B U -- Write attribute packet info to debug log */
