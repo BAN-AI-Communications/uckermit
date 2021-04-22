@@ -143,7 +143,7 @@ input() {
    */
 
   for (numtry = 0; 
-		  (rsn == prvpkt || type == 'T' || type == 'Q' || type == 'N');
+                  (rsn == prvpkt || type == 'T' || type == 'Q' || type == 'N');
        numtry++) {
     debug(F101, "input() try", "", numtry);
     debug(F101, " nakstate", "", nakstate);
@@ -616,9 +616,9 @@ rpack()
     break;
   case 3:
     crc = \
-	  (xunchar(pbc[0]) << 12) | \
-	    (xunchar(pbc[1]) << 6) | \
-		  (xunchar(pbc[2]));
+          (xunchar(pbc[0]) << 12) | \
+            (xunchar(pbc[1]) << 6) | \
+                  (xunchar(pbc[2]));
     if (crc != chk3(recpkt + lp)) {
       debug(F110, "checked chars", recpkt + lp, 0);
       debug(F101, "block check", "", xunchar(*pbc));

@@ -1,4 +1,4 @@
-char *userv = "User Interface, 4G(087), 22 Apr 2021";
+char *userv = "User Interface, 4G(088), 22 Apr 2021";
 
 /* C K U U S R -- "User Interface" for Unix Kermit (Part 1) */
 
@@ -100,9 +100,9 @@ char *userv = "User Interface, 4G(087), 22 Apr 2021";
  */
 
 extern int   size,  rpsiz, urpsiz,  speed,  local, server, displa, binary,
-	       parity, deblog, escape,  xargc,   flow,   turn, duplex,  nfils,
-		   ckxech, pktlog, seslog, tralog, stdouf, turnch,  dfloc,   keep,
-		   maxrps,   warn,  quiet,  cnflg, tlevel, mdmtyp, zincnt;
+               parity, deblog, escape,  xargc,   flow,   turn, duplex,  nfils,
+                   ckxech, pktlog, seslog, tralog, stdouf, turnch,  dfloc,   keep,
+                   maxrps,   warn,  quiet,  cnflg, tlevel, mdmtyp, zincnt;
 
 extern char *versio, *protv, *ckxv, *ckzv, *fnsv, *connv, *dftty, *cmdv;
 extern char *wartv;
@@ -194,7 +194,7 @@ cmdlin()
   debug(F101, "action", "", action);
   if (!local)
     if (
-	  (action == 'g') || (action == 'r') || (action == 'c') || (cflg != 0))
+          (action == 'g') || (action == 'r') || (action == 'c') || (cflg != 0))
         fatal("-l and -b required");
   if (*cmarg2 != 0)
     if ((action != 's') && (action != 'r') && (action != 'v'))
@@ -457,45 +457,45 @@ struct keytab cmdtab[] = {
 #ifndef NOPUSH
     "!",          XXSHE,  0,
 #endif
-	"%",          XXCOM, CM_INV,
+        "%",          XXCOM, CM_INV,
     "bye",        XXBYE,  0,
-	"c",          XXCON, CM_INV,
+        "c",          XXCON, CM_INV,
     "cd",         XXCWD,  0,
-	"close",      XXCLO, 0,
+        "close",      XXCLO, 0,
     "connect",    XXCON,  0,
-	"cwd",        XXCWD, 0,
+        "cwd",        XXCWD, 0,
 #ifndef NOCKUDIA
     "dial",       XXDIAL, 0,
 #endif
-	"directory",  XXDIR, 0,
+        "directory",  XXDIR, 0,
     "echo",       XXECH,  0,
-	"exit",       XXEXI, 0,
+        "exit",       XXEXI, 0,
     "finish",     XXFIN,  0,
-	"get",        XXGET, 0,
+        "get",        XXGET, 0,
 #ifndef NOCKUDIA
     "hangup",     XXHAN,  0,
 #endif
 #ifndef NODOHLP
-	"help",       XXHLP, 0,
+        "help",       XXHLP, 0,
 #endif
     "log",        XXLOG,  0,
-	"quit",       XXQUI, 0,
+        "quit",       XXQUI, 0,
     "r",          XXREC,  CM_INV,
-	"receive",    XXREC, 0,
+        "receive",    XXREC, 0,
     "remote",     XXREM,  0,
-	"s",          XXSEN, CM_INV,
+        "s",          XXSEN, CM_INV,
 #ifndef NOCKUSCR
     "script",     XXLOGI, 0,
 #endif
-	"send",       XXSEN, 0,
+        "send",       XXSEN, 0,
     "server",     XXSER,  0,
-	"set",        XXSET, 0,
+        "set",        XXSET, 0,
     "show",       XXSHO,  0,
-	"space",      XXSPA, 0,
+        "space",      XXSPA, 0,
 #ifndef NOSTATS
     "statistics", XXSTA,  0,
 #endif
-	"take",       XXTAK, 0,
+        "take",       XXTAK, 0,
     "transmit",   XXTRA,  0};
 int ncmd = (sizeof(cmdtab) / sizeof(struct keytab));
 
@@ -587,7 +587,7 @@ struct keytab prmtab[] = {
     CM_INV /* moved to send/receive */
 };
 int nprm = \
-	  (sizeof(prmtab) / sizeof(struct keytab)); /* How many parameters */
+          (sizeof(prmtab) / sizeof(struct keytab)); /* How many parameters */
 
 /*
  * Remote Command
@@ -657,7 +657,7 @@ herald() {
   if (!backgrd) {
     printf("%s,%s\n", versio, ckxsys);
 #ifndef NODOHLP
-	printf("Type ? for help\n");
+        printf("Type ? for help\n");
 #endif
   }
 }
@@ -724,10 +724,10 @@ parser()
       cbn = CMDBL;
 
       /*
-	   * Loop to get next command line and
-	   * all continuation lines from take
+           * Loop to get next command line and
+           * all continuation lines from take
        * file.
-	   */
+           */
 
     again:
       if (fgets(line, cbn, tfile[tlevel]) == NULL)
@@ -917,9 +917,9 @@ docmd(cx) int cx;
  */
 
     if ((x = cmdir(
-			   "Name of local directory, or carriage return",
-			     homdir,
-				   &s)) < 0)
+                           "Name of local directory, or carriage return",
+                             homdir,
+                                   &s)) < 0)
       return x;
     if (x == 2) {
       printf("\n?Wildcards not allowed in directory name\n");
@@ -1042,9 +1042,9 @@ docmd(cx) int cx;
       return x;
 
     /*
-	 * If foreign file name omitted, get
-	 * foreign and local names separately
-	 */
+         * If foreign file name omitted, get
+         * foreign and local names separately
+         */
 
     x = 0; /* For some reason cmtxt returns 1 */
     if (*cmarg == NUL) {
@@ -1290,10 +1290,10 @@ docmd(cx) int cx;
       while (((wstat = wait((int *)0)) != pid) && (wstat != -1))
         ;
 
-	  /*
-	   * Wait for fork
-	   */
-	
+          /*
+           * Wait for fork
+           */
+        
       signal(SIGINT, istat); /* Restore interrupts */
       signal(SIGQUIT, qstat);
     }
@@ -1317,12 +1317,12 @@ docmd(cx) int cx;
 
     case SHVER:
       printf("\nVersions:\n");
-	  printf(" * %s for%s\n", versio, ckxsys);
-	  printf("   * %s\n", protv);
-	  printf("     * %s\n", wartv);
+          printf(" * %s for%s\n", versio, ckxsys);
+          printf("   * %s\n", protv);
+          printf("     * %s\n", wartv);
       printf("   * %s\n", fnsv);
       printf("   * %s\n", cmdv);
-	  printf("   * %s\n", userv);
+          printf("   * %s\n", userv);
       printf("   * %s\n", ckxv);
       printf("   * %s,%s\n", ckzv, ckzsys);
       printf("   * %s\n", connv);
@@ -1330,9 +1330,9 @@ docmd(cx) int cx;
       printf("   * %s\n", dialv);
 #endif
 #ifndef NOCKUSCR
-	  printf("   * %s\n", loginv);
+          printf("   * %s\n", loginv);
 #endif
-	  printf("\n");
+          printf("\n");
       break;
 
     default:

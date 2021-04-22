@@ -1,4 +1,4 @@
-char *protv = "C-Kermit Protocol Module, 4G(040), 22 Apr 2021";
+char *protv = "C-Kermit Protocol Module, 4G(041), 22 Apr 2021";
 
 /* C K C P R O -- C-Kermit Protocol Module in Wart preprocessor notation */
 
@@ -76,7 +76,7 @@ char *protv = "C-Kermit Protocol Module, 4G(040), 22 Apr 2021";
 #define RESUME \
   if (server) { SERVE; } else \
     { sleep(2); \
-	  return; }
+          return; }
 
 %%
 /*
@@ -128,7 +128,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
         vcmd = 0;                     /* and then un-remember it. */
     }
     if (vstate == get)
-	  srinit();                       /* If sending GET command, do that */
+          srinit();                       /* If sending GET command, do that */
     BEGIN vstate;                     /* Switch to desired state */
 }
 
@@ -138,7 +138,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
         vcmd = 0;                     /* Otherwise act as above... */
     }
     if (vstate == get)
-	  srinit();
+          srinit();
     BEGIN vstate;
 }
 
@@ -185,21 +185,21 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
       BEGIN ssinit;                   /* If OK, send back its output */
     else {                            /* Otherwise */
         errpkt(
-		  "Can't do system command"); /* report error */
+                  "Can't do system command"); /* report error */
         SERVE;                        /* & go back to server command wait */
     }
 }
 
 <serve>. {                            /* Any other command in this state */
     errpkt(
-	"Unimplemented server function"); /* we don't know about */
+        "Unimplemented server function"); /* we don't know about */
     SERVE;                            /* back to server command wait */
 }
 
 <generic>C {                          /* Got REMOTE CWD command */
     if (!cwd(srvcmd+1))
-	  errpkt(
-	    "Can't change directory");    /* Try to do it */
+          errpkt(
+            "Can't change directory");    /* Try to do it */
     SERVE;                            /* Back to server command wait */
 }
 
@@ -208,7 +208,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
       BEGIN ssinit;                   /* send the results back */
     else {                            /* otherwise */
         errpkt(
-		  "Can't list directory");    /* report failure */
+                  "Can't list directory");    /* report failure */
         SERVE;                        /* & return to server command wait */
     }
 }
@@ -218,7 +218,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
       BEGIN ssinit;                   /* If OK send results back */
     else {                            /* otherwise */
         errpkt(
-		  "Can't remove file");       /* report failure */
+                  "Can't remove file");       /* report failure */
         SERVE;                        /* & return to server command wait */
     }
 }
@@ -240,7 +240,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
     if (sndhlp()) BEGIN ssinit;       /* Try to send it */
     else {                            /* If not ok, */
         errpkt(
-		  "Can't send help");         /* send error message instead */
+                  "Can't send help");         /* send error message instead */
         SERVE;                        /* & return to server command wait */
     }
 }
@@ -250,7 +250,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
       BEGIN ssinit;                   /* OK */
     else {                            /* not OK */
         errpkt(
-		  "Can't type file");         /* give error message */
+                  "Can't type file");         /* give error message */
         SERVE;                        /* wait for next server command */
     }
 }
@@ -258,14 +258,14 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
 <generic>U {                          /* REMOTE SPACE */
     x = *(srvcmd+1);                  /* Get area to check */
     x = ((x == '\0') || \
-	  (x == SP));
+          (x == SP));
     x = (x ? syscmd(SPACMD,"") : \
-	  syscmd(SPACM2,srvcmd+2));
+          syscmd(SPACM2,srvcmd+2));
     if (x)                            /* If we got the info */
       BEGIN ssinit;                   /* send it */
     else {                            /* otherwise */
         errpkt(
-		  "Can't check space");       /* send error message */
+                  "Can't check space");       /* send error message */
         SERVE;                        /* and await next server command */
     }
 }
@@ -275,14 +275,14 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
       BEGIN ssinit;
     else {
         errpkt(
-		  "Can't do who command");
+                  "Can't do who command");
         SERVE;
     }
 }
 
 <generic>. {                          /* Anything else in this state ... */
     errpkt(
-	  "Unimplemented generic server function");              /* Complain */
+          "Unimplemented generic server function");              /* Complain */
     SERVE;                            /* & return to server command wait */
 }
 
@@ -323,17 +323,17 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
       x = opena(filnam,&iattr);       /* open the file, with attributes */
     if (x) {                          /* If file was opened ok */
         if (
-		 decode(
-		   rdatap,putfil) < 0) {      /* decode first data packet */
+                 decode(
+                   rdatap,putfil) < 0) {      /* decode first data packet */
           errpkt(
-		    "Error writing data");
+                    "Error writing data");
            RESUME;
         }
         ack();                        /* acknowledge it */
         BEGIN rdata;                  /* and switch to receive-data state */
     } else {                          /* otherwise */
         errpkt(
-		  "Can't open file");         /* send error message */
+                  "Can't open file");         /* send error message */
         RESUME;                       /* and quit. */
     }
 }
@@ -353,10 +353,10 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
     else if (czseen)                  /* If file-group interrupt */
       ack1("Z");                      /* put "Z" in ACK */
     else if (
-	  decode(
-	    rdatap,putfil) < 0) {         /* Normal case, */
+          decode(
+            rdatap,putfil) < 0) {         /* Normal case, */
         errpkt(
-		  "Error writing data");      /*   decode data to file */
+                  "Error writing data");      /*   decode data to file */
         RESUME;                       /* Send ACK if data written */
     } else ack();                     /* to file OK. */
 }
@@ -364,7 +364,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
 <rdata,rattr>Z {                      /* End Of File (EOF) Packet */
     if (reof(&iattr) < 0) {           /* Close & dispose of the file */
         errpkt(
-		  "Can't close file");        /* If problem, send error message */
+                  "Can't close file");        /* If problem, send error message */
         RESUME;                       /* and quit */
     } else {                          /* otherwise */
         ack();                        /* acknowledge the EOF packet */
@@ -384,8 +384,8 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
         BEGIN ssfile;                 /* and switch to receive-file state */
     } else {                          /* otherwise send error msg & quit */
         s = xflg ? \
-		  "Can't execute command" : \
-		    "Can't open file";
+                  "Can't execute command" : \
+                    "Can't open file";
         errpkt(s);
         RESUME;
     }
@@ -397,12 +397,12 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
     putsrv('\0');                     /* Terminate with null */
     if (*srvcmd) {                    /* If remote name was recorded */
       tlog(
-	    F110," stored as",srvcmd,0);  /* Record it in transaction log. */
-	}
+            F110," stored as",srvcmd,0);  /* Record it in transaction log. */
+        }
     if (atcapu) {                     /* If attributes are to be used */
         if (sattr(xflg) < 0) {        /* set and send them */
             errpkt(
-			"Can't send attributes"); /* if problem, say so */
+                        "Can't send attributes"); /* if problem, say so */
               RESUME;                 /* and quit */
         } else BEGIN ssattr;          /* if ok, switch to attribute state */
     } else if (sdata() < 0) {         /* No attributes, send data */
@@ -442,7 +442,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
           BEGIN ssfile;               /* if ok, enter send-file state */
         else {                        /* otherwise */
             errpkt(
-			  "Can't open file");     /* send error message */
+                          "Can't open file");     /* send error message */
                 RESUME;               /* and quit */
         }
     } else {                          /* No next file */
@@ -467,7 +467,7 @@ E {                                   /* Got Error packet, in any state */
 #endif
     quiet = x;                        /* restore quiet state */
     if (backgrd && !server)
-	  fatal("Protocol error");
+          fatal("Protocol error");
     RESUME;
 }
 
@@ -494,26 +494,26 @@ proto()
 
     if (local && (speed < 0)) {
         screen(
-		  SCR_EM,0,0l,"Sorry, you must 'set speed' first");
+                  SCR_EM,0,0l,"Sorry, you must 'set speed' first");
         return;
     }
 
     x = -1;
     if (ttopen(ttname,&x,mdmtyp) < 0) {
         debug(
-		  F111,"failed: proto ttopen local",ttname,local);
+                  F111,"failed: proto ttopen local",ttname,local);
         screen(
-		  SCR_EM,0,0l,"Can't open line");
+                  SCR_EM,0,0l,"Can't open line");
         return;
     }
     if (x > -1) local = x;
     debug(
-	  F111,"proto ttopen local",ttname,local);
+          F111,"proto ttopen local",ttname,local);
 
     x = (local) ? speed : -1;
     if (ttpkt(x,flow,parity) < 0) {   /* Put line in packet mode, */
         screen(
-		  SCR_EM,0,0l,"Can't condition line");
+                  SCR_EM,0,0l,"Can't condition line");
         return;
     }
     if (sstate == 'x') {              /* If entering server mode, */
@@ -523,17 +523,17 @@ proto()
                 conol(srvtxt);
             else {
                 conol(
-				  "Entering server mode on ");
+                                  "Entering server mode on ");
                 conoll(ttname);
             }
         }
     } else server = 0;
     if (sstate == 'v' && !local && !quiet)
       conoll(
-	    "Escape back to your local Kermit and give a SEND command...");
+            "Escape back to your local Kermit and give a SEND command...");
     if (sstate == 's' && !local && !quiet)
       conoll(
-	    "Escape back to your local Kermit and give a RECEIVE command...");
+            "Escape back to your local Kermit and give a RECEIVE command...");
     sleep(1);
 
 /*
@@ -550,9 +550,9 @@ proto()
         server = 0;
         if (!quiet)                   /* Give appropriate message */
             conoll(
-			  "C-Kermit server done");
+                          "C-Kermit server done");
     }
     ttres();
     screen(
-	  SCR_TC,0,0l,"");                /* Transaction complete */
+          SCR_TC,0,0l,"");                /* Transaction complete */
 }

@@ -179,9 +179,9 @@ cmini(d)
 int d;
 {
   for (
-	bp = cmdbuf;
-	  bp < cmdbuf + CMDBL;
-	    bp++)
+        bp = cmdbuf;
+          bp < cmdbuf + CMDBL;
+            bp++)
     *bp = NUL;
   *atmbuf = NUL;
   dpx = d;
@@ -195,9 +195,9 @@ char *s;
   while (*s) {
     if (*s == '\\') {
       for (
-		t = s;
-		  *t != '\0';
-		    t++)
+                t = s;
+                  *t != '\0';
+                    t++)
         *t = *(t + 1);
     }
     s++;
@@ -233,15 +233,15 @@ int radix, *n;
 
   x = cmfld(xhlp, xdef, &s);
   debug(
-	F101,
-	  "cmnum: cmfld",
-	    "",
-		  x);
+        F101,
+          "cmnum: cmfld",
+            "",
+                  x);
   debug(
-	F111,
-	  "cmnum: atmbuf",
-	    atmbuf,
-		  cc);
+        F111,
+          "cmnum: atmbuf",
+            atmbuf,
+                  cc);
   if (x < 0)
     return (x);                   /* Parse a field */
 
@@ -250,8 +250,8 @@ int radix, *n;
     return (x);
   } else {
     printf(
-	  "\n?not a number - %s\n",
-	    s);
+          "\n?not a number - %s\n",
+            s);
     return (-2);
   }
 }
@@ -294,14 +294,14 @@ char *xhlp, *xdef, **xp;
 
   if (chkwld(s)) {
     printf(
-	  "\n?Wildcards not allowed - %s\n",
-	    s);
+          "\n?Wildcards not allowed - %s\n",
+            s);
     return (-2);
   }
   if (zchko(s) < 0) {
     printf(
-	  "\n?Write permission denied - %s\n",
-	    s);
+          "\n?Write permission denied - %s\n",
+            s);
     return (-2);
   } else {
     *xp = s;
@@ -355,10 +355,10 @@ int *wild;
   while (1) {
     xc += cc;                     /* Count the characters. */
     debug(
-	  F111,
-	    "cmifi: gtword",
-		  atmbuf,
-		    xc);
+          F111,
+            "cmifi: gtword",
+                  atmbuf,
+                    xc);
     switch (x) {
     case -4:                      /* EOF */
     case -2:                      /* Out of space. */
@@ -379,9 +379,9 @@ int *wild;
         setatm(dirp);             /* right in atom buffer. */
 #endif
       /*
-	   * If filespec is wild, see
-	   * if there are any matches
-	   */
+           * If filespec is wild, see
+           * if there are any matches
+           */
 
       *wild = chkwld(*xp);
       debug(F101, " *wild", "", *wild);
@@ -398,26 +398,26 @@ int *wild;
       }
 
       /*
-	   * If not wild, see if it
-	   * exists and is readable.
-	   */
+           * If not wild, see if it
+           * exists and is readable.
+           */
 
       y = zchki(*xp);
 
       if (y == -3) {
         printf(
-		  "\n?Read permission denied - %s\n",
-		    *xp);
+                  "\n?Read permission denied - %s\n",
+                    *xp);
         return (-2);
       } else if (y == -2) {
         printf(
-		  "\n?File not readable - %s\n",
-		    *xp);
+                  "\n?File not readable - %s\n",
+                    *xp);
         return (-2);
       } else if (y < 0) {
         printf(
-		  "\n?File not found - %s\n",
-		    *xp);
+                  "\n?File not found - %s\n",
+                    *xp);
         return (-2);
       }
       return (x);
@@ -440,7 +440,7 @@ int *wild;
         setatm(dirp);            /* in the atom buffer. */
 #endif
       if (
-		(*wild = chkwld(*xp))) { /* No completion if wild */
+                (*wild = chkwld(*xp))) { /* No completion if wild */
           putchar(BEL);
           break;
       }
@@ -452,13 +452,13 @@ int *wild;
 
       if (y == 0) {
         printf(
-		  "\n?No files match - %s\n",
-		    atmbuf);
+                  "\n?No files match - %s\n",
+                    atmbuf);
         return (-2);
       } else if (y < 0) {
         printf(
-		  "\n?Too many files match - %s\n",
-		    atmbuf);
+                  "\n?Too many files match - %s\n",
+                    atmbuf);
         return (-2);
       } else if (y > 1) {        /* Not unique, just beep. */
         putchar(BEL);
@@ -475,13 +475,13 @@ int *wild;
     case 3:                      /* Question mark */
       if (*xhlp == NUL)
         printf(
-		  " Input file specification");
+                  " Input file specification");
       else
         printf(" %s", xhlp);
       if (xc > 0) {
 #ifdef DTILDE
         dirp = \
-		  tilde_expand(*xp);     /* Expand tilde, if any */
+                  tilde_expand(*xp);     /* Expand tilde, if any */
         if (*dirp != '\0')
           setatm(dirp);
 #endif
@@ -492,22 +492,22 @@ int *wild;
         *sp = '\0';
         if (y == 0) {
           printf(
-			"\n?No files match - %s\n",
-			  atmbuf);
+                        "\n?No files match - %s\n",
+                          atmbuf);
           return (-2);
         } else if (y < 0) {
           printf(
-			"\n?Too many file match - %s\n",
-			  atmbuf);
+                        "\n?Too many file match - %s\n",
+                          atmbuf);
           return (-2);
         } else {
           printf(
-			", one of the following:\n");
+                        ", one of the following:\n");
           clrhlp();
           for (
-			i = 0;
-			  i < y;
-			    i++) {
+                        i = 0;
+                          i < y;
+                            i++) {
             znext(filbuf);
             addhlp(filbuf);
           }
@@ -516,9 +516,9 @@ int *wild;
       } else
         printf("\n");
       printf(
-		"%s%s",
-		  cmprom,
-		    cmdbuf);
+                "%s%s",
+                  cmprom,
+                    cmdbuf);
       break;
     }
     x = gtword();
@@ -566,10 +566,10 @@ char *xhlp, *xdef, **xp;
   while (1) {
     xc += cc;                      /* Count the characters. */
     debug(
-	  F111,
-	    "cmifi: gtword",
-		  atmbuf,
-		    xc);
+          F111,
+            "cmifi: gtword",
+                  atmbuf,
+                    xc);
     switch (x) {
     case -4:                       /* EOF */
     case -2:                       /* Out of space. */
@@ -592,9 +592,9 @@ char *xhlp, *xdef, **xp;
         return (2);
 
       /*
-	   * If not wild, see if it
-	   * exists and is readable.
-	   */
+           * If not wild, see if it
+           * exists and is readable.
+           */
 
       y = zchki(*xp);
 
@@ -880,8 +880,8 @@ char *xhlp, *xdef;
       clrhlp();
       for (i = 0; i < n; i++) {
         if (
-		  !strncmp(table[i].kwd, atmbuf, cc) && \
-		    !btest(table[i].flgs, CM_INV))
+                  !strncmp(table[i].kwd, atmbuf, cc) && \
+                    !btest(table[i].flgs, CM_INV))
               addhlp(table[i].kwd);
       }
       dmphlp();

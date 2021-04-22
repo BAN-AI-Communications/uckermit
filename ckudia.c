@@ -1,5 +1,5 @@
 #ifndef NOCKUDIA
-char *dialv = "Dial Command, 4G(024), 22 Apr 2021";
+char *dialv = "Dial Command, 4G(025), 22 Apr 2021";
 
 /* C K U D I A -- Dialing program for connection to remote system */
 
@@ -288,7 +288,7 @@ static MDMINF ATTMODEM = /* Information for AT&T switched-network modems */
 
 static MDMINF ATTDTDM = /* Information for AT&T Digital Terminal Data Module
                          * For dialing: KYBD switch down, others usually up.
-						 */
+                                                 */
 
     {
         5,              /* dial_time */
@@ -400,17 +400,17 @@ static MDMINF HAYES =   /* Information for "Hayes" modem */
         2,              /* pause_time */
         "AT\r",         /* wake_str */
                         /* Note: Other wake_str's are possible here.
-						 * For Hayes 2400 that is to be used for both
-						 * inbound and outbound calls, "AT&F&D3" might
-						 * be best. For outbound calls only, possibly
-						 * "AT&F&D2". See the Hayes 2400 manual.
-						 */
+                                                 * For Hayes 2400 that is to be used for both
+                                                 * inbound and outbound calls, "AT&F&D3" might
+                                                 * be best. For outbound calls only, possibly
+                                                 * "AT&F&D2". See the Hayes 2400 manual.
+                                                 */
         0,              /* wake_rate */
         "",             /* wake_prompt */
         "",             /* dmode_str */
         "",             /* dmode_prompt */
         "ATD%s\r",      /* dial_str */
-		                /* Note: The user can supply "P" or "T" */
+                                /* Note: The user can supply "P" or "T" */
         0               /* dial_rate */
 };
 
@@ -645,9 +645,9 @@ int nmdm = (sizeof(mdmtab) / sizeof(struct keytab)); /* number of modems */
 
 static char *F_reason[5] = { /* Failure reasons for message */
                             "Unknown",
-							"Timeout",
-							"Interrupt",
-							"Modem",
+                                                        "Timeout",
+                                                        "Interrupt",
+                                                        "Modem",
                             "Initialize"};
 
 static int tries = 0;
@@ -908,10 +908,10 @@ char *telnbr;
   case n_ATTUPC:
 
     /*
-	 * For ATT7300/UNIX-PC's with their special
-	 * internal modem. Timeout and user interrupts
-	 * are enabled during dialing. attdial() is in
-	 * the file ckutio.c.                    --jrd
+         * For ATT7300/UNIX-PC's with their special
+         * internal modem. Timeout and user interrupts
+         * are enabled during dialing. attdial() is in
+         * the file ckutio.c.                    --jrd
      */
 
     {
@@ -928,8 +928,8 @@ char *telnbr;
       if (!quiet)
         printf("Call completed.\07\r\n");
       return 0;                             /* no conversation with the
-											 * modem to complete dialing
-											 */
+                                                                                         * modem to complete dialing
+                                                                                         */
     }
 #endif                                      /* att7300 */
 
@@ -1011,12 +1011,12 @@ char *telnbr;
 
   default:                             /* place modem into command mode */
     debug(F111, "ckdial default, wake string",
-	  pmdminf->wake_str,
+          pmdminf->wake_str,
         pmdminf->wake_rate);
     ttolSlow(pmdminf->wake_str, pmdminf->wake_rate);
     debug(F110, "ckdial default, waiting for wake_prompt",
-	  pmdminf->wake_prompt,
-	    0);
+          pmdminf->wake_prompt,
+            0);
     waitFor(pmdminf->wake_prompt);
     break;
   }
@@ -1126,8 +1126,8 @@ char *telnbr;
 
           /*
            * The DF100 will respond with "Attached" even
-		   * if DTR and / or carrier are not present.
-		   * Another reason to (also) wait for carrier?
+                   * if DTR and / or carrier are not present.
+                   * Another reason to (also) wait for carrier?
            */
 
           if (didWeGet(lbuf, "Busy"))
@@ -1221,15 +1221,15 @@ char *telnbr;
 
           /*
            * Early versions of the Rolm 9751 CBX
-		   * software do not give a CALL COMPLETE
-		   * indication when dialing an outpool
-		   * number, but it does seem to return a
-		   * long string of DELs at that point.
-		   *
-		   * (This doesn't really work...)
-		   *
-		   * if (didWeGet(lbuf,"\177\177\177"))
-		   *   status = CONNECTED;
+                   * software do not give a CALL COMPLETE
+                   * indication when dialing an outpool
+                   * number, but it does seem to return a
+                   * long string of DELs at that point.
+                   *
+                   * (This doesn't really work...)
+                   *
+                   * if (didWeGet(lbuf,"\177\177\177"))
+                   *   status = CONNECTED;
            */
 
           break;
@@ -1252,9 +1252,9 @@ char *telnbr;
         case n_MICROCOM:
 
           /* 
-		   * "RINGBACK" means phone
-		   * line ringing, continue
-		   */
+                   * "RINGBACK" means phone
+                   * line ringing, continue
+                   */
 
           if (didWeGet(lbuf, "NO CONNECT"))
             status = FAILED;

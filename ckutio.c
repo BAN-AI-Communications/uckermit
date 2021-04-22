@@ -1,4 +1,4 @@
-char *ckxv = "UNIX TTY I/O, 4G(069), 22 Apr 2021";
+char *ckxv = "UNIX TTY I/O, 4G(070), 22 Apr 2021";
 
 /*  C K U T I O  */
 
@@ -337,7 +337,7 @@ char *ckxsys = " AT&T System III/System V";
  *  ttpkt(speed,flow)       -- Put the tty in packet mode and set the speed.
  *  ttvt(speed,flow)        -- Put the tty in virtual terminal mode.
  *                              or in DIALING or CONNECTED modem
- *								control state.
+ *                                                              control state.
  * ttinl(dest,max,timo)    -- Timed read line from the tty.
  * ttinc(timo)             -- Timed read character from tty.
  * myread()                -- System 3 raw mode bulk buffer read, gives
@@ -515,7 +515,7 @@ int backgrd = 0;                  /* Assume in foreground (no '&' ) */
 int iniflags = 0;                 /* fcntl flags for ttyfd */
 #endif
 int ckxech = 0;                   /* 0 if system normally echoes
-								   * console characters, else 1 */
+                                                                   * console characters, else 1 */
 
 /*
  * Declarations of variables
@@ -711,12 +711,12 @@ int *lcl, modem;
       x = ttyname(0);               /* then compare its device name */
       strncpy(cname, x, DEVNAMLEN); /* (copy from internal static buf) */
 #ifdef __linux__
-	  x = cname;
+          x = cname;
 #else
       x = ttyname(ttyfd);           /* ...with real name of ttname. */
 #endif
-	  if (x == NULL)
-		  return;
+          if (x == NULL)
+                  return;
 #ifdef __linux__
       xlocal = 1;
 #else
@@ -727,9 +727,9 @@ int *lcl, modem;
 #ifdef UXIII
 
       /*
-	   * Sys III/V provides nice ctermid() function
-	   * to get name of controlling tty
-	   */
+           * Sys III/V provides nice ctermid() function
+           * to get name of controlling tty
+           */
 
       ctermid(cname); /* Get name of controlling terminal */
       debug(F110, " ctermid", cname, 0);
@@ -739,11 +739,11 @@ int *lcl, modem;
 #else
 
       /*
-	   * Just assume local, so "set speed"
-	   * and similar commands will work
+           * Just assume local, so "set speed"
+           * and similar commands will work
        * If not really local, how could
-	   * it work anyway?...
-	   */
+           * it work anyway?...
+           */
 
       xlocal = 1;
       debug(F101, " redirected stdin", "", xlocal);
@@ -804,9 +804,9 @@ int *lcl, modem;
     *lcl = xlocal;
 
     /*
-	 * Some special
-	 * stuff for v7
-	 */
+         * Some special
+         * stuff for v7
+         */
 
 #ifdef V7
   if (kmem[TTY] < 0) {            /*  If open, then skip this.  */
@@ -936,8 +936,8 @@ ttclos() {
   if (xlocal)
     if (ioctl(ttyfd, TIOCNXCL, NULL) < 0)
       fprintf(
-		stderr,
-		  "Warning, problem relinquishing exclusive access\r\n");
+                stderr,
+                  "Warning, problem relinquishing exclusive access\r\n");
 
 #endif
 #endif
@@ -1048,9 +1048,9 @@ tthang() {
     return -1;
 
     /*
-	 * So Kermit hangup command works
-	 * even if there is no carrier
-	 */
+         * So Kermit hangup command works
+         * even if there is no carrier
+         */
 
 #endif /* UXIII */
 
@@ -1158,8 +1158,8 @@ static look4lk(ttname) char *ttname;
       if (system(activecmd) == 256)
         if (!unlink(flfnam))
           fprintf(
-			stderr,
-			  "Warning: invalid lock file %s deleted\n", flfnam);
+                        stderr,
+                          "Warning: invalid lock file %s deleted\n", flfnam);
     }
   }
 #endif /* RTAIX */
@@ -1281,10 +1281,10 @@ ttpkt(speed, flow, parity) int speed, flow, parity;
 #ifdef BSD41
   {
 
-	  /*
-	   * For 4.1BSD only, force "old" tty driver, new one botches TANDEM.
-	   * Note, should really use TIOCGETD in ttopen to get current
-	   * discipline, and restore it in ttres().
+          /*
+           * For 4.1BSD only, force "old" tty driver, new one botches TANDEM.
+           * Note, should really use TIOCGETD in ttopen to get current
+           * discipline, and restore it in ttres().
        */
 
     int ldisc = OTTYDISC;
@@ -1521,68 +1521,68 @@ ttsspd(speed)
 #endif
 #ifdef B57600
   case 57600:
-	s = B57600;
+        s = B57600;
     break;
 #endif
 #ifdef B115200
   case 115200:
-	s = B115200;
+        s = B115200;
     break;
 #endif
 #ifdef B230400
   case 230400:
-	s = B230400;
-	break;
+        s = B230400;
+        break;
 #endif
 #ifdef B460800
   case 460800:
-	s = B460800;
-	break;
+        s = B460800;
+        break;
 #endif
 #ifdef B921600
   case 921600:
-	s = B921600;
-	break;
+        s = B921600;
+        break;
 #endif
 #ifdef B1000000
   case 1000000:
-	s = B1000000;
-	break;
+        s = B1000000;
+        break;
 #endif
 #ifdef B1152000
   case 1152000:
-	s = B1152000;
-	break;
+        s = B1152000;
+        break;
 #endif
 #ifdef B1500000
   case 1500000:
-	s = B1500000;
-	break;
+        s = B1500000;
+        break;
 #endif
 #ifdef B2000000
   case 2000000:
-	s = B2000000;
-	break;
+        s = B2000000;
+        break;
 #endif
 #ifdef B2500000
   case 2500000:
-	s = B2500000;
-	break;
+        s = B2500000;
+        break;
 #endif
 #ifdef B3000000
   case 3000000:
-	s = B3000000;
-	break;
+        s = B3000000;
+        break;
 #endif
 #ifdef B3500000
   case 3500000:
-	s = B3500000;
-	break;
+        s = B3500000;
+        break;
 #endif
 #ifdef B4000000
   case 4000000:
-	s = B4000000;
-	break;
+        s = B4000000;
+        break;
 #endif
   default:
     spdok = 0;
@@ -1642,7 +1642,7 @@ ttflui()
 SIGTYP
 timerh()
 {
-	longjmp(sjbuf, 1);
+        longjmp(sjbuf, 1);
 }
 
 /*
@@ -1960,7 +1960,7 @@ char *s;
 
 static catch()
 {
-	longjmp(jjbuf, -1);
+        longjmp(jjbuf, -1);
 }
 
 /* G E N B R K -- Simulate a modem break */
@@ -2387,7 +2387,7 @@ int m;
 #ifndef NOSTATS
 rtimer()
 {
-	tcount = time((long *)0);
+        tcount = time((long *)0);
 }
 #endif
 
@@ -2622,7 +2622,7 @@ conres()
 
 conoc(c) char c;
 {
-	write(1, &c, 1);
+        write(1, &c, 1);
 }
 
 /* C O N X O -- Write x characters to the console terminal */
@@ -2630,7 +2630,7 @@ conoc(c) char c;
 conxo(x, s) char *s;
 int x;
 {
-	write(1, s, x);
+        write(1, s, x);
 }
 
 /* C O N O L -- Write a line to the console terminal */

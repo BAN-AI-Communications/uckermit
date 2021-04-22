@@ -1,4 +1,4 @@
-char *ckzv = "UNIX File Support, 4G(058), 22 Apr 2021";
+char *ckzv = "UNIX File Support, 4G(059), 22 Apr 2021";
 
 /* C K U F I O -- Kermit file system support for Unix systems */
 
@@ -63,7 +63,7 @@ extern long timezone;
  */
 
 #define leap(y) \
-	(((y) % 4 == 0 && (y) % 100 != 0) || (y) % 400 == 0)
+        (((y) % 4 == 0 && (y) % 100 != 0) || (y) % 400 == 0)
 
 /* 
  * Number of leap years from 1970 to `y'
@@ -71,7 +71,7 @@ extern long timezone;
  */
 
 #define nleap(y) \
-	(((y)-1969) / 4 - ((y)-1901) / 100 + ((y)-1601) / 400)
+        (((y)-1969) / 4 - ((y)-1901) / 100 + ((y)-1601) / 400)
 
 /*
  * Number of days in each
@@ -333,12 +333,12 @@ char *WHOCMD = "who ";               /* For seeing who's logged in */
 
 FILE *fp[ZNFILS] = {         /* File pointers */
                     NULL,
-					NULL,
-					NULL,
-					NULL,
-					NULL,
-					NULL, 
-					NULL};
+                                        NULL,
+                                        NULL,
+                                        NULL,
+                                        NULL,
+                                        NULL, 
+                                        NULL};
 
 /*
  * (PWP) external definitions of things
@@ -547,8 +547,8 @@ zinfill() {
   zinptr = zinbuffer;    /* set pointer to beginning, (== &zinbuffer[0]) */
   zincnt--;              /* one less char in buffer */
   return \
-	(int)(*zinptr++) \
-	  & 0377;            /* because we return the first */
+        (int)(*zinptr++) \
+          & 0377;            /* because we return the first */
 }
 
 /* Z S O U T -- Write a string out to the given file, buffered */
@@ -754,7 +754,7 @@ zchko(name) char *name;
 
 zdelet(name) char *name;
 {
-	unlink(name);
+        unlink(name);
 }
 
 /* Z R T O L -- Convert remote filename into local form */
@@ -825,7 +825,7 @@ zchdir(dirnam) char *dirnam;
 
 char *zhome()
 {
-	return getenv("HOME");
+        return getenv("HOME");
 }
 
 /* Z G T D I R -- Return pointer to user's current directory */
@@ -870,10 +870,10 @@ zxcmd(comand) char *comand;
   if ((pid = fork()) == 0) {                   /* child */
 
     /*
-	 * #if BSD4 Code from Dave Tweten@AMES-NAS,
+         * #if BSD4 Code from Dave Tweten@AMES-NAS,
      * readapted to use getpwuid to find login
-	 * shell, bu H. Fischer.
-	 */
+         * shell, bu H. Fischer.
+         */
 
     char *shpath, *shname, *shptr;             /* to find desired shell */
     struct passwd *p;
@@ -927,11 +927,11 @@ zxcmd(comand) char *comand;
 #endif
 
     execl(
-	  shpath,
-	  shname,
-	  "-c",
-	  comand,
-	  (char *)NULL);                           /* Execute the cmd */
+          shpath,
+          shname,
+          "-c",
+          comand,
+          (char *)NULL);                           /* Execute the cmd */
     exit(0);                                   /* just punt if it failed. */
   } else if (pid == -1) {
     debug(F100, "zxcmd fork failure", "", 0);
@@ -1134,7 +1134,7 @@ char *zfcdat(name) char *name;
   if (time_stamp->tm_year < 1900)
     time_stamp->tm_year += 1900;
   sprintf(
-	datbuf, "%-4.4d%2.2d%2.2d %2.2d:%2.2d:%2.2d", time_stamp->tm_year,
+        datbuf, "%-4.4d%2.2d%2.2d %2.2d:%2.2d:%2.2d", time_stamp->tm_year,
       time_stamp->tm_mon + 1, time_stamp->tm_mday, time_stamp->tm_hour,
         time_stamp->tm_min, time_stamp->tm_sec);
   debug(F111, "zcfdat", datbuf, strlen(datbuf));
@@ -1212,17 +1212,17 @@ time_t mktime(tm) struct tm *tm;
    */
 
   days += \
-	365 * (years - 1970) + \
-	  nleap(years);
+        365 * (years - 1970) + \
+          nleap(years);
   tm->tm_wday = \
-	(days + 4) % 7;                    /* Jan 1, 1970 was a Thursday. */
+        (days + 4) % 7;                    /* Jan 1, 1970 was a Thursday. */
 
   return \
-	86400 * days + \
-	  3600 * hours + \
-	  60 * minutes + \
-	  seconds + \
-	  timezone;
+        86400 * days + \
+          3600 * hours + \
+          60 * minutes + \
+          seconds + \
+          timezone;
 }
 #endif
 #endif
@@ -1346,14 +1346,14 @@ struct path *splitpath(p) char *p;
       prv->fwd = cur;                  /* link into chain */
     prv = cur;
     for (
-	  i = 0;
-	    i < MAXNAMLEN - 1 && *p != '/' && *p != '\0';
-		  i++)
+          i = 0;
+            i < MAXNAMLEN - 1 && *p != '/' && *p != '\0';
+                  i++)
             cur->npart[i] = *p++;
     cur->npart[i] = '\0';              /* end this segment */
     if (i >= MAXNAMLEN)
       while (
-		*p != '/' && *p != '\0')
+                *p != '/' && *p != '\0')
           p++;
     if (*p == '/')
       p++;

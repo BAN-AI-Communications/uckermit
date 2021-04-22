@@ -154,7 +154,7 @@ static char *hlp1[] = {
 
 usage()
 { 
-	conola(hlp1);
+        conola(hlp1);
 }
 
 /* 
@@ -650,9 +650,9 @@ bcarcb(calsp) long calsp;
   
   printf (" %ld",calsp);
   if (calsp >= MAXBRATE)
-	  printf(".\n");
+          printf(".\n");
   else
-	  printf(",");
+          printf(",");
   bcharc=bcharc+brpln;
   if (bcharc >= 66) {
     printf("\n");
@@ -776,94 +776,94 @@ Communication line speed for external tty line specified in most recent");
     puts("\
 'set line' command.  Any of the common baud rates:");
 #ifdef B0
-	bcarcb(0);
+        bcarcb(0);
 #endif
 #ifdef B50
-	bcarcb(50);
+        bcarcb(50);
 #endif
 #ifdef B75
-	bcarcb(75);
+        bcarcb(75);
 #endif
 #ifdef B110
-	bcarcb(110);
+        bcarcb(110);
 #endif
 #ifdef B134
-	bcarcb(134);
+        bcarcb(134);
 #endif
 #ifdef B150
-	bcarcb(150);
+        bcarcb(150);
 #endif
 #ifdef B200
-	bcarcb(200);
+        bcarcb(200);
 #endif
 #ifdef B300
-	bcarcb(300);
+        bcarcb(300);
 #endif
 #ifdef B600
-	bcarcb(600);
+        bcarcb(600);
 #endif
 #ifdef B1200
-	bcarcb(1200);
+        bcarcb(1200);
 #endif
 #ifdef B1800
-	bcarcb(1800);
+        bcarcb(1800);
 #endif
 #ifdef B2400
-	bcarcb(2400);
+        bcarcb(2400);
 #endif
 #ifdef B4800
-	bcarcb(4800);
+        bcarcb(4800);
 #endif
 #ifdef B9600
-	bcarcb(9600);
+        bcarcb(9600);
 #endif
 #ifdef B19200
-	bcarcb(19200);
+        bcarcb(19200);
 #endif
 #ifdef B38400
-	bcarcb(38400);
+        bcarcb(38400);
 #endif
 #ifdef B57600
-	bcarcb(57600);
+        bcarcb(57600);
 #endif
 #ifdef B115200
-	bcarcb(115200);
+        bcarcb(115200);
 #endif
 #ifdef B230400
-	bcarcb(230400);
+        bcarcb(230400);
 #endif
 #ifdef B460800
-	bcarcb(460800);
+        bcarcb(460800);
 #endif
 #ifdef B500000
-	bcarcb(500000);
+        bcarcb(500000);
 #endif
 #ifdef B921600
-	bcarcb(921600);
+        bcarcb(921600);
 #endif
 #ifdef B1000000
-	bcarcb(1000000);
+        bcarcb(1000000);
 #endif
 #ifdef B1152000
-	bcarcb(1152000);
+        bcarcb(1152000);
 #endif
 #ifdef B1500000
-	bcarcb(1500000);
+        bcarcb(1500000);
 #endif
 #ifdef B2000000
-	bcarcb(2000000);
+        bcarcb(2000000);
 #endif
 #ifdef B2500000
-	bcarcb(2500000);
+        bcarcb(2500000);
 #endif
 #ifdef B3000000
-	bcarcb(3000000);
+        bcarcb(3000000);
 #endif
 #ifdef B3500000
-	bcarcb(3500000);
+        bcarcb(3500000);
 #endif
 #ifdef B4000000
-	bcarcb(4000000);
+        bcarcb(4000000);
 #endif
     return 0;
 

@@ -1,4 +1,4 @@
-char *fnsv = "C-Kermit Functions, 4G(076), 22 Apr 2021";
+char *fnsv = "C-Kermit Functions, 4G(077), 22 Apr 2021";
 
 /* C K C F N S -- System-independent Kermit protocol support functions */
 
@@ -235,9 +235,9 @@ register int (*fn)();
   while ((a = *buf++) != '\0') {
     if (rptflg) {                    /* Repeat processing? */
       if (
-		(unsigned int)a == \
-		  (unsigned int)rptq)
-	        {                        /* Yes, got a repeat prefix? */
+                (unsigned int)a == \
+                  (unsigned int)rptq)
+                {                        /* Yes, got a repeat prefix? */
         rpt = xunchar(*buf++);       /* Yes, get the repeat count, */
         a = *buf++;                  /* and get the prefixed character. */
       }
@@ -245,22 +245,22 @@ register int (*fn)();
     b8 = 0;                          /* Check high order "8th" bit */
     if (ebqflg) {                    /* 8th-bit prefixing? */
       if (
-	    (unsigned int)a == \
-		  (unsigned int)ebq)
-	        {                        /* Yes, got an 8th-bit prefix? */
+            (unsigned int)a == \
+                  (unsigned int)ebq)
+                {                        /* Yes, got an 8th-bit prefix? */
         b8 = 0200;                   /* Yes, remember this, */
         a = *buf++;                  /* and get the prefixed character. */
       }
     }
     if (
-	  (unsigned int)a == \
-	    (unsigned int)ctlq)
-	      {                          /* If control prefix, */
+          (unsigned int)a == \
+            (unsigned int)ctlq)
+              {                          /* If control prefix, */
       a = *buf++;                    /* get its operand. */
       a7 = a & 0177;                 /* Only look at low 7 bits. */
       if (
-		(a7 >= 0100 && a7 <= 0137) \
-		  || a7 == '?')              /* Uncontrollify, */
+                (a7 >= 0100 && a7 <= 0137) \
+                  || a7 == '?')              /* Uncontrollify, */
         a = ctl(a);                  /* if in control range */
     }
     a |= b8;                         /* Or, in the 8th bit */
@@ -350,9 +350,9 @@ int bufmax;
     rt &= fmask;                      /* Bytesize mask */
 
     /*
-	 * PWP: Handling of NLCHAR is
-	 * done later, in the while loop
-	 */
+         * PWP: Handling of NLCHAR is
+         * done later, in the while loop
+         */
 
   } else if ((first == -1) && (*leftover == '\0')) /* EOF from last time? */
     return size = 0;
@@ -392,16 +392,16 @@ int bufmax;
     }
 
     /*
-	 * PWP: handling of NLCHAR
-	 * is done in a bit...
-	 */
+         * PWP: handling of NLCHAR
+         * is done in a bit...
+         */
 
     odp = dp;                            /* Remember current position. */
 
     /*
-	 * PWP: the encode() procedure,
-	 * in-line (for speed)
-	 */
+         * PWP: the encode() procedure,
+         * in-line (for speed)
+         */
 
     if (rptflg) {                        /* Repeat processing? */
       if (
@@ -412,9 +412,9 @@ int bufmax;
            * If the next char is really CRLF, then we cannot
            * be doing a repeat (unless CR,CR,LF which becomes
            * "~ <n-1> CR CR LF", which is OK, but not most
-		   * efficient). I just plain don't worry about this
-		   * case. The actual conversion from NL to CR+LF is
-		   * done after the rptflg if...
+                   * efficient). I just plain don't worry about this
+                   * case. The actual conversion from NL to CR+LF is
+                   * done after the rptflg if...
            */
 
           (binary || (rnext != NLCHAR)) &&
@@ -431,8 +431,8 @@ int bufmax;
 
                                /*
                                 * PWP: Must encode two characters.
-								* This is handled later, with a bit
-								* of blue smoke and mirrors, after
+                                                                * This is handled later, with a bit
+                                                                * of blue smoke and mirrors, after
                                 * the first character is encoded.
                                 */
 
@@ -446,8 +446,8 @@ int bufmax;
 
     /*
      * PWP: Even more esoteric NLCHAR handling.
-	 * Remember, at this point t might still be
-	 * the _system_ NLCHAR. If so we do it here.
+         * Remember, at this point t might still be
+         * the _system_ NLCHAR. If so we do it here.
      */
 
     if (!binary && (rt == NLCHAR)) {
@@ -460,9 +460,9 @@ int bufmax;
 #endif
 
     /* 
-	 * Meta control stuff,
-	 * fixed by fdc.
-	 */
+         * Meta control stuff,
+         * fixed by fdc.
+         */
 
     a7 = rt & 0177;                 /* Low 7 bits of character */
     if (ebqflg && (rt & 0200)) {    /* Do 8th bit prefix if necessary. */
@@ -505,7 +505,7 @@ int bufmax;
         *odp = '\0';                /* mark real end */
       } else {                      /* If the packet is exactly full, */
         debug(F101, "getpkt exact fit", "", size);
-	  }
+          }
       t = rt;
       next = rnext;                 /* save for next time */
       return size;
@@ -756,9 +756,9 @@ struct zattr *zz;
     }
     if (binary) {                   /* Log file mode in transaction log */
       tlog(F100, " mode: binary", "", 0l);
-	} else {
+        } else {
       tlog(F100, " mode: text", "", 0l);
-	}
+        }
     screen(SCR_AN, 0, 0l, f);
     intmsg(filcnt);
 
@@ -1112,8 +1112,8 @@ char *s;
   if (rln >= 9) {
     rptq = s[9];
     rptflg = (
-	  (rptq > 32 && rptq < 63) || \
-	    (rptq > 95 && rptq < 127));
+          (rptq > 32 && rptq < 63) || \
+            (rptq > 95 && rptq < 127));
   } else
     rptflg = 0;
 
@@ -1128,10 +1128,10 @@ char *s;
     lpcapu = (x & lpcapb) && lpcapr;
     swcapu = (x & swcapb) && swcapb;
     for (
-	  capas = 10;
-	    (xunchar(s[capas]) & 1) && \
-		  (rln >= capas);
-		    capas++)
+          capas = 10;
+            (xunchar(s[capas]) & 1) && \
+                  (rln >= capas);
+                    capas++)
       ;
   }
 
@@ -1143,7 +1143,7 @@ char *s;
   if (lpcapu) {
     if (rln > capas + 2) {
       x = xunchar(s[capas + 2]) * \
-		95 + xunchar(s[capas + 3]);
+                95 + xunchar(s[capas + 3]);
       if (spsizf) {                       /* If overriding negotiations */
         spsiz = (x < lpsiz) ? x : lpsiz;  /* do this, */
       } else {                            /* otherwise */
@@ -1233,10 +1233,10 @@ gnfile()
     }
 
     /* 
-	 * Otherwise, step to next
-	 * element of internal wildcard
-	 * expansion list.
-	 */
+         * Otherwise, step to next
+         * element of internal wildcard
+         * expansion list.
+         */
 
     if (sndsrc < 0) {
       x = znext(filnam);
@@ -1246,9 +1246,9 @@ gnfile()
     }
 
     /* 
-	 * Get here with
-	 * a filename.
-	 */
+         * Get here with
+         * a filename.
+         */
 
     y = zchki(filnam);                     /* Check if file readable */
     if (y < 0) {
@@ -1370,19 +1370,19 @@ int disp;
 
   if (bsavef) {                          /* If we saved global file type */
     debug(
-	  F101,
-	    "clsof restoring binary",
-		  "",
-		    binary);
+          F101,
+            "clsof restoring binary",
+                  "",
+                    binary);
     binary = bsave;                      /* restore it */
     bsavef = 0;                          /* only this once. */
   }
   if ((x = zclose(ZOFILE)) < 0) {        /* Try to close the file */
     tlog(
-	  F100,
-	    "Failure to close",
-		  filnam,
-		    0l);
+          F100,
+            "Failure to close",
+                  filnam,
+                    0l);
     screen(SCR_ST, ST_ERR, 0l, "");
   } else if (disp && (keep == 0)) {      /* Delete it if interrupted, */
     if (*filnam)

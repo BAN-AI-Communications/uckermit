@@ -1,5 +1,5 @@
 #ifndef NOCKUSCR
-char *loginv = "Script Command, 4G(019), 22 Apr 2021";
+char *loginv = "Script Command, 4G(020), 22 Apr 2021";
 
 /* C K U S C R -- Login script for logging onto remote system */
 
@@ -324,9 +324,9 @@ login(cmdstr) char *cmdstr;
         goto failRet;                 /* no -- return failure */
 
       /*
-	   * start of
-	   * conditional send
-	   */
+           * start of
+           * conditional send
+           */
 
       flushi();                       /* flush out input buffer */
       if (outSeq())

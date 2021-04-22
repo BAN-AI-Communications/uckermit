@@ -1,4 +1,4 @@
-char *wartv = "Wart Preprocessor, 1A(205), 22 Apr 2021";
+char *wartv = "Wart Preprocessor, 1A(206), 22 Apr 2021";
 
 /* W A R T */
 
@@ -488,7 +488,7 @@ char *argv[];
     for (c = 1; c < 128; c++)
       if (tbl[state * 128 + c] != -1)
         printf(
-		  "state %d, chr %d, act %d\n", state, c, tbl[state * 128 + c]);
+                  "state %d, chr %d, act %d\n", state, c, tbl[state * 128 + c]);
 #endif
   exit(GOOD_EXIT);
 }

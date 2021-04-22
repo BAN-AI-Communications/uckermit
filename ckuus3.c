@@ -39,14 +39,14 @@
 /* Variables */
 
 extern int     size,  spsiz,   rpsiz, urpsiz,   npad,  timint,
-	         srvtim,  rtimo,   speed,  local, server,  lpcapr,
-		      fmask,  cmask, backgrd, atcapr,   flow,  displa,
-			 binary,  fncnv,   delay, parity, deblog,  escape,
-			  xargc,   turn,  duplex, cxseen, czseen,   nfils,
-			 ckxech, pktlog,  seslog, tralog, stdouf,  turnch,
-			   bctr,   bctu,   dfloc, mdmtyp,   keep,  maxtry,
-			 rptflg, ebqflg,    warn,  quiet,  cnflg,   timef,
-			 spsizf, mypadn;
+                 srvtim,  rtimo,   speed,  local, server,  lpcapr,
+                      fmask,  cmask, backgrd, atcapr,   flow,  displa,
+                         binary,  fncnv,   delay, parity, deblog,  escape,
+                          xargc,   turn,  duplex, cxseen, czseen,   nfils,
+                         ckxech, pktlog,  seslog, tralog, stdouf,  turnch,
+                           bctr,   bctu,   dfloc, mdmtyp,   keep,  maxtry,
+                         rptflg, ebqflg,    warn,  quiet,  cnflg,   timef,
+                         spsizf, mypadn;
 
 extern long filcnt, tlci, tlco, ffc, tfc, fsize;
 
@@ -267,10 +267,10 @@ doprm(xx) int xx;
     switch (y) {
     /* int z; */
 
-		/*
-		 * Use exterior version of z,
-		 * to avoid OS-9 C Compiler bug.
-		 */
+                /*
+                 * Use exterior version of z,
+                 * to avoid OS-9 C Compiler bug.
+                 */
 
     case XYFILD: /* Display */
       y = seton(&z);
@@ -348,9 +348,9 @@ doprm(xx) int xx;
       return x;
 
     /*
-	 * If parity not none, then
-	 * we also want 8th-bit prefixing
-	 */
+         * If parity not none, then
+         * we also want 8th-bit prefixing
+         */
 
     if ((parity = y))
       ebqflg = 1;
@@ -383,7 +383,7 @@ doprm(xx) int xx;
     case XYSERT:
       sprintf(tmp, "%d", DSRVTIM);
       if ((y = cmnum(
-				 "interval for server NAKs, 0 = none", tmp, 10, &x)) < 0)
+                                 "interval for server NAKs, 0 = none", tmp, 10, &x)) < 0)
         return y;
       if (x < 0) {
         printf("\n?Specify a positive number, or 0 for no server NAKs\n");
@@ -420,9 +420,9 @@ doprm(xx) int xx;
     }
 
     /*
-	 * SET
-	 * SEND/RECEIVE
-	 */
+         * SET
+         * SEND/RECEIVE
+         */
 
   case XYRECV:
   case XYSEND:
@@ -464,7 +464,7 @@ doprm(xx) int xx;
 
     case XYMARK:
       y = cmnum(
-			"Decimal ASCII code for packet-start character", "1", 10, &x);
+                        "Decimal ASCII code for packet-start character", "1", 10, &x);
       if ((y = setcc(&z, x, y)) < 0)
         return y;
       if (xx == XYRECV)
@@ -475,7 +475,7 @@ doprm(xx) int xx;
 
     case XYNPAD: /* Padding */
       y = cmnum(
-			"How many padding characters for inbound packets", "0", 10, &x);
+                        "How many padding characters for inbound packets", "0", 10, &x);
       if ((y = setnum(&z, x, y, 94)) < 0)
         return y;
       if (xx == XYRECV)
@@ -486,7 +486,7 @@ doprm(xx) int xx;
 
     case XYPADC: /* Pad character */
       y = cmnum(
-			"Decimal ASCII code for inbound pad character", "0", 10, &x);
+                        "Decimal ASCII code for inbound pad character", "0", 10, &x);
       if ((y = setcc(&z, x, y)) < 0)
         return y;
       if (xx == XYRECV)
@@ -706,7 +706,7 @@ dormt(xx) int xx;
 
   case XZPRI: /* Print */
     if ((x = cmtxt(
-			   "Remote file(s) to print on remote printer", "", &s)) < 0)
+                           "Remote file(s) to print on remote printer", "", &s)) < 0)
       return x;
     return sstate = rfilop(s, 'S');
 
@@ -942,9 +942,9 @@ intmsg(n) long n;
 #ifdef UXIII
 
     /*
-	 * We need to signal
-	 * before kb input
-	 */
+         * We need to signal
+         * before kb input
+         */
 
     sprintf(buf, "Type escape (%s) followed by:", chstr(escape));
     screen(SCR_TN, 0, 0l, buf);
@@ -952,7 +952,7 @@ intmsg(n) long n;
     screen(SCR_TN, 0, 0l,
            "CTRL-F to cancel file,  CTRL-R to resend current packet");
     screen(SCR_TN, 0, 0l,
-		   "CTRL-B to cancel batch, CTRL-A for status report: ");
+                   "CTRL-B to cancel batch, CTRL-A for status report: ");
   } else
     screen(SCR_TU, 0, 0l, " ");
 }
@@ -976,8 +976,8 @@ chkint() {
     cn--;
 
     /* Give read 5 seconds
-	 * for interrupt character
-	 */
+         * for interrupt character
+         */
 
     if ((ch = coninc(5)) < 0)
       return 0;
