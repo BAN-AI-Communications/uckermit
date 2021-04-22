@@ -1,4 +1,4 @@
-char *userv = "User Interface 4G(076), 22 Apr 2021";
+char *userv = "User Interface, 4G(087), 22 Apr 2021";
 
 /* C K U U S R -- "User Interface" for Unix Kermit (Part 1) */
 
@@ -75,25 +75,15 @@ char *userv = "User Interface 4G(076), 22 Apr 2021";
  */
 
 /*
+ * UNIX
  * Includes
  */
 
 #include "ckcdeb.h"
 #include <ctype.h>
 #include <stdio.h>
-#ifndef AMIGA
-
-/*
- * Apparently these should be included
- * for OS/2 C-Kermit after all...
- */
-
-/* #ifndef OS2 */
 #include <setjmp.h>
 #include <signal.h>
-/* #endif */
-#endif
-
 #include "ckcker.h"
 #include "ckucmd.h"
 #include "ckuusr.h"
@@ -102,21 +92,6 @@ char *userv = "User Interface 4G(076), 22 Apr 2021";
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#endif
-
-#ifdef datageneral
-#define fgets(stringbuf, max, fd) dg_fgets(stringbuf, max, fd)
-#define fork() vfork()
-
-/*
- * DG version 3.21 of C has bugs in the following routines, since they
- * depend on /etc/passwd.  In the context where the routines are used,
- * we don't need them anyway.
- */
-
-#define getgid() -1
-#define getuid() -1
-#define geteuid() -1
 #endif
 
 /*
@@ -130,20 +105,18 @@ extern int   size,  rpsiz, urpsiz,  speed,  local, server, displa, binary,
 		   maxrps,   warn,  quiet,  cnflg, tlevel, mdmtyp, zincnt;
 
 extern char *versio, *protv, *ckxv, *ckzv, *fnsv, *connv, *dftty, *cmdv;
+extern char *wartv;
 #ifndef NOCKUDIA
-extern char *dialv, *loginv;
+extern char *dialv;
+#endif
+#ifndef NOCKUSCR
+extern char *loginv;
 #endif
 extern char *ckxsys, *ckzsys, *cmarg, *cmarg2, **xargv, **cmlist;
 extern char *DIRCMD, *PWDCMD, cmerrp[];
 extern CHAR sstate, ttname[];
 extern CHAR *zinptr;
 char *strcpy(), *getenv();
-#ifdef AMIGA
-char *getcwd();
-#endif
-#ifdef OS2
-char *getcwd();
-#endif
 
 /*
  * Declarations from
@@ -159,9 +132,6 @@ extern char cmdbuf[]; /* Command buffer */
 
 extern char *SPACMD, *zhome(); /* Space command, home directory. */
 extern int backgrd;            /* Kermit executing in background */
-#ifdef OS2
-extern char *zfindfile();
-#endif
 
 /*
  * The background flag is set by ckutio.c
@@ -446,22 +416,6 @@ doarg(x) char x;
       flow = 0;     /* No flow control */
       break;
 
-#ifdef OS2
-    case 'u':
-      /* get numeric argument */
-      if (*(xp + 1))
-        fatal("invalid argument bundling");
-      *xargv++, xargc--;
-      if ((xargc < 1) || (**xargv == '-'))
-        fatal("missing handle");
-      z = atoi(*xargv); /* Convert to number */
-      ttclos();
-      if (!ttiscom(z))
-        fatal("invalid handle");
-      speed = ttspeed();
-      break;
-#endif /* OS2 */
-
     default:
       fatal("invalid argument, type 'kermit -h' for help");
     }
@@ -477,24 +431,15 @@ doarg(x) char x;
 
 fatal(msg) char *msg;
 { /* Fatal error message */
-#ifdef OSK
-  fprintf(stderr, "\nFatal: %s\n", msg);
-#else
   fprintf(stderr, "\r\nFatal: %s\n", msg);
-#endif /* OSK */
   tlog(F110, "Fatal:", msg, 0l);
   doexit(BAD_EXIT); /* Exit indicating failure */
 }
 
 ermsg(msg) char *msg;
 { /* Print error message */
-#ifdef OSK
-  if (!quiet)
-    fprintf(stderr, "\n%s - %s\n", cmerrp, msg);
-#else
   if (!quiet)
     fprintf(stderr, "\r\n%s - %s\n", cmerrp, msg);
-#endif /* OSK */
   tlog(F110, "Error -", msg, 0l);
 }
 
@@ -539,13 +484,17 @@ struct keytab cmdtab[] = {
 	"receive",    XXREC, 0,
     "remote",     XXREM,  0,
 	"s",          XXSEN, CM_INV,
+#ifndef NOCKUSCR
     "script",     XXLOGI, 0,
+#endif
 	"send",       XXSEN, 0,
     "server",     XXSER,  0,
 	"set",        XXSET, 0,
     "show",       XXSHO,  0,
 	"space",      XXSPA, 0,
+#ifndef NOSTATS
     "statistics", XXSTA,  0,
+#endif
 	"take",       XXTAK, 0,
     "transmit",   XXTRA,  0};
 int ncmd = (sizeof(cmdtab) / sizeof(struct keytab));
@@ -670,10 +619,6 @@ struct keytab shotab[] = {"parameters", SHPAR, 0, "versions", SHVER, 0};
 cmdini()
 {
 
-#ifdef AMIGA
-  congm();
-  concb(escape);
-#endif
   tlevel = -1;         /* Take file level */
   cmsetp("C-Kermit>"); /* Set default prompt */
 
@@ -682,16 +627,6 @@ cmdini()
  * home or current directory.
  */
 
-#ifdef OS2
-  lp = zfindfile(KERMRC);
-  strcpy(line, lp);
-  if ((tfile[0] = fopen(line, "r")) != NULL) {
-    tlevel = 0;
-    debug(F110, "init file", line, 0);
-  } else
-    debug(F100, "no init file", "", 0);
-
-#else
   homdir = zhome();
   lp = line;
   lp[0] = '\0';
@@ -701,10 +636,6 @@ cmdini()
       strcat(lp, "/");
   }
   strcat(lp, KERMRC);
-#endif
-#ifdef AMIGA
-  reqoff(); /* disable requestors */
-#endif
   if ((tfile[0] = fopen(line, "r")) != NULL) {
     tlevel = 0;
     debug(F110, "init file", line, 0);
@@ -714,11 +645,7 @@ cmdini()
     if ((tfile[0] = fopen(line, "r")) != NULL)
       tlevel = 0;
   }
-#ifdef AMIGA
-  reqpop(); /* restore requestors */
-#else
   congm(); /* Get console tty modes */
-#endif
 }
 
 /*
@@ -747,19 +674,13 @@ trap(sig, code) int sig, code;
 
 /*  S T P T R A P -- Handle SIGTSTP signals */
 
-#ifdef RTU
-extern int rtu_bug;
-#endif
-
-stptrap(sig, code) int sig, code;
+stptrap(sig, code)
+int sig, code;
 {
   debug(F101, "stptrap() caught signal", "", sig);
   debug(F101, " code", "", code);
   conres(); /* Reset the console */
 #ifdef SIGTSTP
-#ifdef RTU
-  rtu_bug = 1;
-#endif
   kill(0, SIGSTOP); /* If job control, suspend the job */
 #else
   doexit(GOOD_EXIT); /* Probably won't happen otherwise */
@@ -776,9 +697,6 @@ parser()
   int xx, cbn;
   char *cbp;
 
-#ifdef AMIGA
-  reqres(); /* restore AmigaDOS requestors */
-#endif
   concb(escape); /* Put console in cbreak mode. */
   conint(trap);  /* Turn on console terminal interrupts. */
 
@@ -961,13 +879,8 @@ docmd(cx) int cx;
   switch (cx) {
 
   case -4: /* EOF */
-#ifdef OSK
-    if (!quiet && !backgrd)
-      printf("\n");
-#else
     if (!quiet && !backgrd)
       printf("\r\n");
-#endif /* OSK */
     doexit(GOOD_EXIT);
   case -3: /* Null command */
     return 0;
@@ -996,20 +909,6 @@ docmd(cx) int cx;
     return doconect();
 
   case XXCWD:
-#ifdef AMIGA
-    if (cmtxt("Name of local directory, or carriage return", "", &s) < 0)
-      return -1;
-    /* if no name, just print directory name */
-    if (*s) {
-      if (chdir(s))
-        perror(s);
-      cwdf = 1;
-    }
-    if (getcwd(line, sizeof(line)) == NULL)
-      printf("Current directory name not available.\n");
-    else if (!backgrd)
-      printf("%s\n", line);
-#else
 
 /*
  * if (
@@ -1026,29 +925,10 @@ docmd(cx) int cx;
       printf("\n?Wildcards not allowed in directory name\n");
       return -2;
     }
-#ifdef OS2
-    if (s != NUL) {
-      if (strlen(s) >= 2 && s[1] == ':') { /* Disk specifier */
-        if (zchdsk(*s)) {                  /* Change disk successful */
-          if (strlen(s) >= 3 & (s[2] == '\\' || isalnum(s[2])))
-            if (chdir(s))
-              perror(s);
-        } else
-          perror(s);
-      } else if (chdir(s))
-        perror(s);
-    }
-    cwdf = 1;
-    concooked();
-    system(PWDCMD);
-    conraw();
-#else
     if (!zchdir(s))
       perror(s);
     cwdf = 1;
     system(PWDCMD);
-#endif
-#endif
     return 0;
 
   case XXCLO:
@@ -1113,45 +993,12 @@ docmd(cx) int cx;
 #endif
 
   case XXDIR: /* directory */
-#ifdef vms
-    if ((x = cmtxt("Directory/file specification", "", &s)) < 0)
-      return x;
-
-	/*
-	 * Now do this the same as
-	 * a shell command - helps with LAT
-	 */
-
-    conres(); /* make console normal */
-    lp = line;
-    sprintf(lp, "%s %s", DIRCMD, s);
-    debug(F110, "Directory string: ", line, 0);
-    concb(escape);
-    return 0;
-#else
-#ifdef AMIGA
-    if ((x = cmtxt("Directory/file specification", "", &s)) < 0)
-      return x;
-#else
-#ifdef datageneral
-    if ((x = cmtxt("Directory/file specification", "+", &s)) < 0)
-      return x;
-#else
     if ((x = cmdir("Directory/file specification", "*", &s)) < 0)
       return x;
-#endif
-#endif
     lp = line;
     sprintf(lp, "%s %s", DIRCMD, s);
-#ifdef OS2
-    concooked();
     system(line);
-    conraw();
-#else
-    system(line);
-#endif
     return 0;
-#endif
 
   case XXECH: /* echo */
     if ((x = cmtxt("Material to be echoed", "", &s)) < 0)
@@ -1295,10 +1142,12 @@ docmd(cx) int cx;
       return x;
     return dolog(x);
 
+#ifndef NOCKUSCR
   case XXLOGI: /* Send script remote system */
     if ((x = cmtxt("Text of login script", "", &s)) < 0)
       return x;
     return login(s); /* Return 0=completed, -2=failed */
+#endif
 
   case XXREC: /* Receive */
     cmarg2 = "";
@@ -1357,9 +1206,6 @@ docmd(cx) int cx;
     sstate = 'x';
     if (local)
       displa = 1;
-#ifdef AMIGA
-    reqoff(); /* no DOS requestors while server */
-#endif
     return 0;
 
   case XXSET: /* Set */
@@ -1387,59 +1233,14 @@ docmd(cx) int cx;
   case XXSHE: /* Local shell command */
   {
     int pid;
-#ifdef AMIGA
-    if (cmtxt("Command to execute", "", &s) < 0)
-      return -1;
-#else
-#ifdef OS2
-    if (cmtxt("OS2 command to execute", "", &s) < 0)
-      return -1;
-#else
     if (cmtxt("Unix shell command to execute", "", &s) < 0)
       return -1;
-#endif /* Amiga */
-#endif /* OS2 */
 
     conres(); /* Make console normal  */
 
-#ifdef OS2
-    if (*s == '\0')
-      sprintf(s, "%s", "CMD"); /* Command processor */
-    concooked();
-    system(s);
-    conraw();
-#else
-#ifdef OSK
-    system(s);
-#else
-#ifdef AMIGA
-    system(s);
-#else
 #ifdef MSDOS
     zxcmd(s);
 #else
-#ifdef vms
-    system(s); /* Best we can do for VMS? */
-#else
-#ifdef datageneral
-    if (*s == NUL) /* Interactive shell requested? */
-#ifdef mvux
-      system("/bin/sh ");
-#else
-      system("x :cli prefix Kermit_Baby:");
-#endif
-    else         /* Otherwise, */
-      system(s); /* Best for aos/vs?? */
-
-#else
-#ifdef aegis
-    if ((pid = vfork()) == 0) {      /* Make child quickly */
-      char *shpath, *shname, *shptr; /* For finding desired shell */
-
-      if ((shpath = getenv("SHELL")) == NULL)
-        shpath = "/com/sh";
-
-#else /* All Unix systems */
     if ((pid = fork()) == 0) { /* Make child */
 #ifdef __linux__
       const
@@ -1456,7 +1257,6 @@ docmd(cx) int cx;
         shpath = defShel;
       else
         shpath = p->pw_shell;
-#endif
       shptr = shname = shpath;
       while (*shptr != '\0')
         if (*shptr++ == '/')
@@ -1498,11 +1298,6 @@ docmd(cx) int cx;
       signal(SIGQUIT, qstat);
     }
 #endif
-#endif
-#endif
-#endif
-#endif
-#endif
     concb(escape); /* Console back in cbreak mode */
     return 0;
   }
@@ -1521,15 +1316,23 @@ docmd(cx) int cx;
       break;
 
     case SHVER:
-      printf("\nVersions:\n %s\n %s\n", versio, protv);
-      printf(" %s\n", fnsv);
-      printf(" %s\n %s\n", cmdv, userv);
-      printf(" %s for%s\n", ckxv, ckxsys);
-      printf(" %s for%s\n", ckzv, ckzsys);
-      printf(" %s\n", connv);
+      printf("\nVersions:\n");
+	  printf(" * %s for%s\n", versio, ckxsys);
+	  printf("   * %s\n", protv);
+	  printf("     * %s\n", wartv);
+      printf("   * %s\n", fnsv);
+      printf("   * %s\n", cmdv);
+	  printf("   * %s\n", userv);
+      printf("   * %s\n", ckxv);
+      printf("   * %s,%s\n", ckzv, ckzsys);
+      printf("   * %s\n", connv);
 #ifndef NOCKUDIA
-      printf(" %s\n %s\n\n", dialv, loginv);
+      printf("   * %s\n", dialv);
 #endif
+#ifndef NOCKUSCR
+	  printf("   * %s\n", loginv);
+#endif
+	  printf("\n");
       break;
 
     default:
@@ -1539,41 +1342,17 @@ docmd(cx) int cx;
     return 0;
 
   case XXSPA: /* space */
-#ifdef datageneral
-
-    /*
-	 * The DG can take an argument
-	 * after its "space" command.
-	 */
-
-    if ((x = cmtxt("Confirm, or local directory name", "", &s)) < 0)
-      return x;
-    if (*s == NULL)
-      system(SPACMD);
-    else {
-      char *cp;
-      cp = alloc(strlen(s) + 7); /* For "space *s" */
-      strcpy(cp, "space "), strcat(cp, s);
-      system(cp);
-      free(cp);
-    }
-#else
     if ((x = cmcfm()) < 0)
       return x;
-#ifdef OS2
-    concooked();
     system(SPACMD);
-    conraw();
-#else
-    system(SPACMD);
-#endif
-#endif
     return 0;
 
+#ifndef NOSTATS
   case XXSTA: /* statistics */
     if ((x = cmcfm()) < 0)
       return x;
     return dostat();
+#endif
 
   case XXTAK: /* take */
     if (tlevel > MAXTAKE - 1) {
@@ -1676,7 +1455,8 @@ doconect() {
 
 int tr_int; /* Flag if TRANSMIT interrupted */
 
-trtrap() { /* TRANSMIT interrupt trap */
+trtrap()
+{ /* TRANSMIT interrupt trap */
   tr_int = 1;
   return 0;
 }
@@ -1687,9 +1467,7 @@ char t;
 #define LINBUFSIZ 150
   char linbuf[LINBUFSIZ + 2]; /* Line buffer */
 
-#ifndef OS2
   SIGTYP (*oldsig)(); /* For saving old interrupt trap. */
-#endif
   int z = 0;      /* Return code. */
   int x, c, i, n; /* Workers... */
                   /* CHAR tt; */
@@ -1712,9 +1490,7 @@ char t;
     return 1;
   }
   i = 0; /* Beginning of buffer. */
-#ifndef OS2
   oldsig = signal(SIGINT, trtrap); /* Save current interrupt trap. */
-#endif
   tr_int = 0; /* Have not been interrupted (yet). */
   z = 0;      /* Return code presumed good. */
 
@@ -1768,9 +1544,7 @@ char t;
       }
     }
   }
-#ifndef OS2
   signal(SIGINT, oldsig); /* put old signal action back. */
-#endif /* OS2 */
   ttres();        /* Done, restore tty, */
   zclose(ZIFILE); /* close file, */
   return z;       /* and return successfully. */

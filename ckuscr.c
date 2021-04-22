@@ -1,4 +1,5 @@
-char *loginv = "Script Command, V2.0(013) 21 Apr 2021";
+#ifndef NOCKUSCR
+char *loginv = "Script Command, 4G(019), 22 Apr 2021";
 
 /* C K U S C R -- Login script for logging onto remote system */
 
@@ -36,11 +37,6 @@ char *loginv = "Script Command, V2.0(013) 21 Apr 2021";
 #include <signal.h>
 #include <stdio.h>
 
-#ifdef OS2
-#define SIGALRM SIGUSR1
-void alarm(unsigned);
-#endif
-
 #ifdef __linux__
 #include <string.h>
 #endif
@@ -70,9 +66,6 @@ static jmp_buf alrmRng;   /* Envir ptr for connect errors */
 SIGTYP
 scrtime()                 /* Modem read failure handler */
 {
-#ifdef OS2
-  alarmack();             /* Acknowledge the signal */
-#endif
   longjmp(alrmRng, 1);    /* Notifies parent process to stop */
 }
 
@@ -83,7 +76,8 @@ scrtime()                 /* Modem read failure handler */
  * 1 expecting to be called again after the ~d executes.
  */
 
-static sequenc() {
+static sequenc()
+{
 
   int i;
   char c, oct_char;
@@ -172,7 +166,8 @@ static sequenc() {
  * (or failure) in got_it
  */
 
-static recvSeq() {
+static recvSeq()
+{
 
   char *e, got[7], trace[SBUFL];
   int i, l;
@@ -185,11 +180,7 @@ static recvSeq() {
   }
   tlog(F111, "expecting sequence", e, (long)l);
   if (l == 0) {                     /* null sequence, just delay a little */
-#ifdef OS2
-    msleep(NULL_EXP * 1000);
-#else
     sleep(NULL_EXP);
-#endif
     got_it = 1;
     tlog(F100, "got it (null sequence)", "", 0l);
     return;
@@ -226,7 +217,8 @@ static recvSeq() {
  * or whatever)
  */
 
-static int outSeq() {
+static int outSeq()
+{
   char *sb;
   int l;
   int delay;
@@ -383,7 +375,8 @@ static char *chstr(c) char c;
 
 /* F L U S H I -- Flush, but log, input buffer */
 
-flushi() {
+flushi()
+{
   int n;
 
   if (seslog) {                       /* Logging session? */
@@ -397,3 +390,4 @@ flushi() {
   } else
     ttflui();                         /* Otherwise just flush. */
 }
+#endif

@@ -1,4 +1,4 @@
-char *ckzv = "Unix file support, 4G(052) 22 Apr 2021";
+char *ckzv = "UNIX File Support, 4G(058), 22 Apr 2021";
 
 /* C K U F I O -- Kermit file system support for Unix systems */
 
@@ -123,13 +123,8 @@ char *ckzsys = " 4.2 BSD";
 #endif
 #endif
 #else
-#ifdef FT18
-#define BSD41
-char *ckzsys = " Fortune For:Pro 1.8";
-#else
 #define BSD41
 char *ckzsys = " 4.1 BSD";
-#endif
 #endif
 #endif
 
@@ -166,10 +161,6 @@ char *ckzsys = " DEC Pro-3xx/Venix v1";
  * Tower OS is like Sys III, but
  * with BSD features; mostly follows BSD.
  */
-
-#ifdef TOWER1
-char *ckzsys = " NCR Tower 1632, OS 1.02";
-#endif
 
 /*
  * Sys III/V, Xenix, PC/IX,...
@@ -223,33 +214,16 @@ char *ckzsys = " AT&T System III/System V";
 char *DELCMD = "rm -f ";             /* For file deletion */
 char *PWDCMD = "pwd ";               /* For saying where I am */
 
-#ifdef FT18
-char *DIRCMD = "ls -l | more ";      /* For directory listing */
-char *TYPCMD = "more ";              /* For typing a file */
-#else
 char *TYPCMD = "cat ";               /* For typing a file */
 char *DIRCMD = "ls -l ";             /* For directory listing */
-#endif
-
-#ifdef FT18
-#undef BSD4
-#endif
 
 #ifdef BSD4
 char *SPACMD = "pwd ; quota ; df ."; /* Space/quota of current directory */
 #else
-#ifdef FT18
-char #SPACMD = "pwd ; du ; df .";
-#else
 char *SPACMD = "df ";
-#endif
 #endif
 
 char *SPACM2 = "df ";                /* For space in specified directory */
-
-#ifdef FT18
-#define BSD4
-#endif
 
 #ifdef BSD4
 char *WHOCMD = "finger ";            /* For seeing who's logged in */
@@ -285,17 +259,12 @@ char *WHOCMD = "who ";               /* For seeing who's logged in */
  *  struc zattr *) - Return attributes for file which is being sent
  */
 
-#ifdef FT18
-#define PROVX1
-#endif
-
 /*
  * Which systems include
  * <sys/file.h>...
  */
 
 #ifndef PROVX1
-#ifndef aegis
 #ifndef CIE
 #ifndef XENIX
 #ifndef unos
@@ -310,11 +279,6 @@ char *WHOCMD = "who ";               /* For seeing who's logged in */
 #endif
 #endif
 #endif
-#endif
-#endif
-
-#ifdef FT18
-#undef PROVX1
 #endif
 
 /*
@@ -347,7 +311,7 @@ char *WHOCMD = "who ";               /* For seeing who's logged in */
 
 #ifndef MAXNAMLEN
 #ifdef __linux__
-#define MAXNANLEN 255
+#define MAXNANLEN 255        /* Linux XXX(jhj): Find header */
 #else
 #define MAXNAMLEN 14         /* If still not defined... */
 #endif
@@ -409,26 +373,15 @@ static char *mtchs[MAXWLD],        /* Matches found for filename */
  * then, we'll just do kill(0,9)...
  */
 
-zkself() {                         /* For "bye", but, no guarantees! */
+zkself()
+{                                  /* For "bye", but, no guarantees! */
 #ifdef PROVX1
   return kill(0, 9);
 #else
 #ifdef V7
   return kill(0, 9);
 #else
-#ifdef TOWER1
-  return kill(0, 9);
-#else
-#ifdef FT18
-  return kill(0, 9);
-#else
-#ifdef aegis
-  return kill(0, 9);
-#else
   return kill(getppid(), 1);
-#endif
-#endif
-#endif
 #endif
 #endif
 }
@@ -439,7 +392,7 @@ zopeni(n, name) int n;
 char *name;
 {
   debug(F111, " zopeni", name, n);
-  debug(F101, "  fp", "", (int)fp[n]);
+  /* debug(F101, "  fp", "", (int)fp[n]); */
   if (chkfn(n) != 0)
     return 0;
   zincnt = 0;                      /* Reset input buffer */
@@ -460,7 +413,7 @@ char *name;
     return 1;
   }
   fp[n] = fopen(name, "r");        /* Real file. */
-  debug(F111, " zopeni", name, (int)fp[n]);
+  /* debug(F111, " zopeni", name, (int)fp[n]); */
   if (fp[n] == NULL)
     perror("zopeni");
   return (fp[n] != NULL) ? 1 : 0;
@@ -482,14 +435,14 @@ char *name;
 
   /* int uid, euid; */                    /* suid variables... */
 
-  if (n != ZDFILE)
-    debug(F111, " zopeno", name, n);
+  /* if (n != ZDFILE)
+   * debug(F111, " zopeno", name, n); */
   if (chkfn(n) != 0)
     return 0;
   if ((n == ZCTERM) || (n == ZSTDIO)) {   /* Terminal or standard output */
     fp[ZOFILE] = stdout;
-    if (n != ZDFILE)
-      debug(F101, " fp[]=stdout", "", (int)fp[n]);
+    /* if (n != ZDFILE)
+     * debug(F101, " fp[]=stdout", "", (int)fp[n]); */
     zoutcnt = 0;
     zoutptr = zoutbuffer;
     return 1;
@@ -507,8 +460,8 @@ char *name;
   }
   zoutcnt = 0;                            /* (PWP) reset output buffer */
   zoutptr = zoutbuffer;
-  if (n != ZDFILE)
-    debug(F101, " fp[n]", "", (int)fp[n]);
+  /* if (n != ZDFILE)
+   * debug(F101, " fp[n]", "", (int)fp[n]); */
   return (fp[n] != NULL) ? 1 : 0;
 }
 
@@ -656,7 +609,8 @@ char c;
  * routine to speed up file IO
  */
 
-zoutdump() {
+zoutdump()
+{
   int x;
 
   zoutptr = zoutbuffer;             /* reset buffer pointer in all cases */
@@ -829,33 +783,11 @@ zltor(name, name2) char *name, *name2;
 {
   char work[100], *cp, *pp;
   int dc = 0;
-#ifdef aegis
-  char *getenv(), *index(), *namechars;
-  int tilde = 0, bslash = 0;
-
-  if ((namechars = getenv("NAMECHARS")) != NULL) {
-    if (index(namechars, '~') != NULL)
-      tilde = '~';
-    if (index(namechars, '\\') != NULL)
-      bslash = '\\';
-  } else {
-    tilde = '~';
-    bslash = '\\';
-  }
-#endif
 
   debug(F110, "zltor", name, 0);
   pp = work;
-#ifdef aegis
-  cp = name;
-  if (tilde && *cp == tilde)
-    ++cp;
-  for (; *cp != '\0'; cp++) {              /* strip path name */
-    if (*cp == '/' || *cp == bslash) {
-#else
   for (cp = name; *cp != '\0'; cp++) {     /* strip path name */
     if (*cp == '/') {
-#endif
       dc = 0;
       pp = work;
     } else if (islower(*cp))
@@ -935,11 +867,7 @@ zxcmd(comand) char *comand;
     debug(F100, "zxcmd pipe failure", "", 0);
     return 0;                                  /* can't make pipe, fail */
   }
-#ifdef aegis
-  if ((pid = vfork()) == 0) {                  /* child */
-#else
   if ((pid = fork()) == 0) {                   /* child */
-#endif
 
     /*
 	 * #if BSD4 Code from Dave Tweten@AMES-NAS,
@@ -948,12 +876,10 @@ zxcmd(comand) char *comand;
 	 */
 
     char *shpath, *shname, *shptr;             /* to find desired shell */
-#ifndef aegis
     struct passwd *p;
     extern struct passwd *getpwuid();
     extern int getuid();
     char *defShel = "/bin/sh";                 /* default shell */
-#endif
 
     close(pipes[0]);                           /* close in side of pipe */
     close(0);                                  /* close stdin */
@@ -972,13 +898,7 @@ zxcmd(comand) char *comand;
       conol("trouble duping stderr in routine zxcmd\n");
 #endif
 
-    close(pipes[1]);                           /* get rid of this copy
-												* of the pipe
-												*/
-#ifdef aegis
-    if ((shpath = getenv("SERVERSHELL")) == NULL)
-      shpath = "/bin/sh";
-#else
+    close(pipes[1]);                           /* get rid of this copy */
     shpath = getenv("SHELL");                  /* What shell? */
     if (shpath == NULL) {
       p = getpwuid(getuid());                  /* get login data */
@@ -987,7 +907,6 @@ zxcmd(comand) char *comand;
       else
         shpath = p->pw_shell;
     }
-#endif
     shptr = shname = shpath;
     while (*shptr != '\0')
       if (*shptr++ == '/')
@@ -1026,7 +945,8 @@ zxcmd(comand) char *comand;
 
 /* Z C L O S F -- wait for the child fork to terminate and close the pipe */
 
-zclosf() {
+zclosf()
+{
   int wstat;
 
   if (pid != 0) {
@@ -1158,7 +1078,7 @@ zsattr(xx) struct zattr *xx;
   xx->type.len = 0;                 /* File type can't be filled in here */
   xx->type.val = "";
   debug(F110, "before calling zfcdat", nambuf, 0);
-  if (nambuf) {
+  if (*nambuf) { /* XXX(jhj): correct? */
     xx->date.val = zfcdat(nambuf);  /* File creation date */
     xx->date.len = strlen(xx->date.val);
   } else {
@@ -1382,12 +1302,7 @@ struct path {
 #ifdef BSD29
 #define SSPACE 500
 #else
-#ifdef aegis
-#define SSPACE 10000                 /* size of string-generating buffer */
-static char bslash;                  /* backslash character if active */
-#else
 #define SSPACE 2000                  /* size of string-generating buffer */
-#endif
 #endif
 #endif
 static char sspace[SSPACE];          /* buffer to generate names in */
@@ -1430,25 +1345,6 @@ struct path *splitpath(p) char *p;
     else
       prv->fwd = cur;                  /* link into chain */
     prv = cur;
-#ifdef aegis                           /* treat backslash as "../" */
-    if (bslash && *p == bslash) {
-      strcpy(cur->npart, "..");
-      ++p;
-    } else {
-      for (
-		i = 0;
-		  i < MAXNAMLEN - 1 && *p && *p != '/' && *p != bslash;
-		    i++)
-              cur->npart[i] = *p++;
-      cur->npart[i] = '\0';            /* end this segment */
-      if (i >= MAXNAMLEN)
-        while (
-		  *p && *p != '/' && *p != bslash)
-            p++;
-    }
-    if (*p == '/')
-      p++;
-#else
     for (
 	  i = 0;
 	    i < MAXNAMLEN - 1 && *p != '/' && *p != '\0';
@@ -1461,7 +1357,6 @@ struct path *splitpath(p) char *p;
           p++;
     if (*p == '/')
       p++;
-#endif
   }
   debug(F101, "splitpath head", "", head);
   return head;
@@ -1494,37 +1389,6 @@ int len;
 {
   struct path *head;
   char scratch[100], *sptr;
-#ifdef aegis
-  char *getenv(), *index(), *namechars;
-  int tilde = 0, bquote = 0;
-
-  if ((namechars = getenv("NAMECHARS")) != NULL) {
-    if (index(namechars, '~') != NULL)
-      tilde = '~';
-    if (index(namechars, '\\') != NULL)
-      bslash = '\\';
-    if (index(namechars, '`') != NULL)
-      bquote = '`';
-  } else {
-    tilde = '~';
-    bslash = '\\';
-    bquote = '`';
-  }
-
-  sptr = scratch;                    /* copy "`node_data", etc. anchors */
-  if (bquote && *pat == bquote)
-    while (*pat && *pat != '/' && *pat != bslash)
-      *sptr++ = *pat++;
-  else if (tilde && *pat == tilde)
-    *sptr++ = *pat++;
-  while (*pat == '/')
-    *sptr++ = *pat++;
-  if (sptr == scratch) {
-    strcpy(scratch, "./");
-    sptr = scratch + 2;
-  }                                  /* init buffer correctly */
-  head = splitpath(pat);
-#else
   head = splitpath(pat);
   if (*pat == '/') {
     scratch[0] = '/';
@@ -1533,7 +1397,6 @@ int len;
     strcpy(scratch, "./");
     sptr = scratch + 2;
   }                                  /* init buffer correctly */
-#endif
   numfnd = 0;                        /* none found yet */
   freeptr = sspace;                  /* this is where matches are copied */
   resptr = resarry;                  /* static copies of these so*/
@@ -1625,7 +1488,7 @@ char *sofar, *endcur;
 #ifdef BSD42
   if ((fd = opendir(sofar)) == NULL)
     return;                           /* can't open, forget it */
-  while (dirbuf = readdir(fd))
+  while ((dirbuf = readdir(fd) ))
 #else
 #ifdef BSD29
   if ((fd = opendir(sofar)) == NULL)
@@ -1764,7 +1627,9 @@ match(pattern, string) char *pattern, *string;
  * 6) Otherwise, get a name for realuid from /etc/passwd
  */
 
-char *whoami() {
+char
+*whoami()
+{
 #ifdef DTILDE
   static char realname[256];                  /* user's name */
   static int realuid = -1;                    /* user's real uid */
@@ -1830,7 +1695,8 @@ char *whoami() {
 
 #define DIRSEP '/'
 
-char *tilde_expand(dirname) char *dirname;
+char
+*tilde_expand(dirname) char *dirname;
 {
 #define BUFLEN 256
 #ifdef DTILDE

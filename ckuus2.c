@@ -35,27 +35,17 @@
  * Includes       
  */   
            
-#ifdef FT18           
-#include <sys/file.h>             /* File information */
-#endif
-
 /*
  * Whether to include
  * <sys/file.h>...
  */
 
 #ifndef PROVX1
-#ifndef aegis
 #ifndef XENIX
 #ifndef unos
 #include <sys/file.h>             /* File information */
 #endif
 #endif
-#endif
-#endif
-
-#ifdef aegis
-#include <fcntl.h>
 #endif
 
 #ifdef BSD4
@@ -108,28 +98,8 @@
 #include <sys/timeb.h>            /* BSD 2.9 (Vic Abell, Purdue) */
 #endif
 
-#ifdef TOWER1
-#include <sys/timeb.h>            /* Clock info for NCR Tower */
-#endif
-
 #ifdef ultrix
 #include <sys/ioctl.h>
-#endif
-
-#ifdef aegis
-#include "/sys/ins/base.ins.c"
-#include "/sys/ins/ec2.ins.c"
-#include "/sys/ins/error.ins.c"
-#include "/sys/ins/ios.ins.c"
-#include "/sys/ins/pad.ins.c"
-#include "/sys/ins/pfm.ins.c"
-#include "/sys/ins/pgm.ins.c"
-#include "/sys/ins/sio.ins.c"
-#include "/sys/ins/time.ins.c"
-#include "/sys/ins/type_uids.ins.c"
-#include <default_acl.h>
-#undef TIOCEXCL
-#undef FIONREAD
 #endif
 
 extern CHAR mystch, stchr, eol, seol, padch, mypadc, ctlq;
@@ -146,35 +116,39 @@ extern long filcnt, tfc, tlci, tlco, ffc, flci, flco;
 extern char *dftty, *versio, *ckxsys;
 extern struct keytab prmtab[];
 extern struct keytab remcmd[];
+#ifndef NODOHLP
 int bcharc;
+#endif
 
 static char *hlp1[] = {
-    "\n",
-    "  Usage: kermit [ -x arg [ -x arg ] ... [ -yyy ] ... ] ]\n",
-    "   x is an option that requires an argument, y an option with no "
-    "argument:\n",
-    "     actions (* options also require -l and -b) --\n",
-    "       -s file(s)   send (use '-s -' to send from stdin)\n",
-    "       -r           receive\n",
-    "       -k           receive to stdout\n",
-    "     * -g file(s)   get remote file(s) from server (quote wildcards)\n",
-    "       -a name      alternate name, used with -s, -r, -g\n",
-    "       -x           enter server mode\n",
-    "     * -f           finish remote server\n",
-    "     * -c           connect before transaction\n",
-    "     * -n           connect after transaction\n",
-    "     settings --\n",
-    "       -l line      communication line device\n",
-    "       -b baud      line speed, e.g. 1200\n",
-    "       -i           binary file (text by default)\n",
-    "       -p x         parity, x is one of e,o,m,s,n\n",
-    "       -t           line turnaround handshake = xon, half duplex\n",
-    "       -w           don't write over preexisting files\n",
-    "       -q           be quiet during file transfer\n",
-    "       -d           log debugging info to debug.log\n",
-    "       -e length    (extended) receive packet length\n",
-    " If no action command is included, enter interactive dialog.\n",
-    ""};
+"\r",
+"  Usage: kermit [ -x arg [ -x arg ] ... [ -yyy ] ... ] ]\n",
+"    'x' is an option that requires an argument,\n",
+"      'y' is an option with no argument:\n",
+"        ACTION (* options also require -l and -b) --\n",
+"          -s file(s) Send (Use '-s -' to send from stdin)\n",
+"          -r         Receive\n",
+"          -k         Receive to stdout\n",
+"        * -g file(s) Get remote file(s) from server (quote wildcards)\n",
+"          -a name    Alternate name (used with -s, -r, and -g)\n",
+"          -x         Enter server mode\n",
+"        * -f         Finish remote server\n",
+"        * -c         Connect before transaction\n",
+"        * -n         Connect after transaction\n",
+"        SETTING --\n",
+"          -l line    Communication line device\n",
+"          -b baud    Line speed, e.g. 1200\n",
+"          -i         Binary file (text by default)\n",
+"          -p x       Parity, 'x' is one of 'e', 'o', 'm', 's', or 'n'\n",
+"          -t         Set line turnaround to XON/XOFF (half duplex)\n",
+"          -w         Don't write over preexisting files\n",
+"          -q         Be quiet during file transfer\n",
+#ifdef DEBUG
+"          -d         Log debugging info to debug.log\n",
+#endif
+"          -e length  (Extended) Receive packet length\n",
+"  If no ACTION is specified, kernit enters interactive dialog.\n",
+""};
 
 /* U S A G E */
 
@@ -188,6 +162,7 @@ usage()
  * definitions
  */
 
+#ifndef NODOHLP
 static char *tophlp[] = {"\n\
 Type ? for a list of commands, type 'help x' for any command x.\n\
 While typing commands, use the following special characters:\n\n\
@@ -203,6 +178,7 @@ While typing commands, use the following special characters:\n\n\
 From system level, type 'kermit -h' to get help about command line args.\
 \n",
                          ""};
+#endif
 
 static char *hmxxbye = "\
 Shut down and log out a remote Kermit server";
@@ -234,6 +210,7 @@ Record information in a log file:\n\n\
   (transact.log)\n",
     ""};
 
+#ifndef NOCKUSCR
 static char *hmxxlogi[] = {
     "\
 Syntax: script text\n\n",
@@ -257,6 +234,7 @@ Syntax: script text\n\n",
     "       -send-expect[-send-expect[...]]\n\n",
     "where dashed sequences are followed as long as previous expects fail.\n",
     ""};
+#endif
 
 static char *hmxxrc[] = {
     "\
@@ -342,20 +320,7 @@ dohlp(xx) int xx;
     return hmsg(hmxxcon);
 
   case XXCWD:
-#ifdef vms
-    return hmsg("\
-Change Working Directory, equivalent to VMS SET DEFAULT command");
-#else
-#ifdef datageneral
-    return hmsg("Change Working Directory, equivalent to DG 'dir' command");
-#else
-#ifdef OS2
-    return hmsg("Change Working Directory, equivalent to OS2 'chdir' command");
-#else
     return hmsg("Change Working Directory, equivalent to Unix 'cd' command");
-#endif
-#endif
-#endif
 
   case XXDEL:
     return hmsg("Delete a local file or files");
@@ -426,28 +391,8 @@ Tell the remote Kermit server to shut down without logging out.");
 
 #ifndef NOPUSH
   case XXSHE:
-#ifdef vms
-    return hmsg("\
-Issue a command to VMS (space required after '!')");
-#else
-#ifdef AMIGA
-    return hmsg("\
-Issue a command to CLI (space required after '!')");
-#else
-#ifdef datageneral
-    return hmsg("\
-Issue a command to the CLI (space required after '!')");
-#else
-#ifdef OS2
-    return hmsg("\
-Issue a command to CMD.EXE (space required after '!')");
-#else
     return hmsg("\
 Issue a command to the Unix shell (space required after '!')");
-#endif
-#endif
-#endif
-#endif
 #endif
 
   case XXSHO:
@@ -456,13 +401,7 @@ Display current values of 'set' parameters; 'show version' will display\n\
 program version information for each of the C-Kermit modules.");
 
   case XXSPA:
-#ifdef datageneral
-    return hmsg("\
-Display disk usage in current device, directory,\n\
-or return space for a specified device, directory.");
-#else
     return hmsg("Display disk usage in current device, directory");
-#endif
 
   case XXSTA:
     return hmsg("Display statistics about most recent file transfer");
@@ -511,9 +450,9 @@ hmsga(s) char *s[];
 
 /* B C A R C B -- Help format help for baud rates */
 
+#ifndef NODOHLP
 bcarcb(calsp) long calsp;
 {
-#ifndef NODOHLP
 #ifndef MAXBRATE
 #ifdef B4000000
 #define MAXBRATE 4000000
@@ -719,8 +658,8 @@ bcarcb(calsp) long calsp;
     printf("\n");
     bcharc = 0;
   }
-#endif
 }
+#endif
 
 /* D O H S E T -- Give help for SET command */
 
@@ -731,7 +670,6 @@ dohset(xx) int xx;
   if (xx < 0)
     return xx;
   switch (xx) {
-
 #ifndef NODOHLP
   case XYATTR:
     puts("Turn Attribute packet exchange off or on");
@@ -835,25 +773,8 @@ How many times to retransmit a particular packet before giving up");
   case XYSPEE:
     puts("\
 Communication line speed for external tty line specified in most recent");
-#ifdef AMIGA
-    puts("\
-'set line' command.  Any baud rate between 110 and 292000, although you");
-    puts(" will receive a warning if you do not use a standard baud rate:");
-    puts("\
-110, 150, 300, 600, 1200, 1800, 2400, 4800, 9600, 19200, 38400, 57600.");
-#else
-#ifdef datageneral
     puts("\
 'set line' command.  Any of the common baud rates:");
-    puts(" 0, 50, 75, 110, 134, 150, 300, 600, 1200, 1800, ");
-    puts(" 2400, 3600, 7200, 4800, 9600, 19200, 38400.");
-#else
-    puts("\
-'set line' command.  Any of the common baud rates:");
-#ifdef OS2
-    puts(" 0, 110, 150, 300, 600, 1200, 2400, 4800, 9600, 19200.");
-    puts("The highest speed available is hardware-dependant");
-#else
 #ifdef B0
 	bcarcb(0);
 #endif
@@ -943,9 +864,6 @@ Communication line speed for external tty line specified in most recent");
 #endif
 #ifdef B4000000
 	bcarcb(4000000);
-#endif
-#endif
-#endif
 #endif
     return 0;
 
@@ -1279,7 +1197,7 @@ shopar()
     printf("%-12s", "text");
   printf("   Packet Log:       ");
   if (pktlog)
-    printf(pktfil);
+    printf("%s", pktfil);
   else
     printf("none");
   printf("\n File Warning: ");
@@ -1289,7 +1207,7 @@ shopar()
     printf("%-12s", "off");
   printf("   Session Log:      ");
   if (seslog)
-    printf(sesfil);
+    printf("%s", sesfil);
   else
     printf("none");
   printf("\n File Display: ");
@@ -1300,7 +1218,7 @@ shopar()
 #ifdef TLOG
   printf("   Transaction Log:  ");
   if (tralog)
-    printf(trafil);
+    printf("%s", trafil);
   else
     printf("none");
 #endif
@@ -1318,37 +1236,38 @@ shopar()
 
 /* D O S T A T -- Display file transfer statistics */
 
+#ifndef NOSTATS
 dostat()
 {
   printf("\nMost recent transaction --\n");
-  printf(" files: %ld\n", filcnt);
-  printf(" total file characters  : %ld\n", tfc);
-  printf(" communication line in  : %ld\n", tlci);
-  printf(" communication line out : %ld\n", tlco);
-  printf(" elapsed time           : %d sec\n", tsecs);
+  printf(" Files: %ld\n", filcnt);
+  printf(" Total file characters  : %ld\n", tfc);
+  printf(" Communication line in  : %ld\n", tlci);
+  printf(" Communication line out : %ld\n", tlco);
+  printf(" Elapsed time           : %d sec\n", tsecs);
   if (filcnt > 0) {
     if (tsecs > 0) {
       long lx;
       lx = (tfc * 10l) / tsecs;
-      printf(" effective data rate    : %ld\n", lx);
+      printf(" Effective data rate    : %ld\n", lx);
       if (speed > 0) {
         lx = (lx * 100l) / speed;
-        printf(" efficiency             : %ld %%\n", lx);
+        printf(" Efficiency             : %ld %%\n", lx);
       }
     }
-    printf(" packet length          : %d (send), %d (receive)\n", spsiz,
+    printf(" Packet length          : %d (Send), %d (Receive)\n", spsiz,
            urpsiz);
-    printf(" block check type used  : %d\n", bctu);
-    printf(" compression            : ");
+    printf(" Block check type used  : %d\n", bctu);
+    printf(" Compression            : ");
     if (rptflg)
-      printf("yes [%c]\n", rptq);
+      printf("Yes [%c]\n", rptq);
     else
-      printf("no\n");
+      printf("No\n");
     printf(" 8th bit prefixing      : ");
     if (ebqflg)
-      printf("yes [%c]\n", ebq);
+      printf("Yes [%c]\n", ebq);
     else
-      printf("no\n\n");
+      printf("No\n\n");
   } else
     printf("\n");
   return 0;
@@ -1407,9 +1326,11 @@ tstats()
   }
   tlog(F100, "", "", 0L); /* Leave a blank line */
 }
+#endif
 
 /* S D E B U -- Record spar results in debugging log */
 
+#ifdef DEBUG
 sdebu(len) int len;
 {
   debug(F111, "spar: data", rdatap, len);
@@ -1429,6 +1350,7 @@ sdebu(len) int len;
   debug(F101, " swcapu", "", swcapu);
   debug(F101, " wslots", "", wslots);
 }
+
 /* R D E B U -- Debugging display of rpar() values */
 
 rdebu(len) int len;
@@ -1454,3 +1376,4 @@ rdebu(len) int len;
   debug(F101, " wslots", "", wslots);
   debug(F101, " rpsiz(extended)", "", rpsiz);
 }
+#endif

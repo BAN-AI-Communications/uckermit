@@ -1,4 +1,4 @@
-char *connv = "Connect Command for Unix, 4G(025) 21 Apr 2021";
+char *connv = "Connect Command for UNIX, 4G(026), 22 Apr 2021";
 
 /* C K U C O N -- Dumb terminal connection to remote system, for UNIX */
 

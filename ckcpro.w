@@ -1,4 +1,4 @@
-char *protv = "C-Kermit Protocol Module 4G(036), 20 Apr 2021"; /* -*-C-*- */
+char *protv = "C-Kermit Protocol Module, 4G(040), 22 Apr 2021";
 
 /* C K C P R O -- C-Kermit Protocol Module in Wart preprocessor notation */
 
@@ -12,15 +12,15 @@ char *protv = "C-Kermit Protocol Module 4G(036), 20 Apr 2021"; /* -*-C-*- */
  *   Trustees of Columbia University in the City of New York.
  *
  * Permission is granted to any individual or institution to use, copy,
- * or redistribute this software so long as it is not sold for profit,
- * provided this copyright notice is retained. 
+ *   or redistribute this software so long as it is not sold for profit,
+ *   provided this copyright notice is retained. 
  */
 
 #include "ckcdeb.h"
 #include "ckcker.h"
 
 /*
- * Note: This file may also be preprocessed by the Unix Lex program, but 
+ * Note: This file may also be preprocessed by the UNIX Lex program, but 
  * you must indent the above #include statements before using Lex, and
  * then restore them to the left margin in the resulting C program before
  * compilation. Also, the invocation of the "wart()" function below must
@@ -46,7 +46,10 @@ char *protv = "C-Kermit Protocol Module 4G(036), 20 Apr 2021"; /* -*-C-*- */
   extern int pktnum, timint, nfils, hcflg, xflg, speed, flow, mdmtyp;
   extern int prvpkt, cxseen, czseen, server, local;
   extern int displa, bctu, bctr, quiet;
-  extern int tsecs, parity, backgrd, nakstate, atcapu;
+#ifndef NOSTATS
+  extern int tsecs;
+#endif
+  extern int parity, backgrd, nakstate, atcapu;
   extern int putsrv(), puttrm(), putfil(), errpkt();
   extern CHAR *rdatap, recpkt[];
   extern char *DIRCMD, *DELCMD, *TYPCMD, *SPACMD, *SPACM2, *WHOCMD;
@@ -106,8 +109,10 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
 <rgen,get,serve>S {                 /* Receive Send-Init packet */
     rinit(rdatap);                  /* Set parameters */
     bctu = bctr;                    /* Switch to agreed-upon block check */
+#ifndef NOSTATS
     resetc();                       /* Reset counters */
     rtimer();                       /* Reset timer */
+#endif
     BEGIN rfile;                    /* Go into receive-file state */
 }
 
@@ -335,7 +340,9 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
 
 <rfile>B {                            /* EOT, no more files */
     ack();                            /* Acknowledge */
+#ifndef NOSTATS
     tsecs = gtimer();                 /* Get timing for statistics */
+#endif
     reot();                           /* Do EOT things */
     RESUME;                           /* and quit */
 }
@@ -370,8 +377,10 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
     bctu = bctr;                      /* switch to agreed-on block check */
     x = sfile(xflg);                  /* Send X or F header packet */
     if (x) {                          /* If the packet was sent OK */
+#ifndef NOSTATS
         resetc();                     /* reset per-transaction counters */
         rtimer();                     /* reset timers */
+#endif
         BEGIN ssfile;                 /* and switch to receive-file state */
     } else {                          /* otherwise send error msg & quit */
         s = xflg ? \
@@ -386,9 +395,10 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
     srvptr = srvcmd;                  /* Point to string buffer */
     decode(rdatap,putsrv);            /* Decode data field, if any */
     putsrv('\0');                     /* Terminate with null */
-    if (*srvcmd)                      /* If remote name was recorded */
+    if (*srvcmd) {                    /* If remote name was recorded */
       tlog(
 	    F110," stored as",srvcmd,0);  /* Record it in transaction log. */
+	}
     if (atcapu) {                     /* If attributes are to be used */
         if (sattr(xflg) < 0) {        /* set and send them */
             errpkt(
@@ -436,7 +446,9 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
                 RESUME;               /* and quit */
         }
     } else {                          /* No next file */
+#ifndef NOSTATS
         tsecs = gtimer();             /* get statistics timers */
+#endif
         seot();                       /* send EOT packet */
         BEGIN sseot;                  /* enter send-eot state */
     }
@@ -450,7 +462,9 @@ E {                                   /* Got Error packet, in any state */
     ermsg(rdatap);                    /* Issue message. */
     x = quiet; quiet = 1;             /* Close files silently, */
     clsif(); clsof(1);                /* discarding any output file. */
+#ifndef NOSTATS
     tsecs = gtimer();                 /* Get timers */
+#endif
     quiet = x;                        /* restore quiet state */
     if (backgrd && !server)
 	  fatal("Protocol error");

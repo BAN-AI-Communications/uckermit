@@ -35,11 +35,7 @@
  */
 
 #define MAXSP 2048     /* Send packet buffer size  */
-#ifdef vms
-#define MAXRP 1920     /* Receive packet buffer size  */
-#else
 #define MAXRP 1024     /* Receive packet buffer size  */
-#endif
 #define MAXWS 1        /* Maximum window size */
 
 /*

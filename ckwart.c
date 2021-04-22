@@ -1,4 +1,4 @@
-char *wartv = "Wart Version 1A(204) 21 Apr 2021";
+char *wartv = "Wart Preprocessor, 1A(205), 22 Apr 2021";
 
 /* W A R T */
 

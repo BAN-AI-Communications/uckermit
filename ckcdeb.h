@@ -91,8 +91,16 @@ typedef void SIGTYP;    /* System V R3 and later */
 #ifdef SUNOS4
 typedef void SIGTYP;    /* SUNOS V 4.0 and later */
 #else
+#ifdef __linux__
+typedef void SIGTYP;
+#else
 typedef int SIGTYP;
 #endif
+#endif
+#endif
+
+#ifndef FTYPE
+#define FTYPE int
 #endif
 
 /* 
@@ -104,9 +112,6 @@ typedef int SIGTYP;
 #define DTILDE
 #endif
 #ifdef UXIII
-#define DTILDE
-#endif
-#ifdef OSK
 #define DTILDE
 #endif
 
@@ -151,10 +156,6 @@ typedef long LONG;
 #endif
 #endif
 
-#ifdef TOWER1
-typedef int void;
-#endif
-
 /*
  * Line delimiter
  * for text files
@@ -168,15 +169,7 @@ typedef int void;
  * packet operations.
  */
 
-#ifdef MAC                                   /* Macintosh */
-#define NLCHAR 015
-#else
-#ifdef OSK                                   /* OS-9/68K */
-#define NLCHAR 015
-#else                                        /* All UNIX-like systems */
 #define NLCHAR 012
-#endif
-#endif
 
 /*
  * At this point, if there's a system that uses ordinary CRLF line
@@ -184,80 +177,16 @@ typedef int void;
  * the LF when doing input from a file, then #undef NLCHAR.
  */
 
-#ifdef OS2
-#undef NLCHAR
-#endif
-
 /*
  * The device name of a job's controlling terminal.
  * Special for VMS, same for all Unixes (?), but
  * not used by Macintosh */
 
-#ifdef vms
-#define CTTNAM "TT:"
-#else
-#ifdef datageneral
-#define CTTNAM "@output"
-#else
-#ifdef OSK
-extern char myttystr[];
-#define CTTNAM myttystr
-#else
 #define CTTNAM "/dev/tty"
-#endif
-#endif
-#endif
 
 /*
- * Some special includes
- * for DEC VAX/VMS
+ * Program return codes
  */
 
-#ifndef vms /* Commented, causes problems for some preprocessors */
-/*
- * #endif
- * #ifdef vms
- * #include ssdef
- * #include stsdef
- * #endif
- * #ifndef vms
- */
-#endif
-
-/*
- * Program return codes for 
- * VMS, DECUS C, and UNIX
- */
-
-#ifdef vms
-#define GOOD_EXIT (SS$_NORMAL | STS$M_INHIB_MSG)
-#define BAD_EXIT SS$_ABORT
-#else
-#ifdef decus
-#define GOOD_EXIT IO_NORMAL
-#define BAD_EXIT IO_ERROR
-#else
 #define GOOD_EXIT 0
 #define BAD_EXIT  1
-#endif
-#endif
-
-/*
- * Special hack for Fortune, which
- * doesn't have <sys/file.h>...
- */
-
-#ifdef FT18
-#define FREAD  0x01
-#define FWRITE 0x10
-#endif
-
-/*
- * Special hack
- * for OS-9/68K
- */
-
-#ifdef OSK
-#define SIGARB  5342     /* Arbitrary user signal */
-#define SIGALRM 5343     /* and another */
-#endif

@@ -1,4 +1,4 @@
-# makefile, version 2.27, 22 Apr 2021
+# makefile, version 2.30, 22 Apr 2021
 #
 # -- Makefile to build C-Kermit for Unix and Unix-like systems --
 #
@@ -6,7 +6,7 @@
 # ckuker.bwr (the "beware file"), and then rename this file to "makefile"
 # or "Makefile" if necessary, and then:
 #
-# for modern GNU/Linux with GCC, "make linux"
+
 # for Alliant FX/8 with Concentrix 4.1, "make bsdlck"
 # for Amdahl UTS 2.4 on IBM 370 series & compatible mainframes, "make uts24"
 # for Amdahl UTSV IBM 370 series & compatible mainframes, "make sys3"
@@ -37,7 +37,6 @@
 # for DEC Pro-380 with Pro/Venix V2.0 (Sys V), "make sys3" or "make sys3nid"
 # for Encore Multimax 310, 510 with UMAX 4.2, "make bsd"
 # for Encore Multimax 310, 510 with UMAX V 2.2, use Berkeley cc, "make bsd"
-# for Fortune 32:16, For:Pro 1.8, "make ft18"
 # for HP-9000 Series with HP-UX, "make hpux"
 # for IBM 370 Series with IX/370, "make ix370"
 # for IBM PS/2 with PS/2 AIX, "make ps2aix"
@@ -47,8 +46,7 @@
 # for Intel Xenix, "make sco286"
 # for Interactive System III (PC/IX) on PC/XT, "make pcix"
 # for Interactive Sys III on other systems, "make is3"
-# for Masscomp variation on Sys III, "make rtu"
-# for Masscomp/Concurrent with RTU 4.0 or later Berkeley, "make rtubsd"
+# for Linux (modern, with GCC or clang), "make linux"
 # for Microport Sys V, "make mpsysv"
 # for Microsoft,IBM Xenix (/286, PC/AT, etc), "make xenix" or "make sco286"
 # for NCR Tower 1632, OS 1.02, "make tower1"
@@ -70,8 +68,6 @@
 # and put it where users can find it.
 #
 # To remove compiled output, intermediate, and object files, "make clean".
-#
-# To run lint on the source files, "make lint".
 #
 ##############################################################################
 #
@@ -215,7 +211,7 @@ wermit: ckcmai.o ckucmd.o ckuusr.o ckuus2.o ckuus3.o ckcpro.o ckcfns.o \
 
 ckcmai.o: ckcmai.c ckcker.h ckcdeb.h
 
-ckuusr.o: ckuusr.c ckucmd.h ckcker.h ckuusr.h ckcdeb.h
+ckuusr.o: ckcpro.c ckuusr.c ckucmd.h ckcker.h ckuusr.h ckcdeb.h
 
 ckuus2.o: ckuus2.c ckucmd.h ckcker.h ckuusr.h ckcdeb.h
 
@@ -321,24 +317,50 @@ linux:
 		-DTIOCEXCL -DSIGTSTP -DFIONREAD -DDIRENT -DUXIII -DNOT_YET \
 		-Wall -Wextra -Wno-return-type -Wno-unused-variable \
 		-Wno-implicit-int -Wno-implicit-function-declaration \
-		-Wno-implicit-fallthrough -Os"
+		-Wno-implicit-fallthrough -Wno-missing-braces -Os"
 
 #Linux WIP size-reduction target
 linux-small:
 	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DNOT_YET \
 		-DO_NDELAY -DTIOCFLUSH -DTIOCFLUSH -DTIOCSINUSE -DFIONBIO \
 		-DTIOCEXCL -DSIGTSTP -DFIONREAD -DDIRENT -DUXIII \
-		-DNOCKUDIA -DNODOHLP \
+		-DNOCKUSCR -DNOCKUDIA -DNODOHLP -DNOSTATS -Wno-missing-braces \
 		-Wall -Wextra -Wno-return-type -Wno-unused-variable \
 		-Wno-implicit-int -Wno-implicit-function-declaration \
 		-Wno-implicit-fallthrough -fomit-frame-pointer \
 		-fno-asynchronous-unwind-tables -fno-unwind-tables \
-		-fno-exceptions -Os -fdata-sections -ffunction-sections" \
-			"LNKFLAGS = -Wl,--gc-sections -Wl,--print-gc-sections"
-	strip wermit || true
-	strip -s wermit || true
-	strip --strip-all wermit || true
-	strip -R .note.ABI-tag -R .comment -R .note.gnu.build-id -R .gnu.version -R .gnu.hash -R .gnu.build.attributes -R .rel.eh_frame -R .eh_frame_hdr -R .eh_frame -R .rela.eh_frame wermit || true
+		-fno-exceptions -Os -s -fdata-sections -ffunction-sections" \
+			"LNKFLAGS = -Wl,-s -Wl,--gc-sections -Wl,--print-gc-sections"
+
+# strip binary (aggressively)
+strip:
+	@test -f wermit
+	@echo "Start: " "$$(du -k wermit 2>/dev/null | \
+		cut -f 1 -d "	" 2>/dev/null | \
+		cut -f 1 -d " " 2>/dev/null || \
+		ls -l wermit || true)"
+	@strip wermit \
+		2>/dev/null || true
+	@strip -s wermit \
+		2>/dev/null || true
+	@strip --strip-all wermit \
+		2>/dev/null || true
+	@strip --strip-dwo \
+		-R .note.ABI-tag \
+		-R .comment \
+		-R .note.gnu.build-id \
+		-R .gnu.version \
+		-R .gnu.hash \
+		-R .gnu.build.attributes \
+		-R .rel.eh_frame \
+		-R .eh_frame_hdr \
+		-R .eh_frame \
+		-R .rela.eh_frame wermit \
+		2>/dev/null || true
+	@echo "  End: " "$$(du -k wermit 2>/dev/null | \
+		cut -f 1 -d "	" 2>/dev/null | \
+		cut -f 1 -d " " 2>/dev/null || \
+		ls -l wermit || true)"
 
 #System V R3, some things changed since Sys V R2...
 sys5r3:
@@ -430,16 +452,6 @@ is3:
 		"CFLAGS = -DISIII -DUXIII -DDEBUG -DTLOG -Ddata=datax -O -i" \
 		"LNKFLAGS = -i"
 
-
-#Masscomp System III
-rtu:
-	make wermit "CFLAGS= -UFIONREAD -DUXIII -DDEBUG -DTLOG -O" \
-		"LNKFLAGS =" "LIBS= -ljobs"
-
-#Masscomp/Concurrent RTU 4.0 or later, Berkeley environment:
-rtubsd:
-	ucb make wermit "CFLAGS= -DBSD4 -DRTU -DDEBUG -DTLOG"
-
 #DEC Pro-3xx with Pro/Venix V1.0 or V1.1
 # Requires code-mapping on non-I&D-space 11/23 processor, plus some
 # fiddling to get interrupt targets into resident code section.
@@ -447,14 +459,6 @@ provx1:
 	make wart "CFLAGS= -DPROVX1" "LNKFLAGS= "
 	make wermit "CFLAGS = -DPROVX1 -DDEBUG -DTLOG -md780" \
 		"LNKFLAGS= -u _sleep -lc -md780"
-
-#NCR Tower 1632, OS 1.02
-tower1:
-	make wermit "CFLAGS= -DDEBUG -DTLOG -DTOWER1"
-
-#Fortune 32:16, For:Pro 1.8 (mostly like 4.1bsd)
-ft18:
-	make wermit "CFLAGS= -DTLOG -DBSD4 -DFT18"
 
 #Valid Scaldstar
 #Berkeleyish, but need to change some variable names.
@@ -504,8 +508,3 @@ clean:
 	-rm -f ckcmai.o ckucmd.o ckuusr.o ckuus2.o ckuus3.o ckcpro.o \
 	ckcfns.o ckcfn2.o ckucon.o ckutio.o ckufio.o ckudia.o ckuscr.o \
 	ckwart.o ckcpro.c kermit wermit wart debug.log
-
-#Run Lint on this mess for the BSD version.
-lint:
-	-lint -x -DBSD4 -DDEBUG -DTLOG ck[cu]*.[hc] > ck.lint.bsd4
-

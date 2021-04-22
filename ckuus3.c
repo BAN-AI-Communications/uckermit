@@ -36,12 +36,6 @@
 #include <string.h>
 #endif
 
-#ifdef datageneral
-extern int con_reads_mt, /* Flag if console read asynch is active */
-    conint_ch,           /* The character read by asynch read */
-    conint_avl;          /* Flag that char available */
-#endif
-
 /* Variables */
 
 extern int     size,  spsiz,   rpsiz, urpsiz,   npad,  timint,
@@ -546,61 +540,37 @@ doprm(xx) int xx;
 /* C H K S P D -- Check if argument is a valid baud rate */
 
 chkspd(x) int x;
-{
+{ /* XXX(jhj): Needs fixin! */
   switch (x) {
-#ifndef AMIGA
   case 0:
-#endif
-#ifndef datageneral
   case 110:
   case 150:
   case 300:
   case 600:
   case 1200:
-#ifndef OS2
   case 1800:
-#endif
   case 2400:
   case 4800:
   case 9600:
   case 19200:
-#ifdef AMIGA
-  case 38400:
-  case 57600:
-#endif
-#ifdef __linux__
+#ifdef __linux__ /* XXX(jhj): nonononono */
   case 38400:
   case 57600:
   case 115200:
   case 230400:
   case 460800:
   case 921600:
-#endif
-#endif
-
-#ifdef datageneral
-  case 50:
-  case 75:
-  case 134:
-  case 3600:
-  case 7200:
-  case 19200:
-  case 38400:
+  case 1000000:
+  case 1152000:
+  case 1500000:
+  case 2000000:
+  case 2500000:
+  case 3000000:
+  case 3500000:
+  case 4000000:
 #endif
     return x;
   default:
-#ifdef AMIGA
-    if (ttsspd(x) > 0) {
-      printf("Warning: non-standard baud rate - %d\n", x);
-      return x;
-    }
-#endif
-#ifdef VMS
-    if (ttsspd(x) > 0) {
-      printf("Warning: non-standard baud rate - %d\n", x);
-      return x;
-    }
-#endif
     return -1;
   }
 }
@@ -688,12 +658,7 @@ dormt(xx) int xx;
       } else { /* From terminal... */
 
         printf(" Password: "); /* get a password */
-#ifdef OS2
-        while (((x = isatty(0) ? coninc(0) : getchar()) != NL) &&
-               (x != CR)) { /* with no echo */
-#else
         while (((x = getchar()) != NL) && (x != CR)) { /* with no echo */
-#endif
           if ((x &= 0177) == '?') {
             printf("? Password of remote directory\n Password: ");
             s2 = sbuf;
@@ -902,17 +867,11 @@ char *s;
         return;
       c = '.';
     }
-#ifndef AMIGA
     if (p++ > 78) { /* If near right margin, */
       conoll("");   /* Start new line */
       p = 0;        /* and reset counter. */
     }
-#endif
     conoc(c); /* Display the character. */
-#ifdef AMIGA
-    if (c == 'G')
-      conoll(""); /* new line after G packets */
-#endif
     return;
 
   case SCR_TC: /* transaction complete */
@@ -982,9 +941,6 @@ intmsg(n) long n;
   if (n == 1) {
 #ifdef UXIII
 
-#ifndef aegis
-#ifndef datageneral
-
     /*
 	 * We need to signal
 	 * before kb input
@@ -992,8 +948,6 @@ intmsg(n) long n;
 
     sprintf(buf, "Type escape (%s) followed by:", chstr(escape));
     screen(SCR_TN, 0, 0l, buf);
-#endif
-#endif
 #endif
     screen(SCR_TN, 0, 0l,
            "CTRL-F to cancel file,  CTRL-R to resend current packet");
@@ -1015,11 +969,7 @@ chkint() {
 
   if ((!local) || (quiet))
     return 0; /* Only do this if local & not quiet */
-#ifdef datageneral
-  cn = (con_reads_mt) ? 1 : conchk(); /* Any input waiting? */
-#else
   cn = conchk(); /* Any input waiting? */
-#endif
   debug(F101, "conchk", "", cn);
 
   while (cn > 0) { /* Yes, read it. */
@@ -1029,27 +979,8 @@ chkint() {
 	 * for interrupt character
 	 */
 
-#ifdef datageneral
-    /*
-	 * We must be careful to just print out one result for each character
-     * read.  The flag, conint_avl, controls duplication of characters.
-     * Only one character is handled at a time, which is a reasonable
-     * limit.  More complicated schemes could handle a buffer.
-     */
-
-    if (con_reads_mt) {
-      if ((ch = conint_ch) <= 0)
-        return 0; /* I/O error, or no data */
-      else if (conint_avl == 0)
-        return 0; /* Char already read */
-      else
-        conint_avl = 0; /* Flag character as read */
-    } else if ((ch = coninc(5)) < 0)
-      return 0;
-#else
     if ((ch = coninc(5)) < 0)
       return 0;
-#endif
     switch (ch & 0177) {
     case 0001: /* CTRL-A */
       screen(SCR_TN, 0, 0l, "^A  Status report:");

@@ -194,7 +194,8 @@ input() {
  * so we have to keep it
  */
 
-CHAR dopar(ch) register CHAR ch;
+CHAR dopar(ch)
+register CHAR ch;
 {
   register unsigned int a;
   if (!parity)
@@ -226,7 +227,8 @@ CHAR dopar(ch) register CHAR ch;
  * for later retransmission. Updates global sndpktl (send-packet length).
  */
 
-spack(type, n, len, d) char type;
+spack(type, n, len, d)
+char type;
 int n;
 register int len;
 register char *d;
@@ -285,7 +287,7 @@ register char *d;
   switch (parity) {
   case 'e':                       /* Even */
     for (cp = &sndpkt[i - 1]; cp >= sndpkt; cp--)
-      *cp = partab[*cp];
+      *cp = partab[(int)*cp];
     break;
   case 'm':                       /* Mark */
     for (cp = &sndpkt[i - 1]; cp >= sndpkt; cp--)
@@ -293,7 +295,7 @@ register char *d;
     break;
   case 'o':                       /* Odd */
     for (cp = &sndpkt[i - 1]; cp >= sndpkt; cp--)
-      *cp = partab[*cp] ^ 128;
+      *cp = partab[(int)*cp] ^ 128;
     break;
   }
 
@@ -315,7 +317,8 @@ register char *d;
 
 /* C H K 1 -- Compute a type-1 Kermit 6-bit checksum. */
 
-chk1(pkt) register CHAR *pkt;
+chk1(pkt)
+register CHAR *pkt;
 {
   register unsigned int chk;
   chk = chk2(pkt);
@@ -325,7 +328,8 @@ chk1(pkt) register CHAR *pkt;
 
 /* C H K 2 -- Compute the numeric sum of all the bytes in the packet. */
 
-unsigned int chk2(pkt) register CHAR *pkt;
+unsigned int chk2(pkt)
+register CHAR *pkt;
 {
   register long chk;
   register unsigned int m;
@@ -343,7 +347,8 @@ unsigned int chk2(pkt) register CHAR *pkt;
  * string contains no embedded nulls.
  */
 
-unsigned int chk3(pkt) register CHAR *pkt;
+unsigned int chk3(pkt)
+register CHAR *pkt;
 {
   register LONG c, crc;
   register unsigned int m;
@@ -365,13 +370,15 @@ ack() {                             /* Send an ordinary acknowledgment. */
   nxtpkt(&pktnum);                  /* Increment the packet number. */
 }                                   /* Note, only call this once! */
 
-ack1(s) char *s;
+ack1(s)
+char *s;
 {                                   /* Send an ACK with data. */
   spack('Y', pktnum, strlen(s), s); /* Send the packet. */
   nxtpkt(&pktnum);                  /* Increment the packet number. */
 }                                   /* Only call this once! */
 
-nack() {                            /* Negative acknowledgment. */
+nack()
+{                            /* Negative acknowledgment. */
   spack('N', pktnum, 0, "");        /* NAK's never have data. */
 }
 
@@ -438,7 +445,8 @@ rcalcpsz() {
   spsiz = q;                      /* set new send packet size */
 }
 
-resend() {                        /* Send the old packet again. */
+resend()
+{                        /* Send the old packet again. */
   if (spktl) {                    /* If buffer has something, */
     if (ttol(sndpkt, spktl) < 1)  /* resend it, */
       nack();
@@ -454,7 +462,8 @@ resend() {                        /* Send the old packet again. */
   }
 }
 
-errpkt(reason) char *reason;
+errpkt(reason)
+char *reason;
 {                                 /* Send an error packet. */
   int x;
   encstr(reason);
@@ -467,24 +476,28 @@ errpkt(reason) char *reason;
   screen(SCR_TC, 0, 0l, "");
 }
 
-scmd(t, dat) char t, *dat;
+scmd(t, dat)
+char t, *dat;
 {                                 /* Send a packet of the given type */
   encstr(dat);                    /* Encode the command string */
   spack(t, pktnum, size, data);
 }
 
-srinit() {                        /* Send R (GET) packet */
+srinit()
+{                        /* Send R (GET) packet */
   encstr(cmarg);                  /* Encode the filename. */
   spack('R', pktnum, size, data); /* Send the packet. */
 }
 
-nxtpkt(num) int *num;
+nxtpkt(num)
+int *num;
 {
   prvpkt = *num;                  /* Save previous */
   *num = (*num + 1) % 64;         /* Increment packet number mod 64 */
 }
 
-sigint(sig, code) int sig, code;
+sigint(sig, code)
+int sig, code;
 {                                 /* Terminal interrupt handler */
   if (local)
     errpkt("User typed ^C");
@@ -503,7 +516,8 @@ sigint(sig, code) int sig, code;
  * data field).
  */
 
-rpack() {
+rpack()
+{
   register int i, j, x, try, type, lp; /* Local variables */
   unsigned crc;
   CHAR pbc[4];                         /* Packet block check */
@@ -593,7 +607,7 @@ rpack() {
     break;
   case 2:
     x = xunchar(*pbc) << 6 | xunchar(pbc[1]);
-    if (x != chk2(recpkt + lp)) {
+    if ((unsigned int)x != (unsigned int)chk2(recpkt + lp)) {
       debug(F110, "checked chars", recpkt + lp, 0);
       debug(F101, "block check", "", x);
       debug(F101, "should be", "", chk2(recpkt + lp));
@@ -630,7 +644,8 @@ rpack() {
  * Returns 0 on success, -1 on failure.
  */
 
-sattr(xp) int xp;
+sattr(xp)
+int xp;
 {                                      /* Send Attributes */
   int i, j, aln;
   struct zattr x;
@@ -682,7 +697,8 @@ sattr(xp) int xp;
   return 0;
 }
 
-rsattr(s) char *s;
+rsattr(s)
+char *s;
 {                                   /* Read response to attribute packet */
   debug(F111, "rsattr: ", s, *s);   /* If it's 'N' followed by anything */
   if (*s == 'N')
@@ -690,7 +706,8 @@ rsattr(s) char *s;
   return 0;
 }
 
-gattr(s, yy) char *s;
+gattr(s, yy)
+char *s;
 struct zattr *yy;
 {                                   /* Read incoming attribute packet */
   char c;

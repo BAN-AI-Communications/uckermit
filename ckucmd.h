@@ -19,20 +19,6 @@
  * getchars...
  */
 
-#ifdef vax11c
-#define getchar() vms_getchar()
-#endif
-
-#ifdef aegis
-#undef getchar
-#define getchar() coninc(0)
-#endif
-
-#ifdef AMIGA
-#undef getchar
-#define getchar() coninc(0)
-#endif
-
 /*
  * Sizes of
  * things
@@ -90,6 +76,6 @@
 
 struct keytab {                      /* Keyword table */
   char *kwd;                         /* Pointer to keyword string */
-  int val;                           /* Associated value */
-  int flgs;                          /* Flags (as defined above) */
+  int   val;                         /* Associated value */
+  int   flgs;                        /* Flags (as defined above) */
 };

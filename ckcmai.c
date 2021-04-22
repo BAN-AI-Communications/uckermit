@@ -1,4 +1,4 @@
-char *versio = "C-Kermit, 4G(110) 22 Apr 2021";
+char *versio = "C-Kermit, 4G(117), 22 Apr 2021";
 
 /* C K C M A I -- C-Kermit Main program  */
 
@@ -119,33 +119,6 @@ char *versio = "C-Kermit, 4G(110) 22 Apr 2021";
  * or less.
  */
 
-#ifdef MAC
-char *hlptxt = "\r\
-MacKermit Server Commands:\r\
-\r\
-    BYE\r\
-    FINISH\r\
-    GET filespec\r\
-    REMOTE CWD directory\r\
-    REMOTE HELP\r\
-    SEND filespec\r\
-\r\0";
-#else
-#ifdef AMIGA
-char *hlptxt = "C-Kermit Server Commands:\n\
-\n\
-GET filespec, SEND filespec, FINISH, BYE, REMOTE HELP\n\
-\n\0";
-#else
-#ifdef OS2
-char *hlptxt = "C-Kermit Server REMOTE Commands:\n\
-\n\
-GET files  REMOTE CWD [dir]    REMOTE DIRECTORY [files]\n\
-SEND files REMOTE SPACE [dir]  REMOTE HOST command\n\
-FINISH     REMOTE DELETE files REMOTE TYPE files\n\
-BYE        REMOTE HELP\n\
-\n\0";
-#else
 char *hlptxt = "C-Kermit Server REMOTE Commands:\n\
 \n\
 GET files  REMOTE CWD [dir]    REMOTE DIRECTORY [files]\n\
@@ -154,25 +127,13 @@ MAIL files REMOTE DELETE files REMOTE WHO [user]\n\
 BYE        REMOTE PRINT files  REMOTE TYPE files\n\
 FINISH     REMOTE HELP\n\
 \n\0";
-#endif
-#endif
-#endif
 
-#ifdef OSK
-char *srvtxt = "\r\l\
-C-Kermit server starting.  Return to your local machine by typing\r\l\
-its escape sequence for closing the connection, and issue further\r\l\
-commands from there.  To shut down the C-Kermit server, issue the\r\l\
-FINISH or BYE command and then reconnect.\r\l\
-\l\0";
-#else
 char *srvtxt = "\r\n\
 C-Kermit server starting.  Return to your local machine by typing\r\n\
 its escape sequence for closing the connection, and issue further\r\n\
 commands from there.  To shut down the C-Kermit server, issue the\r\n\
 FINISH or BYE command and then reconnect.\n\
 \r\n\0";
-#endif
 
 /* 
  * Declarations for
@@ -255,11 +216,7 @@ CHAR sndpkt[MAXSP + 100], /* Entire packet being sent */
  * variables.
  */
 
-#ifdef datageneral
-CHAR filnam[256];         /* Name of current file. */
-#else
 CHAR filnam[50];          /* Name of current file. */
-#endif
 
 int nfils;                /* Number of files in file group */
 long fsize;               /* Size of current file */
@@ -277,11 +234,7 @@ int parity,               /* Parity specified, 0, 'e', 'o', etc. */
     turn   = 0,           /* Line turnaround handshake flag */
     turnch = XON,         /* Line turnaround character */
     duplex = 0,           /* Duplex, full by default */
-#ifdef OS2
-    escape = 035,         /* Escape character for connect */
-#else
     escape = 034,         /* Escape character for connect */
-#endif
     delay  = DDELAY,      /* Initial delay before sending */
     mdmtyp = 0;           /* Modem type (initially none)  */
 
@@ -364,21 +317,11 @@ CHAR *zinptr, *zoutptr;
 int zincnt, zoutcnt;
 
 /* M A I N -- C-Kermit main program */
-#ifdef aegis
-
-/*
- * On the Apollo, intercept main
- * to insert a cleanup handler.
- */
-
-ckcmai(argc, argv) int argc;
+FTYPE
+main(argc, argv)
+int argc;
 char **argv;
 {
-#else
-main(argc, argv) int argc;
-char **argv;
-{
-#endif
 
   char *strcpy();
 
@@ -426,11 +369,6 @@ char **argv;
     }
   }
 
-#ifdef OS2
-  if (speed == -1)
-    speed = ttspeed();    /* Unless explicitly changed, use current speed */
-#endif
-
   /*
    * If no action requested on command
    * line, enter interactive parser.
@@ -442,4 +380,5 @@ char **argv;
     if (sstate)
       proto();            /* Enter protocol if requested. */
   }
+  return 0;
 }

@@ -1,5 +1,5 @@
 #ifndef NOCKUDIA
-char *dialv = "Dial Command, V2.0(021) 22 Apr 2021";
+char *dialv = "Dial Command, 4G(024), 22 Apr 2021";
 
 /* C K U D I A -- Dialing program for connection to remote system */
 
@@ -154,11 +154,6 @@ char *dialv = "Dial Command, V2.0(021) 22 Apr 2021";
 #include <setjmp.h>     /* Longjumps */
 #else
 #include <setret.h>
-#endif
-
-#ifdef OS2
-#define SIGALRM SIGUSR1
-void alarm(unsigned);
 #endif
 
 #ifdef __linux__
@@ -678,22 +673,18 @@ register unsigned len;
 SIGTYP
 dialtime()                   /* timer interrupt handler */
 {
-#ifdef OS2
-  alarmack();
-#endif
   longjmp(sjbuf, F_time);
 }
 
 SIGTYP
 dialint()                    /* user-interrupt handler */
 {
-#ifdef OS2
-  alarmack();
-#endif
   longjmp(sjbuf, F_int);
 }
 
-static ttolSlow(s, millisec) char *s;
+static
+ttolSlow(s, millisec)
+char *s;
 int millisec;
 {                            /* Output s-l-o-w-l-y */
   for (; *s; s++) {
@@ -712,7 +703,9 @@ int millisec;
  * specified.
  */
 
-static waitFor(s) char *s;
+static
+waitFor(s)
+char *s;
 {
   CHAR c;
   while ((c = *s++))                 /* while more characters remain... */
@@ -720,7 +713,9 @@ static waitFor(s) char *s;
       ;
 }
 
-static didWeGet(s, r) char *s, *r;
+static
+didWeGet(s, r)
+char *s, *r;
 {                                    /* Looks in string s for response r */
   int lr = strlen(r);                /* 0 means not found, 1 means found */
   int i;
@@ -735,17 +730,18 @@ static didWeGet(s, r) char *s, *r;
 
 /* R E S E T -- Reset alarms, etc. on exit */
 
-static reset() {
+static
+reset()
+{
   alarm(0);
   signal(SIGALRM, savAlrm);          /* restore alarm handler */
-#ifndef OS2
   signal(SIGINT, savInt);            /* restore interrupt handler */
-#endif
 }
 
 /* C K D I A L -- Dial up the remote system */
 
-ckdial(telnbr) char *telnbr;
+ckdial(telnbr)
+char *telnbr;
 {
 
   char c;
@@ -802,9 +798,7 @@ ckdial(telnbr) char *telnbr;
 
   printf("Dialing thru %s, speed %d, number %s.\n", ttname, speed, telnbr);
   printf("The timeout for completing the call is %d seconds.\n", waitct);
-#ifndef OS2
   printf("Type the interrupt character (^C) to cancel the dialing.\n");
-#endif
   debug(F101, ttname, "", speed);
   debug(F101, "timeout", "", waitct);
 
@@ -843,10 +837,8 @@ ckdial(telnbr) char *telnbr;
       printf("%s failure while handling failure.\n", F_reason[n1]);
     else {                        /* first (i.e., non-nested) failure */
       signal(SIGALRM, dialtime);  /* be sure to catch signals */
-#ifndef OS2
       if (signal(SIGINT, SIG_IGN) != SIG_IGN)
         signal(SIGINT, dialint);
-#endif
       alarm(10);                  /* be sure to exit this section */
       ttclos();                   /* hangup and close the line */
     }
@@ -896,10 +888,8 @@ ckdial(telnbr) char *telnbr;
   /* ttflui(); */                      /* flush input buffer if any */
 
   savAlrm = signal(SIGALRM, dialtime); /* set alarm handler */
-#ifndef OS2
   if ((savInt = signal(SIGINT, SIG_IGN)) != SIG_IGN)
     signal(SIGINT, dialint);           /* set int handler if not ignored */
-#endif
   debug(F100, "ckdial giving modem 10 secs to wake up", "", 0);
   alarm(10);                           /* give modem 10s to wake up. */
 

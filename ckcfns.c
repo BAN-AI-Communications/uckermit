@@ -1,4 +1,4 @@
-char *fnsv = "C-Kermit functions, 4G(067) 22 Apr 2021";
+char *fnsv = "C-Kermit Functions, 4G(076), 22 Apr 2021";
 
 /* C K C F N S -- System-independent Kermit protocol support functions */
 
@@ -51,7 +51,10 @@ extern int  pktnum, prvpkt, sndtyp, bctr, bctu, fmask, size;
 extern int  osize, maxsize, spktl, nfils, stdouf, warn, timef, spsizf;
 extern int  parity, speed, turn, turnch, delay, displa, pktlog;
 extern int  tralog, seslog, xflg, mypadn;
-extern long filcnt, ffc, flci, flco, tlci, tlco, tfc, fsize;
+extern long filcnt, ffc, fsize;
+#ifndef NOSTATS
+extern long flci, flco, tlci, tlco, tfc;
+#endif
 extern int  tsecs;
 extern int  deblog, hcflg, binary, savmod, fncnv;
 extern int  local, server, cxseen, czseen;
@@ -98,9 +101,6 @@ static int  memstr,        /* Flag for input from memory string */
             first;         /* Flag for first char from input */
 static CHAR t,             /* Current character */
             next;          /* Next character */
-#ifdef datageneral
-extern int quiet;
-#endif
 
 /* E N C S T R -- Encode a string from memory. */
 
@@ -109,7 +109,8 @@ extern int quiet;
  * is a string, rather than a file.
  */
 
-encstr(s) char *s;
+encstr(s)
+char *s;
 {
   int m;
   char *p;
@@ -127,8 +128,9 @@ encstr(s) char *s;
 }
 
 /* E N C O D E -- Kermit packet encoding procedure */
-
-encode(a) CHAR a;
+#ifdef OLDENC
+encode(a)
+CHAR a;
 {                                    /* The current character */
   int a7;                            /* Low order 7 bits of character */
   int b8;                            /* 8th bit of character */
@@ -179,26 +181,30 @@ encode(a) CHAR a;
   data[size++] = a;                  /* Finally, insert the character */
   data[size] = '\0';                 /* itself, and mark the end. */
 }
+#endif
 
 /*
  * Output functions
  * passed to 'decode'
  */
 
-putsrv(c) register char c;
+putsrv(c)
+register char c;
 {                  /* Put character in server command buffer */
   *srvptr++ = c;
   *srvptr = '\0';  /* Make sure buffer is null-terminated */
   return 0;
 }
 
-puttrm(c) register char c;
+puttrm(c)
+register char c;
 {                  /* Output character to console */
   conoc(c);
   return 0;
 }
 
-putfil(c) register char c;
+putfil(c)
+register char c;
 {                  /* Output char to file */
   if (zchout(ZOFILE, c & fmask) < 0) {
     czseen = 1;    /* If write error... */
@@ -217,7 +223,8 @@ putfil(c) register char c;
  * (e.g. disk full)
  */
 
-decode(buf, fn) register CHAR *buf;
+decode(buf, fn)
+register CHAR *buf;
 register int (*fn)();
 {
   register unsigned int a, a7, b8;   /* Low order 7 bits, and the 8th bit */
@@ -310,7 +317,8 @@ register int (*fn)();
  * some confusion with line termination (CR+LF vs. LF vs. CR).
  */
 
-getpkt(bufmax) int bufmax;
+getpkt(bufmax)
+int bufmax;
 {                                     /* Fill one packet buffer */
   register CHAR rt = t, rnext = next; /* register shadows of the globals */
   register CHAR *dp, *odp, *p1, *p2;  /* pointers... */
@@ -495,8 +503,9 @@ getpkt(bufmax) int bufmax;
         debug(F101, " osize", "", (odp - data));
         size = (odp - data);        /* Return truncated packet. */
         *odp = '\0';                /* mark real end */
-      } else                        /* If the packet is exactly full, */
+      } else {                      /* If the packet is exactly full, */
         debug(F101, "getpkt exact fit", "", size);
+	  }
       t = rt;
       next = rnext;                 /* save for next time */
       return size;
@@ -510,7 +519,8 @@ getpkt(bufmax) int bufmax;
 
 /* C A N N E D -- Check if current file transfer cancelled */
 
-canned(buf) char *buf;
+canned(buf)
+char *buf;
 {
   if (*buf == 'X')
     cxseen = 1;
@@ -523,11 +533,13 @@ canned(buf) char *buf;
 
 /* R E S E T C -- Reset per-transaction character counters */
 
+#ifndef NOSTATS
 resetc()
 {
   flci = flco = 0;
   tfc = tlci = tlco = 0;        /* Total file chars, line chars in & out */
 }
+#endif
 
 /* T I N I T -- Initialize a transaction */
 
@@ -557,22 +569,20 @@ tinit() {
 
 /* R I N I T -- Respond to S or I packet */
 
-rinit(d) char *d;
+rinit(d)
+char *d;
 {
   char *tp;
   ztime(&tp);
   tlog(F110, "Transaction begins", tp, 0l); /* Make transaction log entry */
-  if (binary)
+  if (binary) {
     tlog(F100, "Global file mode = binary", "", 0l);
-  else
+  } else {
     tlog(F100, "Global file mode = text", "", 0l);
+  }
   filcnt = 0;                       /* Init file counter */
   spar(d);
   ack1(rpar());
-#ifdef datageneral
-  if ((local) && (!quiet))          /* Only do this if local & not quiet */
-    consta_mt();                    /* Start the asynch read task */
-#endif
 }
 
 /* S I N I T -- Make sure file exists, then send Send-Init packet */
@@ -638,10 +648,6 @@ sinit() {
   ttflui();                         /* Flush input buffer. */
   if (!local && !server)
     sleep(delay);
-#ifdef datageneral
-  if ((local) && (!quiet))          /* Only do this if local & not quiet */
-    consta_mt();                    /* Start the asynch read task */
-#endif
   sipkt('S');                       /* Send the Send-Init packet. */
   return 1;
 }
@@ -665,7 +671,8 @@ sipkt(c) char c;
  * makes a new unique name.
  */
 
-rcvfil(n) char *n;
+rcvfil(n)
+char *n;
 {
   char xname[100], *xp;                /* Buffer for constructing name */
 #ifdef DTILDE
@@ -719,12 +726,15 @@ rcvfil(n) char *n;
  * exists, then a unique name is chosen.
  */
 
-opena(f, zz) char *f;
+opena(f, zz)
+char *f;
 struct zattr *zz;
 {
   int x;
 
+#ifdef DEBUG
   adebu(f, zz);                     /* Write attributes to debug log */
+#endif
 
   if (bsavef) {                     /* If somehow file mode */
     binary = bsave;                 /* was saved but not restored, */
@@ -744,23 +754,13 @@ struct zattr *zz;
       binary = 1;
       debug(F100, "opena attribute B = binary", "", binary);
     }
-    if (binary)                     /* Log file mode in transaction log */
+    if (binary) {                   /* Log file mode in transaction log */
       tlog(F100, " mode: binary", "", 0l);
-    else
+	} else {
       tlog(F100, " mode: text", "", 0l);
+	}
     screen(SCR_AN, 0, 0l, f);
     intmsg(filcnt);
-#ifdef datageneral
-
-    /*
-	 * Need to turn on multi-tasking console
-	 * interrupt task here, since multiple
-     * files may be received.
-	 */
-
-    if ((local) && (!quiet))    /* Only do this if local & not quiet */
-      consta_mt();              /* Start the asynch read task */
-#endif
 
   } else {                      /* Did not open file OK. */
     tlog(F110, "Failure to open", f, 0l);
@@ -772,7 +772,8 @@ struct zattr *zz;
 
 /* R E O F -- Receive End Of File */
 
-reof(yy) struct zattr *yy;
+reof(yy)
+struct zattr *yy;
 {
   int x;
   char *p;
@@ -785,7 +786,9 @@ reof(yy) struct zattr *yy;
     tlog(F100, " *** Discarding", "", 0l);
     cxseen = 0;
   } else {
+#ifndef NOSTATS
     fstats();                          /* Close out file statistics */
+#endif
     if (yy->disp.len != 0) {           /* Handle file disposition */
       p = yy->disp.val;
       c = *p++;
@@ -808,9 +811,12 @@ reof(yy) struct zattr *yy;
 
 /* R E O T -- Receive End Of Transaction */
 
-reot() {
+reot()
+{
   cxseen = czseen = 0;                 /* Reset interruption flags */
+#ifndef NOSTATS
   tstats();
+#endif
 }
 
 /* S F I L E -- Send File header or teXt header packet */
@@ -821,7 +827,8 @@ reot() {
  * success, 0 on failure.
  */
 
-sfile(x) int x;
+sfile(x)
+int x;
 {
   char pktnam[100];                    /* Local copy of name */
   char *s;
@@ -877,7 +884,8 @@ sfile(x) int x;
 
 /* S D A H E A D -- (PWP) Encode the next data packet to send */
 
-sdahead() {
+sdahead()
+{
   if (spsiz > MAXPACK)                 /* S logic in ckcfn2.c, spack() */
     n_len = getpkt(spsiz - bctu - 5);  /* long packet size */
   else
@@ -891,7 +899,8 @@ sdahead() {
  * sends packet and returns length.
  */
 
-sdata() {
+sdata()
+{
   int len;
 
   if (cxseen || czseen)           /* If interrupted, done. */
@@ -926,7 +935,8 @@ sdata() {
  * pointer, or "" for no data.
  */
 
-seof(s) char *s;
+seof(s)
+char *s;
 {
   nxtpkt(&pktnum);                /* Increment the packet number */
   if ((s != NULL) && (*s != '\0')) {
@@ -934,22 +944,28 @@ seof(s) char *s;
     tlog(F100, " *** interrupted, sending discard request", "", 0l);
   } else {
     spack('Z', pktnum, 0, "");
+#ifndef NOSTATS
     fstats();
+#endif
   }
 }
 
 /* S E O T -- Send an End-Of-Transaction packet */
 
-seot() {
+seot()
+{
   nxtpkt(&pktnum);             /* Increment the packet number */
   spack('B', pktnum, 0, "");   /* Send the EOT packet */
   cxseen = czseen = 0;         /* Reset interruption flags */
+#ifndef NOSTATS
   tstats();                    /* Log timing info */
+#endif
 }
 
 /* R P A R -- Fill the data array with my send-init parameters */
 
-CHAR *rpar() {
+CHAR *rpar()
+{
   if (rpsiz > MAXPACK)         /* Biggest normal packet I want. */
     data[1] = tochar(MAXPACK); /* If > 94, use 94, but specify */
   else                         /* extended packet length below... */
@@ -984,14 +1000,17 @@ CHAR *rpar() {
   data[capas + 2] = tochar(rpsiz / 95); /* Long packet size, big part */
   data[capas + 3] = tochar(rpsiz % 95); /* Long packet size, little part */
   data[capas + 4] = '\0';               /* Terminate the init string */
+#ifdef DEBUG
   if (deblog) {
     debug(F110, "rpar", data + 1, 0);
     rdebu(capas + 2);
   }
+#endif
   return data + 1;                      /* Return pointer to string. */
 }
 
-spar(s) char *s;
+spar(s)
+char *s;
 {                                       /* Set parameters */
   int x, lpsiz;
 
@@ -1155,8 +1174,10 @@ spar(s) char *s;
     } else
       wslots = 1;
   }
+#ifdef DEBUG
   if (deblog)
     sdebu(rln);                       /* Record parameters in debug log */
+#endif
 }
 
 /* G N F I L E -- Get the next file name from a file group */
@@ -1166,14 +1187,10 @@ spar(s) char *s;
  * next file, 0 otherwise
  */
 
-gnfile() {
+gnfile()
+{
   int x;
   long y;
-
-#ifdef datageneral
-  int dgfiles = 0;                        /* Number of files expanded */
-  static int dgnfils = -1;                /* Saved nfils value */
-#endif
 
   /* 
    * If file group interruption
@@ -1206,46 +1223,8 @@ gnfile() {
 
     if (sndsrc > 0) {
       if (nfils-- > 0) {
-#ifdef datageneral
-
-        /* 
-		 * The DG does not internally expand
-		 * the file names when a string of
-         * filenames is given, so, we must
-		 * in this case.
-		 */
-
-        if (dgnfils == -1) {        /* This is executed first time only! */
-          strcpy(filnam, *cmlist++);
-          dgfiles = zxpand(filnam); /* Expand the string */
-          debug(F111, "gnfile:cmlist filnam (x-init)", filnam, dgfiles);
-          dgnfils = nfils + 1;
-          debug(F111, "gnfile:cmlist filnam (x-init)", filnam, dgnfils);
-        }
-        x = znext(filnam);
-        if (x > 0) {           /* Get the next file in the expanded list */
-          debug(F111, "gnfile znext: filnam (exp-x=)", filnam, x);
-          nfils = dgnfils;     /* The virtual number of files left */
-        }
-        if (x == 0) {          /* Expand the next command argument */
-          if (dgnfils == 1) {
-            dgnfils = -1;      /* The last argument resets things */
-            *filnam = '\0';
-            debug(F101, "gnfile cmlist: nfils", "", nfils);
-            return 0;
-          }
-
-          strcpy(filnam, *cmlist++);      /* Finish expanding last arg */
-          dgfiles = zxpand(filnam);       /* Expand the string */
-          debug(F111, "gnfile: cmlist filnam (exp)", filnam, dgnfils);
-          x = znext(filnam);
-          debug(F111, "gnfile znext: filnam (exp)", filnam, x);
-          nfils = dgnfils--;
-        }
-#else
         strcpy(filnam, *cmlist++);
         debug(F111, "gnfile: cmlist filnam", filnam, nfils);
-#endif
       } else {
         *filnam = '\0';
         debug(F101, "gnfile cmlist: nfils", "", nfils);
@@ -1284,7 +1263,8 @@ gnfile() {
 
 /* O P E N I -- Open an existing file for input */
 
-openi(name) char *name;
+openi(name)
+char *name;
 {
   int x, filno;
   if (memstr)                                   /* Just return, */
@@ -1322,7 +1302,8 @@ openi(name) char *name;
  * file was opened in string 'name2'.
  */
 
-openo(name) char *name;
+openo(name)
+char *name;
 {
 
   if (stdouf)                              /* Receiving to stdout? */
@@ -1348,7 +1329,10 @@ openo(name) char *name;
 
 opent()
 {
-  ffc = tfc = 0;
+  ffc = 0;
+#ifndef NOSTATS
+  tfc = 0;
+#endif
   return zopeno(ZCTERM, "");
 }
 
@@ -1356,11 +1340,6 @@ opent()
 
 clsif()
 {
-#ifdef datageneral
-  if ((local) && (!quiet)) /* Only do this if local & not quiet */
-    if (nfils < 1)         /* More files to send ... leave it on! */
-      connoi_mt();
-#endif
   if (memstr) {            /* If input was memory string, */
     memstr = 0;            /* indicate no more. */
   } else
@@ -1384,7 +1363,8 @@ clsif()
  * on success.
  */
 
-clsof(disp) int disp;
+clsof(disp)
+int disp;
 {
   int x;
 
@@ -1397,10 +1377,6 @@ clsof(disp) int disp;
     binary = bsave;                      /* restore it */
     bsavef = 0;                          /* only this once. */
   }
-#ifdef datageneral
-  if ((local) && (!quiet))               /* Only do this if local, */
-    connoi_mt();                         /* and not quiet. */
-#endif
   if ((x = zclose(ZOFILE)) < 0) {        /* Try to close the file */
     tlog(
 	  F100,
@@ -1423,7 +1399,8 @@ clsof(disp) int disp;
 
 /* S N D H L P -- Routine to send builtin help */
 
-sndhlp() {
+sndhlp()
+{
   nfils = 0;                             /* No files, no lists. */
   xflg = 1;                              /* Flag we must send X packet. */
   strcpy(cmdstr, "help text");           /* Data for X packet. */
@@ -1446,7 +1423,8 @@ sndhlp() {
  * ACKs (with name) and succeeds.
  */
 
-cwd(vdir) char *vdir;
+cwd(vdir)
+char *vdir;
 {
   char *cdd, *zgtdir();
   char *dirp;
@@ -1483,25 +1461,13 @@ cwd(vdir) char *vdir;
  * concatenating the two arguments
  */
 
-syscmd(prefix, suffix) char *prefix, *suffix;
+syscmd(prefix, suffix)
+char *prefix, *suffix;
 {
   char *cp;
 
   if (prefix == NULL || *prefix == '\0')
     return 0;
-#ifdef datageneral
-
-  /* 
-   * A kludge for now; the real change
-   * needs to be done elsewhere...
-   */
-
-  {
-    extern char *WHOCMD;
-    if ((strcmp(prefix, WHOCMD) == 0) && (*suffix == 0))
-      strcpy(suffix, "[!pids]");
-  }
-#endif
   for (cp = cmdstr; *prefix != '\0'; *cp++ = *prefix++)
     ;
   while ((*cp++ = *suffix++))
@@ -1529,10 +1495,11 @@ syscmd(prefix, suffix) char *prefix, *suffix;
 
 /* A D E B U -- Write attribute packet info to debug log */
 
-adebu(f, zz) char *f;
+#ifdef DEBUG
+adebu(f, zz)
+char *f;
 struct zattr *zz;
 {
-#ifdef DEBUG
   if (deblog == 0)
     return 0;
   debug(F110, "Attributes for incoming file ", f, 0);
@@ -1553,6 +1520,6 @@ struct zattr *zz;
   debug(F111, " recfm", zz->recfm.val, zz->recfm.len);
   debug(F111, " sysparam", zz->sysparam.val, zz->sysparam.len);
   debug(F101, " length", "", (int)zz->length);
-#endif
   return 0;
 }
+#endif

@@ -1,6 +1,6 @@
-char *cmdv = "Unix cmd package V2(035), 22 Apr 2021";
+char *cmdv = "UNIX Command Package, V2(041), 22 Apr 2021";
 
-/* C K U C M D -- Interactive command package for Unix  */
+/* C K U C M D -- Interactive command package for UNIX */
 
 /*
  * Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
@@ -78,14 +78,6 @@ char *cmdv = "Unix cmd package V2(035), 22 Apr 2021";
 #include "ckcdeb.h" /* Formats for debug(), etc. */
 #include <ctype.h>  /* Character types */
 #include <stdio.h>  /* Standard C I/O package */
-#ifdef OS2
-#define INCL_SUB
-#include <os2.h>
-#endif
-
-#ifdef OSK
-#define cc ccount   /* OS-9/68K compiler bug */
-#endif
 
 #ifdef __linux__
 #include <stdlib.h>
@@ -148,7 +140,8 @@ cmsetp(s) char *s;
 
 /* C M S A V P -- Save a copy of the current prompt */
 
-cmsavp(s, n) int n;
+cmsavp(s, n)
+int n;
 char s[];
 {
   extern char *strncpy();        /* +1 */
@@ -162,11 +155,7 @@ prompt()
 {
   if (psetf == 0)
     cmsetp(dfprom);              /* If no prompt set, set default. */
-#ifdef OSK
-  fputs(cmprom, stdout);
-#else
   printf("\r%s", cmprom);        /* Print the prompt. */
-#endif
 }
 
 /* C M R E S -- Reset pointers to beginning of command buffer */
@@ -186,7 +175,8 @@ cmres()
  *  0 somebody else (system, front end, terminal) echoes
  */
 
-cmini(d) int d;
+cmini(d)
+int d;
 {
   for (
 	bp = cmdbuf;
@@ -198,7 +188,8 @@ cmini(d) int d;
   cmres();
 }
 
-stripq(s) char *s;
+stripq(s)
+char *s;
 {                                /* Function to strip '\' quotes */
   char *t;
   while (*s) {
@@ -228,7 +219,8 @@ stripq(s) char *s;
  *    0 otherwise, with n set to number that was parsed
  */
 
-cmnum(xhlp, xdef, radix, n) char *xhlp, *xdef;
+cmnum(xhlp, xdef, radix, n)
+char *xhlp, *xdef;
 int radix, *n;
 {
   int x;
@@ -278,7 +270,8 @@ int radix, *n;
  *    0 or 1 otherwise, with xp pointing to name.
  */
 
-cmofi(xhlp, xdef, xp) char *xhlp, *xdef, **xp;
+cmofi(xhlp, xdef, xp)
+char *xhlp, *xdef, **xp;
 {
   int x;
   char *s;
@@ -338,7 +331,8 @@ cmofi(xhlp, xdef, xp) char *xhlp, *xdef, **xp;
  *        '*' or '?', 0 otherwise.
  */
 
-cmifi(xhlp, xdef, xp, wild) char *xhlp, *xdef, **xp;
+cmifi(xhlp, xdef, xp, wild)
+char *xhlp, *xdef, **xp;
 int *wild;
 {
   int i, x, xc;
@@ -492,11 +486,7 @@ int *wild;
           setatm(dirp);
 #endif
         sp = atmbuf + cc;        /* Insert "*" at end */
-#ifdef datageneral
-        *sp++ = '+';             /* Insert +, the DG wild card */
-#else
         *sp++ = '*';
-#endif
         *sp-- = '\0';
         y = zxpand(atmbuf);
         *sp = '\0';
@@ -554,7 +544,8 @@ int *wild;
  *    2 if a wildcard was included.
  */
 
-cmdir(xhlp, xdef, xp) char *xhlp, *xdef, **xp;
+cmdir(xhlp, xdef, xp)
+char *xhlp, *xdef, **xp;
 {
   int i, x, xc;
   long y;
@@ -635,22 +626,12 @@ cmdir(xhlp, xdef, xp) char *xhlp, *xdef, **xp;
 
 /* C H K W L D -- Check for wildcard characters '*' or '?' */
 
-chkwld(s) char *s;
+chkwld(s)
+char *s;
 {
 
   for (; *s != '\0'; s++) {
-#ifdef datageneral
-
-    /*
-	 * Valid DG wild cards are:
-	 * '-', '+', '#', or '*'
-	 */
-
-    if ((*s <= '-') && (*s >= '#') &&
-        ((*s == '-') || (*s == '+') || (*s == '#') || (*s == '*')))
-#else
     if ((*s == '*') || (*s == '?'))
-#endif
       return (1);
   }
   return (0);
@@ -666,7 +647,8 @@ chkwld(s) char *s;
  *   0 otherwise, xp pointing to string result.
  */
 
-cmfld(xhlp, xdef, xp) char *xhlp, *xdef, **xp;
+cmfld(xhlp, xdef, xp)
+char *xhlp, *xdef, **xp;
 {
   int x, xc;
 
@@ -732,7 +714,8 @@ cmfld(xhlp, xdef, xp) char *xhlp, *xdef, **xp;
  *  with cmflgs set to return code, and xp pointing to result string.
  */
 
-cmtxt(xhlp, xdef, xp) char *xhlp;
+cmtxt(xhlp, xdef, xp)
+char *xhlp;
 char *xdef;
 char **xp;
 {
@@ -808,7 +791,8 @@ char **xp;
     n >= 0  --  value associated with keyword
 */
 
-cmkey(table, n, xhlp, xdef) struct keytab table[];
+cmkey(table, n, xhlp, xdef)
+struct keytab table[];
 int n;
 char *xhlp, *xdef;
 {
@@ -897,7 +881,7 @@ char *xhlp, *xdef;
       for (i = 0; i < n; i++) {
         if (
 		  !strncmp(table[i].kwd, atmbuf, cc) && \
-		    !test(table[i].flgs, CM_INV))
+		    !btest(table[i].flgs, CM_INV))
               addhlp(table[i].kwd);
       }
       dmphlp();
@@ -921,7 +905,8 @@ char *xhlp, *xdef;
     0: Confirmation was received
 */
 
-cmcfm() {
+cmcfm()
+{
   int x, xc;
 
   debug(F101, "cmcfm: cmflgs", "", cmflgs);
@@ -999,40 +984,42 @@ addhlp(s) char *s;
   }
 }
 
-/*  D M P H L P  --  Dump the help line buffer  */
+/* D M P H L P -- Dump the help line buffer */
 
-dmphlp() { /* Print the help buffer */
+dmphlp()
+{ /* Print the help buffer */
   hlpbuf[hx++] = NUL;
   printf(" %s\n", hlpbuf);
   clrhlp();
 }
 
-/*  L O O K U P  --  Lookup the string in the given array of strings  */
+/* L O O K U P -- Lookup the string in the given array of strings */
 
 /*
- Call this way:  v = lookup(table,word,n,&x);
+ * Call this way:  v = lookup(table,word,n,&x);
+ *
+ * table - a 'struct keytab' table.
+ * word  - the target string to look up in the table.
+ * n     - the number of elements in the table.
+ * x     - address of an integer for returning the table array index.
+ *
+ * The keyword table must be arranged in ascending alphabetical order, and
+ * all letters must be lowercase.
+ *
+ * Returns the keyword's associated value ( zero or greater ) if found,
+ * with the variable x set to the array index, or:
+ *
+ *  -3 if nothing to look up (target was null),
+ *  -2 if ambiguous,
+ *  -1 if not found.
+ *
+ * A match is successful if the target matches a keyword exactly, or if
+ * the target is a prefix of exactly one keyword.  It is ambiguous if the
+ * target matches two or more keywords from the table.
+ */
 
-   table - a 'struct keytab' table.
-   word  - the target string to look up in the table.
-   n     - the number of elements in the table.
-   x     - address of an integer for returning the table array index.
-
- The keyword table must be arranged in ascending alphabetical order, and
- all letters must be lowercase.
-
- Returns the keyword's associated value ( zero or greater ) if found,
- with the variable x set to the array index, or:
-
-  -3 if nothing to look up (target was null),
-  -2 if ambiguous,
-  -1 if not found.
-
- A match is successful if the target matches a keyword exactly, or if
- the target is a prefix of exactly one keyword.  It is ambiguous if the
- target matches two or more keywords from the table.
-*/
-
-lookup(table, cmd, n, x) char *cmd;
+lookup(table, cmd, n, x)
+char *cmd;
 struct keytab table[];
 int n, *x;
 {
@@ -1066,27 +1053,30 @@ int n, *x;
     return (-1);
 }
 
-/*  G E T W D  --  Gets a "word" from the command input stream  */
+/* G E T W D -- Gets a "word" from the command input stream */
 
 /*
-Usage: retcode = gtword();
+ * Usage: retcode = gtword();
+ *
+ * Returns:
+ *  -4 if end of file (e.g. pipe broken)
+ *  -2 if command buffer overflows
+ *  -1 if user did some deleting
+ *   0 if word terminates with SP or tab
+ *   1 if ... CR
+ *   2 if ... ESC
+ *   3 if ... ?
+ *
+ * With:
+ *  pp pointing to beginning of word in buffer
+ *  bp pointing to after current position
+ *  atmbuf containing a copy of the word
+ *  cc containing the number of characters
+ *    in the word copied to atmbuf
+ */
 
-Returns:
- -4 if end of file (e.g. pipe broken)
- -2 if command buffer overflows
- -1 if user did some deleting
-  0 if word terminates with SP or tab
-  1 if ... CR
-  2 if ... ESC
-  3 if ... ?
-
-With:
-  pp pointing to beginning of word in buffer
-  bp pointing to after current position
-  atmbuf containing a copy of the word
-  cc containing the number of characters in the word copied to atmbuf
-*/
-gtword() {
+gtword()
+{
 
   int c;                 /* Current char */
   static int inword = 0; /* Flag for start of word found */
@@ -1094,22 +1084,11 @@ gtword() {
   int echof = 0;         /* Flag for whether to echo */
   int ignore;
 
-#ifdef RTU
-  extern int rtu_bug;
-#endif
-
-#ifdef datageneral
-  extern int termtype;     /* DG terminal type flag */
-  extern int con_reads_mt; /* Console read asynch is active */
-  if (con_reads_mt)
-    connoi_mt(); /* Task would interfere w/cons read */
-#endif
-
   pp = np; /* Start of current field */
-  debug(F101, "gtword: cmdbuf", "", (int)cmdbuf);
-  debug(F101, " bp", "", (int)bp);
-  debug(F101, " pp", "", (int)pp);
-  debug(F110, " cmdbuf", cmdbuf, 0);
+  /* debug(F101, "gtword: cmdbuf", "", (int)cmdbuf); */
+  /* debug(F101, " bp", "", (int)bp); */
+  /* debug(F101, " pp", "", (int)pp); */
+  /* debug(F110, " cmdbuf", cmdbuf, 0); */
 
   while (bp < cmdbuf + CMDBL) { /* Loop */
 
@@ -1118,42 +1097,13 @@ gtword() {
     if ((c = *bp) == NUL) { /* Get next character */
       if (dpx)
         echof = 1; /* from reparse buffer */
-#ifdef datageneral
-      {
-        char ch;
-        c = dgncinb(0, &ch, 1);   /* -1 is EOF, -2 TO,
-                                   * -c is AOS/VS error */
-        if (c == -2) {            /* timeout was enabled? */
-          resto(channel(0));      /* reset timeouts */
-          c = dgncinb(0, &ch, 1); /* retry this now! */
-        }
-        if (c < 0)
-          return (-4); /* EOF or some error */
-        else
-          c = (int)ch & 0177; /* Get char without parity */
-        echof = 1;
-      }
-#else
-#ifdef OS2
-      c = isatty(0) ? coninc(0) : getchar();
-      if (c < 0)
-        return (-4);
-#else
       c = getchar(); /* or from tty. */
-#ifdef RTU
-      if (rtu_bug) {
-        c = getchar(); /* RTU doesn't discard the ^Z */
-        rtu_bug = 0;
-      }
-#endif /* RTU */
 
       if (c == EOF) {
         /***            perror("ckucmd getchar");  (just return silently) ***/
         return (-4);
       }
       c &= 127; /* Strip any parity bit. */
-#endif
-#endif
     } else
       ignore = 1;
 
@@ -1165,33 +1115,7 @@ gtword() {
       }
       if (c == FF) { /* Formfeed. */
         c = NL;      /* Replace with newline */
-#ifdef aegis
-        putchar(FF);
-#else
-#ifdef AMIGA
-        putchar(FF);
-#else
-#ifdef OSK
-        putchar(FF);
-#else
-#ifdef datageneral
-        putchar(FF);
-#else
-#ifdef OS2
-        {
-          char cell[2];
-          cell[0] = ' ';
-          cell[1] = 7;
-          VioScrollUp(0, 0, -1, -1, -1, cell, 0);
-          VioSetCurPos(0, 0, 0);
-        }
-#else
         system("clear"); /* and clear the screen. */
-#endif
-#endif
-#endif
-#endif
-#endif
       }
 
       if (c == HT)
@@ -1214,22 +1138,6 @@ gtword() {
         *bp = NUL;              /* End the string */
         if (echof) {            /* If echoing, */
           putchar(c);           /* echo the typein */
-#ifdef OS2
-          if (c == CR)
-            putchar(NL);
-#endif
-#ifdef aegis
-          if (c == CR)
-            putchar(NL);
-#endif
-#ifdef AMIGA
-          if (c == CR)
-            putchar(NL);
-#endif
-#ifdef datageneral
-          if (c == CR)
-            putchar(NL);
-#endif
         }
         np = bp;    /* Where to start next field. */
         setatm(pp); /* Copy this field to atom buffer. */
@@ -1249,13 +1157,6 @@ gtword() {
       }
       if (c == BS || c == RUB) { /* Character deletion */
         if (bp > cmdbuf) {       /* If still in buffer... */
-#ifdef datageneral
-          /* DG '\b' is EM (^y or \031) */
-          if (termtype == 1)
-            /* Erase a character from non-DG screen, */
-            dgncoub(1, "\010 \010", 3);
-          else
-#endif
             printf("\b \b"); /* erase character from screen, */
           bp--;              /* point behind it, */
           if (*bp == SP)
@@ -1271,16 +1172,6 @@ gtword() {
           return (cmflgs = -1);
       }
       if (c == LDEL) { /* ^U, line deletion */
-#ifdef datageneral
-        /* DG '\b' is EM (^y or \031) */
-        if (termtype == 1)
-          /* Erase a character from a non-DG screen, */
-          while ((bp--) > cmdbuf) {
-            dgncoub(1, "\010 \010", 3);
-            *bp = NUL;
-          }
-        else
-#endif /* datageneral */
           while ((bp--) > cmdbuf) {
             printf("\b \b");
             *bp = NUL;
@@ -1296,20 +1187,6 @@ gtword() {
           return (cmflgs = -1);
         }
         bp--;
-#ifdef datageneral
-        /* DG '\b' is EM (^y or \031) */
-        if (termtype == 1) {
-          /* Erase a character from a non-DG screen, */
-          for (; (bp >= cmdbuf) && (*bp == SP); bp--) {
-            dgncoub(1, "\010 \010", 3);
-            *bp = NUL;
-          }
-          for (; (bp >= cmdbuf) && (*bp != SP); bp--) {
-            dgncoub(1, "\010 \010", 3);
-            *bp = NUL;
-          }
-        } else {
-#endif /* datageneral */
           for (; (bp >= cmdbuf) && (*bp == SP); bp--) {
             printf("\b \b");
             *bp = NUL;
@@ -1318,9 +1195,6 @@ gtword() {
             printf("\b \b");
             *bp = NUL;
           }
-#ifdef datageneral
-        } /* Termtype == 1 */
-#endif
         bp++;
         inword = 0;
         return (cmflgs = -1);
@@ -1331,16 +1205,8 @@ gtword() {
         continue;
       }
     }
-#ifdef OS2
-    if (echof) {
-      putchar(c); /* If tty input, echo. */
-      if (quote == 1 && c == CR)
-        putchar(NL);
-    }
-#else
     if (echof)
       putchar(c); /* If tty input, echo. */
-#endif
     inword = 1; /* Flag we're in a word. */
     if (quote == 0 || c != NL)
       *bp++ = c; /* And deposit it. */
@@ -1353,7 +1219,7 @@ gtword() {
 
 /* Utility functions */
 
-/* A D D B U F  -- Add the string pointed to by cp to the command buffer  */
+/* A D D B U F -- Add the string pointed to by cp to the command buffer */
 
 addbuf(cp) char *cp;
 {
@@ -1394,7 +1260,8 @@ setatm(cp) char *cp;
 
 /*  R D I G I T S  -- Verify that all the characters in line ARE DIGITS  */
 
-rdigits(s) char *s;
+rdigits(s)
+char *s;
 {
   while (*s) {
     if (!isdigit(*s))
@@ -1406,7 +1273,8 @@ rdigits(s) char *s;
 
 /*  L O W E R  --  Lowercase a string  */
 
-lower(s) char *s;
+lower(s)
+char *s;
 {
   int n = 0;
   while (*s) {
@@ -1417,9 +1285,10 @@ lower(s) char *s;
   return (n);
 }
 
-/*  T E S T  --  Bit test  */
+/* T E S T -- Bit test */
 
-test(x, m) int x, m;
+btest(x, m)
+int x, m;
 { /*  Returns 1 if any bits from m are on in x, else 0  */
   return ((x & m) ? 1 : 0);
 }
