@@ -263,7 +263,7 @@ These interrupt characters differ from the ones used in other
 .I Kermit
 implementations to avoid conflict with UNIX shell interrupt characters.
 With System III and System V implementations of UNIX, interrupt commands
-must be preceeded by the escape character (e.g. control-\\).
+must be preceeded by the escape character (e.g. Control-\\).
 .RE
 .PP
 Several other command-line options are provided:
@@ -277,7 +277,7 @@ transfers of text files by eliminating CRLF/newline conversion.
 .B \-e " n"
 Specifies the (extended) receive-packet length, a number between 10
 and about 1000 (depending on the system).  Lengths of 95 or greater require
-that the opposite uCKermit support the long packet protocol extension.
+that the opposite Kermit support the long packet protocol extension.
 .TP
 .B \-w
 Write-Protect \(em Avoid filename collisions for incoming files.
