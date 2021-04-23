@@ -1,6 +1,41 @@
-char *versio = "C-Kermit, 4G(118), 22 Apr 2021";
+char *versio = "uCKermit, 4G(123), 23 Apr 2021";
 
-/* C K C M A I -- C-Kermit Main program  */
+/* C K C M A I -- uCKermit Main program  */
+
+/*
+ * Copyright (C) 1981-2011,
+ *   Trustees of Columbia University in the City of New York.
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ *   modification, are permitted provided that the following conditions
+ *   are met:
+ *
+ *   - Redistributions of source code must retain the above copyright 
+ *       notice, this list of conditions and the following disclaimer.
+ *      
+ *   - Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in   
+ *       the documentation and/or other materials provided with the
+ *       distribution.                                                     
+ *     
+ *   - Neither the name of Columbia University nor the names of its
+ *       contributors may be used to endorse or promote products derived
+ *       from this software without specific prior written permission. 
+ *       
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ */
 
 /*
  * Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
@@ -112,6 +147,9 @@ char *versio = "C-Kermit, 4G(118), 22 Apr 2021";
 
 #include "ckcdeb.h"                           /* Debug & other symbols */
 #include "ckcker.h"                           /* Kermit symbols */
+#ifdef __linux__
+#include <string.h>
+#endif
 
 /*
  * Text message definitions...
@@ -119,7 +157,11 @@ char *versio = "C-Kermit, 4G(118), 22 Apr 2021";
  * or less.
  */
 
-char *hlptxt = "C-Kermit Server REMOTE Commands:\n\
+#ifdef NODOHLP
+char *hlptxt = "uCKermit Server REMOTE HELP unavailable.\n\
+\n\0";
+#else
+char *hlptxt = "uCKermit Server REMOTE Commands:\n\
 \n\
 GET files  REMOTE CWD [dir]    REMOTE DIRECTORY [files]\n\
 SEND files REMOTE SPACE [dir]  REMOTE HOST command\n\
@@ -127,18 +169,25 @@ MAIL files REMOTE DELETE files REMOTE WHO [user]\n\
 BYE        REMOTE PRINT files  REMOTE TYPE files\n\
 FINISH     REMOTE HELP\n\
 \n\0";
+#endif
 
+#ifdef NODOHLP
 char *srvtxt = "\r\n\
-C-Kermit server starting.  Return to your local machine by typing\r\n\
+uCKermit server starting.\n\
+\r\n\0";
+#else
+char *srvtxt = "\r\n\
+uCKermit server starting.  Return to your local machine by typing\r\n\
 its escape sequence for closing the connection, and issue further\r\n\
-commands from there.  To shut down the C-Kermit server, issue the\r\n\
+commands from there.  To shut down the uCKermit server, issue the\r\n\
 FINISH or BYE command and then reconnect.\n\
 \r\n\0";
+#endif
 
-/* 
- * Declarations for
- * Send-Init Parameters
- */
+ /* 
+  * Declarations for
+  * Send-Init Parameters
+  */
 
 int spsiz  = DSPSIZ,      /* curent packet size to send */
     spmax  = DSPSIZ,      /* (PWP) Biggest packet size we can send */
@@ -187,10 +236,10 @@ CHAR padch = MYPADC,      /* Padding character to send */
 
 struct zattr iattr;       /* Incoming file attributes */
 
-/*
- * Packet-related
- * variables
- */
+ /*
+  * Packet-related
+  * variables
+  */
 
 int pktnum = 0,           /* Current packet number */
     prvpkt = -1,          /* Previous packet number */
@@ -198,7 +247,6 @@ int pktnum = 0,           /* Current packet number */
     rsn,                  /* Received packet sequence number */
     rln,                  /* Received packet length */
     size,                 /* Current size of output pkt data */
-    osize,                /* Previous output packet data size */
     maxsize,              /* Max size for building data field */
     spktl  = 0;           /* Length packet being sent */
 
@@ -211,20 +259,20 @@ CHAR sndpkt[MAXSP + 100], /* Entire packet being sent */
      mystch = SOH,        /* Outbound packet-start character */
      stchr = SOH;         /* Incoming packet-start character */
 
-/*
- * File-related
- * variables.
- */
+ /*
+  * File-related
+  * variables.
+  */
 
 CHAR filnam[50];          /* Name of current file. */
 
 int nfils;                /* Number of files in file group */
 long fsize;               /* Size of current file */
 
-/*
- * Communication
- * line variables
- */
+ /*
+  * Communication
+  * line variables
+  */
 
 CHAR ttname[50];          /* Name of communication line. */
 
@@ -240,10 +288,10 @@ int parity,               /* Parity specified, 0, 'e', 'o', etc. */
 
 int tlevel = -1;          /* Take-file command level */
 
-/*
- * Statistics
- * variables
- */
+ /*
+  * Statistics
+  * variables
+  */
 
 long filcnt,              /* Number of files in transaction */
      flci,                /* Characters from line, current file */
@@ -255,9 +303,9 @@ long filcnt,              /* Number of files in transaction */
 
 int  tsecs;               /* Seconds for transaction */
 
-/*
- * Flags
- */
+ /*
+  * Flags
+  */
 
 int deblog   = 0,         /* Flag for debug logging */
     pktlog   = 0,         /* Flag for packet logging */
@@ -284,10 +332,10 @@ int deblog   = 0,         /* Flag for debug logging */
     keep     = 0,         /* Keep incomplete files */
     nakstate = 0;         /* In a state where we can send NAKs */
 
-/*
- * Variables passed from command
- * parser to protocol module
- */
+ /*
+   * Variables passed from command
+  * parser to protocol module
+  */
 
 char parser();            /* The parser itself */
 char   sstate = 0;        /* Starting state for automaton */
@@ -295,9 +343,9 @@ char   *cmarg = "";       /* Pointer to command data */
 char  *cmarg2 = "";       /* Pointer to 2nd command data */
 char **cmlist;            /* Pointer to file list in argv */
 
-/*
- * Miscellaneous
- */
+ /*
+  * Miscellaneous
+  */
 
 char **xargv;             /* Global copies of argv */
 int    xargc;             /* and argc  */
@@ -307,23 +355,26 @@ extern int   dfloc;       /* Default location: remote/local */
 extern int  dfprty;       /* Default parity */
 extern int  dfflow;       /* Default flow control */
 
-/*
- * (PWP) buffered input and output
- * buffers; see ckcfns.c getpkt().
- */
+ /*
+  * (PWP) buffered input and output
+  * buffers; see ckcfns.c getpkt().
+  */
 
 CHAR zinbuffer[INBUFSIZE], zoutbuffer[INBUFSIZE];
 CHAR *zinptr, *zoutptr;
 int zincnt, zoutcnt;
 
-/* M A I N -- C-Kermit main program */
+/* M A I N -- uCKermit main program */
+
 FTYPE
 main(argc, argv)
 int argc;
 char **argv;
 {
 
+#ifndef __linux__
   char *strcpy();
+#endif
 
   /*
    * Do some
@@ -374,11 +425,13 @@ char **argv;
    * line, enter interactive parser.
    */
 
+#ifndef NOICP
   herald();               /* Display program herald. */
   while (1) {             /* Loop getting commands. */
     sstate = parser();
     if (sstate)
       proto();            /* Enter protocol if requested. */
   }
+#endif
   return 0;
 }

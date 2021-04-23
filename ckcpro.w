@@ -1,6 +1,41 @@
-char *protv = "C-Kermit Protocol Module, 4G(041), 22 Apr 2021";
+char *protv = "uCKermit Protocol Module, 4G(045), 23 Apr 2021";
 
-/* C K C P R O -- C-Kermit Protocol Module in Wart preprocessor notation */
+/* C K C P R O -- uCKermit Protocol Module in Wart preprocessor notation */
+
+/*
+ * Copyright (C) 1981-2011,
+ *   Trustees of Columbia University in the City of New York.
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ *   modification, are permitted provided that the following conditions
+ *   are met:
+ *
+ *   - Redistributions of source code must retain the above copyright 
+ *       notice, this list of conditions and the following disclaimer.
+ *      
+ *   - Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in   
+ *       the documentation and/or other materials provided with the
+ *       distribution.                                                     
+ *     
+ *   - Neither the name of Columbia University nor the names of its
+ *       contributors may be used to endorse or promote products derived
+ *       from this software without specific prior written permission. 
+ *       
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ */
 
 /*
  * Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
@@ -28,18 +63,18 @@ char *protv = "C-Kermit Protocol Module, 4G(041), 22 Apr 2021";
  * be necessary to remove comments in the %%...%% section.
  */
 
-/*
- * State definitions
- * for Wart (or Lex)
- */
+ /*
+  * State definitions
+  * for Wart (or Lex)
+  */
 
 %states ipkt rfile rattr rdata ssinit ssfile ssattr ssdata sseof sseot
 %states serve generic get rgen
 
-/*
- * External C-Kermit 
- * variable declarations
- */
+ /*
+  * External uCKermit 
+  * variable declarations
+  */
 
   extern char sstate, *versio, *srvtxt, *cmarg, *cmarg2, *rpar();
   extern char data[], filnam[], srvcmd[], ttname[], *srvptr;
@@ -55,21 +90,21 @@ char *protv = "C-Kermit Protocol Module, 4G(041), 22 Apr 2021";
   extern char *DIRCMD, *DELCMD, *TYPCMD, *SPACMD, *SPACM2, *WHOCMD;
   extern struct zattr iattr;
 
-/*
- * Local
- * variables
- */
+ /*
+  * Local
+  * variables
+  */
 
   static char vstate = 0;               /* Saved State   */
   static char vcmd = 0;                 /* Saved Command */
   int x;                                /* General-purpose integer */
   char *s;                              /* General-purpose string pointer */
 
-/*
- * Macros - Note: BEGIN is predefined
- * by Wart (and Lex) as "state = ",
- * BEGIN is NOT a GOTO!
- */
+ /*
+  * Macros - Note: BEGIN is predefined
+  * by Wart (and Lex) as "state = ",
+  * BEGIN is NOT a GOTO!
+  */
 
 #define SERVE  \
   tinit(); BEGIN serve
@@ -77,12 +112,12 @@ char *protv = "C-Kermit Protocol Module, 4G(041), 22 Apr 2021";
   if (server) { SERVE; } else \
     { sleep(2); \
           return; }
-
 %%
-/*
- * Protocol entry points, one
- * for each start state (sstate)
- */
+
+ /*
+  * Protocol entry points, one
+  * for each start state (sstate)
+  */
 
 s { tinit();                                   /* Do Send command */
     if (sinit()) BEGIN ssinit;
@@ -146,10 +181,10 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
     srinit();                         /* same seq number! */
 }
 
-/*
- * States in which we're
- * being a server
- */
+ /*
+  * States in which we're
+  * being a server
+  */
 
 <serve>I {                            /* Get I-packet */
     spar(rdatap);                     /* Set parameters from it */
@@ -487,14 +522,14 @@ proto()
 
     conint(sigint);                   /* Enable console interrupts */
 
-/*
- * Set up the communication
- * line for file transfer.
- */
+ /*
+  * Set up the communication
+  * line for file transfer.
+  */
 
     if (local && (speed < 0)) {
         screen(
-                  SCR_EM,0,0l,"Sorry, you must 'set speed' first");
+                  SCR_EM,0,0l,"You must 'set speed' first");
         return;
     }
 
@@ -536,13 +571,13 @@ proto()
             "Escape back to your local Kermit and give a RECEIVE command...");
     sleep(1);
 
-/*
- * The 'wart()' function is generated by the wart program. It gets a
- * character from the input() routine and then based on that character
- * and the current state, selects the appropriate action, according to
- * the state table above, which is transformed by the wart program into
- * a big case statement. The function is active for one transaction.
- */
+ /*
+  * The 'wart()' function is generated by the wart program. It gets a
+  * character from the input() routine and then based on that character
+  * and the current state, selects the appropriate action, according to
+  * the state table above, which is transformed by the wart program into
+  * a big case statement. The function is active for one transaction.
+  */
 
     wart();                           /* Enter the state table switcher. */
     
@@ -550,7 +585,7 @@ proto()
         server = 0;
         if (!quiet)                   /* Give appropriate message */
             conoll(
-                          "C-Kermit server done");
+                          "uCKermit server done");
     }
     ttres();
     screen(

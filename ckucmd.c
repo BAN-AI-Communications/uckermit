@@ -1,6 +1,41 @@
-char *cmdv = "UNIX Command Package, V2(041), 22 Apr 2021";
+char *cmdv = "UNIX Command Package, V2(043), 23 Apr 2021";
 
 /* C K U C M D -- Interactive command package for UNIX */
+
+/*
+ * Copyright (C) 1981-2011,
+ *   Trustees of Columbia University in the City of New York.
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ *   modification, are permitted provided that the following conditions
+ *   are met:
+ *
+ *   - Redistributions of source code must retain the above copyright 
+ *       notice, this list of conditions and the following disclaimer.
+ *      
+ *   - Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in   
+ *       the documentation and/or other materials provided with the
+ *       distribution.                                                     
+ *     
+ *   - Neither the name of Columbia University nor the names of its
+ *       contributors may be used to endorse or promote products derived
+ *       from this software without specific prior written permission. 
+ *       
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ */
 
 /*
  * Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
@@ -17,13 +52,12 @@ char *cmdv = "UNIX Command Package, V2(041), 22 Apr 2021";
  */
 
 /*
- * Modelled after the DECSYSTEM-20 command parser (the COMND JSYS)
+ * Modelled after the DECSYSTEM-20 (TOPS-20) command parser (COMND JSYS)
  *
  * Features:
- *  . parses and verifies keywords, filenames,
- *    text strings, numbers, other data
+ *  . parses & verifies keywords, filenames, text strings, numbers, other data
  *  . displays appropriate menu or help message when user types "?"
- *  . does keyword and filename completion when user types ESC or TAB
+ *  . does keyword and filename completion when user types 'ESC' or 'TAB'
  *  . accepts any unique abbreviation for a keyword
  *  . allows keywords to have attributes, like "invisible"
  *  . can supply defaults for fields omitted by user
@@ -209,9 +243,7 @@ char *s;
 /*
  * For now only works for positive
  * numbers in base 10.
- */
-
-/*
+ *
  * Returns
  *   -3 if no input present when required,
  *   -2 if user typed an illegal number,
@@ -556,6 +588,10 @@ char *xhlp, *xdef, **xp;
 
   cc = xc = 0;                     /* Initialize counts & pointers */
   *xp = "";
+
+  (void)sp;
+  (void)i;
+
   if ((x = cmflgs) != 1) {         /* Already confirmed? */
     x = gtword();                  /* No, get a word */
   } else {
@@ -592,9 +628,9 @@ char *xhlp, *xdef, **xp;
         return (2);
 
       /*
-           * If not wild, see if it
-           * exists and is readable.
-           */
+       * If not wild, see if it
+       * exists and is readable.
+       */
 
       y = zchki(*xp);
 
@@ -778,18 +814,18 @@ char **xp;
 /* C M K E Y -- Parse a keyword */
 
 /*
- Call with:
-   table    --  keyword table, in 'struct keytab' format;
-   n        --  number of entries in table;
-   xhlp     --  pointer to help string;
-   xdef     --  pointer to default keyword;
-
- Returns:
-   -3       --  no input supplied and no default available
-   -2       --  input doesn't uniquely match a keyword in the table
-   -1       --  user deleted too much, command reparse required
-    n >= 0  --  value associated with keyword
-*/
+ * Call with:
+ *  table    --  keyword table, in 'struct keytab' format;
+ *  n        --  number of entries in table;
+ *  xhlp     --  pointer to help string;
+ *  xdef     --  pointer to default keyword;
+ *
+ * Returns:
+ *  -3       --  no input supplied and no default available
+ *  -2       --  input doesn't uniquely match a keyword in the table
+ *  -1       --  user deleted too much, command reparse required
+ *   n >= 0  --  value associated with keyword
+ */
 
 cmkey(table, n, xhlp, xdef)
 struct keytab table[];
@@ -880,8 +916,8 @@ char *xhlp, *xdef;
       clrhlp();
       for (i = 0; i < n; i++) {
         if (
-                  !strncmp(table[i].kwd, atmbuf, cc) && \
-                    !btest(table[i].flgs, CM_INV))
+          !strncmp(table[i].kwd, atmbuf, cc) && \
+            !btest(table[i].flgs, CM_INV))
               addhlp(table[i].kwd);
       }
       dmphlp();
@@ -899,11 +935,11 @@ char *xhlp, *xdef;
 /*  C M C F M  --  Parse command confirmation (end of line)  */
 
 /*
- Returns
-   -2: User typed anything but whitespace or newline
-   -1: Reparse needed
-    0: Confirmation was received
-*/
+ * Returns
+ *  -2: User typed anything but whitespace or newline
+ *  -1: Reparse needed
+ *   0: Confirmation was received
+ */
 
 cmcfm()
 {
@@ -949,9 +985,12 @@ cmcfm()
   }
 }
 
-/* Keyword help routines */
+/*
+ * Keyword help
+ * routines
+ */
 
-/*  C L R H L P -- Initialize/Clear the help line buffer  */
+/* C L R H L P -- Initialize/Clear the help line buffer */
 
 clrhlp()
 { /* Clear the help buffer */
@@ -959,9 +998,10 @@ clrhlp()
   hh = hx = 0;
 }
 
-/*  A D D H L P  --  Add a string to the help line buffer  */
+/* A D D H L P -- Add a string to the help line buffer */
 
-addhlp(s) char *s;
+addhlp(s)
+char *s;
 { /* Add a word to the help buffer */
   int j;
 
@@ -1026,12 +1066,18 @@ int n, *x;
 
   int i, v, cmdlen;
 
-  /* Lowercase & get length of target, if it's null return code -3. */
+  /*
+   * Lowercase & get length of target,
+   * if it's null return code -3.
+   */
 
   if ((((cmdlen = lower(cmd))) == 0) || (n < 1))
     return (-3);
 
-  /* Not null, look it up */
+  /*
+   * Not null,
+   * look it up
+   */
 
   for (i = 0; i < n - 1; i++) {
     if (!strcmp(table[i].kwd, cmd) ||
@@ -1044,7 +1090,10 @@ int n, *x;
       return (-2);
   }
 
-  /* Last (or only) element */
+  /*
+   * Last (or only)
+   * element
+   */
 
   if (!strncmp(table[n - 1].kwd, cmd, cmdlen)) {
     *x = n - 1;
@@ -1100,7 +1149,7 @@ gtword()
       c = getchar(); /* or from tty. */
 
       if (c == EOF) {
-        /***            perror("ckucmd getchar");  (just return silently) ***/
+        /*** perror("ckucmd getchar");  (just return silently) ***/
         return (-4);
       }
       c &= 127; /* Strip any parity bit. */
@@ -1120,6 +1169,7 @@ gtword()
 
       if (c == HT)
         c = ESC; /* Substitute ESC for tab. */
+	  
       if (c == SP) { /* If space */
         *bp++ = c;   /* deposit it in buffer. */
         if (echof)
@@ -1134,6 +1184,35 @@ gtword()
           return (cmflgs = 0);
         }
       }
+      /* XXX(jhj): 26 == ^Z handle? */
+	  /* XXX(jhj):  4 == ^D handle? */
+      if (
+        c <   1 || \
+        c > 127 || \
+        c == 31 || \
+        c == 30 || \
+        c == 29 || \
+        c == 28 || \
+        c == 26 || \
+        c == 25 || \
+        c == 24 || \
+        c == 22 || \
+        c == 20 || \
+        c == 19 || \
+        c == 17 || \
+        c == 16 || \
+        c == 14 || \
+        c == 11 || \
+        c ==  7 || \
+        c ==  6 || \
+        c ==  5 || \
+        c ==  4 || \
+        c ==  3 || \
+        c ==  2 || \
+        c ==  1 || \
+        c ==  0) {
+          continue;
+	  }
       if (c == NL || c == CR) { /* CR, LF */
         *bp = NUL;              /* End the string */
         if (echof) {            /* If echoing, */
@@ -1217,7 +1296,10 @@ gtword()
   return (cmflgs = -2);
 }
 
-/* Utility functions */
+/*
+ * Utility
+ * functions
+ */
 
 /* A D D B U F -- Add the string pointed to by cp to the command buffer */
 
@@ -1234,13 +1316,23 @@ addbuf(cp) char *cp;
   return (len); /* Return the length */
 }
 
-/*  S E T A T M  --  Deposit a token in the atom buffer.  */
-/*  Break on space, newline, carriage return, or null. */
-/*  Null-terminate the result. */
-/*  If the source pointer is the atom buffer itself, do nothing. */
-/*  Return length of token, and also set global "cc" to this length. */
+/* S E T A T M -- Deposit a token in the atom buffer */
 
-setatm(cp) char *cp;
+/*
+ * Break on space, newline,
+ * carriage return, or null
+ * 
+ * Null-terminate the result.
+ *
+ * If the source pointer is the
+ * atom buffer itself, do nothing.
+ * 
+ * Return length of token, and also
+ * set global "cc" to this length.
+ */
+
+setatm(cp)
+char *cp;
 {
   char *ap;
   cc = 0;
@@ -1258,7 +1350,7 @@ setatm(cp) char *cp;
   return (cc); /* Return length */
 }
 
-/*  R D I G I T S  -- Verify that all the characters in line ARE DIGITS  */
+/* R D I G I T S -- Verify that all the characters in line ARE DIGITS */
 
 rdigits(s)
 char *s;
@@ -1271,7 +1363,7 @@ char *s;
   return (1);
 }
 
-/*  L O W E R  --  Lowercase a string  */
+/* L O W E R -- Lowercase a string */
 
 lower(s)
 char *s;

@@ -1,6 +1,41 @@
-char *userv = "User Interface, 4G(088), 22 Apr 2021";
+char *userv = "User Interface, 4G(096), 23 Apr 2021";
 
-/* C K U U S R -- "User Interface" for Unix Kermit (Part 1) */
+/* C K U U S R -- "User Interface" for UNIX Kermit (Part 1) */
+
+/*
+ * Copyright (C) 1981-2011,
+ *   Trustees of Columbia University in the City of New York.
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ *   modification, are permitted provided that the following conditions
+ *   are met:
+ *
+ *   - Redistributions of source code must retain the above copyright 
+ *       notice, this list of conditions and the following disclaimer.
+ *      
+ *   - Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in   
+ *       the documentation and/or other materials provided with the
+ *       distribution.                                                     
+ *     
+ *   - Neither the name of Columbia University nor the names of its
+ *       contributors may be used to endorse or promote products derived
+ *       from this software without specific prior written permission. 
+ *       
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ */
 
 /*
  *  Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
@@ -18,11 +53,11 @@ char *userv = "User Interface, 4G(088), 22 Apr 2021";
 
 /*
  *  The ckuusr module contains the terminal input and output functions
- *  for UNIX Kermit.  It includes a simple Unix-style command line
+ *  for UNIX Kermit.  It includes a simple UNIX-style command line
  *  parser as well as an interactive prompting keyword command parser.
- *  It depends on the existence of Unix facilities like fopen, fgets,
+ *  It depends on the existence of UNIX facilities like fopen, fgets,
  *  feof, (f)printf, argv/argc, etc.  Other functions that are likely
- *  to vary among Unix implementations -- like setting terminal modes
+ *  to vary among UNIX implementations -- like setting terminal modes
  *  or interrupts -- are invoked via calls to functions that are defined
  *  in the system-dependent modules, ck?[ft]io.c.
  *
@@ -74,11 +109,6 @@ char *userv = "User Interface, 4G(088), 22 Apr 2021";
  *    user i/o for interrupting file transfers.
  */
 
-/*
- * UNIX
- * Includes
- */
-
 #include "ckcdeb.h"
 #include <ctype.h>
 #include <stdio.h>
@@ -91,18 +121,14 @@ char *userv = "User Interface, 4G(088), 22 Apr 2021";
 #ifdef __linux__
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <string.h>
 #endif
 
-/*
- * External Kermit Variables,
- * see ckmain.c for description.
- */
-
 extern int   size,  rpsiz, urpsiz,  speed,  local, server, displa, binary,
-               parity, deblog, escape,  xargc,   flow,   turn, duplex,  nfils,
-                   ckxech, pktlog, seslog, tralog, stdouf, turnch,  dfloc,   keep,
-                   maxrps,   warn,  quiet,  cnflg, tlevel, mdmtyp, zincnt;
+           parity, deblog, escape,  xargc,   flow,   turn, duplex,  nfils,
+           ckxech, pktlog, seslog, tralog, stdouf, turnch,  dfloc,   keep,
+           maxrps,   warn,  quiet,  cnflg, tlevel, mdmtyp, zincnt;
 
 extern char *versio, *protv, *ckxv, *ckzv, *fnsv, *connv, *dftty, *cmdv;
 extern char *wartv;
@@ -118,17 +144,7 @@ extern CHAR sstate, ttname[];
 extern CHAR *zinptr;
 char *strcpy(), *getenv();
 
-/*
- * Declarations from
- * cmd package
- */
-
 extern char cmdbuf[]; /* Command buffer */
-
-/*
- * Declarations from
- * ck?fio.c module
- */
 
 extern char *SPACMD, *zhome(); /* Space command, home directory. */
 extern int backgrd;            /* Kermit executing in background */
@@ -140,19 +156,16 @@ extern int backgrd;            /* Kermit executing in background */
  * ( '&' on shell command line ).
  */
 
-/*
- * Variables and symbols
- * local to this module
- */
-
 char line[CMDBL + 10], *lp; /* Character buffer for anything */
 char debfil[50];            /* Debugging log file name */
 char pktfil[50];            /* Packet log file name */
 char sesfil[50];            /* Session log file name */
 char trafil[50];            /* Transaction log file name */
 
-int n,        /* General purpose int */
-    cflg,     /* Command-line connect cmd given */
+int cflg,     /* Command-line connect cmd given */
+#ifdef COMMENT
+    n,        /* General purpose int */
+#endif
     action,   /* Action selected on command line*/
     repars,   /* Reparse needed */
     cwdf = 0; /* CWD has been done */
@@ -194,7 +207,7 @@ cmdlin()
   debug(F101, "action", "", action);
   if (!local)
     if (
-          (action == 'g') || (action == 'r') || (action == 'c') || (cflg != 0))
+      (action == 'g') || (action == 'r') || (action == 'c') || (cflg != 0))
         fatal("-l and -b required");
   if (*cmarg2 != 0)
     if ((action != 's') && (action != 'r') && (action != 'v'))
@@ -230,7 +243,8 @@ cmdlin()
 
 /* D O A R G -- Do a command-line argument */
 
-doarg(x) char x;
+doarg(x)
+char x;
 {
   int z;
   char *xp;
@@ -429,14 +443,16 @@ doarg(x) char x;
  * Misc
  */
 
-fatal(msg) char *msg;
+fatal(msg)
+char *msg;
 { /* Fatal error message */
   fprintf(stderr, "\r\nFatal: %s\n", msg);
   tlog(F110, "Fatal:", msg, 0l);
   doexit(BAD_EXIT); /* Exit indicating failure */
 }
 
-ermsg(msg) char *msg;
+ermsg(msg)
+char *msg;
 { /* Print error message */
   if (!quiet)
     fprintf(stderr, "\r\n%s - %s\n", cmerrp, msg);
@@ -457,46 +473,47 @@ struct keytab cmdtab[] = {
 #ifndef NOPUSH
     "!",          XXSHE,  0,
 #endif
-        "%",          XXCOM, CM_INV,
+    "%",          XXCOM,  CM_INV,
     "bye",        XXBYE,  0,
-        "c",          XXCON, CM_INV,
+    "c",          XXCON,  CM_INV,
     "cd",         XXCWD,  0,
-        "close",      XXCLO, 0,
+    "close",      XXCLO,  0,
     "connect",    XXCON,  0,
-        "cwd",        XXCWD, 0,
+    "cwd",        XXCWD,  0,
 #ifndef NOCKUDIA
     "dial",       XXDIAL, 0,
 #endif
-        "directory",  XXDIR, 0,
+    "directory",  XXDIR,  0,
     "echo",       XXECH,  0,
-        "exit",       XXEXI, 0,
+    "exit",       XXEXI,  0,
     "finish",     XXFIN,  0,
-        "get",        XXGET, 0,
+    "get",        XXGET,  0,
 #ifndef NOCKUDIA
     "hangup",     XXHAN,  0,
 #endif
 #ifndef NODOHLP
-        "help",       XXHLP, 0,
+    "help",       XXHLP,  0,
 #endif
     "log",        XXLOG,  0,
-        "quit",       XXQUI, 0,
-    "r",          XXREC,  CM_INV,
-        "receive",    XXREC, 0,
+    "quit",       XXQUI,  0,
+ /* "r",          XXREC,  CM_INV, */
+    "receive",    XXREC,  0,
     "remote",     XXREM,  0,
-        "s",          XXSEN, CM_INV,
+ /* "s",          XXSEN,  CM_INV, */
 #ifndef NOCKUSCR
     "script",     XXLOGI, 0,
 #endif
-        "send",       XXSEN, 0,
+    "send",       XXSEN,  0,
     "server",     XXSER,  0,
-        "set",        XXSET, 0,
+    "set",        XXSET,  0,
     "show",       XXSHO,  0,
-        "space",      XXSPA, 0,
+    "space",      XXSPA,  0,
 #ifndef NOSTATS
     "statistics", XXSTA,  0,
 #endif
-        "take",       XXTAK, 0,
+    "take",       XXTAK,  0,
     "transmit",   XXTRA,  0};
+
 int ncmd = (sizeof(cmdtab) / sizeof(struct keytab));
 
 /*
@@ -587,27 +604,29 @@ struct keytab prmtab[] = {
     CM_INV /* moved to send/receive */
 };
 int nprm = \
-          (sizeof(prmtab) / sizeof(struct keytab)); /* How many parameters */
+         (sizeof(prmtab) / sizeof(struct keytab)); /* How many parameters */
 
-/*
- * Remote Command
- * Table
- */
+ /*
+  * Remote Command
+  * Table
+  */
 
 struct keytab remcmd[] = {
     "cd",        XZCWD, CM_INV, "cwd",  XZCWD, 0, "delete", XZDEL, 0,
     "directory", XZDIR, 0,      "help", XZHLP, 0, "host",   XZHOS, 0,
     "space",     XZSPA, 0,      "type", XZTYP, 0, "who",    XZWHO, 0};
+
 int nrmt = (sizeof(remcmd) / sizeof(struct keytab));
 
 struct keytab logtab[] = {"debugging", LOGD, 0, "packets",      LOGP, 0,
                           "session",   LOGS, 0, "transactions", LOGT, 0};
+
 int nlog = (sizeof(logtab) / sizeof(struct keytab));
 
-/*
- * Show command
- * arguments
- */
+ /*
+  * Show command
+  * arguments
+  */
 
 #define SHPAR 0 /* Parameters */
 #define SHVER 1 /* Versions */
@@ -620,12 +639,12 @@ cmdini()
 {
 
   tlevel = -1;         /* Take file level */
-  cmsetp("C-Kermit>"); /* Set default prompt */
+  cmsetp("uCKermit>"); /* Set default prompt */
 
-/*
- * Look for init file in
- * home or current directory.
- */
+ /*
+  * Look for init file in
+  * home or current directory.
+  */
 
   homdir = zhome();
   lp = line;
@@ -648,10 +667,10 @@ cmdini()
   congm(); /* Get console tty modes */
 }
 
-/*
- * Display version herald
- * and initial prompt
- */
+ /*
+  * Display version herald
+  * and initial prompt
+  */
 
 herald() {
   if (!backgrd) {
@@ -664,21 +683,41 @@ herald() {
 
 /* T R A P -- Terminal interrupt handler */
 
-trap(sig, code) int sig, code;
+trap(
+#ifdef DEBUG
+sig, code
+#endif
+)
+#ifdef DEBUG
+int sig, code;
+#endif
 {
   fprintf(stderr, "^C...\n");
+#ifdef DEBUG
   debug(F101, "trap() caught signal", "", sig);
   debug(F101, " code", "", code);
+#endif
   doexit(GOOD_EXIT); /* Exit indicating success */
 }
 
-/*  S T P T R A P -- Handle SIGTSTP signals */
+/* S T P T R A P -- Handle SIGTSTP signals */
 
-stptrap(sig, code)
+#ifdef __linux__
+void
+#endif
+stptrap(
+#ifdef DEBUG
+sig, code
+#endif
+)
+#ifdef DEBUG
 int sig, code;
+#endif
 {
+#ifdef DEBUG
   debug(F101, "stptrap() caught signal", "", sig);
   debug(F101, " code", "", code);
+#endif
   conres(); /* Reset the console */
 #ifdef SIGTSTP
   kill(0, SIGSTOP); /* If job control, suspend the job */
@@ -700,11 +739,12 @@ parser()
   concb(escape); /* Put console in cbreak mode. */
   conint(trap);  /* Turn on console terminal interrupts. */
 
-/*
- * sstate becomes nonzero when a command has been parsed that requires some
- * action from the protocol module.  Any non-protocol actions, such as local
- * directory listing or terminal emulation, are invoked directly from below
- */
+ /*
+  * sstate becomes nonzero when a command has been parsed that requires
+  * some action from the protocol module.  Any non-protocol actions,
+  * such as local directory listing or terminal emulation, are invoked
+  * directly from below
+  */
 
   if (local && !backgrd)
     printf("\n");       /*** Temporary kludge ***/
@@ -723,11 +763,11 @@ parser()
       cbp = cmdbuf;    /* Get the next line. */
       cbn = CMDBL;
 
-      /*
-           * Loop to get next command line and
-           * all continuation lines from take
-       * file.
-           */
+   /*
+    * Loop to get next command line and
+    * all continuation lines from take
+    * file.
+    */
 
     again:
       if (fgets(line, cbn, tfile[tlevel]) == NULL)
@@ -784,12 +824,14 @@ parser()
 
   if (!local)
     connoi(); /* Interrupts off only if remote */
+
   return sstate;
 }
 
 /* D O E X I T -- Exit from the program. */
 
-doexit(exitstat) int exitstat;
+doexit(exitstat)
+int exitstat;
 {
 
   ttclos(); /* Close external line, if any */
@@ -830,7 +872,9 @@ doexit(exitstat) int exitstat;
 
 /* B L D L E N -- Make length-encoded copy of string */
 
-char *bldlen(str, dest) char *str, *dest;
+char *
+bldlen(str, dest)
+char *str, *dest;
 {
   int len;
   len = strlen(str);
@@ -841,7 +885,8 @@ char *bldlen(str, dest) char *str, *dest;
 
 /* S E T G E N -- Construct a generic command */
 
-setgen(type, arg1, arg2, arg3) char type, *arg1, *arg2, *arg3;
+setgen(type, arg1, arg2, arg3)
+char type, *arg1, *arg2, *arg3;
 {
   char *upstr, *cp;
 
@@ -871,7 +916,8 @@ setgen(type, arg1, arg2, arg3) char type, *arg1, *arg2, *arg3;
  *   0: parse was successful (even tho command may have failed).
  */
 
-docmd(cx) int cx;
+docmd(cx)
+int cx;
 {
   int x, y;
   char *s;
@@ -909,18 +955,12 @@ docmd(cx) int cx;
     return doconect();
 
   case XXCWD:
-
-/*
- * if (
- *  cmtxt("Name of local directory, or carriage return",homdir,&s) < 0)
- *    return(-1);     <-- this replaced by new cmdir() function, below.
- */
-
     if ((x = cmdir(
-                           "Name of local directory, or carriage return",
-                             homdir,
-                                   &s)) < 0)
-      return x;
+      "Name of local directory, or carriage return",
+        homdir,
+          &s))
+            < 0)
+              return x;
     if (x == 2) {
       printf("\n?Wildcards not allowed in directory name\n");
       return -2;
@@ -988,7 +1028,7 @@ docmd(cx) int cx;
 #ifndef NOCKUDIA
     if ((x = cmtxt("Number to be dialed", "", &s)) < 0)
       return x;
-    /***/ debug(F110, "ckuusr calling ckdial", s, 0);
+    debug(F110, "ckuusr calling ckdial", s, 0);
     return ckdial(s);
 #endif
 
@@ -1042,9 +1082,9 @@ docmd(cx) int cx;
       return x;
 
     /*
-         * If foreign file name omitted, get
-         * foreign and local names separately
-         */
+     * If foreign file name omitted, get
+     * foreign and local names separately
+     */
 
     x = 0; /* For some reason cmtxt returns 1 */
     if (*cmarg == NUL) {
@@ -1123,7 +1163,7 @@ docmd(cx) int cx;
     return x;
 #ifndef NODOHLP
   case XXHLP: /* Help */
-    x = cmkey(cmdtab, ncmd, "C-Kermit command", "help");
+    x = cmkey(cmdtab, ncmd, "uCKermit command", "help");
     return dohlp(x);
 #endif
   case XXHAN: /* Hangup */
@@ -1192,9 +1232,12 @@ docmd(cx) int cx;
     } else if ((x = cmcfm()) < 0)
       return x;
     cmarg = line; /* File to send */
+#ifdef DEBUG
     debug(F110, "Sending:", cmarg, 0);
-    if (*cmarg2 != '\0')
+    if (*cmarg2 != '\0') {
       debug(F110, " as:", cmarg2, 0);
+	}
+#endif
     sstate = 's'; /* Set start state */
     if (local)
       displa = 1;
@@ -1217,8 +1260,8 @@ docmd(cx) int cx;
     if (x < 0)
       return x;
     return doprm(x);
-
 #ifndef NOPUSH
+
   /*
    * XXSHE code by H. Fischer;
    *   Copyright rights assigned to Columbia Univ
@@ -1233,7 +1276,7 @@ docmd(cx) int cx;
   case XXSHE: /* Local shell command */
   {
     int pid;
-    if (cmtxt("Unix shell command to execute", "", &s) < 0)
+    if (cmtxt("UNIX shell command to execute", "", &s) < 0)
       return -1;
 
     conres(); /* Make console normal  */
@@ -1245,11 +1288,13 @@ docmd(cx) int cx;
 #ifdef __linux__
       const
 #endif
-          char *shpath,
-          *shname, *shptr; /* For finding desired shell */
+      char *shpath,
+      *shname, *shptr; /* For finding desired shell */
       struct passwd *p;
       extern struct passwd *getpwuid();
+#ifndef __linux__
       extern int getuid();
+#endif
       char *defShel = "/bin/sh"; /* Default */
 
       p = getpwuid(getuid()); /* Get login data */
@@ -1262,10 +1307,10 @@ docmd(cx) int cx;
         if (*shptr++ == '/')
           shname = shptr;
 
-/*
- * Remove following uid calls
- * if they cause trouble
- */
+ /*
+  * Remove following uid calls
+  * if they cause trouble
+  */
 
 #ifdef BSD4
 #ifndef BSD41
@@ -1273,37 +1318,34 @@ docmd(cx) int cx;
       seteuid(getuid()); /*  checks. */
 #endif
 #endif
-      if (*s == NUL)                          /* Interactive sh requested */
+      if (*s == NUL) {                        /* Interactive sh requested */
         execl(shpath, shname, "-i", NULL);    /* Yes, do that */
-      else                                    /* Otherwise, */
+	  } else {                                /* Otherwise, */
         execl(shpath, shname, "-c", s, NULL); /* exec the given command */
+	  }
       exit(BAD_EXIT);
-    }      /* Just punt if it didn't work */
-    else { /* Parent */
+    }                                   /* Just punt if it didn't work */
+    else {                              /* Parent */
 
-      int wstat; /* Kermit must wait for child */
+      int wstat;                        /* Kermit must wait for child */
       SIGTYP (*istat)(), (*qstat)();
 
       istat = signal(SIGINT, SIG_IGN);  /* Let the fork handle keyboard */
       qstat = signal(SIGQUIT, SIG_IGN); /* interrupts itself... */
 
       while (((wstat = wait((int *)0)) != pid) && (wstat != -1))
-        ;
+        ;                               /* Wait for fork */
 
-          /*
-           * Wait for fork
-           */
-        
-      signal(SIGINT, istat); /* Restore interrupts */
+      signal(SIGINT, istat);            /* Restore interrupts */
       signal(SIGQUIT, qstat);
     }
 #endif
-    concb(escape); /* Console back in cbreak mode */
+    concb(escape);                      /* Console back in cbreak mode */
     return 0;
   }
 #endif
 
-  case XXSHO: /* Show */
+  case XXSHO:                           /* Show */
     x = cmkey(shotab, 2, "", "parameters");
     if (x < 0)
       return x;
@@ -1359,7 +1401,7 @@ docmd(cx) int cx;
       printf("?Take files nested too deeply\n");
       return -2;
     }
-    if ((y = cmifi("C-Kermit command file", "", &s, &x)) < 0) {
+    if ((y = cmifi("uCKermit command file", "", &s, &x)) < 0) {
       if (y == -3) {
         printf("?A file specification is required\n");
         return -2;
@@ -1402,8 +1444,8 @@ docmd(cx) int cx;
       return -2;
     }
     if ((y = cmcfm()) < 0)
-      return y; /* Confirm the command */
-                /*
+      return y; /* Confirm the command
+                 *
                  *   if (!local) {
                  *       printf("?Transmit requires prior SET LINE\n");
                  *       return(-2);
@@ -1427,7 +1469,8 @@ docmd(cx) int cx;
  * connection is made.
  */
 
-doconect() {
+doconect()
+{
   int x;
 
   conres();      /* Put console back to normal */
@@ -1446,22 +1489,31 @@ doconect() {
  * 1 on obvious failure.
  */
 
-/*
- * Things to add:
- *  . Make both text and binary mode obey set file bytesize.
- *  . Maybe allow user to specify terminators other than CR?
- *  . Maybe allow user to specify prompts other than single characters?
- */
+ /*
+  * Things to add:
+  *   - Make both text and binary mode obey set file bytesize.
+  *   - Maybe allow user to specify terminators other than CR?
+  *   - Maybe allow user to specify prompts other than single characters?
+  */
 
 int tr_int; /* Flag if TRANSMIT interrupted */
 
+#ifdef __linux__
+void
+#endif
 trtrap()
 { /* TRANSMIT interrupt trap */
   tr_int = 1;
+#ifdef __linux__
   return 0;
+#endif
 }
 
-transmit(s, t) char *s;
+transmit(s, t)
+#ifdef __linux__
+const
+#endif
+char *s;
 char t;
 {
 #define LINBUFSIZ 150
@@ -1472,8 +1524,12 @@ char t;
   int x, c, i, n; /* Workers... */
                   /* CHAR tt; */
 
-  /* tt = */ dopar(t); /* Turnaround char, with parity */
+  (void)n;
+  dopar(t); /* Turnaround char, with parity */
+
+#ifdef DEBUG
   debug(F101, "transmit turnaround", "", t);
+#endif
 
   if (zopeni(ZIFILE, s) == 0) { /* Open the file to be transmitted */
     printf("?Can't open %s\n", s);

@@ -1,6 +1,41 @@
-char *connv = "Connect Command for UNIX, 4G(026), 22 Apr 2021";
+char *connv = "Connect Command for UNIX, 4G(029), 23 Apr 2021";
 
 /* C K U C O N -- Dumb terminal connection to remote system, for UNIX */
+
+/*
+ * Copyright (C) 1981-2011,
+ *   Trustees of Columbia University in the City of New York.
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ *   modification, are permitted provided that the following conditions
+ *   are met:
+ *
+ *   - Redistributions of source code must retain the above copyright 
+ *       notice, this list of conditions and the following disclaimer.
+ *      
+ *   - Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in   
+ *       the documentation and/or other materials provided with the
+ *       distribution.                                                     
+ *     
+ *   - Neither the name of Columbia University nor the names of its
+ *       contributors may be used to endorse or promote products derived
+ *       from this software without specific prior written permission. 
+ *       
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ */
 
 /*
  * Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
@@ -22,12 +57,7 @@ char *connv = "Connect Command for UNIX, 4G(026), 22 Apr 2021";
 #include <errno.h>
 #include <signal.h>
 #include <stdio.h>
-
-#ifndef ZILOG
 #include <setjmp.h>                  /* Longjumps */
-#else
-#include <setret.h>
-#endif
 
 #ifndef SIGUSR1
 #define SIGUSR1 16
@@ -49,10 +79,10 @@ char temp[50];
 #define LBUFL 200                    /* Line buffer */
 char lbuf[LBUFL];
 
-/* 
- * Connect state parent/child
- * communication signal handlers
- */
+ /* 
+  * Connect state parent/child
+  * communication signal handlers
+  */
 
 static jmp_buf env_con;              /* Envir ptr for connect errors */
 
@@ -64,7 +94,8 @@ conn_int()                           /* Modem read failure handler, */
 
 /* C O N E C T -- Perform terminal connection */
 
-conect() {
+conect()
+{
   int pid,                           /* process id of child: modem reader */
       parent_id,                     /* process id of parent: kbd. reader */
       n;
@@ -75,11 +106,11 @@ conect() {
   char errmsg[50], *erp;
 
   if (!local) {
-    printf("Sorry, you must 'set line' first\n");
+    printf("You must 'set line' first\n");
     return -2;
   }
   if (speed < 0) {
-    printf("Sorry, you must 'set speed' first\n");
+    printf("You must 'set speed' first\n");
     return -2;
   }
   if ((escape < 0) || (escape > 0177)) {
@@ -88,7 +119,7 @@ conect() {
   }
   if (ttopen(ttname, &local, mdmtyp) < 0) {
     erp = errmsg;
-    sprintf(erp, "Sorry, can't open %s", ttname);
+    sprintf(erp, "Can't open %s", ttname);
     perror(errmsg);
     return -2;
   }
@@ -106,12 +137,12 @@ conect() {
    */
 
   if (conbin(escape) < 0) {
-    printf("Sorry, can't condition console terminal\n");
+    printf("Can't condition console terminal\n");
     return -2;
   }
   if (ttvt(speed, flow) < 0) {
     conres();
-    printf("Sorry, Can't condition communication line\n");
+    printf("Can't condition communication line\n");
     return -2;
   }
 
@@ -196,7 +227,8 @@ conect() {
 
 /* H C O N N E -- Give help message for connect */
 
-hconne() {
+hconne()
+{
   int c;
   static char *hlpmsg[] = {
       "\
@@ -220,7 +252,9 @@ hconne() {
 
 /* C H S T R -- Make a printable string out of a character */
 
-char *chstr(c) int c;
+char *
+chstr(c)
+int c;
 {
   static char s[8];
   char *cp = s;
@@ -235,7 +269,8 @@ char *chstr(c) int c;
 
 /* D O E S C -- Process an escape character argument */
 
-doesc(c) char c;
+doesc(c)
+char c;
 {
   CHAR d;
 

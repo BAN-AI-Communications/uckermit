@@ -1,4 +1,39 @@
-/* C K U U S 3 -- "User Interface" for Unix Kermit, part 3 */
+/* C K U U S 3 -- "User Interface" for UNIX Kermit, part 3 */
+
+/*
+ * Copyright (C) 1981-2011,
+ *   Trustees of Columbia University in the City of New York.
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ *   modification, are permitted provided that the following conditions
+ *   are met:
+ *
+ *   - Redistributions of source code must retain the above copyright 
+ *       notice, this list of conditions and the following disclaimer.
+ *      
+ *   - Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in   
+ *       the documentation and/or other materials provided with the
+ *       distribution.                                                     
+ *     
+ *   - Neither the name of Columbia University nor the names of its
+ *       contributors may be used to endorse or promote products derived
+ *       from this software without specific prior written permission. 
+ *       
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ */
 
 /*
  * Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
@@ -18,10 +53,6 @@
  * SET and REMOTE commands; screen, debug,
  * interrupt, and logging functions */
 
-/*
- * Includes
- */
-
 #include "ckcdeb.h"
 #include "ckcker.h"
 #include "ckucmd.h"
@@ -36,17 +67,15 @@
 #include <string.h>
 #endif
 
-/* Variables */
-
 extern int     size,  spsiz,   rpsiz, urpsiz,   npad,  timint,
-                 srvtim,  rtimo,   speed,  local, server,  lpcapr,
-                      fmask,  cmask, backgrd, atcapr,   flow,  displa,
-                         binary,  fncnv,   delay, parity, deblog,  escape,
-                          xargc,   turn,  duplex, cxseen, czseen,   nfils,
-                         ckxech, pktlog,  seslog, tralog, stdouf,  turnch,
-                           bctr,   bctu,   dfloc, mdmtyp,   keep,  maxtry,
-                         rptflg, ebqflg,    warn,  quiet,  cnflg,   timef,
-                         spsizf, mypadn;
+             srvtim,  rtimo,   speed,  local, server,  lpcapr,
+              fmask,  cmask, backgrd, atcapr,   flow,  displa,
+             binary,  fncnv,   delay, parity, deblog,  escape,
+              xargc,   turn,  duplex, cxseen, czseen,   nfils,
+             ckxech, pktlog,  seslog, tralog, stdouf,  turnch,
+               bctr,   bctu,   dfloc, mdmtyp,   keep,  maxtry,
+             rptflg, ebqflg,    warn,  quiet,  cnflg,   timef,
+             spsizf, mypadn;
 
 extern long filcnt, tlci, tlco, ffc, tfc, fsize;
 
@@ -56,17 +85,7 @@ extern CHAR stchr, mystch, sstate, padch, mypadc, eol, seol, ctlq;
 extern CHAR filnam[], ttname[];
 char *strcpy();
 
-/*
- * Declarations from
- * cmd package
- */
-
 extern char cmdbuf[]; /* Command buffer */
-
-/*
- * From main
- * ckuser module...
- */
 
 extern char line[100], *lp; /* Character buffer for anything */
 extern char debfil[50],     /* Debugging log file name */
@@ -98,6 +117,7 @@ struct keytab dpxtab[] = {"full", 0, 0, "half", 1, 0};
 
 struct keytab filtab[] = {"display", XYFILD, 0, "names",   XYFILN, 0,
                           "type",    XYFILT, 0, "warning", XYFILW, 0};
+
 int nfilp = (sizeof(filtab) / sizeof(struct keytab));
 
 /*
@@ -109,6 +129,7 @@ struct keytab srtab[] = {
     "end-of-packet",   XYEOL,  0, "packet-length", XYLEN,  0,
     "pad-character",   XYPADC, 0, "padding",       XYNPAD, 0,
     "start-of-packet", XYMARK, 0, "timeout",       XYTIMO, 0};
+
 int nsrtab = (sizeof(srtab) / sizeof(struct keytab));
 
 /*
@@ -117,6 +138,7 @@ int nsrtab = (sizeof(srtab) / sizeof(struct keytab));
  */
 
 struct keytab flotab[] = {"none", 0, 0, "xon/xoff", 1, 0};
+
 int nflo = (sizeof(flotab) / sizeof(struct keytab));
 
 /*
@@ -125,9 +147,10 @@ int nflo = (sizeof(flotab) / sizeof(struct keytab));
  */
 
 struct keytab hshtab[] = {
-    "bell", 007,  0,   "cr",  015,    0,   "esc", 033,
-    0,      "lf", 012, 0,     "none", 999, 0,
-    "xoff", 023,  0,   "xon", 021,    0};
+    "bell",  007,     0,   "cr",      015,     0,   "esc",      033,
+         0, "lf",   012,      0,   "none",   999,       0,   "xoff",
+       023,    0, "xon",    021,        0};
+
 int nhsh = (sizeof(hshtab) / sizeof(struct keytab));
 
 struct keytab fntab[] = {/* File naming */
@@ -146,8 +169,11 @@ extern int nmdm;
  * table
  */
 
-struct keytab partab[] = {"even", 'e',   0,   "mark", 'm',     0,   "none", 0,
-                          0,      "odd", 'o', 0,      "space", 's', 0};
+struct keytab partab[] = {"even",     'e',        0,   "mark",
+                             'm',       0,   "none",        0,
+                               0,   "odd",      'o',        0,
+                         "space",     's',        0};
+
 int npar = (sizeof(partab) / sizeof(struct keytab));
 
 /*
@@ -155,14 +181,16 @@ int npar = (sizeof(partab) / sizeof(struct keytab));
  * table
  */
 
-struct keytab onoff[] = {"off", 0, 0, "on", 1, 0};
+struct keytab onoff[] = {"off", 0, 0,
+                          "on", 1, 0};
 
 /*
  * Incomplete File
  * Disposition table
  */
 
-struct keytab ifdtab[] = {"discard", 0, 0, "keep", 1, 0};
+struct keytab ifdtab[] = {"discard", 0, 0,
+                             "keep", 1, 0};
 
 /*
  * Terminal parameters
@@ -180,16 +208,18 @@ struct keytab srvtab[] = {"timeout", 0, 0};
 
 /* D O P R M -- Set a parameter */
 
-/*
- *  Returns:
- *   -2: illegal input
- *   -1: reparse needed
- *   0: success
- */
+ /*
+  *  Returns:
+  *   -2: illegal input
+  *   -1: reparse needed
+  *   0: success
+  */
 
-doprm(xx) int xx;
+doprm(xx)
+int xx;
 {
-  int x, y, z;
+  int x = 0;
+  int y, z;
   char *s;
 
   switch (xx) {
@@ -222,7 +252,7 @@ doprm(xx) int xx;
 
     x = strcmp(s, dftty) ? -1 : dfloc; /* Maybe let ttopen figure it out */
     if (ttopen(s, &x, mdmtyp) < 0) {   /* Can we open the new line? */
-      perror("Sorry, can't open line");
+      perror("Can't open line");
       return -2; /* If not, give bad return */
     }
     if (x > -1)
@@ -265,12 +295,6 @@ doprm(xx) int xx;
     if ((y = cmkey(filtab, nfilp, "File parameter", "")) < 0)
       return y;
     switch (y) {
-    /* int z; */
-
-                /*
-                 * Use exterior version of z,
-                 * to avoid OS-9 C Compiler bug.
-                 */
 
     case XYFILD: /* Display */
       y = seton(&z);
@@ -348,9 +372,9 @@ doprm(xx) int xx;
       return x;
 
     /*
-         * If parity not none, then
-         * we also want 8th-bit prefixing
-         */
+     * If parity not none, then
+     * we also want 8th-bit prefixing
+     */
 
     if ((parity = y))
       ebqflg = 1;
@@ -360,7 +384,7 @@ doprm(xx) int xx;
     return 0;
 
   case XYPROM:
-    if ((x = cmtxt("Program's command prompt", "C-Kermit>", &s)) < 0)
+    if ((x = cmtxt("Program's command prompt", "uCKermit>", &s)) < 0)
       return x;
     if (*s == '\42') {       /* Quoted string? */
       x = strlen(s) - 1;     /* Yes, strip quotes. */
@@ -383,7 +407,7 @@ doprm(xx) int xx;
     case XYSERT:
       sprintf(tmp, "%d", DSRVTIM);
       if ((y = cmnum(
-                                 "interval for server NAKs, 0 = none", tmp, 10, &x)) < 0)
+        "interval for server NAKs, 0 = none", tmp, 10, &x)) < 0)
         return y;
       if (x < 0) {
         printf("\n?Specify a positive number, or 0 for no server NAKs\n");
@@ -420,9 +444,9 @@ doprm(xx) int xx;
     }
 
     /*
-         * SET
-         * SEND/RECEIVE
-         */
+     * SET
+     * SEND/RECEIVE
+     */
 
   case XYRECV:
   case XYSEND:
@@ -475,7 +499,7 @@ doprm(xx) int xx;
 
     case XYNPAD: /* Padding */
       y = cmnum(
-                        "How many padding characters for inbound packets", "0", 10, &x);
+        "How many padding characters for inbound packets", "0", 10, &x);
       if ((y = setnum(&z, x, y, 94)) < 0)
         return y;
       if (xx == XYRECV)
@@ -486,7 +510,7 @@ doprm(xx) int xx;
 
     case XYPADC: /* Pad character */
       y = cmnum(
-                        "Decimal ASCII code for inbound pad character", "0", 10, &x);
+        "Decimal ASCII code for inbound pad character", "0", 10, &x);
       if ((y = setcc(&z, x, y)) < 0)
         return y;
       if (xx == XYRECV)
@@ -540,7 +564,7 @@ doprm(xx) int xx;
 /* C H K S P D -- Check if argument is a valid baud rate */
 
 chkspd(x) int x;
-{ /* XXX(jhj): Needs fixin! */
+{                       /* XXX(jhj): Needs fixin! */
   switch (x) {
   case 0:
   case 110:
@@ -553,7 +577,7 @@ chkspd(x) int x;
   case 4800:
   case 9600:
   case 19200:
-#ifdef __linux__ /* XXX(jhj): nonononono */
+#ifdef __linux__        /* XXX(jhj): nonononono */
   case 38400:
   case 57600:
   case 115200:
@@ -577,7 +601,8 @@ chkspd(x) int x;
 
 /* S E T O N -- Parse on/off (default on), set parameter to result */
 
-seton(prm) int *prm;
+seton(prm)
+int *prm;
 {
   int x, y;
   if ((y = cmkey(onoff, 2, "", "on")) < 0)
@@ -596,13 +621,14 @@ seton(prm) int *prm;
  * y - return code from cmnum
  */
 
-setnum(prm, x, y, max) int x, y, *prm, max;
+setnum(prm, x, y, max)
+int x, y, *prm, max;
 {
   debug(F101, "setnum", "", y);
   if (y < 0)
     return y;
   if (x > max) {
-    printf("\n?Sorry, %d is the maximum\n", max);
+    printf("\n?%d is the maximum\n", max);
     return -2;
   }
   if ((y = cmcfm()) < 0)
@@ -613,7 +639,8 @@ setnum(prm, x, y, max) int x, y, *prm, max;
 
 /* S E T C C -- Set parameter to an ASCII control character value */
 
-setcc(prm, x, y) int x, y, *prm;
+setcc(prm, x, y)
+int x, y, *prm;
 {
   if (y < 0)
     return y;
@@ -629,7 +656,8 @@ setcc(prm, x, y) int x, y, *prm;
 
 /* D O R M T -- Do a remote command */
 
-dormt(xx) int xx;
+dormt(xx)
+int xx;
 {
   int x;
   char *s, sbuf[50], *s2;
@@ -706,7 +734,7 @@ dormt(xx) int xx;
 
   case XZPRI: /* Print */
     if ((x = cmtxt(
-                           "Remote file(s) to print on remote printer", "", &s)) < 0)
+      "Remote file(s) to print on remote printer", "", &s)) < 0)
       return x;
     return sstate = rfilop(s, 'S');
 
@@ -735,7 +763,8 @@ dormt(xx) int xx;
 
 /* R F I L O P -- Remote File Operation */
 
-rfilop(s, t) char *s, t;
+rfilop(s, t)
+char *s, t;
 {
   if (*s == NUL) {
     printf("?File specification required\n");
@@ -757,7 +786,8 @@ rfilop(s, t) char *s, t;
  *  This version is for a dumb tty.
  */
 
-screen(f, c, n, s) int f;
+screen(f, c, n, s)
+int f;
 long n;
 char c;
 char *s;
@@ -883,7 +913,7 @@ char *s;
     conoc('?');
     conoll(s);
     p = 0;
-    return; /* +1   */
+    return;    /* +1 */
 
   case SCR_WM: /* Warning message */
     conoll("");
@@ -928,7 +958,8 @@ char *s;
 
 /* I N T M S G -- Issue message about terminal interrupts */
 
-intmsg(n) long n;
+intmsg(n)
+long n;
 {
   extern char *chstr();
   char buf[80];
@@ -942,9 +973,9 @@ intmsg(n) long n;
 #ifdef UXIII
 
     /*
-         * We need to signal
-         * before kb input
-         */
+     * We need to signal
+     * before kb input
+     */
 
     sprintf(buf, "Type escape (%s) followed by:", chstr(escape));
     screen(SCR_TN, 0, 0l, buf);
@@ -964,7 +995,8 @@ intmsg(n) long n;
  * destroy typeahead
  */
 
-chkint() {
+chkint()
+{
   int ch, cn;
 
   if ((!local) || (quiet))
@@ -975,9 +1007,10 @@ chkint() {
   while (cn > 0) { /* Yes, read it. */
     cn--;
 
-    /* Give read 5 seconds
-         * for interrupt character
-         */
+    /*
+     * Give read 5 seconds
+     * for interrupt character
+     */
 
     if ((ch = coninc(5)) < 0)
       return 0;
@@ -1030,7 +1063,8 @@ chkint() {
 
 #ifdef DEBUG
 #define DBUFL 1200
-debug(f, s1, s2, n) int f, n;
+debug(f, s1, s2, n)
+int f, n;
 char *s1, *s2;
 {
   static char s[DBUFL];
@@ -1107,7 +1141,8 @@ char *s1, *s2;
  *  n  - Int, argument 3.
  */
 
-tlog(f, s1, s2, n) int f;
+tlog(f, s1, s2, n)
+int f;
 long n;
 char *s1, *s2;
 {

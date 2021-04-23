@@ -6,6 +6,41 @@
  */
 
 /*
+ * Copyright (C) 1981-2011,
+ *   Trustees of Columbia University in the City of New York.
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ *   modification, are permitted provided that the following conditions
+ *   are met:
+ *
+ *   - Redistributions of source code must retain the above copyright 
+ *       notice, this list of conditions and the following disclaimer.
+ *      
+ *   - Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in   
+ *       the documentation and/or other materials provided with the
+ *       distribution.                                                     
+ *     
+ *   - Neither the name of Columbia University nor the names of its
+ *       contributors may be used to endorse or promote products derived
+ *       from this software without specific prior written permission. 
+ *       
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ */
+
+/*
  * Author: Frank da Cruz (fdc@cunixc.cc.columbia.edu, FDCCU@CUVMA.BITNET),
  * Columbia University Center for Computing Activities.
  *
@@ -35,7 +70,7 @@
 extern int spsiz, spmax, rpsiz, timint, npad, ebq, ebqflg;
 extern int rpt, rptq, rptflg, capas, spsizf;
 extern int pktnum, prvpkt, sndtyp, bctr, bctu, rsn, rln;
-extern int maxtry, size, osize, maxsize, spktl, nfils;
+extern int maxtry, size, maxsize, spktl, nfils;
 extern int stdouf, warn, timef, parity, speed, turn, turnch;
 extern int delay, displa, pktlog, tralog, seslog, xflg, mypadn;
 extern int deblog, hcflg, binary, fncnv, local, server, cxseen;
@@ -189,7 +224,8 @@ input() {
 
 /*  D O P A R  --  Add an appropriate parity bit to a character  */
 
-/* TODO(jhj): Remove
+/*
+ * TODO(jhj): Remove??? Used in a few places...
  * (PWP) This is still used in the Mac terminal emulator,
  * so we have to keep it
  */
@@ -496,13 +532,21 @@ int *num;
   *num = (*num + 1) % 64;         /* Increment packet number mod 64 */
 }
 
-sigint(sig, code)
+sigint(
+#ifdef DEBUG
+sig, code
+#endif
+)
+#ifdef DEBUG
 int sig, code;
+#endif
 {                                 /* Terminal interrupt handler */
   if (local)
     errpkt("User typed ^C");
+#ifdef DEBUG
   debug(F101, "sigint() caught signal", "", sig);
   debug(F101, " code", "", code);
+#endif
   doexit(GOOD_EXIT);              /* Exit program */
 }
 
@@ -732,6 +776,9 @@ struct zattr *yy;
    * Fill in the attributes
    * we have received
    */
+
+  (void)l;
+  (void)x;
 
   while ((c = *s++)) {               /* Get attribute tag */
     aln = xunchar(*s++);             /* Length of attribute string */

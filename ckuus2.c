@@ -1,6 +1,41 @@
 /* C K U U S 2 -- "User Interface" STRINGS module for UNIX Kermit */
 
 /*
+ * Copyright (C) 1981-2011,
+ *   Trustees of Columbia University in the City of New York.
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ *   modification, are permitted provided that the following conditions
+ *   are met:
+ *
+ *   - Redistributions of source code must retain the above copyright 
+ *       notice, this list of conditions and the following disclaimer.
+ *      
+ *   - Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in   
+ *       the documentation and/or other materials provided with the
+ *       distribution.                                                     
+ *     
+ *   - Neither the name of Columbia University nor the names of its
+ *       contributors may be used to endorse or promote products derived
+ *       from this software without specific prior written permission. 
+ *       
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ */
+
+/*
  * Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
  * Columbia University Center for Computing Activities.
  *
@@ -14,10 +49,10 @@
  *   provided this copyright notice is retained.
  */
 
-/*
- * This module separates long strings from
- * the body of the ckuser module.
- */
+ /*
+  * This module separates long strings from
+  * the body of the ckuser module.
+  */
 
 #include "ckcdeb.h"
 #include "ckcker.h"
@@ -30,21 +65,14 @@
 #include <string.h>
 #endif
 
-/*    
- * Conditional
- * Includes       
- */   
-           
 /*
  * Whether to include
  * <sys/file.h>...
  */
 
-#ifndef PROVX1
 #ifndef XENIX
 #ifndef unos
 #include <sys/file.h>             /* File information */
-#endif
 #endif
 #endif
 
@@ -53,39 +81,32 @@
 #include <sys/file.h>
 #endif
 
-/*
- * System III
- * or System V
- */
+ /*
+  * System III
+  * or System V
+  */
 
 #ifdef UXIII
 #include <termio.h>
 #include <sys/ioctl.h>
 #include <errno.h>                /* error numbers for system returns */
 #include <fcntl.h>                /* directory reading for locking */
-#ifdef ATT7300
-#ifndef NOCKUDIA
-#include <sys/phone.h>            /* UNIX PC, internal modem dialer */
-#endif
-#endif
 #endif
 
 #ifdef HPUX
 #include <sys/modem.h>
 #endif
 
-/*
- * Not System III
- * or System V
- */
+ /*
+  * Not System III
+  * or System V
+  */
 
 #ifndef UXIII
 #include <sgtty.h>                /* Set/Get tty modes */
-#ifndef PROVX1
 #ifndef V7
 #ifndef BSD41
 #include <sys/time.h>             /* Clock info (for break generation) */
-#endif
 #endif
 #endif
 #endif
@@ -123,6 +144,7 @@ int bcharc;
 static char *hlp1[] = {
 "\r",
 "  Usage: kermit [ -x arg [ -x arg ] ... [ -yyy ] ... ] ]\n",
+#ifndef NODOHLP
 "    'x' is an option that requires an argument,\n",
 "      'y' is an option with no argument:\n",
 "        ACTION (* options also require -l and -b) --\n",
@@ -148,6 +170,7 @@ static char *hlp1[] = {
 #endif
 "          -e length  (Extended) Receive packet length\n",
 "  If no ACTION is specified, kernit enters interactive dialog.\n",
+#endif
 ""};
 
 /* U S A G E */
@@ -180,27 +203,36 @@ From system level, type 'kermit -h' to get help about command line args.\
                          ""};
 #endif
 
+#ifndef NODOHLP
 static char *hmxxbye = "\
 Shut down and log out a remote Kermit server";
+#endif
 
+#ifndef NODOHLP
 static char *hmxxclo = "\
 Close one of the following logs:\n\
  session, transaction, packet, debugging -- 'help log' for further info.";
+#endif
 
+#ifndef NODOHLP
 static char *hmxxcon = "\
 Connect to a remote system via the tty device given in the\n\
 most recent 'set line' command";
+#endif
 
+#ifndef NODOHLP
 static char *hmxxget = "\
 Format: 'get filespec'.  Tell the remote Kermit server to send the named\n\
 files.  If filespec is omitted, then you are prompted for the remote and\n\
 local filenames separately.";
+#endif
 
+#ifndef NODOHLP
 static char *hmxxlg[] = {
     "\
 Record information in a log file:\n\n\
  debugging             Debugging information, to help track down\n\
-  (default debug.log)  bugs in the C-Kermit program.\n\n\
+  (default debug.log)  bugs in the uCKermit program.\n\n\
  packets               Kermit packets, to help track down protocol problems.\n\
   (packet.log)\n\n",
 
@@ -209,8 +241,10 @@ Record information in a log file:\n\n\
  transactions          Names and statistics about files transferred.\n\
   (transact.log)\n",
     ""};
+#endif
 
 #ifndef NOCKUSCR
+#ifndef NODOHLP
 static char *hmxxlogi[] = {
     "\
 Syntax: script text\n\n",
@@ -235,7 +269,9 @@ Syntax: script text\n\n",
     "where dashed sequences are followed as long as previous expects fail.\n",
     ""};
 #endif
+#endif
 
+#ifndef NODOHLP
 static char *hmxxrc[] = {
     "\
 Format: 'receive [filespec]'.  Wait for a file to arrive from the other\n\
@@ -244,23 +280,35 @@ Kermit, which must be given a 'send' command.  If the optional filespec is\n",
     "given, the (first) incoming file will be stored under that name, otherwise\n\
 it will be stored under the name it arrives with.",
     ""};
+#endif
 
+#ifndef NODOHLP
 static char *hmxxsen = "\
 Format: 'send file1 [file2]'.  File1 may contain wildcard characters '*' or\n\
 '?'.  If no wildcards, then file2 may be used to specify the name file1 is\n\
 sent under; if file2 is omitted, file1 is sent under its own name.";
+#endif
 
+#ifndef NODOHLP
 static char *hmxxser = "\
 Enter server mode on the currently selected line.  All further commands\n\
 will be taken in packet form from the other Kermit program.";
+#endif
 
+#ifndef NODOHLP
 static char *hmhset[] = {
     "\
 The 'set' command is used to establish various communication or file\n",
     "parameters.  The 'show' command can be used to display the values of\n",
     "'set' parameters.  Help is available for each individual parameter;\n",
     "type 'help set ?' to see what's available.\n", ""};
+#else
+static char *hmhset[] = {
+    "\
+Type 'help set ?' to see settings available.\n", ""};
+#endif
 
+#ifndef NODOHLP
 static char *hmxychkt[] = {"\
 Type of packet block check to be used for error detection, 1, 2, or 3.\n",
                            "Type 1 is standard, and catches most errors.  "
@@ -268,14 +316,16 @@ Type of packet block check to be used for error detection, 1, 2, or 3.\n",
                            "rigorous checking at the cost of higher overhead.  "
                            "Not all Kermit programs\n",
                            "support types 2 and 3.\n", ""};
+#endif
 
+#ifndef NODOHLP
 static char *hmxyf[] = {
     "\
 set file: names, type, warning, display.\n\n",
     "'names' are normally 'converted', which means file names are converted\n",
     "to 'common form' during transmission; 'literal' means use filenames\n",
     "literally (useful between like systems).\n\n",
-    "'type' is normally 'text', in which conversion is done between Unix\n",
+    "'type' is normally 'text', in which conversion is done between UNIX\n",
     "newlines and CRLF line delimiters; 'binary' means to do no conversion.\n",
     "Use 'binary' for executable programs or binary data.\n\n",
     "'warning' is 'on' or 'off', normally off.  When off, incoming files "
@@ -287,7 +337,9 @@ set file: names, type, warning, display.\n\n",
     "on your screen when in local mode.  'set display off' is useful for\n",
     "allowing file transfers to proceed in the background.\n\n",
     ""};
+#endif
 
+#ifndef NODOHLP
 static char *hmhrmt[] = {
     "\
 The 'remote' command is used to send file management instructions to a\n",
@@ -298,12 +350,23 @@ The 'remote' command is used to send file management instructions to a\n",
     "see a list of available remote commands.  Type 'help remote x' to get\n",
     "further information about a particular remote command 'x'.\n",
     ""};
+#else
+static char *hmhrmt[] = {
+    "\
+Type 'remote ?' for available remote commands.\n"
+    "Type 'help remote x' for information for remote command 'x'.\n",
+    ""};
+#endif
 
 /* D O H L P -- Give a help message */
 
-dohlp(xx) int xx;
+dohlp(xx)
+int xx;
 {
-  int x, y;
+  int x;
+#ifndef NODOHLP
+  int y;
+#endif
 
   if (xx < 0)
     return xx;
@@ -320,7 +383,7 @@ dohlp(xx) int xx;
     return hmsg(hmxxcon);
 
   case XXCWD:
-    return hmsg("Change Working Directory, equivalent to Unix 'cd' command");
+    return hmsg("Change Working Directory, equivalent to UNIX 'cd' command");
 
   case XXDEL:
     return hmsg("Delete a local file or files");
@@ -392,13 +455,13 @@ Tell the remote Kermit server to shut down without logging out.");
 #ifndef NOPUSH
   case XXSHE:
     return hmsg("\
-Issue a command to the Unix shell (space required after '!')");
+Issue a command to the UNIX shell (space required after '!')");
 #endif
 
   case XXSHO:
     return hmsg("\
 Display current values of 'set' parameters; 'show version' will display\n\
-program version information for each of the C-Kermit modules.");
+program version information for each of the uCKermit modules.");
 
   case XXSPA:
     return hmsg("Display disk usage in current device, directory");
@@ -428,7 +491,8 @@ Specify 0 for no waiting.");
 
 /* H M S G -- Get confirmation, then print the given message */
 
-hmsg(s) char *s;
+hmsg(s)
+char *s;
 {
   int x;
   if ((x = cmcfm()) < 0)
@@ -437,7 +501,8 @@ hmsg(s) char *s;
   return 0;
 }
 
-hmsga(s) char *s[];
+hmsga(s)
+char *s[];
 { /* Same function, but for arrays */
   int x, i;
   if ((x = cmcfm()) < 0)
@@ -448,10 +513,11 @@ hmsga(s) char *s[];
   return 0;
 }
 
-/* B C A R C B -- Help format help for baud rates */
+/* B C A R C B -- Format helper for baud rates */
 
 #ifndef NODOHLP
-bcarcb(calsp) long calsp;
+bcarcb(calsp)
+long calsp;
 {
 #ifndef MAXBRATE
 #ifdef B4000000
@@ -634,7 +700,7 @@ bcarcb(calsp) long calsp;
 #endif
 
 #ifndef MAXBRATE
-#define MAXBRATE 19200
+#define MAXBRATE 19200  /* XXX(jhj): Ugh */
 #endif
 
   int brpln = 0;
@@ -649,11 +715,13 @@ bcarcb(calsp) long calsp;
   if (calsp > 10000000) brpln = 11;
   
   printf (" %ld",calsp);
+
   if (calsp >= MAXBRATE)
-          printf(".\n");
+    printf(".\n");
   else
-          printf(",");
+    printf(",");
   bcharc=bcharc+brpln;
+
   if (bcharc >= 66) {
     printf("\n");
     bcharc = 0;
@@ -663,7 +731,8 @@ bcarcb(calsp) long calsp;
 
 /* D O H S E T -- Give help for SET command */
 
-dohset(xx) int xx;
+dohset(xx)
+int xx;
 {
   if (xx == -3)
     return hmsga(hmhset);
@@ -762,7 +831,7 @@ types of modems are supported by this program.");
     return 0;
 
   case XYPROM:
-    puts("Prompt string for this program, normally 'C-Kermit>'.");
+    puts("Prompt string for this program, normally 'uCKermit>'.");
     return 0;
 
   case XYRETR:
@@ -896,7 +965,7 @@ all specified as decimal numbers.");
   case XYSERV:
     puts("server timeout:");
     puts("\
-Server command wait timeout interval, how often the C-Kermit server issues");
+Server command wait timeout interval, how often the uCKermit server issues");
     puts("\
 a NAK while waiting for a command packet.  Specify 0 for no NAKs at all.");
     return 0;
@@ -909,7 +978,8 @@ a NAK while waiting for a command packet.  Specify 0 for no NAKs at all.");
 
 /* D O H R M T -- Give help about REMOTE command */
 
-dohrmt(xx) int xx;
+dohrmt(xx)
+int xx;
 {
   int x;
   if (xx == -3)
@@ -968,7 +1038,8 @@ about the specified user.");
 
 /* D O L O G -- Do the log command */
 
-dolog(x) int x;
+dolog(x)
+int x;
 {
   int y;
   char *s;
@@ -981,7 +1052,7 @@ dolog(x) int x;
 #else
     y = -2;
     s = "";
-    printf("%s", "- Sorry, debug log not available\n");
+    printf("%s", "- Debug log not available\n");
 #endif
     break;
 
@@ -999,7 +1070,7 @@ dolog(x) int x;
 #else
     y = -2;
     s = "";
-    printf("%s", "- Sorry, transaction log not available\n");
+    printf("%s", "- Transaction log not available\n");
 #endif
     break;
 
@@ -1058,7 +1129,14 @@ dolog(x) int x;
 
 /* D E B O P N -- Open a debugging file */
 
-debopn(s) char *s;
+debopn(
+#ifdef DEBUG
+s
+#endif
+)
+#ifdef DEBUG
+char *s;
+#endif
 {
 #ifdef DEBUG
   char *tp;
@@ -1083,9 +1161,8 @@ debopn(s) char *s;
 
 shopar()
 {
-
-  int i;
 #ifndef NOCKUDIA
+  int i;
   extern struct keytab mdmtab[];
   extern int nmdm;
 #endif
@@ -1146,7 +1223,6 @@ shopar()
   else
     printf("none\n");
   printf("Terminal emulation: %d bits\n", (cmask == 0177) ? 7 : 8);
-
   printf("\nProtocol Parameters:   Send    Receive");
   if (timef || spsizf)
     printf("    (* = override)");
@@ -1172,7 +1248,6 @@ shopar()
   if (rptflg)
     printf("   Repeat Prefix:  '%c'", rptq);
   printf("\n Length Limit: %11d%9d\n", maxsps, maxrps);
-
   printf("\nFile parameters:              Attributes:       ");
   if (atcapr)
     printf("on");
@@ -1331,7 +1406,8 @@ tstats()
 /* S D E B U -- Record spar results in debugging log */
 
 #ifdef DEBUG
-sdebu(len) int len;
+sdebu(len)
+int len;
 {
   debug(F111, "spar: data", rdatap, len);
   debug(F101, " spsiz ", "", spsiz);
@@ -1353,7 +1429,8 @@ sdebu(len) int len;
 
 /* R D E B U -- Debugging display of rpar() values */
 
-rdebu(len) int len;
+rdebu(len)
+int len;
 {
   debug(F111, "rpar: data", data + 1, len); /*** was rdatap ***/
   debug(F101, " rpsiz ", "", xunchar(data[1]));

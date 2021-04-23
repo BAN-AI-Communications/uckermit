@@ -1,7 +1,42 @@
 #ifndef NOCKUSCR
-char *loginv = "Script Command, 4G(020), 22 Apr 2021";
+char *loginv = "Script Command, 4G(024), 23 Apr 2021";
 
 /* C K U S C R -- Login script for logging onto remote system */
+
+/*
+ * Copyright (C) 1981-2011,
+ *   Trustees of Columbia University in the City of New York.
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ *   modification, are permitted provided that the following conditions
+ *   are met:
+ *
+ *   - Redistributions of source code must retain the above copyright 
+ *       notice, this list of conditions and the following disclaimer.
+ *      
+ *   - Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in   
+ *       the documentation and/or other materials provided with the
+ *       distribution.                                                     
+ *     
+ *   - Neither the name of Columbia University nor the names of its
+ *       contributors may be used to endorse or promote products derived
+ *       from this software without specific prior written permission. 
+ *       
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ */
 
 /*
  * This module should work under all versions of UNIX.
@@ -76,7 +111,8 @@ scrtime()                 /* Modem read failure handler */
  * 1 expecting to be called again after the ~d executes.
  */
 
-static sequenc()
+static
+sequenc()
 {
 
   int i;
@@ -166,7 +202,8 @@ static sequenc()
  * (or failure) in got_it
  */
 
-static recvSeq()
+static
+recvSeq()
 {
 
   char *e, got[7], trace[SBUFL];
@@ -217,7 +254,8 @@ static recvSeq()
  * or whatever)
  */
 
-static int outSeq()
+static int
+outSeq()
 {
   char *sb;
   int l;
@@ -264,7 +302,8 @@ static int outSeq()
 
 /* L O G I N -- Login to remote system */
 
-login(cmdstr) char *cmdstr;
+login(cmdstr)
+char *cmdstr;
 {
 
   SIGTYP (*saveAlm)();          /* save incoming alarm function */
@@ -274,15 +313,15 @@ login(cmdstr) char *cmdstr;
 
   tlog(F100, loginv, "", 0l);
   if (!local) {
-    printf("Sorry, you must 'set line' first\n");
+    printf("You must 'set line' first\n");
     return -2;
   }
   if (speed < 0) {
-    printf("Sorry, you must 'set speed' first\n");
+    printf("You must 'set speed' first\n");
     return -2;
   }
   if (ttopen(ttname, &local, mdmtyp) < 0) {
-    sprintf(seq_buf, "Sorry, can't open %s", ttname);
+    sprintf(seq_buf, "Can't open %s", ttname);
     perror(seq_buf);
     return -2;
   }
@@ -301,7 +340,7 @@ login(cmdstr) char *cmdstr;
    */
 
   if (ttvt(speed, flow) < 0) {
-    printf("Sorry, Can't condition communication line\n");
+    printf("Can't condition communication line\n");
     return -2;
   }
   saveAlm = signal(SIGALRM, SIG_IGN); /* save timer interrupt value */
@@ -324,9 +363,9 @@ login(cmdstr) char *cmdstr;
         goto failRet;                 /* no -- return failure */
 
       /*
-           * start of
-           * conditional send
-           */
+       * start of
+       * conditional send
+       */
 
       flushi();                       /* flush out input buffer */
       if (outSeq())
@@ -354,14 +393,16 @@ login(cmdstr) char *cmdstr;
 
 failRet:
   signal(SIGALRM, saveAlm);
-  printf("Sorry, script failed\n");
+  printf("Script failed\n");
   tlog(F100, "Script failed", "", 0l);
   return -2;
 }
 
 /* C H S T R -- Make printable string from a character */
 
-static char *chstr(c) char c;
+static char *
+chstr(c)
+char c;
 {
   static char sc[4];
 

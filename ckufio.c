@@ -1,6 +1,41 @@
-char *ckzv = "UNIX File Support, 4G(059), 22 Apr 2021";
+char *ckzv = "UNIX File Support, 4G(065), 23 Apr 2021";
 
-/* C K U F I O -- Kermit file system support for Unix systems */
+/* C K U F I O -- Kermit file system support for UNIX systems */
+
+/*
+ * Copyright (C) 1981-2011,
+ *   Trustees of Columbia University in the City of New York.
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ *   modification, are permitted provided that the following conditions
+ *   are met:
+ *
+ *   - Redistributions of source code must retain the above copyright 
+ *       notice, this list of conditions and the following disclaimer.
+ *      
+ *   - Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in   
+ *       the documentation and/or other materials provided with the
+ *       distribution.                                                     
+ *     
+ *   - Neither the name of Columbia University nor the names of its
+ *       contributors may be used to endorse or promote products derived
+ *       from this software without specific prior written permission. 
+ *       
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ */
 
 /*
  * Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
@@ -16,10 +51,6 @@ char *ckzv = "UNIX File Support, 4G(059), 22 Apr 2021";
  *   provided this copyright notice is retained.
  */
 
-/*
- * Includes
- */
-
 #include "ckcdeb.h"               /* Typedefs, debug formats, etc */
 #include "ckcker.h"               /* Kermit definitions */
 #include <ctype.h>                /* Character types */
@@ -29,10 +60,10 @@ char *ckzv = "UNIX File Support, 4G(059), 22 Apr 2021";
 #include <sys/dir.h>              /* Directory structure */
 #include <sys/types.h>            /* Data types */
 
-/*
- * File date
- * material
- */
+ /*
+  * File date
+  * material
+  */
 
 #ifdef BSD4
 #define TIMESTAMP
@@ -54,57 +85,52 @@ extern long timezone;
 
 #ifdef __linux__
 #include <stdlib.h>
+#include <unistd.h>
 #include <string.h>
 #endif
 
-/*
- * Is year y a
- * leap year?
- */
+ /*
+  * Is year y a
+  * leap year?
+  */
 
 #define leap(y) \
         (((y) % 4 == 0 && (y) % 100 != 0) || (y) % 400 == 0)
 
-/* 
- * Number of leap years from 1970 to `y'
- * (not including `y' itself).
- */
+ /* 
+  * Number of leap years from 1970 to `y'
+  * (not including `y' itself).
+  */
 
 #define nleap(y) \
         (((y)-1969) / 4 - ((y)-1901) / 100 + ((y)-1601) / 400)
 
-/*
- * Number of days in each
- * month of the year.
- */
+ /*
+  * Number of days in each
+  * month of the year.
+  */
 
 static char monlens[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
-#ifdef CIE
-#include <stat.h>           /* File status */
-#else
 #include <sys/stat.h>       /* File status */
-#endif
 
-/*
- * Support for tilde-expansion
- * in file and directory names
- */
+ /*
+  * Support for tilde-expansion
+  * in file and directory names
+  */
 
 #ifdef BSD4
 #define NAMEENV "USER"      /* Environment variable for tilde */
 #endif
-
 #ifdef UXIII
 #define NAMEENV "LOGNAME"   /* Environment variable for tilde */
 #endif
 
-/*
- * Berkeley Unix Version 4.x
- * including 4.1bsd support,
- * from Charles E. Brooks,
- * EDN-VAX
- */
+ /*
+  * Berkeley UNIX Version 4.x
+  * including 4.1bsd support,
+  * from Charles E. Brooks
+  */
 
 #ifdef BSD4
 #ifdef MAXNAMLEN
@@ -128,45 +154,29 @@ char *ckzsys = " 4.1 BSD";
 #endif
 #endif
 
-/*
- * 2.9bsd support contributed
- * by Bradley Smith, UCLA
- */
+ /*
+  * 2.9bsd support contributed
+  * by Bradley Smith, UCLA
+  */
 
 #ifdef BSD29
 char *ckzsys = " 2.9 BSD";
 #endif
 
-/*
- * UNIX
- * V7
- */
+ /*
+  * UNIX
+  * V7
+  */
 
 #ifdef V7
-char *ckzsys = " Version 7 Unix";
+char *ckzsys = " Version 7 UNIX";
 #endif
 
-/*
- * DEC Professional-300 series
- * with Venturcom Venix v1
- */
-
-#ifdef PROVX1
-char *ckzsys = " DEC Pro-3xx/Venix v1";
-#endif
-
-/*
- * NCR Tower support contributed
- * by John Bray, Auburn, AL.
- * Tower OS is like Sys III, but
- * with BSD features; mostly follows BSD.
- */
-
-/*
- * Sys III/V, Xenix, PC/IX,...
- * support by Herm Fischer,
- * Litton Data Systems
- */
+ /*
+  * Sys III/V, Xenix, PC/IX,...
+  * support by Herm Fischer,
+  * Litton Data Systems
+  */
 
 #ifdef UXIII
 #ifdef XENIX
@@ -176,24 +186,13 @@ char *ckzsys = " Xenix/386";
 #ifdef M_I286
 char *ckzsys = " Xenix/286";
 #else
-#ifdef TRS16
-char *ckzsys = " Xenix/68000";
-#else
 char *ckzsys = " Xenix/86";
 #endif
 #endif
-#endif
-#else
-#ifdef PCIX
-char *ckzsys = " PC/IX";
 #else
 #ifdef ISIII
 char *ckzsys = " Interactive Systems Corp, System III";
 #else
-#ifdef ZILOG
-char *ckzsys = " Zilog S8000 Zeus 3.21+";
-#else
-#ifndef TRS16
 #ifdef __linux__
 char *ckzsys = " GNU/Linux";
 #else
@@ -202,29 +201,22 @@ char *ckzsys = " AT&T System III/System V";
 #endif
 #endif
 #endif
-#endif
-#endif
-#endif
 
-/*
- * Definitions for some
- * UNIX system commands
- */
+ /*
+  * Definitions for some
+  * UNIX system commands
+  */
 
 char *DELCMD = "rm -f ";             /* For file deletion */
 char *PWDCMD = "pwd ";               /* For saying where I am */
-
 char *TYPCMD = "cat ";               /* For typing a file */
 char *DIRCMD = "ls -l ";             /* For directory listing */
-
 #ifdef BSD4
 char *SPACMD = "pwd ; quota ; df ."; /* Space/quota of current directory */
 #else
 char *SPACMD = "df ";
 #endif
-
 char *SPACM2 = "df ";                /* For space in specified directory */
-
 #ifdef BSD4
 char *WHOCMD = "finger ";            /* For seeing who's logged in */
 #else
@@ -237,7 +229,6 @@ char *WHOCMD = "who ";               /* For seeing who's logged in */
  * zopeni(n,name)  - Opens an existing file for input
  * zopeno(n,name)  - Opens a new file for output
  * zclose(n)       - Closes a file
- * zchin(n,&c)     - Gets the next character from an input file
  * zsout(n,s)      - Write a null-terminated string to output file, buffered
  * zsoutl(n,s)     - Like zsout, but appends a line terminator
  * zsoutx(n,s,x)   - Write x characters to output file, unbuffered
@@ -259,32 +250,28 @@ char *WHOCMD = "who ";               /* For seeing who's logged in */
  *  struc zattr *) - Return attributes for file which is being sent
  */
 
-/*
- * Which systems include
- * <sys/file.h>...
- */
+ /*
+  * Which systems include
+  * <sys/file.h>...
+  */
 
-#ifndef PROVX1
-#ifndef CIE
 #ifndef XENIX
 #ifndef unos
 
-/*
- * Watch out, some versions of Xenix might
- * need to do this include, but reportedly
- * SCO Xenix 2.2 on an 80x86 system does not
- */
+ /*
+  * Watch out, some versions of Xenix might
+  * need to do this include, but reportedly
+  * SCO Xenix 2.2 on an 80x86 system does not
+  */
 
 #include <sys/file.h>        /* File access */
 #endif
 #endif
-#endif
-#endif
 
-/*
- * Some systems define these symbols in
- * include files, others don't...
- */
+ /*
+  * Some systems define these symbols in
+  * include files, others don't...
+  */
 
 #ifndef R_OK
 #define R_OK 4               /* For access */
@@ -292,10 +279,6 @@ char *WHOCMD = "who ";               /* For seeing who's logged in */
 
 #ifndef W_OK
 #define W_OK 2
-#endif
-
-#ifdef PROVX1
-#define MAXNAMLEN DIRSIZ     /* Max file name length */
 #endif
 
 #ifdef UXIII
@@ -311,46 +294,38 @@ char *WHOCMD = "who ";               /* For seeing who's logged in */
 
 #ifndef MAXNAMLEN
 #ifdef __linux__
-#define MAXNANLEN 255        /* Linux XXX(jhj): Find header */
+#define MAXNANLEN 255        /* Linux XXX(jhj): Find in header */
 #else
 #define MAXNAMLEN 14         /* If still not defined... */
 #endif
 #endif
 
-#ifdef PROVX1
-#define MAXWLD 50            /* Maximum wildcard filenames */
-#else
 #ifdef BSD29
 #define MAXWLD 50            /* Maximum wildcard filenames */
 #else
 #define MAXWLD 500
 #endif
-#endif
-
-/*
- * Declarations
- */
 
 FILE *fp[ZNFILS] = {         /* File pointers */
                     NULL,
-                                        NULL,
-                                        NULL,
-                                        NULL,
-                                        NULL,
-                                        NULL, 
-                                        NULL};
+                    NULL,
+                    NULL,
+                    NULL,
+                    NULL,
+                    NULL, 
+                    NULL};
 
-/*
- * (PWP) external definitions of things
- * used in buffered file input and output
- */
+ /*
+  * (PWP) external definitions of things
+  * used in buffered file input and output
+  */
 
 extern CHAR zinbuffer[], zoutbuffer[];
 extern CHAR *zinptr, *zoutptr;
 extern int zincnt, zoutcnt;
 
 static long iflen = -1;            /* Input file length */
-static long oflen = -1;            /* Output file length */
+/* static long oflen = -1; */      /* Output file length */
 
 static int pid = 0;                /* pid of child fork */
 static int fcount;                 /* Number of files in wild group */
@@ -367,28 +342,25 @@ static char *mtchs[MAXWLD],        /* Matches found for filename */
 
 /* Z K S E L F -- Kill Self: log out own job, if possible */
 
-/*
- * Note: This should get current pid, but
- * if your system doesn't have getppid(),
- * then, we'll just do kill(0,9)...
- */
+ /*
+  * Note: This should get current pid,
+  * but if your system doesn't have
+  * getppid(), just do kill(0,9)...
+  */
 
 zkself()
 {                                  /* For "bye", but, no guarantees! */
-#ifdef PROVX1
-  return kill(0, 9);
-#else
 #ifdef V7
   return kill(0, 9);
 #else
   return kill(getppid(), 1);
 #endif
-#endif
 }
 
 /* Z O P E N I -- Open an existing file for input */
 
-zopeni(n, name) int n;
+zopeni(n, name)
+int n;
 char *name;
 {
   debug(F111, " zopeni", name, n);
@@ -421,7 +393,8 @@ char *name;
 
 /* Z O P E N O -- Open a new file for output */
 
-zopeno(n, name) int n;
+zopeno(n, name)
+int n;
 char *name;
 {
 
@@ -467,13 +440,14 @@ char *name;
 
 /* Z C L O S E -- Close the given file */
 
-/*
- * Returns 0 if arg out of
- * range, 1 if successful,
- * -1 if close failed.
- */
+ /*
+  * Returns 0 if arg out of
+  * range, 1 if successful,
+  * -1 if close failed.
+  */
 
-zclose(n) int n;
+zclose(n)
+int n;
 {
   int x, x2;
   if (chkfn(n) < 1)
@@ -505,15 +479,17 @@ zclose(n) int n;
     return 1;
 }
 
-/* Z C H I N -- Get a character from the input file */
+ /* Z C H I N -- Get a character from the input file */
 
-/*
- * Returns -1 if EOF, 0
- * otherwise with character
- * returned in argument
- */
+ /*
+  * Returns -1 if EOF, 0
+  * otherwise with character
+  * returned in argument
+  */
 
-zchin(n, c) int n;
+#ifdef COMMENT
+zchin(n, c)
+int n;
 char *c;
 {
   int a;
@@ -533,12 +509,13 @@ char *c;
   *c = a & 0377;
   return 0;
 }
+#endif
 
-/*
- * (PWP) (re)fill the buffered input buffer with data.
- * All file input should go through this routine, usually
- * by calling the zminchar() macro (in ckcker.h).
- */
+ /*
+  * (PWP) (re)fill the buffered input buffer with data.
+  * All file input should go through this routine, usually
+  * by calling the zminchar() macro.
+  */
 
 zinfill() {
   zincnt = fread(zinbuffer, sizeof(char), INBUFSIZE, fp[ZIFILE]);
@@ -548,7 +525,7 @@ zinfill() {
   zincnt--;              /* one less char in buffer */
   return \
         (int)(*zinptr++) \
-          & 0377;            /* because we return the first */
+          & 0377;        /* because we return the first */
 }
 
 /* Z S O U T -- Write a string out to the given file, buffered */
@@ -564,7 +541,8 @@ char *s;
 
 /* Z S O U T L -- Write string to file, with line terminator, buffered */
 
-zsoutl(n, s) int n;
+zsoutl(n, s)
+int n;
 char *s;
 {
   /* if (chkfn(n) < 1) return(-1); */
@@ -575,7 +553,8 @@ char *s;
 
 /* Z S O U T X -- Write x characters to file, unbuffered */
 
-zsoutx(n, s, x) int n, x;
+zsoutx(n, s, x)
+int n, x;
 char *s;
 {
   /* if (chkfn(n) < 1) return(-1); */
@@ -585,12 +564,13 @@ char *s;
 
 /* Z C H O U T -- Add a character to the given file */
 
-/*
- * Should return 0 or greater on success,
- * -1 on failures (e.g. disk full)
- */
+ /*
+  * Should return 0 or greater on success,
+  * -1 on failures (e.g. disk full)
+  */
 
-zchout(n, c) register int n;
+zchout(n, c)
+register int n;
 char c;
 {
   /* if (chkfn(n) < 1) return(-1); */
@@ -604,10 +584,10 @@ char c;
   }
 }
 
-/*
- * (PWP) buffered character output
- * routine to speed up file IO
- */
+ /*
+  * (PWP) buffered character output
+  * routine to speed up file IO
+  */
 
 zoutdump()
 {
@@ -635,14 +615,15 @@ zoutdump()
 
 /* C H K F N -- Internal function to verify file number is ok */
 
-/*
- * Returns:
- * -1: File number n is out of range
- * 0: n is in range, but file is not open
- * 1: n in range and file is open
- */
+ /*
+  * Returns:
+  * -1: File number n is out of range
+  * 0: n is in range, but file is not open
+  * 1: n in range and file is open
+  */
 
-chkfn(n) int n;
+chkfn(n)
+int n;
 {
   switch (n) {
   case ZCTERM:
@@ -675,18 +656,21 @@ chkfn(n) int n;
  *     -3 if file exists but protected against read access.
  */
 
-/*
- * For Berkeley Unix, a file must be of type "regular" to be
- * readable. Directory files, special files, and symbolic
- * links are not readable.
- */
+ /*
+  * For Berkeley UNIX, a file must be of type "regular" to be
+  * readable. Directory files, special files, and symbolic
+  * links are not readable.
+  */
 
-long zchki(name) char *name;
+long
+zchki(name)
+char *name;
 {
   struct stat buf;
   int x;
   long y;
 
+  (void)y;
   x = stat(name, &buf);
   if (x < 0) {
     debug(F111, "zchki stat fails", name, errno);
@@ -717,7 +701,8 @@ long zchki(name) char *name;
  * the file would be denied, 0 otherwise.
  */
 
-zchko(name) char *name;
+zchko(name)
+char *name;
 {
   int i, x;
   char s[50], *sp;
@@ -752,7 +737,8 @@ zchko(name) char *name;
 
 /* Z D E L E T -- Delete the named file */
 
-zdelet(name) char *name;
+zdelet(name)
+char *name;
 {
         unlink(name);
 }
@@ -764,7 +750,8 @@ zdelet(name) char *name;
  * uppercase letters to lowercase.
  */
 
-zrtol(name, name2) char *name, *name2;
+zrtol(name, name2)
+char *name, *name2;
 {
   for (; *name != '\0'; name++)
     *name2++ = isupper(*name) ? tolower(*name) : *name;
@@ -774,12 +761,13 @@ zrtol(name, name2) char *name, *name2;
 
 /* Z L T O R -- Local TO Remote */
 
-/*
- * Convert filename from a local
- * format to common (remote) form
- */
+ /*
+  * Convert filename from a local
+  * format to common (remote) form
+  */
 
-zltor(name, name2) char *name, *name2;
+zltor(name, name2)
+char *name, *name2;
 {
   char work[100], *cp, *pp;
   int dc = 0;
@@ -811,7 +799,8 @@ zltor(name, name2) char *name, *name2;
 
 /* Z C H D I R -- Change directory */
 
-zchdir(dirnam) char *dirnam;
+zchdir(dirnam)
+char *dirnam;
 {
   char *hd;
   if (*dirnam == '\0')
@@ -860,7 +849,8 @@ char *zgtdir() {
 /* Z X C M D -- Run system command so its output can be read like a file */
 
 #ifndef NOPUSH
-zxcmd(comand) char *comand;
+zxcmd(comand)
+char *comand;
 {
   int pipes[2];
   if (pipe(pipes) != 0) {
@@ -870,15 +860,17 @@ zxcmd(comand) char *comand;
   if ((pid = fork()) == 0) {                   /* child */
 
     /*
-         * #if BSD4 Code from Dave Tweten@AMES-NAS,
+     * #if BSD4 Code from Dave Tweten@AMES-NAS,
      * readapted to use getpwuid to find login
-         * shell, bu H. Fischer.
-         */
+     * shell, bu H. Fischer.
+     */
 
     char *shpath, *shname, *shptr;             /* to find desired shell */
     struct passwd *p;
     extern struct passwd *getpwuid();
+#ifndef __linux__
     extern int getuid();
+#endif
     char *defShel = "/bin/sh";                 /* default shell */
 
     close(pipes[0]);                           /* close in side of pipe */
@@ -897,7 +889,6 @@ zxcmd(comand) char *comand;
     if (dup(pipes[1]) != 2)
       conol("trouble duping stderr in routine zxcmd\n");
 #endif
-
     close(pipes[1]);                           /* get rid of this copy */
     shpath = getenv("SHELL");                  /* What shell? */
     if (shpath == NULL) {
@@ -914,10 +905,10 @@ zxcmd(comand) char *comand;
     debug(F100, "zxcmd...", "", 0);
     debug(F110, shpath, shname, 0);
 
-/*
- * Remove the following uid
- * calls if they cause trouble
- */
+ /*
+  * Remove the following uid
+  * calls if they cause trouble
+  */
 
 #ifdef BSD4
 #ifndef BSD41
@@ -925,13 +916,12 @@ zxcmd(comand) char *comand;
     seteuid(getuid());                         /*  security checks */
 #endif
 #endif
-
     execl(
           shpath,
           shname,
           "-c",
           comand,
-          (char *)NULL);                           /* Execute the cmd */
+          (char *)NULL);                       /* Execute the cmd */
     exit(0);                                   /* just punt if it failed. */
   } else if (pid == -1) {
     debug(F100, "zxcmd fork failure", "", 0);
@@ -971,7 +961,8 @@ zclosf()
  * next znext() call.
  */
 
-zxpand(fn) char *fn;
+zxpand(fn)
+char *fn;
 {
   fcount = fgen(fn, mtchs, MAXWLD);            /* Look up the file. */
   if (fcount > 0) {
@@ -988,7 +979,8 @@ zxpand(fn) char *fn;
  * string, or 0 if no more files in list.
  */
 
-znext(fn) char *fn;
+znext(fn)
+char *fn;
 {
   if (fcount-- > 0)
     strcpy(fn, *mtchptr++);
@@ -1000,7 +992,8 @@ znext(fn) char *fn;
 
 /* Z N E W N -- Make a new name for the given file */
 
-znewn(fn, s) char *fn, **s;
+znewn(fn, s)
+char *fn, **s;
 {
 #ifdef BSD4
   static char buf[256];
@@ -1056,17 +1049,18 @@ znewn(fn, s) char *fn, **s;
 
 }
 
-/* Z S A T T R -- Fills attribute structure for the file to be sent. */
+/* Z S A T T R -- Fills attribute structure for the file to be sent */
 
-/*
- * Returns 0 on success with the structure
- * filled in, or -1 on failure. If any string
- * member is null, then it should be ignored.
- * If any numeric member is -1, then it should
- * be ignored.
- */
+ /*
+  * Returns 0 on success with the structure
+  * filled in, or -1 on failure. If any string
+  * member is null, then it should be ignored.
+  * If any numeric member is -1, then it should
+  * be ignored.
+  */
 
-zsattr(xx) struct zattr *xx;
+zsattr(xx)
+struct zattr *xx;
 {
   long k;
   char *zfcdat();
@@ -1078,7 +1072,7 @@ zsattr(xx) struct zattr *xx;
   xx->type.len = 0;                 /* File type can't be filled in here */
   xx->type.val = "";
   debug(F110, "before calling zfcdat", nambuf, 0);
-  if (*nambuf) { /* XXX(jhj): correct? */
+  if (*nambuf) {                    /* XXX(jhj): correct? */
     xx->date.val = zfcdat(nambuf);  /* File creation date */
     xx->date.len = strlen(xx->date.val);
   } else {
@@ -1117,13 +1111,15 @@ zsattr(xx) struct zattr *xx;
 
 /* Z F C D A T -- Return a string containing the time stamp for a file */
 
-char *zfcdat(name) char *name;
+char *
+zfcdat(name)
+char *name;
 {
 
 #ifdef TIMESTAMP
   struct stat buffer;
   struct tm *time_stamp, *localtime();
-  static char datbuf[20];
+  static char datbuf[70];
 
   datbuf[0] = '\0';
   if (stat(name, &buffer) != 0) {
@@ -1134,9 +1130,14 @@ char *zfcdat(name) char *name;
   if (time_stamp->tm_year < 1900)
     time_stamp->tm_year += 1900;
   sprintf(
-        datbuf, "%-4.4d%2.2d%2.2d %2.2d:%2.2d:%2.2d", time_stamp->tm_year,
-      time_stamp->tm_mon + 1, time_stamp->tm_mday, time_stamp->tm_hour,
-        time_stamp->tm_min, time_stamp->tm_sec);
+        datbuf,
+		  "%-4.4d%2.2d%2.2d %2.2d:%2.2d:%2.2d",
+		    time_stamp->tm_year,
+              time_stamp->tm_mon + 1,
+			    time_stamp->tm_mday,
+				  time_stamp->tm_hour,
+                    time_stamp->tm_min,
+					  time_stamp->tm_sec);
   debug(F111, "zcfdat", datbuf, strlen(datbuf));
   return datbuf;
 #else
@@ -1146,32 +1147,34 @@ char *zfcdat(name) char *name;
 
 #ifdef NOT_YET
 
-/*
- * Apparently, the definition of timezone is a big problem.
- * Every computer I looked at deals with it in a different way.
- * On the SUN with SUNOS 4.0, you have to declare it yourself.
- * On a VAX with Ultrix, it's declared in <time.h> as
- * "char * timezone()", or as "extern long timezone" for System V.
- * So to use this, it looks like we'll need an #ifdef per system,
- * OS version, etc.
- */
+ /*
+  * Apparently, the definition of timezone is a big problem.
+  * Every computer I looked at deals with it in a different way.
+  * On the SUN with SUNOS 4.0, you have to declare it yourself.
+  * On a VAX with Ultrix, it's declared in <time.h> as
+  * "char * timezone()", or as "extern long timezone" for System V.
+  * So to use this, it looks like we'll need an #ifdef per system,
+  * OS version, etc.
+  */
 
-/*
- * ANSI C mktime for UNIX
- *   by David MacKenzie <edf@rocky2.rockefeller.edu>
- *   and Michael Haertel <mike@stolaf.edu> 08/09/89
- */
+   /*
+    * ANSI C mktime for UNIX
+    *   by David MacKenzie <edf@rocky2.rockefeller.edu>
+    *   and Michael Haertel <mike@stolaf.edu> 08/09/89
+    */
 
-/*
- * Convert the exploded time structure `tm', containing a
- * local time and date, into the number of seconds past
- * Jan 1, 1970 GMT. Sets `tm->tm_yday' and `tm->tm_wday'
- * correctly, but doesn't set `tm->tm_isdst'. Doesn't
- * return -1 if passed invalid values.
- */
+      /*
+       * Convert the exploded time structure `tm', containing a
+       * local time and date, into the number of seconds past
+       * Jan 1, 1970 GMT. Sets `tm->tm_yday' and `tm->tm_wday'
+       * correctly, but doesn't set `tm->tm_isdst'. Doesn't
+       * return -1 if passed invalid values.
+       */
 
 #ifdef TIMESTAMP
-time_t mktime(tm) struct tm *tm;
+time_t
+mktime(tm)
+struct tm *tm;
 {
   int years, months, days, hours, minutes, seconds;
 
@@ -1215,7 +1218,7 @@ time_t mktime(tm) struct tm *tm;
         365 * (years - 1970) + \
           nleap(years);
   tm->tm_wday = \
-        (days + 4) % 7;                    /* Jan 1, 1970 was a Thursday. */
+        (days + 4) % 7;                /* Jan 1, 1970 was a Thursday. */
 
   return \
         86400 * days + \
@@ -1227,7 +1230,8 @@ time_t mktime(tm) struct tm *tm;
 #endif
 #endif
 
-zmail(p, f) char *p;
+zmail(p, f)
+char *p;
 char *f;
 {                                      /* E-mail file f to address p */
 #ifdef BSD4
@@ -1261,7 +1265,8 @@ char *f;
   return 0;
 }
 
-zprint(p, f) char *p;
+zprint(p, f)
+char *p;
 char *f;
 {                                      /* Print file f with options p */
 
@@ -1279,31 +1284,27 @@ char *f;
   return 0;
 }
 
-/*
- * Directory Functions for UNIX, written
- * by Jeff Damens, CUCCA, 1984.
- */
+ /*
+  * Directory Functions for UNIX, written
+  * by Jeff Damens, CUCCA, 1984.
+  */
 
-/*
- * The path structure is used to represent the name to match.
- * Each slash-separated segment of the name is kept in one
- * such structure, and they are linked together, to make
- * traversing the name easier.
- */
+  /*
+   * The path structure is used to represent the name to match.
+   * Each slash-separated segment of the name is kept in one
+   * such structure, and they are linked together, to make
+   * traversing the name easier.
+   */
 
 struct path {
   char npart[MAXNAMLEN];             /* name part of path segment */
   struct path *fwd;                  /* forward ptr */
 };
 
-#ifdef PROVX1
-#define SSPACE 500
-#else
 #ifdef BSD29
 #define SSPACE 500
 #else
 #define SSPACE 2000                  /* size of string-generating buffer */
-#endif
 #endif
 static char sspace[SSPACE];          /* buffer to generate names in */
 static char *freeptr, **resptr;      /* copies of caller's arguments */
@@ -1327,7 +1328,9 @@ static int numfnd;                   /* number of matches found */
  *  segments of the input string p.
  */
 
-struct path *splitpath(p) char *p;
+struct path *
+splitpath(p)
+char *p;
 {
   struct path *head, *cur, *prv;
   int i;
@@ -1384,7 +1387,8 @@ struct path *splitpath(p) char *p;
  * By:      Jeff Damens, CUCCA, 1984.
  */
 
-fgen(pat, resarry, len) char *pat, *resarry[];
+fgen(pat, resarry, len)
+char *pat, *resarry[];
 int len;
 {
   struct path *head;
@@ -1436,7 +1440,8 @@ int len;
  * Returns: nothing.
  */
 
-traverse(pl, sofar, endcur) struct path *pl;
+traverse(pl, sofar, endcur)
+struct path *pl;
 char *sofar, *endcur;
 {
 #ifdef BSD42
@@ -1502,7 +1507,7 @@ char *sofar, *endcur;
 #endif
   {
     strncpy(nambuf, dirbuf->d_name,
-            MAXNAMLEN);               /* Get a null terminated copy!!! */
+      MAXNAMLEN);                     /* Get a null terminated copy!!! */
     nambuf[MAXNAMLEN] = '\0';
 #ifdef unos
     if (dirbuf->d_ino != -1 && match(pl->npart, nambuf)) {
@@ -1543,7 +1548,8 @@ char *sofar, *endcur;
  * Returns: nothing.
  */
 
-addresult(str) char *str;
+addresult(str)
+char *str;
 {
   int l;
   if (strncmp(str, "./", 2) == 0)
@@ -1563,7 +1569,8 @@ addresult(str) char *str;
   numfnd++;
 }
 
-iswild(str) char *str;
+iswild(str)
+char *str;
 {
   char c;
   while ((c = *str++) != '\0')
@@ -1587,7 +1594,8 @@ iswild(str) char *str;
  * Returns: 1 if match, 0 if no match.
  */
 
-match(pattern, string) char *pattern, *string;
+match(pattern, string)
+char *pattern, *string;
 {
   char *psave, *ssave;                   /* back up pointers for failure */
   psave = ssave = NULL;
@@ -1627,8 +1635,8 @@ match(pattern, string) char *pattern, *string;
  * 6) Otherwise, get a name for realuid from /etc/passwd
  */
 
-char
-*whoami()
+char *
+whoami()
 {
 #ifdef DTILDE
   static char realname[256];                  /* user's name */
@@ -1694,9 +1702,9 @@ char
  */
 
 #define DIRSEP '/'
-
-char
-*tilde_expand(dirname) char *dirname;
+char *
+tilde_expand(dirname)
+char *dirname;
 {
 #define BUFLEN 256
 #ifdef DTILDE

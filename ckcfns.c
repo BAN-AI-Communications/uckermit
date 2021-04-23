@@ -1,10 +1,45 @@
-char *fnsv = "C-Kermit Functions, 4G(077), 22 Apr 2021";
+char *fnsv = "uCKermit Functions, 4G(082), 23 Apr 2021";
 
 /* C K C F N S -- System-independent Kermit protocol support functions */
 
 /*
  * ...Part 1
  * (others moved to ckcfn2 to make this module small enough)
+ */
+
+/*
+ * Copyright (C) 1981-2011,
+ *   Trustees of Columbia University in the City of New York.
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ *   modification, are permitted provided that the following conditions
+ *   are met:
+ *
+ *   - Redistributions of source code must retain the above copyright 
+ *       notice, this list of conditions and the following disclaimer.
+ *      
+ *   - Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in   
+ *       the documentation and/or other materials provided with the
+ *       distribution.                                                     
+ *     
+ *   - Neither the name of Columbia University nor the names of its
+ *       contributors may be used to endorse or promote products derived
+ *       from this software without specific prior written permission. 
+ *       
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
  */
 
 /*
@@ -21,13 +56,6 @@ char *fnsv = "C-Kermit Functions, 4G(077), 22 Apr 2021";
  *   provided this copyright notice is retained.
  */
 
-/*
- * System-dependent primitives defined in:
- *
- * ck?tio.c -- terminal i/o
- * cx?fio.c -- file i/o, directory structure
- */
-
 #include "ckcdeb.h"       /* Debug formats, typedefs, etc. */
 #include "ckcker.h"       /* Symbol definitions for Kermit */
 #ifdef __linux__
@@ -40,15 +68,10 @@ char *fnsv = "C-Kermit Functions, 4G(077), 22 Apr 2021";
 #define NULL 0
 #endif
 
-/*
- * Externals
- * from ckcmai.c
- */
-
 extern int  spsiz, spmax, rpsiz, timint, srvtim, rtimo;
 extern int  npad, ebq, ebqflg, rpt, rptq, rptflg, capas, keep;
 extern int  pktnum, prvpkt, sndtyp, bctr, bctu, fmask, size;
-extern int  osize, maxsize, spktl, nfils, stdouf, warn, timef, spsizf;
+extern int  maxsize, spktl, nfils, stdouf, warn, timef, spsizf;
 extern int  parity, speed, turn, turnch, delay, displa, pktlog;
 extern int  tralog, seslog, xflg, mypadn;
 extern long filcnt, ffc, fsize;
@@ -126,62 +149,6 @@ char *s;
   memptr = p;                 /* and pointer */
   first = 1;                  /* Put this back as we found it. */
 }
-
-/* E N C O D E -- Kermit packet encoding procedure */
-#ifdef OLDENC
-encode(a)
-CHAR a;
-{                                    /* The current character */
-  int a7;                            /* Low order 7 bits of character */
-  int b8;                            /* 8th bit of character */
-
-  if (rptflg) {                      /* Repeat processing? */
-    if (a == next && (first == 0)) { /* Got a run... */
-      if (++rpt < 94)                /* Below max, just count */
-        return;
-      else if (rpt == 94) {          /* Reached max, must dump */
-        data[size++] = rptq;
-        data[size++] = tochar(rpt);
-        rpt = 0;
-      }
-    } else if (rpt == 1) {           /* Run broken, only 2? */
-      rpt = 0;                       /* Yes, reset repeat flag & count. */
-      encode(a);                     /* Do the character twice. */
-      if (size <= maxsize)
-        osize = size;
-      rpt = 0;
-      encode(a);
-      return;
-    } else if (rpt > 1) {            /* More than two */
-      data[size++] = rptq;           /* Insert the repeat prefix */
-      data[size++] = tochar(++rpt);  /* and count. */
-      rpt = 0;                       /* Reset repeat counter. */
-    }
-  }
-  a7 = a & 0177;                     /* Isolate ASCII part */
-  b8 = a & 0200;                     /* and 8th (parity) bit. */
-
-  if (ebqflg && b8) {                /* Do 8th bit prefix if necessary. */
-    data[size++] = ebq;
-    a = a7;
-  }
-  if ((a7 < SP) || (a7 == DEL)) {    /* Do control prefix if necessary. */
-    data[size++] = myctlq;
-    a = ctl(a);
-  }
-  if (a7 == myctlq)                  /* Prefix the control prefix */
-    data[size++] = myctlq;
-
-  if ((rptflg) && (a7 == rptq))      /* If it's the repeat prefix, */
-    data[size++] = myctlq;           /* quote it if doing repeat counts. */
-
-  if ((ebqflg) && (a7 == ebq))       /* Prefix the 8th bit prefix */
-    data[size++] = myctlq;           /* if doing 8th-bit prefixes */
-
-  data[size++] = a;                  /* Finally, insert the character */
-  data[size] = '\0';                 /* itself, and mark the end. */
-}
-#endif
 
 /*
  * Output functions
@@ -392,16 +359,16 @@ int bufmax;
     }
 
     /*
-         * PWP: handling of NLCHAR
-         * is done in a bit...
-         */
+     * PWP: handling of NLCHAR
+     * is done in a bit...
+     */
 
     odp = dp;                            /* Remember current position. */
 
     /*
-         * PWP: the encode() procedure,
-         * in-line (for speed)
-         */
+     * PWP: the encode() procedure,
+     * in-line (for speed)
+     */
 
     if (rptflg) {                        /* Repeat processing? */
       if (
@@ -431,8 +398,8 @@ int bufmax;
 
                                /*
                                 * PWP: Must encode two characters.
-                                                                * This is handled later, with a bit
-                                                                * of blue smoke and mirrors, after
+                                * This is handled later, with a bit
+                                * of blue smoke and mirrors, after
                                 * the first character is encoded.
                                 */
 
@@ -446,8 +413,8 @@ int bufmax;
 
     /*
      * PWP: Even more esoteric NLCHAR handling.
-         * Remember, at this point t might still be
-         * the _system_ NLCHAR. If so we do it here.
+     * Remember, at this point t might still be
+     * the _system_ NLCHAR. If so we do it here.
      */
 
     if (!binary && (rt == NLCHAR)) {
@@ -460,9 +427,9 @@ int bufmax;
 #endif
 
     /* 
-         * Meta control stuff,
-         * fixed by fdc.
-         */
+     * Meta control stuff,
+     * fixed by fdc.
+     */
 
     a7 = rt & 0177;                 /* Low 7 bits of character */
     if (ebqflg && (rt & 0200)) {    /* Do 8th bit prefix if necessary. */
@@ -587,7 +554,8 @@ char *d;
 
 /* S I N I T -- Make sure file exists, then send Send-Init packet */
 
-sinit() {
+sinit()
+{
   int x;
   char *tp;
 
@@ -1233,10 +1201,10 @@ gnfile()
     }
 
     /* 
-         * Otherwise, step to next
-         * element of internal wildcard
-         * expansion list.
-         */
+     * Otherwise, step to next
+     * element of internal wildcard
+     * expansion list.
+     */
 
     if (sndsrc < 0) {
       x = znext(filnam);
@@ -1246,9 +1214,9 @@ gnfile()
     }
 
     /* 
-         * Get here with
-         * a filename.
-         */
+     * Get here with
+     * a filename.
+     */
 
     y = zchki(filnam);                     /* Check if file readable */
     if (y < 0) {
@@ -1356,12 +1324,12 @@ clsif()
 
 /* C L S O F -- Close an output file */
 
-/*
- * Call with disp != 0 if file is to
- * be discarded. Returns -1 upon
- * failure to close, 0 or greater
- * on success.
- */
+ /*
+  * Call with disp != 0 if file is to
+  * be discarded. Returns -1 upon
+  * failure to close, 0 or greater
+  * on success.
+  */
 
 clsof(disp)
 int disp;
@@ -1416,12 +1384,12 @@ sndhlp()
 
 /* C W D -- Change current working directory */
 
-/*
- * String passed has first byte as length
- * of directory name, rest of string is
- * name. Fails if can't connect, else,
- * ACKs (with name) and succeeds.
- */
+ /*
+  * String passed has first byte as length
+  * of directory name, rest of string is
+  * name. Fails if can't connect, else,
+  * ACKs (with name) and succeeds.
+  */
 
 cwd(vdir)
 char *vdir;

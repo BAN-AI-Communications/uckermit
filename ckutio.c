@@ -1,8 +1,43 @@
-char *ckxv = "UNIX TTY I/O, 4G(070), 22 Apr 2021";
+char *ckxv = "UNIX TTY I/O, 4G(078), 23 Apr 2021";
 
-/*  C K U T I O  */
+/* C K U T I O */
 
-/* C-Kermit interrupt, terminal control & i/o functions for Unix systems */
+/* uCKermit interrupt, terminal control & I/O functions for UNIX systems */
+
+/*
+ * Copyright (C) 1981-2011,
+ *   Trustees of Columbia University in the City of New York.
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ *   modification, are permitted provided that the following conditions
+ *   are met:
+ *
+ *   - Redistributions of source code must retain the above copyright 
+ *       notice, this list of conditions and the following disclaimer.
+ *      
+ *   - Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in   
+ *       the documentation and/or other materials provided with the
+ *       distribution.                                                     
+ *     
+ *   - Neither the name of Columbia University nor the names of its
+ *       contributors may be used to endorse or promote products derived
+ *       from this software without specific prior written permission. 
+ *       
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ */
 
 /*
  * Author: Frank da Cruz (fdc@cunixc.cc.columbia.edu, FDCCU@CUVMA.BITNET),
@@ -18,10 +53,10 @@ char *ckxv = "UNIX TTY I/O, 4G(070), 22 Apr 2021";
  *   provided this copyright notice is retained.
  */
 
-/*
- * Includes for all UNIXes
- * (conditional includes come later)
- */
+ /*
+  * Includes for all UNIXes
+  * (conditional includes come later)
+  */
 
 #include <sys/types.h> /* Types */
 #include <ctype.h>     /* Character types */
@@ -32,13 +67,9 @@ char *ckxv = "UNIX TTY I/O, 4G(070), 22 Apr 2021";
 #endif
 
 #include <signal.h>    /* Interrupts */
-#include <stdio.h>     /* Unix Standard i/o */
+#include <stdio.h>     /* UNIX Standard i/o */
 
-#ifndef ZILOG
 #include <setjmp.h>    /* Longjumps */
-#else
-#include <setret.h>
-#endif
 
 #include "ckcdeb.h"    /* Typedefs, formats for debug() */
 
@@ -46,23 +77,19 @@ char *ckxv = "UNIX TTY I/O, 4G(070), 22 Apr 2021";
 #include <string.h>
 #endif
 
-/*
- * Maximum length for the
- * name of a tty device
- */
+ /*
+  * Maximum length for the
+  * name of a tty device
+  */
 
 #ifndef DEVNAMLEN
 #define DEVNAMLEN 25
 #endif
 
-/*
- * 4.1 BSD support added by
- * Charles E. Brooks, EDN-VAX
- *
- * Fortune 32:16 Pro:For 1.8
- * support mostly like 4.1
- * added by J-P Dumas
- */
+ /*
+  * 4.1 BSD support added by
+  * Charles E. Brooks, EDN-VAX
+  */
 
 #ifdef BSD4
 #define ANYBSD
@@ -83,9 +110,7 @@ char *ckxsys = " 4.2 BSD";
 #endif /* sunos4 */
 #else
 #define BSD41
-#ifndef C70
 char *ckxsys = " 4.1 BSD";
-#endif /* not c70 */
 #endif /* maxnamlen */
 #endif /* bsd4 */
 
@@ -109,50 +134,6 @@ char *ckxsys = " Version 7 UNIX (tm)";
 #endif /* v7 */
 
 /*
- * BBN C70 support from
- * Frank Wancho, WANCHO@SIMTEL20
- */
-
-#ifdef C70
-char *ckxsys = " BBN C/70";
-#endif /* c70 */
-
-/*
- * IBM 370 IX/370 support from
- * Wayne Van Pelt, GE/CRD,
- * Schenectedy, NY
- */
-
-#ifdef IX370
-char *ckxsys = " IBM IX/370";
-#endif /* ix370 */
-
-/*
- * Amdahl UTS 2.4 (v7 derivative)
- * for IBM 370 series compatible mainframes,
- * contributed by Garard Gaye,
- * Jean-Pierre Dumas, DUMAS@SUMEX-AIM
- */
-
-#ifdef UTS24
-char *ckxsys = " Amdahl UTS 2.4";
-#endif /* uts24 */
-
-/* 
- * Pro/Venix Version 1.x
- * support from Columbia U
- */
-
-#ifdef PROVX1
-char *ckxsys = " Pro-3xx Venix v1";
-#endif /* provx1 */
-
-/*
- * Tower support contributed by
- * John Bray, Auburn, Alabama
- */
-
-/*
  * Sys III/V, Xenix, PC/IX support
  * by Herm Fischer, Encino, CA
  */
@@ -169,9 +150,6 @@ char *ckxsys = " Xenix/86";
 #endif
 #endif
 #else
-#ifdef PCIX
-char *ckxsys = " PC/IX";
-#else
 #ifdef ISIII
 char *ckxsys = " Interactive Systems Corp System III";
 #else
@@ -184,51 +162,15 @@ char *ckxsys = " Interactive Systems Corp System III";
 
 char *ckxsys = " HP 9000 Series HP-UX";
 #else
-#ifdef ZILOG
-char *ckxsys = " Zilog S8000 Zeus 3.21+";
-#else
-#ifdef VXVE
-
-/*
- * Control Data Corp VX/VE 5.2.1
- * System V support by S.O. Lidie,
- * Lehigh University
- * LUSOL@LEHICDC1.BITNET
- */
-
-char *ckxsys = " CDC VX/VE 5.2.1 System V";
-#else
-#ifdef ATT7300
-
-/*
- * Changes by Joe R. Doupnik
- * jrd@usu.Bitnet
- * Utah State University
- */
-
-char *ckxsys = " AT&T 7300/Unix PC System III/System V\n";
-#else
-#ifdef RTAIX
-char *ckxsys = " IBM PC-RT AIX";
-#else
 #ifdef __linux__
 char *ckxsys = " GNU/Linux";
 #else
 char *ckxsys = " AT&T System III/System V";
 #endif /* linux */
-#endif /* rtaix */
-#endif /* att7300 */
-#endif /* vxve  */
-#endif /* zilog */
 #endif /* hpux  */
 #endif /* isiii */
-#endif /* pcix  */
 #endif /* xenix */
 #endif /* uxiii */
-
-/*
- * Features...
- */
 
 /*
  * Where is the
@@ -240,14 +182,11 @@ char *ckxsys = " AT&T System III/System V";
 #endif
 
 /*
- * Must coordinate with
- * Honey-DanBer UUCP?
+ * Coordinate with
+ * HoneyDanBer UUCP?
  */
 
 #ifdef ATT3BX
-#define HDBUUCP
-#endif
-#ifdef RTAIX
 #define HDBUUCP
 #endif
 
@@ -257,9 +196,6 @@ char *ckxsys = " AT&T System III/System V";
  */
 
 #ifndef LOCK_DIR
-#ifdef RTAIX
-#define LOCK_DIR "/etc/locks";
-#else
 #ifdef ISIII
 #define LOCK_DIR "/etc/locks";
 #else
@@ -273,7 +209,6 @@ char *ckxsys = " AT&T System III/System V";
 #endif /* LCKDIR */
 #endif /* HDBUUCP */
 #endif /* ISIII */
-#endif /* RTAIX */
 #endif /* !LOCK_DIR (outside ifndef) */
 
 /*
@@ -284,19 +219,6 @@ char *ckxsys = " AT&T System III/System V";
 #ifdef UXIII
 #define MYREAD
 #endif /* uxiii */
-
-#ifdef ATT7300
-
-/*
- * no myread(), bits for attmodem:
- * internal modem in use
- * restart getty
- */
-
-#undef MYREAD
-#define ISMODEM 1
-#define DOGETY 512
-#endif /* att7300 */
 
 #ifdef BSD42
 #undef MYREAD
@@ -354,8 +276,8 @@ char *ckxsys = " AT&T System III/System V";
  * ttunlck()               -- Unlock "       "     "
  * look4lk(ttname)         -- Check if a lock file exists
  *
- *                            For ATT7300/Unix PC, Sys III / Sys V:
- * attdial(ttname,speed,telnbr) -- dials ATT7300/Unix PC internal modem
+ *                            For ATT7300/UNIX PC, Sys III / Sys V:
+ * attdial(ttname,speed,telnbr) -- dials ATT7300/UNIX PC internal modem
  * atthang(ttname)         -- Hangs up internal modem for ATT7300's
  * offgetty(ttname)        -- Turns off getty(1m) for comms line
  * ongetty(ttname)         -- Restores getty() to comms line
@@ -387,20 +309,13 @@ char *ckxsys = " AT&T System III/System V";
  */
 
 /*
- * Conditional
- * Includes
- */
-
-/*
  * Whether to include
  * <sys/file.h>...
  */
 
-#ifndef PROVX1
 #ifndef XENIX
 #ifndef unos
 #include <sys/file.h>             /* File information */
-#endif
 #endif
 #endif
 
@@ -419,11 +334,6 @@ char *ckxsys = " AT&T System III/System V";
 #include <sys/ioctl.h>
 #include <errno.h>                /* error numbers for system returns */
 #include <fcntl.h>                /* directory reading for locking */
-#ifdef ATT7300
-#ifndef NOCKUDIA
-#include <sys/phone.h>            /* UNIX PC, internal modem dialer */
-#endif
-#endif
 #endif
 
 #ifdef HPUX
@@ -432,16 +342,14 @@ char *ckxsys = " AT&T System III/System V";
 
 /*
  * Not System III
- * or System V
+ * nor System V
  */
 
 #ifndef UXIII
 #include <sgtty.h>                /* Set/Get tty modes */
-#ifndef PROVX1
 #ifndef V7
 #ifndef BSD41
 #include <sys/time.h>             /* Clock info (for break generation) */
-#endif
 #endif
 #endif
 #endif
@@ -472,10 +380,6 @@ char *ckxsys = " AT&T System III/System V";
 #define FWRITE 0x10
 #endif
 
-/*
- * Declarations
- */
-
 long time();                      /* All UNIXes should have this... */
 extern int errno;                 /* System call error code. */
 
@@ -498,13 +402,8 @@ char *initrawq(), *qaddr[2] = {0, 0};
  * and 1 if an external line
  */
 
-#ifdef PROVX1
-char *dftty = "/dev/com1.dout";   /* Only example so far of a system */
-int dfloc = 1;                    /* that goes in local mode by default */
-#else
 char *dftty = CTTNAM;             /* Remote by default, use normal */
 int dfloc = 0;                    /* controlling terminal name. */
-#endif
 
 int dfprty = 0;                   /* Default parity (0 = none) */
 int ttprty = 0;                   /* Parity in use. */
@@ -515,17 +414,15 @@ int backgrd = 0;                  /* Assume in foreground (no '&' ) */
 int iniflags = 0;                 /* fcntl flags for ttyfd */
 #endif
 int ckxech = 0;                   /* 0 if system normally echoes
-                                                                   * console characters, else 1 */
+                                   * console characters, else 1 */
 
 /*
  * Declarations of variables
  * global within this module
  */
 
+#ifndef NOSTATS
 static long tcount;               /* Elapsed time counter */
-
-#ifdef PROVX1
-static char *brnuls = "\0\0\0\0\0\0\0"; /* A string of nulls */
 #endif
 
 static jmp_buf sjbuf, jjbuf;      /* Longjump buffer */
@@ -558,7 +455,7 @@ static long clock;
 #endif
 
 /*
- * sgtty/termio
+ * sgtty/termio/termios
  * information...
  */
 
@@ -576,10 +473,6 @@ static struct sgttyb              /* sgtty info... */
   ccold, ccraw, cccbrk, vanilla;  /* and for console */
 #endif
 
-#ifdef ATT7300
-static int attmodem = 0;          /* ATT7300 internal-modem status */
-#endif
-
 static char flfnam[80];           /* UUCP lock file path name */
 static int hasLock = 0;           /* =1 if this kermit locked uucp */
 static int inbufc = 0;            /* stuff for efficient SIII raw line */
@@ -590,9 +483,10 @@ static int ttlock();              /* definition of ttlock subprocedure */
 static int ttunlck();             /* and unlock subprocedure */
 static char ttnmsv[DEVNAMLEN+1];  /* copy of open path for tthang */
 
-/*  S Y S I N I T  --  System-dependent program initialization.  */
+/* S Y S I N I T -- System-dependent program initialization */
 
-sysinit() {
+sysinit()
+{
 #ifdef ultrix
   gtty(0, &vanilla);               /* Get sgtty info */
   iniflags = fcntl(0, F_GETFL, 0); /* Get flags */
@@ -604,9 +498,10 @@ sysinit() {
   return 0;
 }
 
-/*  S Y S C L E A N U P  --  System-dependent program cleanup.  */
+/* S Y S C L E A N U P -- System-dependent program cleanup */
 
-syscleanup() {
+syscleanup()
+{
 #ifdef ultrix
   stty(0, &vanilla);           /* Get sgtty info */
   fcntl(0, F_SETFL, iniflags); /* Restore flags */
@@ -626,18 +521,13 @@ syscleanup() {
  *  be opened, then lcl remains (and is returned as) -1.
  */
 
-ttopen(ttname, lcl, modem) char *ttname;
+ttopen(ttname, lcl, modem)
+char *ttname;
 int *lcl, modem;
 {
 
 #ifdef UXIII
-#ifndef CIE
   char *ctermid();                   /* Wish they all had this! */
-#endif
-#endif
-
-#ifdef CIE                           /* CIE Regulus doesn't... */
-#define ctermid(x) strcpy(x, "")
 #endif
 
   char *x;
@@ -668,18 +558,7 @@ int *lcl, modem;
  */
 
 #ifdef UXIII
-#ifdef ATT7300
-
- /*
-  * Open comms line without waiting for carrier so initial call does
-  * not hang because state of "modem" is likely unknown at the initial
-  * call  -jrd.
-  */
-
-  ttyfd = open(ttname, O_RDWR | O_NDELAY);
-#else
   ttyfd = open(ttname, O_RDWR | (modem ? O_NDELAY : 0));
-#endif /* att7300 */
 #else /* not uxiii */
 #ifdef O_NDELAY
   ttyfd = open(ttname, O_RDWR | (modem ? O_NDELAY : 0));
@@ -711,12 +590,12 @@ int *lcl, modem;
       x = ttyname(0);               /* then compare its device name */
       strncpy(cname, x, DEVNAMLEN); /* (copy from internal static buf) */
 #ifdef __linux__
-          x = cname;
+      x = cname;
 #else
       x = ttyname(ttyfd);           /* ...with real name of ttname. */
 #endif
-          if (x == NULL)
-                  return;
+      if (x == NULL)
+        return;
 #ifdef __linux__
       xlocal = 1;
 #else
@@ -727,9 +606,9 @@ int *lcl, modem;
 #ifdef UXIII
 
       /*
-           * Sys III/V provides nice ctermid() function
-           * to get name of controlling tty
-           */
+       * Sys III/V provides nice ctermid() function
+       * to get name of controlling tty
+       */
 
       ctermid(cname); /* Get name of controlling terminal */
       debug(F110, " ctermid", cname, 0);
@@ -739,11 +618,11 @@ int *lcl, modem;
 #else
 
       /*
-           * Just assume local, so "set speed"
-           * and similar commands will work
+       * Just assume local, so "set speed"
+       * and similar commands will work
        * If not really local, how could
-           * it work anyway?...
-           */
+       * it work anyway?...
+       */
 
       xlocal = 1;
       debug(F101, " redirected stdin", "", xlocal);
@@ -752,10 +631,10 @@ int *lcl, modem;
   }
 
   /*
-   * Note, the following code was added so that Unix "idle-line" snoopers
+   * Note, the following code was added so that UNIX "idle-line" snoopers
    * would not think Kermit was idle when it was transferring files, and
    * maybe log people out.  But it had to be removed because it broke
-   * one of Unix Kermit's very useful features, sending from standard input,
+   * one of UNIX Kermit's very useful features, sending from standard input,
    * as in "kermit -s - < file" or "command | kermit -s -".  Too bad...
    *
    * If we're not local, close the ttyfd and just use 0
@@ -768,10 +647,10 @@ int *lcl, modem;
    *    }
    */
 
-  /*
-   * Now check if line is locked --
-   * if so fail, else lock for ourselves
-   */
+    /*
+     * Now check if line is locked --
+     * if so fail, else lock for ourselves
+     */
 
   lkf = 0; /* Check lock */
   if (xlocal > 0) {
@@ -786,16 +665,6 @@ int *lcl, modem;
   }
 
   /*
-   * Check for/suppress
-   * getty on line
-   */
-
-#ifdef ATT7300
-  if ((attmodem & DOGETY) == 0)   /* if have not suppressed getty() */
-    attmodem |= offgetty(ttname); /*  do so now and remember response */
-#endif /* att7300 */
-
-  /*
    * Got the line, now set the
    * desired value for local.
    */
@@ -804,9 +673,9 @@ int *lcl, modem;
     *lcl = xlocal;
 
     /*
-         * Some special
-         * stuff for v7
-         */
+     * Some "special"
+     * stuff for UNIX v7
+     */
 
 #ifdef V7
   if (kmem[TTY] < 0) {            /*  If open, then skip this.  */
@@ -824,24 +693,10 @@ int *lcl, modem;
    * after this point
    */
 
-  /*
-   * Request exclusive access
-   * on systems that allow it.
-   */
 #ifndef XENIX
-
-/*
- * Xenix exclusive access prevents
- * open(close(...)) from working...
- */
 #ifndef unos
-
-/*
- * Unos has the defines, but they
- * don't do anything but return -1
- */
-
 #ifdef TIOCEXCL
+
   if (xlocal)
     if (ioctl(ttyfd, TIOCEXCL, NULL) < 0)
       fprintf(stderr, "Warning, problem getting exclusive access\n");
@@ -853,7 +708,6 @@ int *lcl, modem;
 #ifdef ultrix
   if (xlocal) {
     int temp = 0;
-
 #ifdef TIOCSINUSE
     if (ioctl(ttyfd, TIOCSINUSE, NULL) < 0) {
       fprintf(stderr, "Can't set in-use flag on modem.\n");
@@ -885,30 +739,27 @@ int *lcl, modem;
     ttold.c_lflag &= ~ECHO; /* Turn off echo on local line. */
   ioctl(ttyfd, TCGETA, &ttraw);
   ioctl(ttyfd, TCGETA, &tttvt);
-#endif /* not uxiii */
-
-#ifdef VXVE
-  ttraw.c_line = 0; /* STTY line 0 for VX/VE */
-  ioctl(ttyfd, TCSETA, &ttraw);
-  tttvt.c_line = 0; /* STTY line 0 for VX/VE */
-  ioctl(ttyfd, TCSETA, &tttvt);
-#endif /* vxve */
-
+#endif
+#ifdef DEBUG
   debug(F101, "ttopen, ttyfd", "", ttyfd);
   debug(F101, " lcl", "", *lcl);
   debug(F111, " lock file", flfnam, lkf);
+#endif
   return 0;
 }
 
 /* T T C L O S -- Close the TTY, releasing any lock */
 
+#ifdef COMMENT
 SIGTYP
 ttclosx() /* To avoid pointer type mismatches */
 {
   ttclos();
 }
+#endif
 
-ttclos() {
+ttclos()
+{
   debug(F101, "ttclos", "", ttyfd);
   if (ttyfd < 0)
     return 0; /* Wasn't open. */
@@ -936,9 +787,8 @@ ttclos() {
   if (xlocal)
     if (ioctl(ttyfd, TIOCNXCL, NULL) < 0)
       fprintf(
-                stderr,
-                  "Warning, problem relinquishing exclusive access\r\n");
-
+        stderr,
+          "Warning, problem relinquishing exclusive access\r\n");
 #endif
 #endif
 #endif
@@ -951,25 +801,21 @@ ttclos() {
 #ifdef NEWUUCP
   acucntrl("enable", flfnam); /* Close getty on line. */
 #endif
-#ifdef ATT7300
-  if (attmodem & DOGETY) /* was getty(1m) running before us? */
-    ongetty(ttnmsv);     /* yes, restart on tty line */
-  attmodem &= ~DOGETY;   /* no phone in use, getty restored */
-#endif
   debug(F101, "ttclose exit", "", ttyfd);
   return 0;
 }
 
 /* T T H A N G -- Hangup phone line */
 
-tthang() {
+tthang()
+{
 #ifdef UXIII
 #ifdef HPUX
   unsigned long dtr_down = 00000000000, modem_rtn;
 #else
   unsigned short ttc_save;
-#endif /* hpux */
-#endif /* uxiii */
+#endif
+#endif
 #ifdef ANYBSD
   int ttc_save;
 #endif
@@ -993,7 +839,7 @@ tthang() {
     return -1;
   }
 #endif
-#endif /* anybsd */
+#endif
 
 #ifdef UXIII
 #ifdef HPUX /* Hewlett Packard way of modem control  */
@@ -1010,18 +856,10 @@ tthang() {
 #else
   ttc_save = ttraw.c_cflag;
   ttraw.c_cflag &= ~CBAUD; /* swa: set baud rate to 0 to hangup */
-#ifndef ATT6300
   if (ioctl(ttyfd, TCSETAF, &ttraw) < 0)
     return -1; /* do it */
-#else
-  ioctl(ttyfd, TCSETAF, &ttraw); /* do it */
-#endif /* ATT6300 */
   msleep(100); /* let things settle */
   ttraw.c_cflag = ttc_save;
-
-#ifdef ATT7300
-  atthang(ttnmsv); /* hangup internal modem, if in use */
-#endif /* ATT7300 */
 
   /*
    * NOTE - The following #ifndef...#endif
@@ -1030,13 +868,7 @@ tthang() {
    * versions, which can't do close/open.
    */
 
-#ifndef XENIX /* xenix cannot do close/open when carrier drops */
-
-  /*
-   * following corrects a
-   * PC/IX defficiency
-   */
-
+#ifndef XENIX
   ttc_save = fcntl(ttyfd, F_GETFL, 0);
   close(ttyfd); /* close/reopen file descriptor */
   ttyfd = -1;   /* in case reopen fails */
@@ -1048,27 +880,30 @@ tthang() {
     return -1;
 
     /*
-         * So Kermit hangup command works
-         * even if there is no carrier
-         */
+     * So Kermit hangup command works
+     * even if there is no carrier
+     */
 
-#endif /* UXIII */
-
-#endif /* not xenix */
+#endif
+#endif
   if (ioctl(ttyfd, TCSETAF, &ttraw) < 0)
     return -1; /* un-do it */
-#endif /* uxiii */
-#endif /* hpux  */
+#endif
+#endif
   return 0;
 }
 
 /* T T R E S -- Restore terminal to "normal" mode */
 
-ttres() { /* Restore the tty to normal. */
+ttres()
+{ /* Restore the tty to normal. */
   int x;
+
+  (void)x;
 
   if (ttyfd < 0)
     return -1; /* Not open. */
+
 #ifndef UXIII  /* except for sIII, */
   sleep(1); /* Wait for pending i/o to finish. */
 #endif /* (sIII does wait in ioctls) */
@@ -1080,7 +915,7 @@ ttres() { /* Restore the tty to normal. */
     if (fcntl(ttyfd, F_SETFL, fcntl(ttyfd, F_GETFL, 0) & ~O_NDELAY) < 0)
       return -1;
   return 0;
-#else /* not uxiii */
+#else
 #ifdef MYREAD
 #ifdef FIONBIO
   x = 0;
@@ -1089,32 +924,34 @@ ttres() { /* Restore the tty to normal. */
     perror("ttres ioctl");
     debug(F101, "ttres ioctl", "", x);
   }
-#else /* not fionbio */
+#else
 #ifdef FNDELAY
   x = (fcntl(ttyfd, F_SETFL, fcntl(ttyfd, F_GETFL, 0) & ~FNDELAY) == -1);
   debug(F101, "ttres ~FNDELAY fcntl", "", x);
   if (x < 0)
     perror("fcntl");
-#endif /* fndelay */
-#endif /* fionbio */
-#endif /* myread */
+#endif
+#endif
+#endif
   x = stty(ttyfd, &ttold); /* Restore sgtty stuff */
   debug(F101, "ttres stty restore", "", x);
   if (x < 0)
     perror("ttres stty");
   return x;
-#endif /* uxiii (this endif moved from above prev code in edit 080) */
+#endif
 }
 
-/*
- * Exclusive uucp file locking control
- *
- * by H. Fischer, creative non-Bell coding !
- * copyright rights for lock modules
- * assigned to Columbia University
- */
+ /*
+  * Exclusive uucp file locking control
+  *
+  * by H. Fischer, creative non-Bell coding !
+  * copyright rights for lock modules
+  * assigned to Columbia University
+  */
 
-static char *xxlast(s, c) char *s;
+static char *
+xxlast(s, c)
+char *s;
 char c;
 { /* Equivalent to strrchr() */
   int i;
@@ -1139,35 +976,20 @@ static look4lk(ttname) char *ttname;
 #endif /* isiii */
 
   if (access(lockdir, 04) < 0) { /* read access denied on lock dir */
-    fprintf(stderr, "Warning, read access to lock directory \"%s\" denied\n", lockdir);
+    fprintf(
+      stderr,
+        "Warning, read access to lock directory \"%s\" denied\n",
+          lockdir);
     return 1; /* cannot check or set lock file */
   }
 
   strcat(strcat(strcpy(flfnam, lockdir), "/"), lockfil);
   debug(F110, "look4lk", flfnam, 0);
 
-#ifdef RTAIX
-  if (!access(flfnam, 00)) { /* See if process still exists */
-    int lck_fil;
-    if ((lck_fil = open(flfnam, 0)) != -1) {
-      char activecmd[50];
-      strcpy(activecmd, "ps -e | cut -c1-6 | grep ");
-      (void)read(lck_fil, activecmd + 25, 10);
-      (void)close(lck_fil);
-      strcpy(activecmd + 35, " > /dev/null");
-      if (system(activecmd) == 256)
-        if (!unlink(flfnam))
-          fprintf(
-                        stderr,
-                          "Warning: invalid lock file %s deleted\n", flfnam);
-    }
-  }
-#endif /* RTAIX */
-
   if (!access(flfnam, 00)) { /* print out lock file entry */
     char lckcmd[40];
     strcat(strcpy(lckcmd, "ls -l "), flfnam);
-    system(lckcmd);
+    system(lckcmd);          /* XXX(jhj): make conditional */
     if ((access(flfnam, 02) == 0) && (access(lockdir, 02) == 0))
       printf("(You may type \"! rm %s\" to remove this file)\n", flfnam);
     return -1;
@@ -1181,7 +1003,9 @@ static look4lk(ttname) char *ttname;
 
 /* T T L O C K */
 
-static ttlock(ttfd) char *ttfd;
+static
+ttlock(ttfd)
+char *ttfd;
 { /* lock uucp if possible */
   int lck_fil, l4l;
   int pid_buf = getpid(); /* pid to save in lock file */
@@ -1213,19 +1037,22 @@ static ttlock(ttfd) char *ttfd;
 
 /* T T U N L O C K */
 
-static ttunlck() { /* kill uucp lock if possible */
+static
+ttunlck()
+{ /* kill uucp lock if possible */
   if (hasLock)
     return unlink(flfnam);
   return 0;
 }
 
-/*
- * New-style (4.3BSD) UUCP line
- * direction control (Stan Barber, Rice U)
- */
+ /*
+  * New-style (4.3BSD) UUCP line
+  * direction control (Stan Barber, Rice U)
+  */
 
 #ifdef NEWUUCP
-acucntrl(flag, ttname) char *flag, *ttname;
+acucntrl(flag, ttname)
+char *flag, *ttname;
 {
   char x[DEVNAMLEN + 32], *device, *devname;
 
@@ -1246,19 +1073,21 @@ acucntrl(flag, ttname) char *flag, *ttname;
 #define DIALING 4 /* flags (via flow) for modem handling */
 #define CONNECT 5
 
-/*
- * If called with speed > -1,
- * also set the speed.
- */
+ /*
+  * If called with speed > -1,
+  * also set the speed.
+  * 
+  * Returns 0 on success,
+  * -1 on failure.
+  */
 
-/* 
- * Returns 0 on success,
- * -1 on failure.
- */
-
-ttpkt(speed, flow, parity) int speed, flow, parity;
+ttpkt(speed, flow, parity)
+int speed, flow, parity;
 {
-  int s, x;
+  int s = -1;
+  int x;
+
+  (void)x;
 
   if (ttyfd < 0)
     return -1;     /* Not open. */
@@ -1277,14 +1106,13 @@ ttpkt(speed, flow, parity) int speed, flow, parity;
   if (xlocal)
     if (s > -1)
       ttraw.sg_ispeed = ttraw.sg_ospeed = s; /* Do the speed */
-
 #ifdef BSD41
   {
 
-          /*
-           * For 4.1BSD only, force "old" tty driver, new one botches TANDEM.
-           * Note, should really use TIOCGETD in ttopen to get current
-           * discipline, and restore it in ttres().
+      /*
+       * For 4.1BSD only, force "old" tty driver, new one botches TANDEM.
+       * Note, should really use TIOCGETD in ttopen to get current
+       * discipline, and restore it in ttres().
        */
 
     int ldisc = OTTYDISC;
@@ -1293,7 +1121,6 @@ ttpkt(speed, flow, parity) int speed, flow, parity;
 #endif
   if (stty(ttyfd, &ttraw) < 0)
     return -1; /* Set the new modes. */
-
 #ifdef MYREAD
 #ifdef BSD4
 
@@ -1309,54 +1136,44 @@ ttpkt(speed, flow, parity) int speed, flow, parity;
     perror("ttpkt ioctl");
     return -1;
   }
-#else /* fionbio */
+#else
 #ifdef FNDELAY
   debug(F100, "ttpkt FNDELAY fcntl", "", 0);
   if (fcntl(ttyfd, F_SETFL, fcntl(ttyfd, F_GETFL, 0) | FNDELAY) == -1)
     return -1;
 
-#endif /* fndelay */
-#endif /* bsd4 */
+#endif
+#endif
   debug(F100, "ttpkt flushing (1)", "", 0);
   ttflui(); /* Flush any pending input */
   debug(F100, "ttpkt returning (1)", "", 0);
   return 0;
-#endif /* bsd4 */
-#else /* myread */
+#endif
+#else
   debug(F100, "ttpkt flushing (2)", "", 0);
   ttflui(); /* Flush any pending input */
   debug(F100, "ttpkt returning (2)", "", 0);
   return 0;
-#endif /* myread */
-#endif /* not uxiii */
+#endif
+#endif
 
 #ifdef UXIII
   if (flow == 1)
     ttraw.c_iflag |= (IXON | IXOFF);
   if (flow == 0)
     ttraw.c_iflag &= ~(IXON | IXOFF);
-
   if (flow == DIALING)
     ttraw.c_cflag |= CLOCAL | HUPCL;
   if (flow == CONNECT)
     ttraw.c_cflag &= ~CLOCAL;
-
   ttraw.c_lflag &= ~(ICANON | ECHO);
   ttraw.c_lflag |= ISIG; /* do check for interrupt */
   ttraw.c_iflag |= (BRKINT | IGNPAR);
   ttraw.c_iflag &=
-      ~(IGNBRK | INLCR | IGNCR | ICRNL | IUCLC | INPCK | ISTRIP | IXANY);
+    ~(IGNBRK | INLCR | IGNCR | ICRNL | IUCLC | INPCK | ISTRIP | IXANY);
   ttraw.c_oflag &= ~OPOST;
   ttraw.c_cflag &= ~(CSIZE | PARENB);
   ttraw.c_cflag |= (CS8 | CREAD);
-#ifdef IX370
-  ttraw.c_cc[4] = 48; /* So Series/1 doesn't interrupt on every char */
-  ttraw.c_cc[5] = 1;
-#else
-#ifdef VXVE
-  ttraw.c_cc[4] = 1; /* [VMIN]  for CDC VX/VE */
-  ttraw.c_cc[5] = 0; /* [VTIME] for CDC VX/VE */
-#else
 #ifdef MYREAD
   ttraw.c_cc[4] = 1; /* return max of this many characters */
   ttraw.c_cc[5] = 0; /* or when this many secs/10 expire w/no input */
@@ -1370,8 +1187,6 @@ ttpkt(speed, flow, parity) int speed, flow, parity;
    * between Sys III and Sys V..
    */
 
-#endif
-#endif
 #endif
   if (xlocal && (s > -1)) { /* set speed */
     ttraw.c_cflag &= ~CBAUD;
@@ -1393,7 +1208,8 @@ ttpkt(speed, flow, parity) int speed, flow, parity;
 
 /* T T V T -- Condition communication line for use as virtual terminal */
 
-ttvt(speed, flow) int speed, flow;
+ttvt(speed, flow)
+int speed, flow;
 {
   int s = -1;
   if (ttyfd < 0)
@@ -1416,29 +1232,27 @@ ttvt(speed, flow) int speed, flow;
 #ifdef MYREAD
 #ifdef BSD4
 
-/*
- * Make reads
- * nonblocking
- */
+ /*
+  * Make reads
+  * nonblocking
+  */
 
   if (fcntl(ttyfd, F_SETFL, fcntl(ttyfd, F_GETFL, 0) | FNDELAY) == -1)
     return -1;
   else
     return 0;
-#endif /* bsd4 */
-#endif /* myread */
+#endif
+#endif
 
-#else /* uxiii */
+#else
   if (flow == 1)
     tttvt.c_iflag |= (IXON | IXOFF);
   if (flow == 0)
     tttvt.c_iflag &= ~(IXON | IXOFF);
-
   if (flow == DIALING)
     tttvt.c_cflag |= CLOCAL | HUPCL;
   if (flow == CONNECT)
     tttvt.c_cflag &= ~CLOCAL;
-
   tttvt.c_lflag &= ~(ISIG | ICANON | ECHO);
   tttvt.c_iflag |= (IGNBRK | IGNPAR);
   tttvt.c_iflag &=
@@ -1477,16 +1291,16 @@ ttsspd(speed)
   switch (speed) {
   case 0:
     s = B0;
-    break; /* Just the common ones. */
+    break;
   case 110:
     s = B110;
-    break; /* The others from ttydev.h */
+    break;
   case 150:
     s = B150;
-    break; /* could also be included if */
+    break;
   case 300:
     s = B300;
-    break; /* necessary... */
+    break;
   case 600:
     s = B600;
     break;
@@ -1521,68 +1335,68 @@ ttsspd(speed)
 #endif
 #ifdef B57600
   case 57600:
-        s = B57600;
+    s = B57600;
     break;
 #endif
 #ifdef B115200
   case 115200:
-        s = B115200;
+    s = B115200;
     break;
 #endif
 #ifdef B230400
   case 230400:
-        s = B230400;
-        break;
+    s = B230400;
+    break;
 #endif
 #ifdef B460800
   case 460800:
-        s = B460800;
-        break;
+    s = B460800;
+    break;
 #endif
 #ifdef B921600
   case 921600:
-        s = B921600;
-        break;
+    s = B921600;
+    break;
 #endif
 #ifdef B1000000
   case 1000000:
-        s = B1000000;
-        break;
+    s = B1000000;
+    break;
 #endif
 #ifdef B1152000
   case 1152000:
-        s = B1152000;
-        break;
+    s = B1152000;
+    break;
 #endif
 #ifdef B1500000
   case 1500000:
-        s = B1500000;
-        break;
+    s = B1500000;
+    break;
 #endif
 #ifdef B2000000
   case 2000000:
-        s = B2000000;
-        break;
+    s = B2000000;
+    break;
 #endif
 #ifdef B2500000
   case 2500000:
-        s = B2500000;
-        break;
+    s = B2500000;
+    break;
 #endif
 #ifdef B3000000
   case 3000000:
-        s = B3000000;
-        break;
+    s = B3000000;
+    break;
 #endif
 #ifdef B3500000
   case 3500000:
-        s = B3500000;
-        break;
+    s = B3500000;
+    break;
 #endif
 #ifdef B4000000
   case 4000000:
-        s = B4000000;
-        break;
+    s = B4000000;
+    break;
 #endif
   default:
     spdok = 0;
@@ -1610,10 +1424,8 @@ ttflui()
   inbufc = 0;
 
 #ifdef UXIII
-#ifndef VXVE
   if (ioctl(ttyfd, TCFLSH, 0) < 0)
     perror("flush failed");
-#endif /* vxve */
 #else
 #ifdef TIOCFLUSH
 #ifdef ANYBSD
@@ -1629,20 +1441,15 @@ ttflui()
   return 0;
 }
 
-/*
- * Interrupt
- * Functions
- */
-
-/*
- * Timeout handler for communication
- * line input functions
- */
+ /*
+  * Timeout handler for communication
+  * line input functions
+  */
 
 SIGTYP
 timerh()
 {
-        longjmp(sjbuf, 1);
+  longjmp(sjbuf, 1);
 }
 
 /*
@@ -1667,17 +1474,10 @@ esctrp()
 }
 #endif
 
-#ifdef C70
-esctrp()
-{ /* trap console escapes (^\) */
-  conesc = 1;
-  signal(SIGQUIT, SIG_IGN); /* ignore until trapped */
-}
-#endif
-
 /* C O N I N T -- Console Interrupt setter */
 
-conint(f) SIGTYP (*f)();
+conint(f)
+SIGTYP (*f)();
 { /* Set an interrupt trap. */
   int x, y;
 #ifndef BSD4
@@ -1690,7 +1490,12 @@ conint(f) SIGTYP (*f)();
   static int bgset = 0;
 #endif
 #ifdef SIGTSTP
-  int stptrap(); /* Suspend trap */
+#ifdef __linux__
+  void
+#else
+  int
+#endif
+    stptrap(); /* Suspend trap */
 #endif
 
   /*
@@ -1793,6 +1598,7 @@ connoi()
  *  otherwise value of character (0 or greater)
  */
 
+#ifdef MYREAD
 myread()
 {
   static int inbuf_item;
@@ -1840,6 +1646,7 @@ myunrd(ch) CHAR ch;
 { /* push back up to one character */
   ungotn = ch;
 }
+#endif
 
 /* I N I T R A W Q -- Set up to read /DEV/KMEM for character count */
 
@@ -1870,12 +1677,10 @@ myunrd(ch) CHAR ch;
 #include <a.out.h>
 #include <sys/proc.h>
 
-char *initrawq(tty)
+char *
+initrawq(tty)
 int tty;
 {
-#ifdef UTS24
-  return 0;
-#else
 #ifdef BSD29
   return 0;
 #else
@@ -1884,7 +1689,7 @@ int tty;
   static struct proc *pp;
   char *malloc(), *qaddr, *p, c;
   int m, pid, me;
-  NPTYPE xproc; /* Its type is defined in makefile. */
+  NPTYPE xproc; /* Its type is defined in Makefile. */
   int catch ();
 
   me = getpid();
@@ -1940,7 +1745,6 @@ iout:
   wait((int *)0); /* Destroy the ZOMBIEs! */
   return qaddr;
 #endif
-#endif
 }
 
 /*
@@ -1948,7 +1752,8 @@ iout:
  * functions...
  */
 
-static err(s)
+static
+err(s)
 char *s;
 {
   char buf[200];
@@ -1958,9 +1763,10 @@ char *s;
   doexit(1);
 }
 
-static catch()
+static
+catch()
 {
-        longjmp(jjbuf, -1);
+  longjmp(jjbuf, -1);
 }
 
 /* G E N B R K -- Simulate a modem break */
@@ -1985,7 +1791,7 @@ int fn;
 }
 #endif
 
-/* T T C H K -- Tell how many characters are waiting in tty input buffer  */
+/* T T C H K -- Tell how many characters are waiting in tty input buffer */
 
 ttchk()
 {
@@ -1998,24 +1804,14 @@ ttchk()
   return (x < 0) ? 0 : n;
 #else
 #ifdef V7
-  lseek(kmem[TTY], (long)qaddr[TTY], 0); /* 7th Edition Unix */
+  lseek(kmem[TTY], (long)qaddr[TTY], 0); /* 7th Edition UNIX */
   x = read(kmem[TTY], &n, sizeof(int));
   return (x == sizeof(int)) ? n : 0;
 #else
 #ifdef UXIII
   return inbufc + (ungotn >= 0); /* Sys III, Sys V */
 #else
-#ifdef PROVX1
-  x = ioctl(ttyfd, TIOCQCNT, &ttbuf); /* Pro/3xx Venix V.1 */
-  n = ttbuf.sg_ispeed & 0377;
-  return (x < 0) ? 0 : n;
-#else
-#ifdef C70
-  return inbufc + (ungotn >= 0); /* etc... */
-#else
   return 0;
-#endif
-#endif
 #endif
 #endif
 #endif
@@ -2080,6 +1876,9 @@ ttoc(c)
 char c;
 {
   int x;
+
+  (void)jjbuf;
+
   if (ttyfd < 0)
     return -1;             /* Check for not open. */
   signal(SIGALRM, timerh); /* Enable timer interrupt */
@@ -2109,11 +1908,13 @@ ttinl(dest, max, timo, eol)
 int max, timo;
 CHAR *dest, eol;
 {
-  int x = 0, ccn = 0, c, i, j, m, n; /* local variables */
+  unsigned int ccn;
+  int x = 0, c, i, j, m, n; /* local variables */
 
   if (ttyfd < 0)
     return -1; /* Not open. */
 
+  ccn = 0;
   m = (ttprty) ? 0177 : 0377; /* Parity stripping mask. */
   *dest = '\0';               /* Clear destination buffer */
   if (timo)
@@ -2231,19 +2032,13 @@ ttsndb()
   long n;
   char spd;
 
+  (void)spd;
+  (void)n;
+  (void)x;
+
   if (ttyfd < 0)
     return -1; /* Not open. */
 
-#ifdef PROVX1
-  gtty(ttyfd, &ttbuf);     /* Get current tty flags */
-  spd = ttbuf.sg_ospeed;   /* Save speed */
-  ttbuf.sg_ospeed = B50;   /* Change to 50 baud */
-  stty(ttyfd, &ttbuf);     /*  ... */
-  write(ttyfd, brnuls, 3); /* Send 3 nulls */
-  ttbuf.sg_ospeed = spd;   /* Restore speed */
-  stty(ttyfd, &ttbuf);     /*  ... */
-  return 0;
-#else
 #ifdef UXIII
   if (ioctl(ttyfd, TCSBRK, (char *)0) < 0) { /* Send a BREAK */
     perror("Can't send BREAK");
@@ -2272,7 +2067,6 @@ ttsndb()
 #endif
 #endif
 #endif
-#endif
 }
 
 /* M S L E E P -- Millisecond version of sleep() */
@@ -2286,12 +2080,8 @@ msleep(m)
 int m;
 {
 
-#ifdef PROVX1
-  if (m <= 0)
-    return 0;
-  sleep(-((m * 60 + 500) / 1000));
-  return 0;
-#endif
+  (void)tz;
+  (void)tv;
 
 #ifdef ANYBSD
   int t1, t3, t4;
@@ -2419,12 +2209,6 @@ char **s;
   *s = ctime(&clock_storage);
 #endif
 
-#ifdef PROVX1
-  int utime[2]; /* Venix way */
-  time(utime);
-  *s = ctime(utime);
-#endif
-
 #ifdef ANYBSD
   char *asctime(); /* Berkeley way */
   struct tm *localtime();
@@ -2475,12 +2259,6 @@ congm()
 /*  ccold.c_cc[1] = 034; */       /** these changes were suggested **/
 /*  ioctl(0,TCSETAW,&ccold); */   /** but may be dangerous **/
 #endif
-#ifdef VXVE
-  cccbrk.c_line = 0; /* STTY line 0 for CDC VX/VE */
-  ioctl(0, TCSETA, &cccbrk);
-  ccraw.c_line = 0; /* STTY line 0 for CDC VX/VE */
-  ioctl(0, TCSETA, &ccraw);
-#endif /* vxve */
   cgmf = 1; /* Flag that we got them. */
   return 0;
 }
@@ -2511,16 +2289,13 @@ char esc;
   cccbrk.c_cc[0] = 003;    /* interrupt char is control-c */
   cccbrk.c_cc[1] = escchr; /* escape during packet modes */
   cccbrk.c_cc[4] = 1;
-#ifdef ZILOG
-  cccbrk.c_cc[5] = 0;
-#else
   cccbrk.c_cc[5] = 1;
-#endif /* zilog */
   x = ioctl(0, TCSETAW, &cccbrk); /* set new modes . */
 #endif
 
   if (x > -1)
     setbuf(stdout, NULL); /* Make console unbuffered. */
+
 #ifdef V7
   if (kmem[CON] < 0) {
     qaddr[CON] = initrawq(0);
@@ -2561,14 +2336,11 @@ char esc;
   ccraw.c_iflag &= ~(IGNBRK | INLCR | IGNCR | ICRNL | IUCLC | IXON | IXANY |
                      IXOFF | INPCK | ISTRIP);
   ccraw.c_oflag &= ~OPOST;
-#ifdef ATT7300
-  ccraw.c_cflag = CLOCAL | B9600 | CS8 | CREAD | HUPCL; /* c_cflag */
-#endif
 
 /*
  * Kermit used to put the console in 8-bit raw mode, but some users have
  * pointed out that this should not be done, since some sites actually
- * use terminals with parity settings on their Unix systems, and if we
+ * use terminals with parity settings on their UNIX systems, and if we
  * override the current settings and stop doing parity, then their terminals
  * will display blotches for characters whose parity is wrong.  Therefore,
  * the following two lines are commented out (Larry Afrin, Clemson U).
@@ -2588,11 +2360,7 @@ char esc;
   ccraw.c_cc[0] = 003;    /* Interrupt char is Ctrl-C */
   ccraw.c_cc[1] = escchr; /* Escape during packet mode */
   ccraw.c_cc[4] = 1;
-#ifdef ZILOG
-  ccraw.c_cc[5] = 0;
-#else
   ccraw.c_cc[5] = 1;
-#endif /* zilog */
   return ioctl(0, TCSETAW, &ccraw); /* set new modes . */
 #endif
 }
@@ -2620,14 +2388,16 @@ conres()
 
 /* C O N O C -- Output a character to the console terminal */
 
-conoc(c) char c;
+conoc(c)
+char c;
 {
         write(1, &c, 1);
 }
 
 /* C O N X O -- Write x characters to the console terminal */
 
-conxo(x, s) char *s;
+conxo(x, s)
+char *s;
 int x;
 {
         write(1, s, x);
@@ -2635,7 +2405,8 @@ int x;
 
 /* C O N O L -- Write a line to the console terminal */
 
-conol(s) char *s;
+conol(s)
+char *s;
 {
   int len;
   len = strlen(s);
@@ -2644,7 +2415,8 @@ conol(s) char *s;
 
 /* C O N O L A -- Write an array of lines to the console terminal */
 
-conola(s) char *s[];
+conola(s)
+char *s[];
 {
   int i;
   for (i = 0; *s[i]; i++)
@@ -2653,7 +2425,8 @@ conola(s) char *s[];
 
 /* C O N O L L -- Output a string followed by CRLF */
 
-conoll(s) char *s;
+conoll(s)
+char *s;
 {
   conol(s);
   write(1, "\r\n", 2);
@@ -2666,11 +2439,8 @@ conchk()
   int x;
   long n;
 
-#ifdef PROVX1
-  x = ioctl(0, TIOCQCNT, &ttbuf);
-  n = ttbuf.sg_ispeed & 0377;
-  return (x < 0) ? 0 : n;
-#else
+  (void)x;
+  (void)n;
 #ifdef V7
   lseek(kmem[CON], (long)qaddr[CON], 0);
   x = read(kmem[CON], &n, sizeof(int));
@@ -2684,21 +2454,11 @@ conchk()
   }
   return 0;
 #else
-#ifdef C70
-  if (conesc) { /* Escape typed */
-    conesc = 0;
-    signal(SIGQUIT, esctrp); /* Restore escape */
-    return 1;
-  }
-  return 0;
-#else
 #ifdef FIONREAD
   x = ioctl(0, FIONREAD, &n); /* BSD and maybe some others */
   return (x < 0) ? 0 : n;
 #else
   return 0; /* Others can't do. */
-#endif
-#endif
 #endif
 #endif
 #endif
@@ -2718,11 +2478,9 @@ int timo;
       return ch; /* Return the char if read */
     else
 #ifdef UXIII
-#ifndef CIE /* CIE Regulus has no such symbol */
         if (n < 0 && errno == EINTR) /* if read was interrupted by QUIT */
       return escchr;                 /* user entered escape character */
     else                             /* cannot be ^C sigint never returns */
-#endif
 #endif
       return -1; /* Return the char, or -1. */
   }
@@ -2740,179 +2498,9 @@ int timo;
     return ch;
   else
 #ifdef UXIII
-#ifndef CIE /* CIE Regulus has no such symbol */
       if (n == -1 && errno == EINTR) /* If read interrupted by QUIT, */
     return escchr;                   /* user entered escape character, */
   else                               /* can't be ^c, sigint never returns */
 #endif
-#endif
     return -1;
 }
-
-#ifdef ATT7300
-
-/* A T T D I A L -- Dial up the remote system using internal modem */
-
-/*
- * Purpose: to open and dial a number on the internal modem available on the
- * ATT7300 UNIX PC.  Written by Joe Doupnik. Superceeds version written by
- * Richard E. Hill, Dickinson, TX. which employed dial(3c).
- * Uses information in <sys/phone.h> and our status int attmodem.
- */
-
-#ifndef NOCKUDIA
-struct updata dialer = {0}; /* Condition Dialer for Data call */
-
-attdial(ttname, speed, telnbr)
-char *ttname, *telnbr;
-int speed;
-{
-  char *telnum;
-  int ttclos();
-
-  attmodem &= ~ISMODEM; /* modem not in use yet */
-  
-  /*
-   * Ensure O_NDELAY is set
-   * else i/o traffic hangs
-   */
-
-  fcntl(ttyfd, F_SETFL, fcntl(ttyfd, F_GETFL, 0) | O_NDELAY);
-
-  /*
-   * Condition line, check
-   * availability & DATA mode,
-   * turn on speaker
-   */
-
-  if (ioctl(ttyfd, PIOCOFFHOOK, &dialer) == -1) {
-    printf("cannot access phone\n");
-    ttclos();
-    return -2;
-  }
-  ioctl(ttyfd, PIOCGETP, &dialer); /* get phone dialer parameters */
-
-  if (dialer.c_lineparam & VOICE) { /* phone must be in DATA mode */
-    printf(" Should not dial with modem in VOICE mode.\n");
-    printf(" Exit Kermit, switch to DATA and retry call.\n");
-    ttclos();
-    return -2;
-  }
-
-  /*
-   * Dialer parameters
-   * to be set
-   */
-
-  dialer.c_lineparam = DATA | DTMF; /* dial with tones */
-  dialer.c_waitdialtone = 5;        /* wait 5 sec for dialtone */
-  dialer.c_feedback = SPEAKERON | NORMSPK | RINGON; /* control speaker */
-  dialer.c_waitflash = 500;                         /* 0.5 sec flash hook */
-  if (ioctl(ttyfd, PIOCSETP, &dialer) == -1) {      /* set parameters */
-    printf("Cannot set modem characteristics\n");
-    ttclos();
-    return -2;
-  }
-
-  /*
-   * fprintf(stderr,"Phone line status. line_par:%o dialtone_wait:%o \
-   *   line_status:%o feedback:%o\n",
-   *  dialer.c_lineparam, dialer.c_waitdialtone,
-   *  dialer.c_linestatus, dialer.c_feedback);
-   */
-
-  attmodem |= ISMODEM; /* modem is now in-use */
-  sleep(1);
-  for (telnum = telnbr; *telnum != '\0'; telnum++) /* dial number */
-    if (ioctl(ttyfd, PIOCDIAL, telnum) != 0) {
-      perror("Error in dialing");
-      ttclos();
-      return -2;
-    }
-  ioctl(ttyfd, PIOCDIAL, "@"); /* terminator for data call */
-
-  do {                                          /* wait for modem Connect */
-    if (ioctl(ttyfd, PIOCGETP, &dialer) != 0) { /* get params */
-      perror("Cannot get modems to connect");
-      ttclos();
-      return -2;
-    }
-  } while ((dialer.c_linestatus & MODEMCONNECTED) == 0);
-  signal(SIGHUP, ttclosx); /* hangup on loss of carrier */
-  return 0;                /* return success */
-}
-
-/* A T T H A N G -- Hangup internal modem of ATT7300 */
-
-/*
- * attmodem has getty status
- * and modem-in-use bit.
- */
-
-atthang(ttname)
-char *ttname;
-{
-  int myttyfd; /* temp tty comms file descriptor */
-
-  if (attmodem & ISMODEM) /* if ATT7300 internal modem is in use */
-    if (ttyfd > 0) {      /* if ttyfd file still active, disconnect */
-                          /* and put driver in stable state */
-      myttyfd = open(ttname, O_RDWR | O_NDELAY); /* helps driver */
-      if (myttyfd < 0)
-        return -1;                         /* Oops! */
-      ioctl(myttyfd, PIOCUNHOLD, &dialer); /* return call to handset */
-      ioctl(myttyfd, PIOCDISC, &dialer);   /* disconnect phone */
-      close(myttyfd);
-    }
-  attmodem &= ~ISMODEM; /* phone not in use */
-  return 0;             /* ttyfd is unchanged */
-}
-#endif
-
-/*
- *       Offgetty, ongetty functions. These function get the 'getty(1m)' off
- *       and restore it to the indicated line.  Shell's return codes are:
- *       0: Can't do it.  Probably a user logged on.
- *       1: No need.  No getty on that line.
- *       2: Done, you should restore the getty when you're done. DOGETY
- *       System(3), however, returns them as 0, 256, 512, respectively.
- *       Thanks to Kevin O'Gorman, Anarm Software Systems.
- *
- *       getoff.sh looks like            geton.sh looks like
- *               setgetty $1 0           setgetty $1 1
- *               err=$?                  exit $?
- *               sleep 2
- *               exit $err
- */
-
-/* O F F G E T T Y -- Turn off getty(1m) for the communications tty line */
-
-/*
- * Get status so it can be restarted
- * after the line is hung up.
- */
-
-offgetty(ttname)
-char *ttname;
-{
-  char temp[30];
-  while (*ttname != '\0')
-    ttname++;  /* seek terminator of path */
-  ttname -= 3; /* get last 3 chars of name */
-  sprintf(temp, "/usr/bin/getoff.sh %s", ttname);
-  return system(temp);
-}
-
-/* O N G E T T Y -- Turn on getty(1m) for the communications tty line */
-
-ongetty(ttname)
-char *ttname;
-{
-  char temp[30];
-  while (*ttname != '\0')
-    ttname++; /* comms tty path name */
-  ttname -= 3;
-  sprintf(temp, "/usr/bin/geton.sh %s", ttname);
-  return system(temp);
-}
-#endif

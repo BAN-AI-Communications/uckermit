@@ -1,6 +1,41 @@
-char *wartv = "Wart Preprocessor, 1A(206), 22 Apr 2021";
+char *wartv = "Wart Preprocessor, 1A(210), 23 Apr 2021";
 
 /* W A R T */
+
+/*
+ * Copyright (C) 1981-2011,
+ *   Trustees of Columbia University in the City of New York.
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ *   modification, are permitted provided that the following conditions
+ *   are met:
+ *
+ *   - Redistributions of source code must retain the above copyright 
+ *       notice, this list of conditions and the following disclaimer.
+ *      
+ *   - Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in   
+ *       the documentation and/or other materials provided with the
+ *       distribution.                                                     
+ *     
+ *   - Neither the name of Columbia University nor the names of its
+ *       contributors may be used to endorse or promote products derived
+ *       from this software without specific prior written permission. 
+ *       
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ */
 
 /*
  * Pre-process a lex-like file into a C program.
@@ -24,7 +59,7 @@ char *wartv = "Wart Preprocessor, 1A(206), 22 Apr 2021";
  *  %%
  */
 
-#include "ckcdeb.h" /* Includes */
+#include "ckcdeb.h"          /* Includes */
 #include <stdio.h>
 #ifdef __linux__
 #include <stdlib.h>
@@ -32,95 +67,73 @@ char *wartv = "Wart Preprocessor, 1A(206), 22 Apr 2021";
 #endif
 #include <ctype.h>
 
-/*
- * The following "CHAR" should be changed to
- *   "short", "int", or "long" if your wart program
- *   will generate more than 127 states.
- *
- * Since wart is used mainly with C-Kermit, which
- *   has less than 50 states, "short" is adequate.
- *
- * This keeps the program about 3K-4K smaller.
- */
+#define TBL_TYPE "CHAR"
 
-#define TBL_TYPE "CHAR" /* C data type of state table */
-
-#define C_L 014 /* Formfeed */
-
-#define SEP 1 /* Token types */
+#define C_L  014             /* Formfeed */
+#define SEP    1             /* Token types */
 #define LBRACK 2
 #define RBRACK 3
-#define WORD 4
-#define COMMA 5
+#define WORD   4
+#define COMMA  5
 
 /*
  * Storage
  * sizes
  */
 
-#define MAXSTATES 50 /* max number of states */
-#define MAXWORD 50 /* max # of chars/word */
-#define SBYTES ((MAXSTATES + 7) / 8) /* # of bytes for state bitmask */
+#define MAXSTATES 50         /* max number of states */
+#define MAXWORD 50           /* max # of chars/word */
+#define SBYTES \
+  ((MAXSTATES + 7) / 8)      /* # of bytes for state bitmask */
 
-/*
- * Name of wart function
- * in generated program
- */
+ /*
+  * Name of wart function
+  * in generated program
+  */
 
 #ifndef FNAME
 #define FNAME "wart"
 #endif
 
-/*
- * Structure for
- * state information
- */
+ /*
+  * Structure for
+  * state information
+  */
 
 struct trans {
-  CHAR states[SBYTES]; /* included states */
-  int anyst;           /* true if this good from any state */
-  CHAR inchr;          /* input character */
-  int actno;           /* associated action */
+  CHAR states[SBYTES];       /* included states */
+  int anyst;                 /* true if this good from any state */
+  CHAR inchr;                /* input character */
+  int actno;                 /* associated action */
   struct trans *nxt;
-}; /* next transition */
+};                           /* next transition */
 
 typedef struct trans *Trans;
 
 #ifndef __linux__
-char *malloc(); /* Returns pointer (not int) */
+char *malloc();              /* Returns pointer (not int) */
 #endif
 
-/*
- * Variables and
- * tables
- */
+ /*
+  * Variables and
+  * tables
+  */
 
 int lines, nstates, nacts;
-
 char tokval[MAXWORD];
-
 int tbl[MAXSTATES * 128];
-
 char *tbl_type = TBL_TYPE;
-
 char *txt1 = "\n#define BEGIN state =\n\nint state = 0;\n\n";
-
-char *fname = FNAME; /* function name goes here */
-
-/*
- * Rest of
- * program...
- */
-
+char *fname = FNAME;         /* function name goes here */
 char *txt2 = "()\n\
 {\n\
-    int c,actno;\n\
+    int c, actno;\n\
     extern ";
 
-/*
- * Data type of state table is
- * inserted here (short or int)
- */
+ /*
+  * Data type of state table is
+  * inserted here (short or int)
+  */
 
 char *txt2a = " tbl[];\n\
     while (1) {\n\
@@ -128,32 +141,38 @@ char *txt2a = " tbl[];\n\
         if ((actno = tbl[c + state*128]) != -1)\n\
             switch(actno) {\n";
 
-/*
- * This program's output goes
- * here, followed by final text...
- */
+ /*
+  * This program's output goes
+  * here, followed by final text...
+  */
 
 char *txt3 = "\n            }\n    }\n}\n\n";
 
-/*
- * Turn on the bit associated
- * with the given state
- */
+ /*
+  * Turn on the bit associated
+  * with the given state
+  */
 
-wsetstate(state, t) int state;
+int
+wsetstate(state, t)
+int state;
 Trans t;
 {
   int idx, msk;
   idx = state / 8;           /* byte associated with state */
   msk = 0x80 >> (state % 8); /* bit mask for state */
   t->states[idx] |= msk;
+  return 0;
 }
 
-/*
- * See if the state is involved in the transition
- */
+ /*
+  * See if the state is
+  * involved in the transition
+  */
 
-teststate(state, t) int state;
+int
+teststate(state, t)
+int state;
 Trans t;
 {
   int idx, msk;
@@ -162,16 +181,20 @@ Trans t;
   return t->states[idx] & msk;
 }
 
-/*
- * Read input from here...
- */
+ /*
+  * Read input
+  * from here...
+  */
 
-Trans rdinput(infp, outfp) FILE *infp, *outfp;
+Trans
+rdinput(infp, outfp)
+FILE *infp, *outfp;
 {
   Trans x, rdrules();
   lines = 1;   /* line counter */
   nstates = 0; /* no states */
   nacts = 0;   /* no actions yet */
+
   fprintf(outfp, "%c* WARNING -- This C source program generated by ", '/');
   fprintf(outfp, "Wart preprocessor. */\n");
   fprintf(outfp, "%c* Do not edit this file; edit the Wart-format ", '/');
@@ -188,12 +211,14 @@ Trans rdinput(infp, outfp) FILE *infp, *outfp;
   return x;
 }
 
-/*
- * Initial - read initial definitions and state names.
- * Returns on EOF or %%.
- */
+ /*
+  * Initial - read initial definitions and state names.
+  * Returns on EOF or %%.
+  */
 
-initial(infp, outfp) FILE *infp, *outfp;
+int
+initial(infp, outfp)
+FILE *infp, *outfp;
 {
   int c;
   char wordbuf[MAXWORD];
@@ -203,7 +228,7 @@ initial(infp, outfp) FILE *infp, *outfp;
       if (strcmp(wordbuf, "states") == 0)
         rdstates(infp, outfp);
       else if (strcmp(wordbuf, "%") == 0)
-        return;
+        return 0;
       else
         fprintf(outfp, "%%%s", wordbuf);
     } else
@@ -211,14 +236,17 @@ initial(infp, outfp) FILE *infp, *outfp;
     if (c == '\n')
       lines++;
   }
+  return 0;
 }
 
-/*
- * boolean function to tell if the
- * given character can be part of a word.
- */
+ /*
+  * boolean function to tell if the
+  * given character can be part of a word.
+  */
 
-isin(s, c) char *s;
+int
+isin(s, c)
+char *s;
 int c;
 {
   for (; *s != '\0'; s++)
@@ -226,50 +254,68 @@ int c;
       return 1;
   return 0;
 }
-isword(c) int c;
+
+int
+isword(c)
+int c;
 {
-  static char special[] = ".%_-$@"; /* these are allowable */
+  static char special[] = ".%_-$@";         /* these are allowable */
   return isalnum(c) || isin(special, c);
 }
 
-/*
- * Read the next word into the given buffer.
- */
+ /*
+  * Read the next word
+  * into the given buffer.
+  */
 
-rdword(fp, buf) FILE *fp;
+int
+rdword(fp, buf)
+FILE *fp;
 char *buf;
 {
   int len = 0, c;
   while (isword(c = getc(fp)) && ++len < MAXWORD)
     *buf++ = c;
-  *buf++ = '\0'; /* tie off word */
-  ungetc(c, fp); /* put break char back */
+  *buf++ = '\0';                            /* tie off word */
+  ungetc(c, fp);                            /* put break char back */
+  return 0;
 }
 
 /*
- * Read state names, up to a newline.
+ * Read state names,
+ * up to a newline.
  */
 
-rdstates(fp, ofp) FILE *fp, *ofp;
+int
+rdstates(fp, ofp)
+FILE *fp, *ofp;
 {
   int c;
   char wordbuf[MAXWORD];
   while ((c = getc(fp)) != EOF && c != '\n') {
     if (isspace(c) || c == C_L)
-      continue;                /* skip whitespace */
-    ungetc(c, fp);             /* put char back */
-    rdword(fp, wordbuf);       /* read the whole word */
-    enter(wordbuf, ++nstates); /* put into symbol tbl */
-    fprintf(ofp, "#define %s %d\n", wordbuf, nstates);
+      continue;                             /* skip whitespace */
+    ungetc(c, fp);                          /* put char back */
+    rdword(fp, wordbuf);                    /* read the whole word */
+    enter(wordbuf, ++nstates);              /* put into symbol tbl */
+    fprintf(
+      ofp,
+        "#define %s %d\n",
+          wordbuf,
+            nstates);
   }
   lines++;
+  return 0;
 }
 
-/*
- * Allocate a new, empty transition node
- */
+ /*
+  * Allocate a new,
+  * empty transition node
+  */
 
-Trans newtrans() {
+Trans
+newtrans()
+{
   Trans new;
   int i;
 
@@ -281,11 +327,14 @@ Trans newtrans() {
   return new;
 }
 
-/*
- * Read all the rules.
- */
+ /*
+  * Read all
+  * the rules.
+  */
 
-Trans rdrules(fp, out) FILE *fp, *out;
+Trans
+rdrules(fp, out)
+FILE *fp, *out;
 {
   Trans head, cur, prev;
   int curtok;
@@ -318,19 +367,21 @@ Trans rdrules(fp, out) FILE *fp, *out;
       cur = NULL;
       copyact(fp, out, nacts);
       break;
+
     default:
       fatal("bad input format");
     }
-
   return head;
 }
 
-/*
- * Read a list of (comma-separated) states,
- * set them in the given transition.
- */
+ /*
+  * Read a list of (comma-separated) states,
+  * set them in the given transition.
+  */
 
-statelist(fp, t) FILE *fp;
+int
+statelist(fp, t)
+FILE *fp;
 Trans t;
 {
   int curtok, sval;
@@ -347,14 +398,17 @@ Trans t;
     wsetstate(sval, t);
     curtok = gettoken(fp);
   }
+  return 0;
 }
 
-/*
- * Copy an action from the
- * input to the output file
- */
+ /*
+  * Copy an action from the
+  * input to the output file
+  */
 
-copyact(inp, outp, actno) FILE *inp, *outp;
+int
+copyact(inp, outp, actno)
+FILE *inp, *outp;
 int actno;
 {
   int c, bcnt;
@@ -384,15 +438,18 @@ int actno;
     lines++;
   }
   fprintf(outp, "\n    break;\n");
+  return 0;
 }
 
-/*
- * Find the action associated with a
- * given character and state.
- * returns -1 if one can't be found.
- */
+ /*
+  * Find the action associated with a
+  * given character and state.
+  * returns -1 if one can't be found.
+  */
 
-faction(hd, state, chr) Trans hd;
+int
+faction(hd, state, chr)
+Trans hd;
 int state, chr;
 {
   while (hd != NULL) {
@@ -404,34 +461,50 @@ int state, chr;
   return -1;
 }
 
-/*
- * Empty the table...
- */
+ /*
+  * Empty the
+  * table...
+  */
 
-emptytbl() {
+int
+emptytbl()
+{
   int i;
 
   for (i = 0; i < nstates * 128; i++)
     tbl[i] = -1;
+  return 0;
 }
 
-/*
- * Add the specified action to the
- * output for the given state and chr.
- */
+ /*
+  * Add the specified action to the
+  * output for the given state and chr.
+  */
 
-addaction(act, state, chr) int act, state, chr;
-{ tbl[state * 128 + chr] = act; }
+int
+addaction(act, state, chr)
+int act, state, chr;
+{
+	tbl[state * 128 + chr] = act;
+	return 0;
+}
 
-writetbl(fp) FILE *fp;
-{ warray(fp, "tbl", tbl, 128 * (nstates + 1), TBL_TYPE); }
+int
+writetbl(fp)
+FILE *fp;
+{
+	warray(fp, "tbl", tbl, 128 * (nstates + 1), TBL_TYPE);
+	return 0;
+}
 
-/*
- * Write an array to the output file,
- * given its name and size.
- */
+ /*
+  * Write an array to the output file,
+  * given its name and size.
+  */
 
-warray(fp, nam, cont, siz, typ) FILE *fp;
+int
+warray(fp, nam, cont, siz, typ)
+FILE *fp;
 char *nam;
 int cont[], siz;
 char *typ;
@@ -444,13 +517,17 @@ char *typ;
       putc('\n', fp);
   }
   fprintf(fp, "};\n");
+  return 0;
 }
 
-/*
- * Main function
- */
+ /*
+  * Main
+  * function
+  */
 
-main(argc, argv) int argc;
+int
+main(argc, argv)
+int argc;
 char *argv[];
 {
   Trans head;
@@ -479,31 +556,34 @@ char *argv[];
   for (state = 0; state <= nstates; state++)
     for (c = 1; c < 128; c++)
       addaction(faction(head, state, c), state,
-                c); /* find actions, add to tbl */
+        c);                        /* find actions, add to tbl */
   writetbl(outfile);
   copyrest(infile, outfile);
   printf("%d states, %d actions\n", nstates, nacts);
-#ifdef undef
-  for (state = 1; state <= nstates; state++)
-    for (c = 1; c < 128; c++)
-      if (tbl[state * 128 + c] != -1)
-        printf(
-                  "state %d, chr %d, act %d\n", state, c, tbl[state * 128 + c]);
-#endif
-  exit(GOOD_EXIT);
+  return GOOD_EXIT;
 }
 
-/*
- * Fatal error handler
- */
+ /*
+  * Fatal error
+  * handler
+  */
 
-fatal(msg) char *msg;
+int
+fatal(msg)
+char *msg;
 {
-  fprintf(stderr, "error in line %d: %s\n", lines, msg);
+  fprintf(
+    stderr,
+      "error in line %d: %s\n",
+        lines,
+          msg);
   exit(BAD_EXIT);
+  return(BAD_EXIT);               /* unreachable */
 }
 
-prolog(outfp) FILE *outfp;
+int
+prolog(outfp)
+FILE *outfp;
 {
   int c;
   while ((c = *txt1++) != '\0')
@@ -516,20 +596,27 @@ prolog(outfp) FILE *outfp;
     putc(c, outfp);
   while ((c = *txt2a++) != '\0')
     putc(c, outfp);
+  return 0;
 }
 
-epilogue(outfp) FILE *outfp;
+int
+epilogue(outfp)
+FILE *outfp;
 {
   int c;
   while ((c = *txt3++) != '\0')
     putc(c, outfp);
+  return 0;
 }
 
-copyrest(in, out) FILE *in, *out;
+int
+copyrest(in, out)
+FILE *in, *out;
 {
   int c;
   while ((c = getc(in)) != EOF)
     putc(c, out);
+  return 0;
 }
 
 /*
@@ -537,7 +624,9 @@ copyrest(in, out) FILE *in, *out;
  * to the string value of the token if appropriate.
  */
 
-gettoken(fp) FILE *fp;
+int
+gettoken(fp)
+FILE *fp;
 {
   int c;
   while (1) { /* loop if reading comments... */
@@ -583,11 +672,14 @@ gettoken(fp) FILE *fp;
   }
 }
 
-/*
- * Skip over a comment
- */
+ /*
+  * Skip over
+  * a comment
+  */
 
-rdcmnt(fp) FILE *fp;
+int
+rdcmnt(fp)
+FILE *fp;
 {
   int c, star, prcnt;
   prcnt = star = 0; /* no star seen yet */
@@ -599,51 +691,55 @@ rdcmnt(fp) FILE *fp;
     if (c == '\n')
       lines++;
   }
+  return 0;
 }
 
-/*
- * Symbol table management for wart
- *
- * Entry points:
- *   clrhash - empty hash table.
- *   enter - enter a name into the symbol table
- *   lkup - find a name's value in the symbol table.
- */
+ /*
+  * Symbol table management for wart
+  *
+  * Entry points:
+  *   clrhash - empty hash table.
+  *   enter - enter a name into the symbol table
+  *   lkup - find a name's value in the symbol table.
+  */
 
-#define HASHSIZE 101 /* # of entries in hash table */
-
+#define HASHSIZE 101  /* # of entries in hash table */
 struct sym {
-  char *name; /* symbol name */
-  int val;    /* value */
+  char *name;         /* symbol name */
+  int val;            /* value */
   struct sym *hnxt;
-} /* next on collision chain */
+}                     /* next on collision chain */
     * htab[HASHSIZE]; /* the hash table */
 
-/*
- * Empty the hash table
- * before using it...
- */
+ /*
+  * Empty the hash table
+  * before using it...
+  */
 
+int
 clrhash() {
   int i;
 
   for (i = 0; i < HASHSIZE; i++)
     htab[i] = NULL;
+  return 0;
 }
 
-/*
- * Compute the value of
- * the hash for a symbol
- */
+ /*
+  * Compute the value of
+  * the hash for a symbol
+  */
 
-hash(name) char *name;
+int
+hash(name)
+char *name;
 {
   int sum;
   for (sum = 0; *name != '\0'; name++)
     sum += (sum + *name);
-  sum %= HASHSIZE; /* take sum mod hashsize */
+  sum %= HASHSIZE;     /* take sum mod hashsize */
   if (sum < 0)
-    sum += HASHSIZE; /* disallow negative hash value */
+    sum += HASHSIZE;   /* disallow negative hash value */
   return sum;
 }
 
@@ -652,7 +748,9 @@ hash(name) char *name;
  * copy of a string...
  */
 
-char *copy(s) char *s;
+char *
+copy(s)
+char *s;
 {
   char *new;
   new = (char *)malloc(strlen(s) + 1);
@@ -665,7 +763,9 @@ char *copy(s) char *s;
  * into the hash table
  */
 
-enter(name, svalue) char *name;
+int
+enter(name, svalue)
+char *name;
 int svalue;
 {
   int h;
@@ -680,15 +780,18 @@ int svalue;
   cur->val = svalue;
   cur->hnxt = htab[h];
   htab[h] = cur;
+  return 0;
 }
 
-/*
- * Find name in the symbol table,
- * return its value.
- * Returns -1 if not found.
- */
+ /*
+  * Find name in the symbol table,
+  * return its value.
+  * Returns -1 if not found.
+  */
 
-lkup(name) char *name;
+int
+lkup(name)
+char *name;
 {
   struct sym *cur;
   for (cur = htab[hash(name)]; cur != NULL; cur = cur->hnxt)

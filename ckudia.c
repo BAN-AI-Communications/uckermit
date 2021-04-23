@@ -1,7 +1,42 @@
 #ifndef NOCKUDIA
-char *dialv = "Dial Command, 4G(025), 22 Apr 2021";
+char *dialv = "Dial Command, 4G(029), 23 Apr 2021";
 
 /* C K U D I A -- Dialing program for connection to remote system */
+
+/*
+ * Copyright (C) 1981-2011,
+ *   Trustees of Columbia University in the City of New York.
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ *   modification, are permitted provided that the following conditions
+ *   are met:
+ *
+ *   - Redistributions of source code must retain the above copyright 
+ *       notice, this list of conditions and the following disclaimer.
+ *      
+ *   - Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in   
+ *       the documentation and/or other materials provided with the
+ *       distribution.                                                     
+ *     
+ *   - Neither the name of Columbia University nor the names of its
+ *       contributors may be used to endorse or promote products derived
+ *       from this software without specific prior written permission. 
+ *       
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ */
 
 /*
  * Original author: Herm Fischer (HFISCHER@USC-ECLB).
@@ -14,9 +49,9 @@ char *dialv = "Dial Command, 4G(025), 22 Apr 2021";
  *   or redistribute this software so long as it is not sold for profit,
  *   provided this copyright notice is retained.
  *
- * OS-9/68K and Microcom modem support by Bob Larson (Blarson@ecla.usc.edu)
+ * Microcom modem support by Bob Larson (Blarson@ecla.usc.edu)
  *
- * This module should work under all versions of Unix. It calls externally
+ * This module should work under all versions of UNIX. It calls externally
  * defined system-depended functions for i/o, but depends upon the existence
  * of various modem control functions.
  *
@@ -42,8 +77,6 @@ char *dialv = "Dial Command, 4G(025), 22 Apr 2021";
  */
 
 /*
- * Previous Modifications:
- *
  *      21-Jul-85       Fixed failure returns hanging on no carrier signal
  *                      Requires tthang change too (ckutio.c revision)
  *                                                      -- Herm Fischer
@@ -150,11 +183,7 @@ char *dialv = "Dial Command, 4G(025), 22 Apr 2021";
 #include <signal.h>
 #include <stdio.h>
 
-#ifndef ZILOG
 #include <setjmp.h>     /* Longjumps */
-#else
-#include <setret.h>
-#endif
 
 #ifdef __linux__
 #include <string.h>
@@ -207,7 +236,7 @@ MDMINF                  /* structure for modem-specific information */
 #define n_USROBOT  12
 #define n_VENTEL   13
 #define n_CONCORD  14
-#define n_ATTUPC   15   /* aka Unix PC and ATT7300 */
+#define n_ATTUPC   15   /* aka UNIX PC and ATT7300 */
 #define n_ROLM     16   /* Rolm CBX */
 #define n_MICROCOM 17
 
@@ -232,12 +261,12 @@ MDMINF                  /* structure for modem-specific information */
 
 static MDMINF ATTMODEM = /* Information for AT&T switched-network modems */
 
-/* "Number" following "dial" can include: p's and
- * t's to indicate pulse or tone (default) dialing,
- * + for wait for dial tone, , for pause, r for
- * last number dialed, and, except for 2224B, some
- * comma-delimited options like o12=y, before number.
- */
+ /* "Number" following "dial" can include: p's and
+  * t's to indicate pulse or tone (default) dialing,
+  * + for wait for dial tone, , for pause, r for
+  * last number dialed, and, except for 2224B, some
+  * comma-delimited options like o12=y, before number.
+  */
 
 /* "Important" options for the modems:
  *
@@ -400,11 +429,11 @@ static MDMINF HAYES =   /* Information for "Hayes" modem */
         2,              /* pause_time */
         "AT\r",         /* wake_str */
                         /* Note: Other wake_str's are possible here.
-                                                 * For Hayes 2400 that is to be used for both
-                                                 * inbound and outbound calls, "AT&F&D3" might
-                                                 * be best. For outbound calls only, possibly
-                                                 * "AT&F&D2". See the Hayes 2400 manual.
-                                                 */
+                         * For Hayes 2400 that is to be used for both
+                         * inbound and outbound calls, "AT&F&D3" might
+                         * be best. For outbound calls only, possibly
+                         * "AT&F&D2". See the Hayes 2400 manual.
+                         */
         0,              /* wake_rate */
         "",             /* wake_prompt */
         "",             /* dmode_str */
@@ -499,7 +528,7 @@ static MDMINF CONCORD = /* Information for Condor CDS 220 2400b modem */
 };
 
 static MDMINF
-    ATTUPC = /* (Dummy) Information for "ATT7300/Unix PC" internal modem */
+    ATTUPC = /* (Dummy) Information for "ATT7300/UNIX PC" internal modem */
     {
         20,             /* dial_time */
         "",             /* pause_chars */
@@ -563,12 +592,14 @@ static MDMINF *ptrtab[] = {
     &MICROCOM,
 };
 
-/*
- * Declare modem names and associated numbers for command
- * parsing, and also for doing number-to-name translation.
- *
- * The entries MUST be in alphabetical order by modem name.
- */
+ /*
+  * Declare modem names and associated numbers for command
+  * parsing, and also for doing number-to-name translation.
+  */
+
+ /*
+  * The entries MUST be in alphabetical order by modem name.
+  */
 
 struct keytab mdmtab[] = {"attdtdm",
                           n_ATTDTDM,
@@ -645,9 +676,9 @@ int nmdm = (sizeof(mdmtab) / sizeof(struct keytab)); /* number of modems */
 
 static char *F_reason[5] = { /* Failure reasons for message */
                             "Unknown",
-                                                        "Timeout",
-                                                        "Interrupt",
-                                                        "Modem",
+                            "Timeout",
+                            "Interrupt",
+                            "Modem",
                             "Initialize"};
 
 static int tries = 0;
@@ -755,15 +786,15 @@ char *telnbr;
   char *pc;             /* pointer to a character */
 
   if (!mdmtyp) {
-    printf("Sorry, you must 'set modem' first\n");
+    printf("You must 'set modem' first\n");
     return -2;
   }
   if (!local) {
-    printf("Sorry, you must 'set line' first\n");
+    printf("You must 'set line' first\n");
     return -2;
   }
   if (speed < 0) {
-    printf("Sorry, you must 'set speed' first\n");
+    printf("You must 'set speed' first\n");
     return -2;
   }
   debug(F110, "dial", telnbr, 0);
@@ -775,7 +806,7 @@ char *telnbr;
 
   if (ttopen(ttname, &local, mdmtyp) < 0) { /* Open, no carrier wait */
     erp = errmsg;
-    sprintf(erp, "Sorry, can't open %s", ttname);
+    sprintf(erp, "Can't open %s", ttname);
     perror(errmsg);
     return -2;
   }
@@ -808,7 +839,7 @@ char *telnbr;
    */
 
   if (tthang() < 0) {
-    printf("Sorry, Can't hang up tty line\n");
+    printf("Can't hang up tty line\n");
     return -2;
   }
   if (augmdmtyp == n_ROLM)
@@ -820,7 +851,7 @@ char *telnbr;
    */
 
   if (ttpkt(speed, DIALING, parity) < 0) {
-    printf("Sorry, Can't condition communication line\n");
+    printf("Can't condition communication line\n");
     return -2;
   }
   if (augmdmtyp == n_ROLM)
@@ -903,35 +934,6 @@ char *telnbr;
 #define GOT_A -3
 
   switch (augmdmtyp) {
-
-#ifdef ATT7300
-  case n_ATTUPC:
-
-    /*
-         * For ATT7300/UNIX-PC's with their special
-         * internal modem. Timeout and user interrupts
-         * are enabled during dialing. attdial() is in
-         * the file ckutio.c.                    --jrd
-     */
-
-    {
-      alarm(waitct);                        /* do alarm properly */
-      if (attdial(ttname, speed, telnbr)) { /* dial internal modem */
-        reset();                            /* reset alarms, etc. */
-        if (!quiet)
-          printf("Call did not complete.");
-        ttclos();                           /* close line if open */
-        return -2;                          /* return failure */
-      }
-      reset();                              /* reset alarms, etc. */
-      ttpkt(speed, CONNECT, parity);        /* cancel dialing ioctl */
-      if (!quiet)
-        printf("Call completed.\07\r\n");
-      return 0;                             /* no conversation with the
-                                                                                         * modem to complete dialing
-                                                                                         */
-    }
-#endif                                      /* att7300 */
 
   case n_HAYES:
   case n_HAYESNV:
@@ -1126,8 +1128,8 @@ char *telnbr;
 
           /*
            * The DF100 will respond with "Attached" even
-                   * if DTR and / or carrier are not present.
-                   * Another reason to (also) wait for carrier?
+           * if DTR and / or carrier are not present.
+           * Another reason to (also) wait for carrier?
            */
 
           if (didWeGet(lbuf, "Busy"))
@@ -1221,15 +1223,15 @@ char *telnbr;
 
           /*
            * Early versions of the Rolm 9751 CBX
-                   * software do not give a CALL COMPLETE
-                   * indication when dialing an outpool
-                   * number, but it does seem to return a
-                   * long string of DELs at that point.
-                   *
-                   * (This doesn't really work...)
-                   *
-                   * if (didWeGet(lbuf,"\177\177\177"))
-                   *   status = CONNECTED;
+           * software do not give a CALL COMPLETE
+           * indication when dialing an outpool
+           * number, but it does seem to return a
+           * long string of DELs at that point.
+           *
+           * (This doesn't really work...)
+           *
+           * if (didWeGet(lbuf,"\177\177\177"))
+           *   status = CONNECTED;
            */
 
           break;
@@ -1252,9 +1254,9 @@ char *telnbr;
         case n_MICROCOM:
 
           /* 
-                   * "RINGBACK" means phone
-                   * line ringing, continue
-                   */
+           * "RINGBACK" means phone
+           * line ringing, continue
+           */
 
           if (didWeGet(lbuf, "NO CONNECT"))
             status = FAILED;

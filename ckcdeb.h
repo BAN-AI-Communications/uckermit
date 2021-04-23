@@ -1,12 +1,46 @@
 /* C K C D E B . H */
 
 /*
- * This file is included by all C-Kermit modules, including the modules
- * that aren't specific to Kermit (like the command parser and the
- * ck?tio and ck?fio modules. It specifies format codes for debug(),
- * tlog(), and similar functions, and includes any necessary typedefs
- * to be used by all C-Kermit modules, and also includes some feature
- * selection compile-time switches.
+ * This file is included by all uCKermit modules, including the modules
+ * that aren't specific to Kermit. It specifies format codes for
+ * debug(), tlog(), and similar functions, and includes any necessary
+ * typedefs to be used by all uCKermit modules, and also includes some
+ * feature selection compile-time switches.
+ */
+
+/*
+ * Copyright (C) 1981-2011,
+ *   Trustees of Columbia University in the City of New York.
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ *   modification, are permitted provided that the following conditions
+ *   are met:
+ *
+ *   - Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *
+ *   - Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in
+ *       the documentation and/or other materials provided with the
+ *       distribution.
+ *
+ *   - Neither the name of Columbia University nor the names of its
+ *       contributors may be used to endorse or promote products derived
+ *       from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 /*
@@ -34,7 +68,10 @@
 #define tlog(a, b, c, d)
 #endif
 
-/* Formats for debug(), tlog(), etc */
+/*
+ * Formats for
+ * debug(), tlog(), etc
+ */
 
 #define F000 0
 #define F001 1
@@ -76,11 +113,6 @@ struct zattr {          /* Kermit File Attribute structure */
 };
 
 /*
- * Unix Version
- * Dependencies
- */
-
-/*
  * signal() type
  * void or int?
  */
@@ -120,23 +152,7 @@ typedef int SIGTYP;
  * Dependencies
  */
 
-#ifdef ZILOG
-#define setjmp setret
-#define longjmp longret
-#define jmp_buf ret_buf
-#define getcwd curdir
-#endif
-
-#ifdef PROVX1
-typedef char CHAR;
-typedef long LONG;
-typedef int void;
-#else
 #ifdef V7
-typedef char CHAR;
-typedef long LONG;
-#else
-#ifdef C70
 typedef char CHAR;
 typedef long LONG;
 #else
@@ -150,8 +166,6 @@ typedef long LONG;
 #else
 typedef unsigned char CHAR;
 typedef long LONG;
-#endif
-#endif
 #endif
 #endif
 #endif
@@ -178,9 +192,9 @@ typedef long LONG;
  */
 
 /*
- * The device name of a job's controlling terminal.
- * Special for VMS, same for all Unixes (?), but
- * not used by Macintosh */
+ * The device name of a job's
+ * controlling terminal.
+ */
 
 #define CTTNAM "/dev/tty"
 
