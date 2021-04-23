@@ -10,8 +10,8 @@
 
 ## DESCRIPTION
 
-_μCKermit_ is a Kermit file transfer program that allows files to be moved between
-machines of many different operating systems and architectures.
+_μCKermit_ is a Kermit file transfer program that allows files to be moved
+between machines of many different operating systems and architectures.
 
 Arguments are optional. If _μCKermit_ is executed without arguments, it will
 enter _command mode_. Otherwise, _μCKermit_ will read the arguments off the
@@ -55,8 +55,8 @@ options specify either protocol transactions or terminal connection.
     characters, the UNIX shell expands it into a list. If _fn_ is \'`-`\' then
     _μCKermit_ sends from standard input, which may come from a file:
     `uckermit -s - < foo.bar` or a parallel process: `ls -l | uckermit -s -`.
-    You _cannot_ use this mechanism to send terminal type-in. If you want to send
-    file whose name is \"-\" you can precede it with a path name, as in:
+    You _cannot_ use this mechanism to send terminal type-in. If you want to
+    send file whose name is \"-\" you can precede it with a path name, as in:
     `uckermit -s ./-`.
 - **`-r`**
   - Receive a file or files. Wait passively for files to arrive.
@@ -104,9 +104,10 @@ options specify either protocol transactions or terminal connection.
     mechanism will be used for transferring 8-bit binary data, provided the
     opposite _Kermit_ agrees. _The default parity is **none**_.
 - **`-t`**
-  - Specifies half duplex, line turnaround with **XON** as the handshake character.
-    The following commands may be used only with a _μCKermit_ which is local —
-    either by default or else because the **`-l`** option has been specified.
+  - Specifies half duplex, line turnaround with **XON** as the handshake
+    character. The following commands may be used only with a _μCKermit_ which
+    is local — either by default or else because the **`-l`** option has been
+    specified.
 - **`-g rfn`**
   - Actively request a remote server to send the named file or files; _rfn_ is a
     file specification in the remote host\'s own syntax. If _fn_ happens to
@@ -196,7 +197,8 @@ options specify either protocol transactions or terminal connection.
       beep if the requested operation fails.
   - **`DEL`**
     - The `Delete` or `Rubout` key — Delete the previous character from the
-      command. You may also use `BS` (`Backspace`) or `Control-H` for this function.
+      command. You may also use `BS` (`Backspace`) or `Control-H` for this
+      function.
   - **`^W`**
     - `Control-W` — Erase the rightmost word from the command line.
   - **`^U`**
