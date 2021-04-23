@@ -53,10 +53,12 @@ protocol transactions or terminal connection.
 - **`-s fn`**
   - Send the specified file or files. If _fn_ contains wildcard (meta)
     characters, the UNIX shell expands it into a list. If _fn_ is \'-\' then
-    _μCKermit_ sends from standard input, which may come from a file: `uckermit -s - < foo.bar` or a parallel process: `ls -l | uckermit -s -`
+    _μCKermit_ sends from standard input, which may come from a file:
+    `uckermit -s - < foo.bar` or a parallel process: `ls -l | uckermit -s -`
 
 You cannot use this mechanism to send terminal typein. If you want to send file
-whose name is \"-\" you can precede it with a path name, as in: `uckermit -s ./-`
+whose name is \"-\" you can precede it with a path name, as in:
+`uckermit -s ./-`
 
 - **`-r`**
   - Receive a file or files. Wait passively for files to arrive.
@@ -81,7 +83,12 @@ Pipes the incoming data (single or multiple files) to the indicated command, as
 in: `uckermit -k | sort > sorted.stuff`
 
 - **`-a fn1`**
-  - If you have specified a file transfer option, you may specify an alternate name for a single file with the **-a** option. For example, `uckermit -s foo -a bar` sends the file foo telling the receiver that its name is bar. If more than one file arrives or is sent, only the first file is affected by the **-a** option: `uckermit -ra baz` stores the first incoming file under the name baz.
+  - If you have specified a file transfer option, you may specify an alternate
+    name for a single file with the **-a** option. For example,
+    `uckermit -s foo -a bar` sends the file foo telling the receiver that its
+    name is bar. If more than one file arrives or is sent, only the first file
+    is affected by the **-a** option: `uckermit -ra baz` stores the first
+    incoming file under the name baz.
 - **`-x`**
   - Begin server operation. May be used in either local or remote mode.
 
@@ -112,7 +119,10 @@ This option should always be included with the **-l** option, since the speed of
 an external line is not necessarily what you might expect.
 
 - **`-p x`**
-  - Parity --- **`e`**, **`o`**, **`m`**, **`s`**, **`n`** (even, odd, mark, space, or none). If parity is other than none, then the 8th-bit prefixing mechanism will be used for transferring 8-bit binary data, provided the opposite _Kermit_ agrees. The default parity is none.
+  - Parity --- **`e`**, **`o`**, **`m`**, **`s`**, **`n`** (even, odd, mark,
+    space, or none). If parity is other than none, then the 8th-bit prefixing
+    mechanism will be used for transferring 8-bit binary data, provided the
+    opposite _Kermit_ agrees. The default parity is none.
 - **`-t`**
   - Specifies half duplex, line turnaround with XON as the handshake character.
 
@@ -136,7 +146,9 @@ either by default or else because the **-l** option has been specified.
     **`-n`** may both be used in the same command. The use of **`-n`** and
     **`-c`** is illustrated below.
 
-On a timesharing system, the **`-l`** and **`-b`** options will also have to be included with the **`-r`**, **`-k`**, or **`-s`** options if the other _μCKermit_ is on a remote system.
+On a timesharing system, the **`-l`** and **`-b`** options will also have to be
+included with the **`-r`**, **`-k`**, or **`-s`** options if the other
+_μCKermit_ is on a remote system.
 
 If _uckermit_ is in local mode, the screen (stdout) is continously updated to
 show the progress of the file transer. A dot is printed for every four data
@@ -181,9 +193,11 @@ The command line may contain no more than one protocol action option.
 
 ## INTERACTIVE OPERATION
 
-_μCKermit_\'s interactive command prompt is \"μCKermit\>\". In response to this prompt, you may type any valid command.
+_μCKermit_\'s interactive command prompt is \"μCKermit\>\". In response to this
+prompt, you may type any valid command.
 
-_μCKermit_ executes the command and then prompts you for another command. The process continues until you instruct the program to terminate.
+_μCKermit_ executes the command and then prompts you for another command. The
+process continues until you instruct the program to terminate.
 
 Commands begin with a keyword, normally an English verb, such as \"send\". You
 may omit trailing characters from any keyword, so long as you specify sufficient
@@ -370,7 +384,8 @@ any reasonable depth.
 
 **_Revised 3-Clause BSD License for Columbia University Kermit Software_**
 
-Copyright (C) 1981-2011, Trustees of Columbia University in the City of New York.
+Copyright (C) 1981-2011, Trustees of Columbia University in the City of New
+York.
 
 All rights reserved.
 
@@ -388,7 +403,16 @@ All rights reserved.
     may be used to endorse or promote products derived from this software
     without specific prior written permission.
 
-**THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.**
+**THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.**
 
 ## FILES
 
@@ -405,7 +429,8 @@ All rights reserved.
 
 ## DIAGNOSTICS
 
-- The diagnostics produced by _μCKermit_ itself are _intended_ to be self-explanatory.
+- The diagnostics produced by _μCKermit_ itself are _intended_ to be
+  self-explanatory.
 
 ## BUGS
 
