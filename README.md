@@ -22,8 +22,8 @@ The following notation is used in command descriptions:
 _fn_
 
 > A UNIX file specification, possibly containing either of the \"wildcard\"
-characters \'\~\', \'\*\', or \'?\' (\'\~\' matches a user\'s home directory
-name,
+> characters \'\~\', \'\*\', or \'?\' (\'\~\' matches a user\'s home directory
+> name,
 
 _fn1_
 
@@ -32,7 +32,7 @@ _fn1_
 _rfn_
 
 > A remote file specification in the remote system\'s own syntax, which may
-denote a single file or a group of files.
+> denote a single file or a group of files.
 
 _rfn1_
 
@@ -45,12 +45,12 @@ _n_
 _c_
 
 > A decimal number between 0 and 127 representing the value of an ASCII
-character.
+> character.
 
 _cc_
 
 > A decimal number between 0 and 31, or else exactly 127, representing the value
-of an ASCII control character.
+> of an ASCII control character.
 
 **\[ \]**
 
@@ -70,8 +70,8 @@ protocol transactions or terminal connection.
 **-s\*** fn\*
 
 > Send the specified file or files. If _fn_ contains wildcard (meta) characters,
-the UNIX shell expands it into a list. If _fn_ is \'-\' then _μCKermit_ sends
-from standard input, which may come from a file:
+> the UNIX shell expands it into a list. If _fn_ is \'-\' then _μCKermit_ sends
+> from standard input, which may come from a file:
 
 uckermit -s - \< foo.bar
 
@@ -91,7 +91,7 @@ uckermit -s ./-
 **-k**
 
 > Receive (passively) a file or files, sending them to standard output. This
-option can be used in several ways:
+> option can be used in several ways:
 
 uckermit -k
 
@@ -113,7 +113,7 @@ uckermit -k \| sort \> sorted.stuff
 **-a\*** fn1\*
 
 > If you have specified a file transfer option, you may specify an alternate
-name for a single file with the **-a** option. For example,
+> name for a single file with the **-a** option. For example,
 
 uckermit -s foo -a bar
 
@@ -143,7 +143,7 @@ following command sets _μCKermit_\'s \"mode\":
 **-l\*** dev\*
 
 > Line --- Specify a terminal line to use for file transfer and terminal
-connection, as in
+> connection, as in
 
 uckermit -l /dev/ttyS5
 
@@ -162,9 +162,9 @@ uckermit -l /dev/ttyS5 -b 9600
 **-p\*** x\*
 
 > Parity --- **e**, **o**, **m**, **s**, **n** (even, odd, mark, space, or
-none). If parity is other than none, then the 8th-bit prefixing mechanism will
-be used for transferring 8-bit binary data, provided the opposite _μCKermit_
-agrees. The default parity is none.
+> none). If parity is other than none, then the 8th-bit prefixing mechanism will
+> be used for transferring 8-bit binary data, provided the opposite _μCKermit_
+> agrees. The default parity is none.
 
 **-t**
 
@@ -176,8 +176,8 @@ either by default or else because the **-l** option has been specified.
 **-g\*** rfn\*
 
 > Actively request a remote server to send the named file or files; _rfn_ is a
-file specification in the remote host\'s own syntax. If _fn_ happens to contain
-any special shell characters, like \'\*\', these must be quoted, as in
+> file specification in the remote host\'s own syntax. If _fn_ happens to contain
+> any special shell characters, like \'\*\', these must be quoted, as in
 
 uckermit -g x\\\*.\\?
 
@@ -188,15 +188,15 @@ uckermit -g x\\\*.\\?
 **-c**
 
 > Establish a terminal connection over the specified or default communication
-line, before any protocol transaction takes place. Get back to the local system
-by typing the escape character (normally Control-Backslash) followed by the
-letter \'c\'.
+> line, before any protocol transaction takes place. Get back to the local system
+> by typing the escape character (normally Control-Backslash) followed by the
+> letter \'c\'.
 
 **-n**
 
 > Like **-c,** but after a protocol transaction takes place; **-c** and **-n**
-may both be used in the same command. The use of **-n** and **-c** is
-illustrated below.
+> may both be used in the same command. The use of **-n** and **-c** is
+> illustrated below.
 
 On a timesharing system, the **-l** and **-b** options will also have to be
 included with the **-r**, **-k**, or **-s** options if the other _μCKermit_ is
@@ -226,15 +226,15 @@ Several other command-line options are provided:
 **-i**
 
 > Specifies that files should be sent or received exactly \"as is\" with no
-conversions. This option is necessary for transmitting binary files. It may also
-be used to slightly boost efficiency in UNIX-to-UNIX transfers of text files by
-eliminating CRLF/newline conversion.
+> conversions. This option is necessary for transmitting binary files. It may also
+> be used to slightly boost efficiency in UNIX-to-UNIX transfers of text files by
+> eliminating CRLF/newline conversion.
 
 **-e n**
 
 > Specifies the (extended) receive-packet length, a number between 10 and about
-1000 (depending on the system). Lengths of 95 or greater require that the
-opposite μCKermit support the long packet protocol extension.
+> 1000 (depending on the system). Lengths of 95 or greater require that the
+> opposite μCKermit support the long packet protocol extension.
 
 **-w**
 
@@ -243,13 +243,13 @@ opposite μCKermit support the long packet protocol extension.
 **-q**
 
 > Quiet --- Suppress screen update during file transfer, for instance to allow a
-file transfer to proceed in the background.
+> file transfer to proceed in the background.
 
 **-d**
 
 > Debug --- Record debugging information in the file debug.log in the current
-directory. Use this option if you believe the program is misbehaving, and show
-the resulting log to your local _μCKermit_ maintainer.
+> directory. Use this option if you believe the program is misbehaving, and show
+> the resulting log to your local _μCKermit_ maintainer.
 
 **-h**
 
@@ -276,19 +276,19 @@ Certain characters have special functions in interactive commands:
 **?**
 
 > Question mark, typed at any point in a command, will produce a message
-explaining what is possible or expected at that point. Depending on the context,
-the message may be a brief phrase, a menu of keywords, or a list of files.
+> explaining what is possible or expected at that point. Depending on the context,
+> the message may be a brief phrase, a menu of keywords, or a list of files.
 
 **ESC**
 
 > (The Escape or Altmode key) --- Request completion of the current keyword or
-filename, or insertion of a default value. The result will be a beep if the
-requested operation fails.
+> filename, or insertion of a default value. The result will be a beep if the
+> requested operation fails.
 
 **DEL**
 
 > (The Delete or Rubout key) --- Delete the previous character from the command.
-You may also use BS (Backspace, Control-H) for this function.
+> You may also use BS (Backspace, Control-H) for this function.
 
 **\^W**
 
@@ -305,19 +305,19 @@ You may also use BS (Backspace, Control-H) for this function.
 **SP**
 
 > (Space) --- Delimits fields (keywords, filenames, numbers) within a command.
-HT (Horizontal Tab) may also be used for this purpose.
+> HT (Horizontal Tab) may also be used for this purpose.
 
 **CR**
 
 > (Carriage Return) --- Enters the command for execution. **LF** (Linefeed) or
-**FF** (formfeed) may also be used for this purpose.
+> **FF** (formfeed) may also be used for this purpose.
 
 **\\**
 
 > (Backslash) --- Enter any of the above characters into the command, literally.
-To enter a backslash, type two backslashes in a row (\\\\). A single backslash
-immediately preceding a carriage return allows you to continue the command on
-the next line.
+> To enter a backslash, type two backslashes in a row (\\\\). A single backslash
+> immediately preceding a carriage return allows you to continue the command on
+> the next line.
 
 You may type the editing characters (DEL, \^W, etc) repeatedly, to delete all
 the way back to the prompt. No action will be performed until the command is
@@ -587,25 +587,25 @@ Redistributions of source code must retain the above copyright notice, this
 Redistributions in binary form must reproduce the above copyright notice,
 
 > this list of conditions and the following disclaimer in the documentation and
-/ or other materials provided with the distribution.
+> / or other materials provided with the distribution.
 
 Neither the name of Columbia University nor the names of its contributors
 
 > may be used to endorse or promote products derived from this software without
-specific prior written permission.
+> specific prior written permission.
 
 **THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS
 IS\"**
 
 > AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+> DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+> ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+> (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+> LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+> ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+> SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ## FILES
 
