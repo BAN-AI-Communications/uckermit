@@ -276,7 +276,7 @@ transfers of text files by eliminating CRLF/newline conversion.
 .TP
 .B \-e " n"
 Specifies the (extended) receive-packet length, a number between 10
-and about 1000 (depending on the system).  Lengths of 95 or greater require
+and about 1200 (depending on the system).  Lengths of 95 or greater require
 that the opposite Kermit support the long packet protocol extension.
 .TP
 .B \-w
@@ -311,9 +311,7 @@ process continues until you instruct the program to terminate.
 Commands begin with a keyword, normally an English verb, such as "send".
 You may omit trailing characters from any keyword, so long as you
 specify sufficient characters to distinguish it from any other keyword
-valid in that field.  Certain commonly-used keywords (such as "send",
-"receive", "connect") have special non-unique abbreviations ("s" for
-"send", "r" for "receive", "c" for "connect").
+valid in that field.
 .PP
 Certain characters have special functions in interactive commands:
 .PP
@@ -325,9 +323,9 @@ context, the message may be a brief phrase, a menu of keywords, or a
 list of files.
 .TP 8
 .B ESC
-(The Escape or Altmode key) \(em Request completion of the current keyword
-or filename, or insertion of a default value.  The result will be a beep
-if the requested operation fails.
+(The Escape, Meta, or Altmode key) \(em Request completion of the current
+keyword or filename, or insertion of a default value.  The result will be
+a beep if the requested operation fails.
 .TP 8
 .B DEL
 (The Delete or Rubout key) \(em Delete the previous character from the
@@ -618,7 +616,7 @@ Columbia University, 8th Edition
 .TP
 Frank da Cruz,
 .IR "Kermit, A File Transfer Protocol" ,
-Digital Press (1987)
+Digital Press (1986)
 .SH DIAGNOSTICS
 The diagnostics produced by
 .I uCKermit
