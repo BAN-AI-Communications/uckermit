@@ -81,7 +81,7 @@ options specify either protocol transactions or terminal connection.
     proceeding, a few words about remote and local operation are necessary.
     _μCKermit_ is \"local\" if it is running on a PC or workstation that you are
     using directly, or if it is running on a multiuser system and transferring
-    files over an external communication line --- not your job\'s controlling
+    files over an external communication line — not your job\'s controlling
     terminal or console. _μCKermit_ is remote if it is running on a multiuser
     system and transferring files over its own controlling terminal\'s
     communication line, connected to your PC or workstation. On most systems,
@@ -89,23 +89,23 @@ options specify either protocol transactions or terminal connection.
     will have to put it into local mode. The following command sets
     _μCKermit_\'s \"mode\":
 - **`-l dev`**
-  - Line --- Specify a terminal line to use for file transfer and terminal
+  - Line — Specify a terminal line to use for file transfer and terminal
     connection, as in: `uckermit -l /dev/ttyS5`. When an external line is being
     used, you might also need some additional options for successful
     communication with the remote system:
 - **`-b n`**
-  - Baud --- Specify the baud rate for the line given in the **`-l`** option, as
+  - Baud — Specify the baud rate for the line given in the **`-l`** option, as
     in: `uckermit -l /dev/ttyS5 -b 9600`. This option should always be included
     with the **`-l`** option, since the speed of an external line is not
     necessarily what you might expect.
 - **`-p x`**
-  - Parity --- **`e`**, **`o`**, **`m`**, **`s`**, **`n`** (even, odd, mark,
+  - Parity — **`e`**, **`o`**, **`m`**, **`s`**, **`n`** (even, odd, mark,
     space, or none). If parity is other than none, then the 8th-bit prefixing
     mechanism will be used for transferring 8-bit binary data, provided the
     opposite _Kermit_ agrees. _The default parity is none_.
 - **`-t`**
   - Specifies half duplex, line turnaround with XON as the handshake character.
-    The following commands may be used only with a _μCKermit_ which is local ---
+    The following commands may be used only with a _μCKermit_ which is local —
     either by default or else because the **`-l`** option has been specified.
 - **`-g rfn`**
   - Actively request a remote server to send the named file or files; _rfn_ is a
@@ -262,7 +262,7 @@ options specify either protocol transactions or terminal connection.
   - **help**
     - Display a help message for a given command.
   - **log**
-    - Open a log file --- debugging, packet, session, transaction.
+    - Open a log file — debugging, packet, session, transaction.
   - **quit**
     - Same as \'`exit`\'.
   - **receive**
