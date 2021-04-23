@@ -1,6 +1,6 @@
 .TH UCKERMIT 1C LOCAL 
 .SH NAME
-uckermit \- minimal kermit file transfer
+uckermit \- minimalistic kermit file transfer
 .SH SYNOPSIS
 .B uckermit
 [ option ...] [file ...]
@@ -141,8 +141,6 @@ is remote if it is running on a multiuser system and transferring files
 over its own controlling terminal's communication line, connected to
 your PC or workstation.
 .PP
-If you are running 
-.I uCKermit
 On most systems,
 .I uCKermit
 runs in remote mode by default, so on a PC or workstation, you will have
@@ -183,7 +181,7 @@ Parity \(em
 (even, odd, mark, space, or none).  If parity is other than none, then
 the 8th-bit prefixing mechanism will be used for transferring 8-bit
 binary data, provided the opposite
-.I uCKermit
+.I Kermit
 agrees. The default parity is none.
 .TP
 .B \-t
@@ -262,7 +260,7 @@ Control-A:  Display a status report for the current transaction.
 .RE
 .IP
 These interrupt characters differ from the ones used in other
-.I uCKermit
+.I Kermit
 implementations to avoid conflict with UNIX shell interrupt characters.
 With System III and System V implementations of UNIX, interrupt commands
 must be preceeded by the escape character (e.g. control-\\).
@@ -565,7 +563,7 @@ Display who's logged in, or get information about a user.
 Jeffrey H. Johnson
 <trnsz@pobox.com>
 .SH HOMEPAGE
-https://github.com/johnsonjh/uckermit/
+https://github.com/BAN-AI-Communications/uckermit
 .SH ORIGINAL AUTHORS
 Frank da Cruz, Columbia University Center for Computing Activities,
 with contributions from many others.
