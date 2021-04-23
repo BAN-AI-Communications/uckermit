@@ -13,8 +13,6 @@
 
 - **_[Current Status](https://github.com/BAN-AI-Communications/uckermit/issues/32)_**
 
----
-
 ## NAME
 
 - **_uckermit_** - minimalistic **kermit** file transfer
