@@ -1,4 +1,4 @@
-# μCKermit - _micro_–C֊Kermit
+# μ*C֊Kermit* - _micro_–C֊Kermit
 
 [![License: BSD](https://img.shields.io/badge/License-BSD%20-blue.svg)](https://github.com/BAN-AI-Communications/uckermit/blob/master/LICENSE)
 [![LocCount](https://img.shields.io/tokei/lines/github/BAN-AI-Communications/uckermit.svg)](https://github.com/XAMPPRocky/tokei)
@@ -8,6 +8,8 @@
 [![CodebeatBadge](https://codebeat.co/badges/d423617a-5c80-40fd-97f2-baa839f1ee77)](https://codebeat.co/projects/github-com-ban-ai-communications-uckermit-master)
 [![DeepSourceA](https://deepsource.io/gh/BAN-AI-Communications/uckermit.svg/?label=active+issues)](https://deepsource.io/gh/BAN-AI-Communications/uckermit/?ref=repository-badge)
 [![DeepSourceR](https://deepsource.io/gh/BAN-AI-Communications/uckermit.svg/?label=resolved+issues)](https://deepsource.io/gh/BAN-AI-Communications/uckermit/?ref=repository-badge)
+
+* ***[Current Status](https://github.com/BAN-AI-Communications/uckermit/issues/32)***
 
 ## NAME
 
