@@ -159,8 +159,8 @@ options specify either protocol transactions or terminal connection.
   - **`-w`**
     - Write-Protect — Avoid filename collisions for incoming files.
   - **`-q`**
-    - Quiet — Suppress screen update during file transfer, for instance to
-      allow a file transfer to proceed in the background.
+    - Quiet — Suppress screen update during file transfer, for instance to allow
+      a file transfer to proceed in the background.
   - **`-d`**
     - Debug — Record debugging information in the file `debug.log` in the
       current directory. Use this option if you believe the program is
@@ -191,9 +191,9 @@ options specify either protocol transactions or terminal connection.
       context, the message may be a brief phrase, a menu of keywords, or a list
       of files.
   - **`ESC`**
-    - The `Escape`, `Meta`, or `Altmode` key — Request completion of the
-      current keyword or filename, or insertion of a default value. The result
-      will be a beep if the requested operation fails.
+    - The `Escape`, `Meta`, or `Altmode` key — Request completion of the current
+      keyword or filename, or insertion of a default value. The result will be a
+      beep if the requested operation fails.
   - **`DEL`**
     - The `Delete` or `Rubout` key — Delete the previous character from the
       command. You may also use `BS` `Backspace`, `Control-H` for this function.
@@ -204,24 +204,24 @@ options specify either protocol transactions or terminal connection.
   - **`^R`**
     - `Control-R` — Redisplay the current command.
   - **`SP`**
-    - `Space` — Delimits fields (keywords, filenames, numbers) within a
-      command. `HT` (`Horizontal Tab`), may also be used for this purpose.
+    - `Space` — Delimits fields (keywords, filenames, numbers) within a command.
+      `HT` (`Horizontal Tab`), may also be used for this purpose.
   - **`CR`**
     - `Carriage Return` — Enters the command for execution. **`LF`**
       (`Linefeed`), or **`FF`** (`Formfeed`) may also be used for this purpose.
   - **`\`**
     - `Backslash` — Enter any of the above characters into the command,
-      literally. To enter a backslash, type two backslashes in a row
-      (`\\`). A single backslash immediately preceding a carriage return
-      allows you to continue the command on the next line.
+      literally. To enter a backslash, type two backslashes in a row (`\\`). A
+      single backslash immediately preceding a carriage return allows you to
+      continue the command on the next line.
 
 - You may type the editing characters (`DEL`, `^W`, etc) repeatedly, to delete
   all the way back to the prompt. No action will be performed until the command
   is entered by typing `carriage return`, `linefeed`, or `formfeed`. If you make
-  any mistakes, you will receive an informative error message and a new prompt
-  — make liberal use of \'`?`\' and `ESC` to feel your way through the
-  commands. One important command is \"`help`\" — you should use it the first
-  time you run _μCKermit._
+  any mistakes, you will receive an informative error message and a new prompt —
+  make liberal use of \'`?`\' and `ESC` to feel your way through the commands.
+  One important command is \"`help`\" — you should use it the first time you run
+  _μCKermit._
 
 - Interactive _μCKermit_ accepts commands from files as well as from the
   keyboard. Upon startup, _μCKermit_ looks for the file .uckermrc in your home
