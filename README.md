@@ -212,7 +212,7 @@ options specify either protocol transactions or terminal connection.
   - **`\`**
     - `Backslash` — Enter any of the above characters into the command,
       literally. To enter a backslash, type two backslashes in a row
-      (` \\\\ `). A single backslash immediately preceding a carriage return
+      (`\\\\`). A single backslash immediately preceding a carriage return
       allows you to continue the command on the next line.
 
 - You may type the editing characters (`DEL`, `^W`, etc) repeatedly, to delete
@@ -289,6 +289,7 @@ options specify either protocol transactions or terminal connection.
     - Send a file without error checking.
 
 * The \'`set`\' parameters are:
+
   - **attributes**
     - Turn attribute packet exchange on or off (_default is on_).
   - **block-check**
@@ -395,10 +396,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.**
 
 ## SEE ALSO
 
--  [cu(1C)](https://man.openbsd.org/cu)
--  [ecu(1)](https://github.com/BAN-AI-Communications/ecu)
--  [uucp(1C)](https://github.com/BAN-AI-Communications/bnu-hdb-uucp)
--  [kermit(1)](https://kermitproject.org/)
+- [cu(1C)](https://man.openbsd.org/cu)
+- [ecu(1)](https://github.com/BAN-AI-Communications/ecu)
+- [uucp(1C)](https://github.com/BAN-AI-Communications/bnu-hdb-uucp)
+- [kermit(1)](https://kermitproject.org/)
 
 - _Christine Gianone_,
   [Kermit User\'s Guide](https://kermitproject.org/booksonline.html), Columbia
