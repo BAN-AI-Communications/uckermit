@@ -55,7 +55,7 @@ options specify either protocol transactions or terminal connection.
     characters, the UNIX shell expands it into a list. If _fn_ is \'`-`\' then
     _μCKermit_ sends from standard input, which may come from a file:
     `uckermit -s - < foo.bar` or a parallel process: `ls -l | uckermit -s -`.
-    You *cannot* use this mechanism to send terminal type-in. If you want to send
+    You _cannot_ use this mechanism to send terminal type-in. If you want to send
     file whose name is \"-\" you can precede it with a path name, as in:
     `uckermit -s ./-`.
 - **`-r`**
