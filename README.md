@@ -22,7 +22,7 @@ The following notation is used in command descriptions:
 - _fn_
   - A UNIX file specification, possibly containing either of the \"*wildcard*\"
     characters \'`~`\', \'`*`', or \'`?`\' (\'`~`\' matches a user\'s home directory
-    name,
+    name.)
 - _fn1_
   - A UNIX file specification which may not contain \'`*`\' or \'`?`\'.
 - _rfn_
