@@ -369,7 +369,7 @@ any reasonable depth.
 
 ## CONTACT
 
-- Jeffrey H. Johnson \<trnsz\@pobox.com\>
+- [Jeffrey H. Johnson](mailto:trnsz@pobox.com)
 
 ## HOMEPAGE
 
