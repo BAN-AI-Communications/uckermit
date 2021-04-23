@@ -20,7 +20,7 @@ command line and interpret them.
 The following notation is used in command descriptions:
 
 - _fn_
-  - A UNIX file specification, possibly containing either of the \"*wildcard*\"
+  - A UNIX file specification, possibly containing either of the \"_wildcard_\"
     characters \'`~`\', \'`*`', or \'`?`\' (\'`~`\' matches a user\'s home directory
     name,
 - _fn1_
@@ -31,19 +31,19 @@ The following notation is used in command descriptions:
 - _rfn1_
   - A remote file specification which should denote only a single file.
 - _n_
-  - A decimal number, in most cases between *0* and *94*.
+  - A decimal number, in most cases between _0_ and _94_.
 - _c_
-  - A decimal number between *0* and *127* representing the value of an ASCII
+  - A decimal number between _0_ and _127_ representing the value of an ASCII
     character.
 - _cc_
-  - A decimal number between *0* and *31*, or else exactly *127*, representing the
+  - A decimal number between _0_ and _31_, or else exactly _127_, representing the
     value of an ASCII control character.
 - **\[ \]**
   - Any field in square braces is optional.
 - {_x,y,z_}
   - Alternatives are listed in curly braces.
 
-_μCKermit_ command line options may specify either ***actions*** or ***settings***. If
+_μCKermit_ command line options may specify either **_actions_** or **_settings_**. If
 _μCKermit_ is invoked with a command line that specifies no **actions**, then it
 will issue a prompt and begin interactive dialog. Action options specify either
 protocol transactions or terminal connection.
@@ -51,7 +51,7 @@ protocol transactions or terminal connection.
 ## COMMAND LINE OPTIONS
 
 - **`-s fn`**
-  - Send the specified file or files. If _fn_ contains wildcard (*shell meta*)
+  - Send the specified file or files. If _fn_ contains wildcard (_shell meta_)
     characters, the UNIX shell expands it into a list. If _fn_ is \'-\' then
     _μCKermit_ sends from standard input, which may come from a file:
     `uckermit -s - < foo.bar` or a parallel process: `ls -l | uckermit -s -`.
@@ -63,7 +63,7 @@ protocol transactions or terminal connection.
 - **`-k`**
   - Receive (passively) a file or files, sending them to standard output. This
     option can be used in several ways: `uckermit -k` displays the incoming
-    files on your screen; to be used only in \"local mode\" (*see below*).
+    files on your screen; to be used only in \"local mode\" (_see below_).
     `uckermit -k > fn1` sends the incoming file or files to the named file,
     _fn1._ If more than one file arrives, all are concatenated together into the
     single file _fn1._ `uckermit -k | command` pipes the incoming data (single
@@ -152,7 +152,7 @@ protocol transactions or terminal connection.
       may also be used to slightly boost efficiency in UNIX-to-UNIX transfers of
       text files by eliminating CRLF/newline conversion.
   - **`-e n`**
-    - Specifies the (_extended_) receive-packet length, a number between *10* and
+    - Specifies the (_extended_) receive-packet length, a number between _10_ and
       about _1200_ (depending on the system). Lengths of _95_ or greater require
       that the opposite Kermit support the long packet protocol extension.
   - **`-w`**
@@ -183,6 +183,7 @@ protocol transactions or terminal connection.
   field.
 
 - Certain characters have special functions in interactive commands:
+
   - **`?`**
     - Question mark, typed at any point in a command, will produce a message
       explaining what is possible or expected at that point. Depending on the
@@ -210,7 +211,7 @@ protocol transactions or terminal connection.
       (`Linefeed`), or **`FF`** (`Formfeed`) may also be used for this purpose.
   - **`\`**
     - `Backslash` --- Enter any of the above characters into the command,
-      literally. To enter a backslash, type two backslashes in a row (`\\``\\`).
+      literally. To enter a backslash, type two backslashes in a row (` \\``\\ `).
       A single backslash immediately preceding a carriage return allows you to
       continue the command on the next line.
 
@@ -231,6 +232,7 @@ protocol transactions or terminal connection.
   may be nested to any reasonable depth.
 
 * Here is a brief list of _μCKermit_ **interactive commands**:
+
   - **! command**
     - Execute a UNIX shell command. _A space is required after after the `!`_.
   - **% text**
@@ -287,6 +289,7 @@ protocol transactions or terminal connection.
     - Send a file without error checking.
 
 * The \'`set`\' parameters are:
+
   - **attributes**
     - Turn attribute packet exchange on or off (_default is on_).
   - **block-check**
@@ -413,5 +416,4 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.**
 
 ## BUGS
 
-- Probably ***way*** too many.
-
+- Probably **_way_** too many.
