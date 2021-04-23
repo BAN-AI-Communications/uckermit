@@ -176,8 +176,8 @@ either by default or else because the **-l** option has been specified.
 **-g\*** rfn\*
 
 > Actively request a remote server to send the named file or files; _rfn_ is a
-> file specification in the remote host\'s own syntax. If _fn_ happens to contain
-> any special shell characters, like \'\*\', these must be quoted, as in
+> file specification in the remote host\'s own syntax. If _fn_ happens to
+> contain any special shell characters, like \'\*\', these must be quoted, as in
 
 uckermit -g x\\\*.\\?
 
@@ -188,9 +188,9 @@ uckermit -g x\\\*.\\?
 **-c**
 
 > Establish a terminal connection over the specified or default communication
-> line, before any protocol transaction takes place. Get back to the local system
-> by typing the escape character (normally Control-Backslash) followed by the
-> letter \'c\'.
+> line, before any protocol transaction takes place. Get back to the local
+> system by typing the escape character (normally Control-Backslash) followed by
+> the letter \'c\'.
 
 **-n**
 
@@ -226,9 +226,9 @@ Several other command-line options are provided:
 **-i**
 
 > Specifies that files should be sent or received exactly \"as is\" with no
-> conversions. This option is necessary for transmitting binary files. It may also
-> be used to slightly boost efficiency in UNIX-to-UNIX transfers of text files by
-> eliminating CRLF/newline conversion.
+> conversions. This option is necessary for transmitting binary files. It may
+> also be used to slightly boost efficiency in UNIX-to-UNIX transfers of text
+> files by eliminating CRLF/newline conversion.
 
 **-e n**
 
@@ -276,8 +276,9 @@ Certain characters have special functions in interactive commands:
 **?**
 
 > Question mark, typed at any point in a command, will produce a message
-> explaining what is possible or expected at that point. Depending on the context,
-> the message may be a brief phrase, a menu of keywords, or a list of files.
+> explaining what is possible or expected at that point. Depending on the
+> context, the message may be a brief phrase, a menu of keywords, or a list of
+> files.
 
 **ESC**
 
@@ -599,13 +600,13 @@ IS\"**
 
 > AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 > IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-> DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-> ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-> (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-> LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-> ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-> (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-> SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+> FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+> DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+> SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+> CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+> OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+> OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ## FILES
 
