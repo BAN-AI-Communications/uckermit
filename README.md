@@ -10,7 +10,7 @@
 
 ## DESCRIPTION
 
-_μCKermit_ is a Kermit file transfer program that allows files to be moved
+_μCKermit_ is a file transfer program that allows files to be moved
 between machines of many different operating systems and architectures.
 
 Arguments are optional. If _μCKermit_ is executed without arguments, it will
