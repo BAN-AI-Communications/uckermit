@@ -1,4 +1,13 @@
-# μCKermit
+# μCKermit - _micro_–C֊Kermit
+
+[![License: BSD](https://img.shields.io/badge/License-BSD%20-blue.svg)](https://github.com/BAN-AI-Communications/uckermit/blob/master/LICENSE)
+[![LocCount](https://img.shields.io/tokei/lines/github/BAN-AI-Communications/uckermit.svg)](https://github.com/XAMPPRocky/tokei)
+[![GitHubCodeSize](https://img.shields.io/github/languages/code-size/BAN-AI-Communications/uckermit.svg)](https://github.com/BAN-AI-Communications/uckermit)
+[![TickgitTODOs](https://img.shields.io/endpoint?url=https://api.tickgit.com/badge?repo=github.com/johnsonjh/duma)](https://www.tickgit.com/browse?repo=github.com/johnsonjh/duma)
+[![CodacyBadge](https://app.codacy.com/project/badge/Grade/254f13018a974c66a08d123d84862500)](https://www.codacy.com/gh/BAN-AI-Communications/uckermit/dashboard?utm_source=github.com&utm_medium=referral&utm_content=BAN-AI-Communications/uckermit&utm_campaign=Badge_Grade)
+[![CodebeatBadge](https://codebeat.co/badges/d423617a-5c80-40fd-97f2-baa839f1ee77)](https://codebeat.co/projects/github-com-ban-ai-communications-uckermit-master)
+[![DeepSourceA](https://deepsource.io/gh/BAN-AI-Communications/uckermit.svg/?label=active+issues)](https://deepsource.io/gh/BAN-AI-Communications/uckermit/?ref=repository-badge)
+[![DeepSourceR](https://deepsource.io/gh/BAN-AI-Communications/uckermit.svg/?label=resolved+issues)](https://deepsource.io/gh/BAN-AI-Communications/uckermit/?ref=repository-badge)
 
 ## NAME
 
@@ -10,8 +19,8 @@
 
 ## DESCRIPTION
 
-_μCKermit_ is a file transfer program that allows files to be moved
-between machines of many different operating systems and architectures.
+_μCKermit_ is a file transfer program that allows files to be moved between
+machines of many different operating systems and architectures.
 
 Arguments are optional. If _μCKermit_ is executed without arguments, it will
 enter _command mode_. Otherwise, _μCKermit_ will read the arguments off the
