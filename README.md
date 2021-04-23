@@ -10,7 +10,7 @@
 
 ## DESCRIPTION
 
-_μCKermit_ is a file transfer program that allows files to be moved between
+_μCKermit_ is a Kermit file transfer program that allows files to be moved between
 machines of many different operating systems and architectures.
 
 Arguments are optional. If _μCKermit_ is executed without arguments, it will
@@ -21,8 +21,8 @@ The following notation is used in command descriptions:
 
 - _fn_
   - A UNIX file specification, possibly containing either of the \"_wildcard_\"
-    characters \'`~`\', \'`*`', or \'`?`\' (\'`~`\' matches a user\'s home
-    directory name.)
+    characters \'`~`\', \'`*`', or \'`?`\'.
+    - (\'`~`\' matches a user\'s home directory name.)
 - _fn1_
   - A UNIX file specification which may not contain \'`*`\' or \'`?`\'.
 - _rfn_
@@ -38,9 +38,9 @@ The following notation is used in command descriptions:
 - _cc_
   - A decimal number between _0_ and _31_, or else exactly _127_, representing
     the value of an ASCII control character.
-- **\[ \]**
+- **\[ `...` \]**
   - Any field in square braces is optional.
-- {_x,y,z_}
+- **{** _x, y, z_ **}**
   - Alternatives are listed in curly braces.
 
 _μCKermit_ command line options may specify either **_actions_** or
@@ -52,10 +52,10 @@ options specify either protocol transactions or terminal connection.
 
 - **`-s fn`**
   - Send the specified file or files. If _fn_ contains wildcard (_shell meta_)
-    characters, the UNIX shell expands it into a list. If _fn_ is \'-\' then
+    characters, the UNIX shell expands it into a list. If _fn_ is \'`-`\' then
     _μCKermit_ sends from standard input, which may come from a file:
     `uckermit -s - < foo.bar` or a parallel process: `ls -l | uckermit -s -`.
-    You cannot use this mechanism to send terminal typein. If you want to send
+    You *cannot* use this mechanism to send terminal type-in. If you want to send
     file whose name is \"-\" you can precede it with a path name, as in:
     `uckermit -s ./-`.
 - **`-r`**
@@ -102,15 +102,15 @@ options specify either protocol transactions or terminal connection.
   - Parity — **`e`**, **`o`**, **`m`**, **`s`**, **`n`** (even, odd, mark,
     space, or none). If parity is other than none, then the 8th-bit prefixing
     mechanism will be used for transferring 8-bit binary data, provided the
-    opposite _Kermit_ agrees. _The default parity is none_.
+    opposite _Kermit_ agrees. _The default parity is **none**_.
 - **`-t`**
-  - Specifies half duplex, line turnaround with XON as the handshake character.
+  - Specifies half duplex, line turnaround with **XON** as the handshake character.
     The following commands may be used only with a _μCKermit_ which is local —
     either by default or else because the **`-l`** option has been specified.
 - **`-g rfn`**
   - Actively request a remote server to send the named file or files; _rfn_ is a
     file specification in the remote host\'s own syntax. If _fn_ happens to
-    contain any special shell characters, like \'\*\', these must be quoted, as
+    contain any special shell characters, like \'`*`\', these must be quoted, as
     in: `uckermit -g x\*.\?`
 - **`-f`**
   - Send a \'`finish`\' command to a remote server.
@@ -172,7 +172,7 @@ options specify either protocol transactions or terminal connection.
 
 ## INTERACTIVE OPERATION
 
-- _μCKermit_\'s interactive command prompt is \"`uCKermit\>`\". In response to
+- _μCKermit_\'s interactive command prompt is \"`uCKermit> `\". In response to
   this prompt, you may type any valid command.
 
 - _μCKermit_ executes the command and then prompts you for another command. The
@@ -196,7 +196,7 @@ options specify either protocol transactions or terminal connection.
       beep if the requested operation fails.
   - **`DEL`**
     - The `Delete` or `Rubout` key — Delete the previous character from the
-      command. You may also use `BS` `Backspace`, `Control-H` for this function.
+      command. You may also use `BS` (`Backspace`) or `Control-H` for this function.
   - **`^W`**
     - `Control-W` — Erase the rightmost word from the command line.
   - **`^U`**
@@ -205,10 +205,10 @@ options specify either protocol transactions or terminal connection.
     - `Control-R` — Redisplay the current command.
   - **`SP`**
     - `Space` — Delimits fields (keywords, filenames, numbers) within a command.
-      `HT` (`Horizontal Tab`), may also be used for this purpose.
+      `HT` (`Horizontal Tab`) may also be used for this purpose.
   - **`CR`**
     - `Carriage Return` — Enters the command for execution. **`LF`**
-      (`Linefeed`), or **`FF`** (`Formfeed`) may also be used for this purpose.
+      (`Linefeed`) or **`FF`** (`Formfeed`) may also be used for this purpose.
   - **`\`**
     - `Backslash` — Enter any of the above characters into the command,
       literally. To enter a backslash, type two backslashes in a row (`\\`). A
