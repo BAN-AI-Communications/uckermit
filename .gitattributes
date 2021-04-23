@@ -8,3 +8,7 @@
 *.nr linguist-vendored
 *.doc linguist-vendored
 *.md linguist-vendored
+Makefile linguist-vendored
+makefile linguist-vendored
+.mak linguist-vendored
+*.mak linguist-vendored
