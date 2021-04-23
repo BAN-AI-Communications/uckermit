@@ -19,8 +19,8 @@
 
 ## DESCRIPTION
 
-_μCKermit_ is a file transfer program that allows files to be moved
-between machines of many different operating systems and architectures.
+_μCKermit_ is a file transfer program that allows files to be moved between
+machines of many different operating systems and architectures.
 
 Arguments are optional. If _μCKermit_ is executed without arguments, it will
 enter _command mode_. Otherwise, _μCKermit_ will read the arguments off the
