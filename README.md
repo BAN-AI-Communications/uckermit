@@ -58,8 +58,8 @@ protocol transactions or terminal connection.
 - **`-r`**
   - Receive a file or files. Wait passively for files to arrive.
 - **`-k`**
-  - Receive (passively) a file or files, sending them to standard output.  This option can be used in several ways: `uckermit -k` displays the incoming files on your screen; to be used only in \"local mode\" (see below). `uckermit -k > fn1` sends the incoming file or files to the named file, _fn1._ If more than one file arrives, all are concatenated together into the single file _fn1._ `uckermit -k | command` pipes the incoming data (single or multiple files) to the indicated command, as
-in: `uckermit -k | sort > sorted.stuff`
+  - Receive (passively) a file or files, sending them to standard output. This option can be used in several ways: `uckermit -k` displays the incoming files on your screen; to be used only in \"local mode\" (see below). `uckermit -k > fn1` sends the incoming file or files to the named file, _fn1._ If more than one file arrives, all are concatenated together into the single file _fn1._ `uckermit -k | command` pipes the incoming data (single or multiple files) to the indicated command, as
+    in: `uckermit -k | sort > sorted.stuff`
 - **`-a fn1`**
   - If you have specified a file transfer option, you may specify an alternate
     name for a single file with the **-a** option. For example,
@@ -71,17 +71,17 @@ in: `uckermit -k | sort > sorted.stuff`
   - Begin server operation. May be used in either local or remote mode. Before proceeding, a few words about remote and local operation are necessary. _μCKermit_ is \"local\" if it is running on a PC or workstation that you are using directly, or if it is running on a multiuser system and transferring files over an external communication line --- not your job\'s controlling terminal or console. _μCKermit_ is remote if it is running on a multiuser system and transferring files over its own controlling terminal\'s communication line, connected to your PC or workstation. On most systems, _μCKermit_ runs in remote mode by default, so on a PC or workstation, you will have to put it into local mode. The following command sets _μCKermit_\'s \"mode\":
 - **`-l dev`**
   - Line --- Specify a terminal line to use for file transfer and terminal
-    connection, as in: `uckermit -l /dev/ttyS5`.  When an external line is being used, you might also need some additional options for successful communication with the remote system:
+    connection, as in: `uckermit -l /dev/ttyS5`. When an external line is being used, you might also need some additional options for successful communication with the remote system:
 - **`-b n`**
   - Baud --- Specify the baud rate for the line given in the **-l** option, as
-    in: `uckermit -l /dev/ttyS5 -b 9600`.  This option should always be included with the **-l** option, since the speed of an external line is not necessarily what you might expect.
+    in: `uckermit -l /dev/ttyS5 -b 9600`. This option should always be included with the **-l** option, since the speed of an external line is not necessarily what you might expect.
 - **`-p x`**
   - Parity --- **`e`**, **`o`**, **`m`**, **`s`**, **`n`** (even, odd, mark,
     space, or none). If parity is other than none, then the 8th-bit prefixing
     mechanism will be used for transferring 8-bit binary data, provided the
-    opposite _Kermit_ agrees. *The default parity is none*.
+    opposite _Kermit_ agrees. _The default parity is none_.
 - **`-t`**
-  - Specifies half duplex, line turnaround with XON as the handshake character.  The following commands may be used only with a _μCKermit_ which is local --- either by default or else because the **-l** option has been specified.
+  - Specifies half duplex, line turnaround with XON as the handshake character. The following commands may be used only with a _μCKermit_ which is local --- either by default or else because the **-l** option has been specified.
 - **`-g rfn`**
   - Actively request a remote server to send the named file or files; _rfn_ is a
     file specification in the remote host\'s own syntax. If _fn_ happens to
@@ -98,16 +98,17 @@ in: `uckermit -k | sort > sorted.stuff`
   - Like **`-c`,** but after a protocol transaction takes place; **`-c`** and
     **`-n`** may both be used in the same command. The use of **`-n`** and
     **`-c`** is illustrated below.
+
 * On a timesharing system, the **`-l`** and **`-b`** options will also have to be included with the **`-r`**, **`-k`**, or **`-s`** options if the other _μCKermit_ is on a remote system.
-* If _uckermit_ is in local mode, the screen (stdout) is continously updated to show the progress of the file transer. A dot is printed for every four data packets, other packets are shown by type (e.g. \'`S`\' for *Send-Init*), \'`T`\' is printed when there\'s a timeout, and \'`%`\' for each retransmission. In addition, you may type (to stdin) certain \"interrupt\" commands during file transfer:
+* If _uckermit_ is in local mode, the screen (stdout) is continously updated to show the progress of the file transer. A dot is printed for every four data packets, other packets are shown by type (e.g. \'`S`\' for _Send-Init_), \'`T`\' is printed when there\'s a timeout, and \'`%`\' for each retransmission. In addition, you may type (to stdin) certain \"interrupt\" commands during file transfer:
   - `Control-F`: Interrupt the current File, and go on to the next (if any).
   - `Control-B`: Interrupt the entire Batch of files, terminate the transaction.
   - `Control-R`: Resend the current packet
   - `Control-A`: Display a status report for the current transaction.
 * These interrupt characters differ from the ones used in other _Kermit_
-implementations to avoid conflict with UNIX shell interrupt characters. With
-System III and System V implementations of UNIX, interrupt commands must be
-preceeded by the escape character (e.g. `Control-\`).
+  implementations to avoid conflict with UNIX shell interrupt characters. With
+  System III and System V implementations of UNIX, interrupt commands must be
+  preceeded by the escape character (e.g. `Control-\`).
 * Several other command-line options are provided:
   - **`-i`**
     - Specifies that files should be sent or received exactly \"as is\" with no
@@ -115,8 +116,8 @@ preceeded by the escape character (e.g. `Control-\`).
       also be used to slightly boost efficiency in UNIX-to-UNIX transfers of text
       files by eliminating CRLF/newline conversion.
   - **`-e n`**
-    - Specifies the (*extended*) receive-packet length, a number between 10 and
-      about *1200* (depending on the system). Lengths of *95* or greater require that
+    - Specifies the (_extended_) receive-packet length, a number between 10 and
+      about _1200_ (depending on the system). Lengths of _95_ or greater require that
       the opposite Kermit support the long packet protocol extension.
   - **`-w`**
     - Write-Protect --- Avoid filename collisions for incoming files.
@@ -132,10 +133,10 @@ preceeded by the escape character (e.g. `Control-\`).
 
 ## INTERACTIVE OPERATION
 
-* _μCKermit_\'s interactive command prompt is \"`uCKermit\>`\". In response to this prompt, you may type any valid command.
-* _μCKermit_ executes the command and then prompts you for another command. The process continues until you instruct the program to terminate.
-* Commands begin with a keyword, normally an English verb, such as \"`send`\". You may omit trailing characters from any keyword, so long as you specify sufficient characters to distinguish it from any other keyword valid in that field.
-* Certain characters have special functions in interactive commands:
+- _μCKermit_\'s interactive command prompt is \"`uCKermit\>`\". In response to this prompt, you may type any valid command.
+- _μCKermit_ executes the command and then prompts you for another command. The process continues until you instruct the program to terminate.
+- Commands begin with a keyword, normally an English verb, such as \"`send`\". You may omit trailing characters from any keyword, so long as you specify sufficient characters to distinguish it from any other keyword valid in that field.
+- Certain characters have special functions in interactive commands:
   - **`?`**
     - Question mark, typed at any point in a command, will produce a message
       explaining what is possible or expected at that point. Depending on the
@@ -163,14 +164,15 @@ preceeded by the escape character (e.g. `Control-\`).
       - **`FF`** (formfeed) may also be used for this purpose.
   - **`\`**
     - (`Backslash`) --- Enter any of the above characters into the command,
-      literally. To enter a backslash, type two backslashes in a row (`\``\`). A
+      literally. To enter a backslash, type two backslashes in a row (` \``\ `). A
       single backslash immediately preceding a carriage return allows you to
       continue the command on the next line.
-* You may type the editing characters (`DEL`, `^W`, etc) repeatedly, to delete all the way back to the prompt. No action will be performed until the command is entered by typing carriage return, linefeed, or formfeed. If you make any mistakes, you will receive an informative error message and a new prompt --- make liberal use of \'`?`\' and `ESC` to feel your way through the commands. One important command is \"`help`\" --- you should use it the first time you run _μCKermit._
-* Interactive _μCKermit_ accepts commands from files as well as from the keyboard. Upon startup, _μCKermit_ looks for the file .uckermrc in your home or current directory (first it looks in the home directory, then in the current one) and executes any commands it finds there. These commands must be in interactive format, not UNIX command-line format. A \"`take`\" command is also provided for use at any time during an interactive session. Command files may be nested to any reasonable depth.
-- Here is a brief list of _μCKermit_ **interactive commands**:
+- You may type the editing characters (`DEL`, `^W`, etc) repeatedly, to delete all the way back to the prompt. No action will be performed until the command is entered by typing carriage return, linefeed, or formfeed. If you make any mistakes, you will receive an informative error message and a new prompt --- make liberal use of \'`?`\' and `ESC` to feel your way through the commands. One important command is \"`help`\" --- you should use it the first time you run _μCKermit._
+- Interactive _μCKermit_ accepts commands from files as well as from the keyboard. Upon startup, _μCKermit_ looks for the file .uckermrc in your home or current directory (first it looks in the home directory, then in the current one) and executes any commands it finds there. These commands must be in interactive format, not UNIX command-line format. A \"`take`\" command is also provided for use at any time during an interactive session. Command files may be nested to any reasonable depth.
+
+* Here is a brief list of _μCKermit_ **interactive commands**:
   - **! command**
-    - Execute a UNIX shell command. *A space is required after after the `!`*.
+    - Execute a UNIX shell command. _A space is required after after the `!`_.
   - **% text**
     - A comment. Useful in `take`-command files.
   - **bye**
@@ -223,9 +225,9 @@ preceeded by the escape character (e.g. `Control-\`).
     - Execute commands from a file.
   - **transmit**
     - Send a file without error checking.
-- The \'`set`\' parameters are:
+* The \'`set`\' parameters are:
   - **attributes**
-    - Turn attribute packet exchange on or off (*default is on*).
+    - Turn attribute packet exchange on or off (_default is on_).
   - **block-check**
     - Level of packet error detection.
   - **delay**
@@ -255,10 +257,10 @@ preceeded by the escape character (e.g. `Control-\`).
   - **send**
     - Set various parameters for outbound packets.
   - **server**
-    - Set server-related parameters (*like timeout*).
+    - Set server-related parameters (_like timeout_).
   - **speed**
     - Communication line speed.
-- The \'`remote`\' commands are:
+* The \'`remote`\' commands are:
   - **cwd**
     - Change remote working directory.
   - **delete**
@@ -286,7 +288,7 @@ preceeded by the escape character (e.g. `Control-\`).
 
 ## ORIGINAL AUTHORS
 
-- **Frank da Cruz**, *Columbia University Center for Computing Activities*,
+- **Frank da Cruz**, _Columbia University Center for Computing Activities_,
   - with contributions from many others.
 
 ## LICENSE
