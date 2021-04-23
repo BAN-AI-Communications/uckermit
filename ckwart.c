@@ -1,4 +1,4 @@
-char *wartv = "Wart Preprocessor, 1A(210), 23 Apr 2021";
+char *wartv = "Wart Preprocessor, 1A(211), 23 Apr 2021";
 
 /* W A R T */
 
@@ -485,16 +485,16 @@ int
 addaction(act, state, chr)
 int act, state, chr;
 {
-	tbl[state * 128 + chr] = act;
-	return 0;
+        tbl[state * 128 + chr] = act;
+        return 0;
 }
 
 int
 writetbl(fp)
 FILE *fp;
 {
-	warray(fp, "tbl", tbl, 128 * (nstates + 1), TBL_TYPE);
-	return 0;
+        warray(fp, "tbl", tbl, 128 * (nstates + 1), TBL_TYPE);
+        return 0;
 }
 
  /*

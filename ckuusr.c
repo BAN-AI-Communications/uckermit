@@ -1,4 +1,4 @@
-char *userv = "User Interface, 4G(096), 23 Apr 2021";
+char *userv = "User Interface, 4G(098), 23 Apr 2021";
 
 /* C K U U S R -- "User Interface" for UNIX Kermit (Part 1) */
 
@@ -1236,7 +1236,7 @@ int cx;
     debug(F110, "Sending:", cmarg, 0);
     if (*cmarg2 != '\0') {
       debug(F110, " as:", cmarg2, 0);
-	}
+        }
 #endif
     sstate = 's'; /* Set start state */
     if (local)
@@ -1320,9 +1320,9 @@ int cx;
 #endif
       if (*s == NUL) {                        /* Interactive sh requested */
         execl(shpath, shname, "-i", NULL);    /* Yes, do that */
-	  } else {                                /* Otherwise, */
+          } else {                                /* Otherwise, */
         execl(shpath, shname, "-c", s, NULL); /* exec the given command */
-	  }
+          }
       exit(BAD_EXIT);
     }                                   /* Just punt if it didn't work */
     else {                              /* Parent */
@@ -1435,7 +1435,8 @@ int cx;
       return -2;
     }
     strcpy(line, s); /* Save copy of string just parsed. */
-    y = cmnum("Decimal ASCII value of line turnaround character", "10", 10, &x);
+    y = cmnum(
+      "Decimal ASCII value of line turnaround character", "10", 10, &x);
     debug(F101, "transmit parse turnaround", "", x);
     if (y < 0)
       return y;
@@ -1487,22 +1488,20 @@ doconect()
  *
  * Returns 0 upon apparent success,
  * 1 on obvious failure.
+ *
+ * Things to add:
+ *  - Make both text and binary mode obey set file bytesize.
+ *  - Maybe allow user to specify terminators other than CR?
+ *  - Maybe allow user to specify prompts other than single characters?
  */
 
- /*
-  * Things to add:
-  *   - Make both text and binary mode obey set file bytesize.
-  *   - Maybe allow user to specify terminators other than CR?
-  *   - Maybe allow user to specify prompts other than single characters?
-  */
-
-int tr_int; /* Flag if TRANSMIT interrupted */
+int tr_int;                             /* Flag if TRANSMIT interrupted */
 
 #ifdef __linux__
 void
 #endif
 trtrap()
-{ /* TRANSMIT interrupt trap */
+{                                       /* TRANSMIT interrupt trap */
   tr_int = 1;
 #ifdef __linux__
   return 0;
@@ -1517,21 +1516,20 @@ char *s;
 char t;
 {
 #define LINBUFSIZ 150
-  char linbuf[LINBUFSIZ + 2]; /* Line buffer */
+  char linbuf[LINBUFSIZ + 2];           /* Line buffer */
 
-  SIGTYP (*oldsig)(); /* For saving old interrupt trap. */
-  int z = 0;      /* Return code. */
-  int x, c, i, n; /* Workers... */
-                  /* CHAR tt; */
-
+  SIGTYP (*oldsig)();                   /* For saving old interrupt trap. */
+  int z = 0;                            /* Return code. */
+  int x, c, i, n;                       /* Workers... */
+                                        /* CHAR tt; */
   (void)n;
-  dopar(t); /* Turnaround char, with parity */
+  dopar(t);                             /* Turnaround char, with parity */
 
 #ifdef DEBUG
   debug(F101, "transmit turnaround", "", t);
 #endif
 
-  if (zopeni(ZIFILE, s) == 0) { /* Open the file to be transmitted */
+  if (zopeni(ZIFILE, s) == 0) {         /* Open file to be transmitted */
     printf("?Can't open %s\n", s);
     return 1;
   }
@@ -1540,68 +1538,68 @@ char t;
     printf("Can't open %s\n", ttname);
     return 1;
   }
-  x = x ? speed : -1; /* Put the line in "packet mode" */
+  x = x ? speed : -1;                   /* Put the line in "packet mode" */
   if (ttpkt(x, flow, parity) < 0) {
     printf("Can't condition line\n");
     return 1;
   }
-  i = 0; /* Beginning of buffer. */
-  oldsig = signal(SIGINT, trtrap); /* Save current interrupt trap. */
-  tr_int = 0; /* Have not been interrupted (yet). */
-  z = 0;      /* Return code presumed good. */
+  i = 0;                                /* Beginning of buffer. */
+  oldsig = signal(SIGINT, trtrap);      /* Save current interrupt trap. */
+  tr_int = 0;                           /* Have not been interrupted yet */
+  z = 0;                                /* Return code presumed good. */
 
-  while ((c = zminchar()) != -1) { /* Loop for all characters in file */
-    if (tr_int) {                  /* Interrupted? */
-      fprintf(stderr, "^C...\n");  /* Print message */
+  while ((c = zminchar()) != -1) {      /* Loop on all characters in file */
+    if (tr_int) {                       /* Interrupted? */
+      fprintf(stderr, "^C...\n");       /* Print message */
       z = 1;
       break;
     }
     if (duplex)
-      conoc(c);                 /* Echo character on screen */
-    if (binary) {               /* If binary file */
-      if (ttoc(dopar(c)) < 0) { /* just try to send the character */
+      conoc(c);                         /* Echo character on screen */
+    if (binary) {                       /* If binary file */
+      if (ttoc(dopar(c)) < 0) {         /* just try to send the character */
         printf("?Can't transmit character\n");
         z = 1;
         break;
       }
       if (!duplex) {
-        x = ttinc(1); /* Try to read back echo */
+        x = ttinc(1);                   /* Try to read back echo */
         if (x > -1)
           conoc(x);
       }
-    } else {           /* Line at a time for text files... */
-      if (c == '\n') { /* Got a line */
+    } else {                            /* Line at a time for text files */
+      if (c == '\n') {                  /* Got a line */
         if (linbuf[i - 1] != dopar('\r'))
-          linbuf[i++] = dopar('\r'); /* Terminate it with CR */
-        if (ttol(linbuf, i) < 0) {   /* try to send it */
+          linbuf[i++] = dopar('\r');    /* Terminate it with CR */
+        if (ttol(linbuf, i) < 0) {      /* try to send it */
           printf("?Can't transmit line\n");
           z = 1;
           break;
         }
-        i = 0;   /* Reset the buffer pointer */
-        if (t) { /* If we want a turnaround character */
+        i = 0;                          /* Reset the buffer pointer */
+        if (t) {                        /* Got a turnaround character? */
           x = 0; /* wait for it */
           while ((x != -1) && (x != t)) {
             x = ttinc(1);
             if (!duplex)
-              conoc(x); /* also echo any echoes */
+              conoc(x);                 /* also echo any echoes */
           }
         }
-      } else {                       /* Not a newline, regular character */
-        linbuf[i++] = dopar(c);      /* Put it in line buffer. */
-        if (i == LINBUFSIZ) {        /* If buffer full, */
-          if (ttol(linbuf, i) < 0) { /* try to send it. */
+      } else {                          /* Not a NL, regular character */
+        linbuf[i++] = dopar(c);         /* Put it in line buffer. */
+        if (i == LINBUFSIZ) {           /* If buffer full, */
+          if (ttol(linbuf, i) < 0) {    /* try to send it. */
             printf("Can't send buffer\n");
             z = 1;
             break;
-          }      /* Don't wait for turnaround */
-          i = 0; /* Reset buffer pointer */
+          }                             /* Don't wait for turnaround */
+          i = 0;                        /* Reset buffer pointer */
         }
       }
     }
   }
-  signal(SIGINT, oldsig); /* put old signal action back. */
-  ttres();        /* Done, restore tty, */
-  zclose(ZIFILE); /* close file, */
-  return z;       /* and return successfully. */
+  signal(SIGINT, oldsig);               /* put old signal action back. */
+  ttres();                              /* Done, restore tty, */
+  zclose(ZIFILE);                       /* close file, */
+  return z;                             /* and return successfully. */
 }

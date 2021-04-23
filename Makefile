@@ -1,6 +1,6 @@
 ###########################################################################
 #                                                                         #
-#                   Makefile, version 2.42, 23 Apr 2021                   #
+#                   Makefile, version 2.43, 23 Apr 2021                   #
 #                                                                         #
 ###########################################################################
 #                                                                         #
@@ -366,7 +366,7 @@ v7:
 	-DNPTYPE=$(NPTYPE) $(DIRECT)"
 #
 ###########################################################################
-#Modern Linux with GCC or clang
+#Modern Linux with GCC or clang (development)
 linux:
 	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DDEBUG -DTLOG -DUXIII \
 		-DO_NDELAY -DTIOCFLUSH -DTIOCFLUSH -DTIOCSINUSE -DFIONBIO -Wall \
@@ -376,7 +376,7 @@ linux:
 		-Wno-implicit-fallthrough -Wno-missing-braces -Os -fno-math-errno \
 		-fno-asynchronous-unwind-tables -fdata-sections -funsigned-char \
 		-ffunction-sections -fomit-frame-pointer -fmerge-all-constants \
-		-fdelete-null-pointer-checks -fno-threadsafe-statics -ffast-math \
+		-fdelete-null-pointer-checks -ffast-math \
 		-fno-unroll-loops" \
 			"LNKFLAGS = -Wl,-s \
 				-Wl,--gc-sections \
@@ -384,7 +384,7 @@ linux:
 				-Wl,-z,relro,-z,now"
 #
 ###########################################################################
-#Linux WIP size-reduction target
+#Linux WIP size-reduction target (development)
 linux-small:
 	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DNOT_YET -Wall -Os \
 		-DO_NDELAY -DTIOCFLUSH -DTIOCFLUSH -DTIOCSINUSE -DFIONBIO -DUXIII \
@@ -395,26 +395,26 @@ linux-small:
 		-fno-exceptions -fdata-sections -ffunction-sections -ffast-math \
 		-fno-math-errno -Wno-implicit-int -DNOSTATS -fno-unroll-loops \
 		-fmerge-all-constants -funsigned-char -fomit-frame-pointer \
-		-fdelete-null-pointer-checks -fno-threadsafe-statics" \
+		-fdelete-null-pointer-checks" \
 			"LNKFLAGS = -Wl,-s \
 				-Wl,--gc-sections \
 				-Wl,--print-gc-sections \
 				-Wl,-z,relro,-z,now"
 #
 ###########################################################################
-#Linux WIP size-reduction target (alternate name)
+#Linux WIP size-reduction target (alternate target name)
 linux-tiny:
 	make linux-small
 #
 ###########################################################################
-# strip binary (aggressively)
+# strip binary aggressively (development)
 strip:
 	@test -f wermit
-	@printf '%s' "Original: " "$$(du -k wermit 2>/dev/null | \
+	@printf '\n%s ' "Original: " "$$(du -k wermit 2>/dev/null | \
 		cut -f 1 -d "	" 2>/dev/null | \
 		cut -f 1 -d " " 2>/dev/null || true)"K \
 		"$$(/bin/ls -l wermit 2>/dev/null | \
-		awk '{ print $$5 }' 2>/dev/null || true) bytes"
+		awk '{ print $$5 }' 2>/dev/null || true) bytes" || true
 	@strip wermit \
 		2>/dev/null || true
 	@strip -s wermit \
@@ -441,11 +441,13 @@ strip:
 		wermit \
 		2>/dev/null || true
 	@sstrip -z wermit 2>/dev/null || true
-	@printf '%s' "Stripped: " "$$(du -k wermit 2>/dev/null | \
+	@printf '%s\n' "" || true
+	@printf '\n%s ' "Stripped: " "$$(du -k wermit 2>/dev/null | \
 		cut -f 1 -d "	" 2>/dev/null | \
 		cut -f 1 -d " " 2>/dev/null || true)K" \
 		"$$(/bin/ls -l wermit 2>/dev/null | \
-		awk '{ print $$5 }' 2>/dev/null || true) bytes"
+		awk '{ print $$5 }' 2>/dev/null || true) bytes" || true
+	@printf '\n%s\n' "" || true
 #
 ###########################################################################
 #System V R3, some things changed since System V R2...

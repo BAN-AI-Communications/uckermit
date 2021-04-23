@@ -1,4 +1,4 @@
-char *cmdv = "UNIX Command Package, V2(043), 23 Apr 2021";
+char *cmdv = "UNIX Command Package, V2(044), 23 Apr 2021";
 
 /* C K U C M D -- Interactive command package for UNIX */
 
@@ -55,7 +55,7 @@ char *cmdv = "UNIX Command Package, V2(043), 23 Apr 2021";
  * Modelled after the DECSYSTEM-20 (TOPS-20) command parser (COMND JSYS)
  *
  * Features:
- *  . parses & verifies keywords, filenames, text strings, numbers, other data
+ *  . parses & verifies keywords, filenames, text strings, numbers, etc.
  *  . displays appropriate menu or help message when user types "?"
  *  . does keyword and filename completion when user types 'ESC' or 'TAB'
  *  . accepts any unique abbreviation for a keyword
@@ -102,10 +102,6 @@ char *cmdv = "UNIX Command Package, V2(043), 23 Apr 2021";
  * wakeup/noecho mode, care should be taken to restore it before exit
  * from or interruption of the program. If the character wakeup mode is
  * not set, the system's own line editor may be used.
-*/
-
-/*
- * Includes
  */
 
 #include "ckucmd.h" /* Command parsing definitions */
@@ -1027,7 +1023,7 @@ char *s;
 /* D M P H L P -- Dump the help line buffer */
 
 dmphlp()
-{ /* Print the help buffer */
+{                       /* Print the help buffer */
   hlpbuf[hx++] = NUL;
   printf(" %s\n", hlpbuf);
   clrhlp();
@@ -1038,20 +1034,20 @@ dmphlp()
 /*
  * Call this way:  v = lookup(table,word,n,&x);
  *
- * table - a 'struct keytab' table.
- * word  - the target string to look up in the table.
- * n     - the number of elements in the table.
- * x     - address of an integer for returning the table array index.
+ *   table  -  a 'struct keytab' table.
+ *   word   -  the target string to look up in the table.
+ *   n      -  the number of elements in the table.
+ *   x      -  address of an integer for returning the table array index.
  *
- * The keyword table must be arranged in ascending alphabetical order, and
- * all letters must be lowercase.
+ * The keyword table must be arranged in ascending alphabetical order,
+ * and all letters must be lowercase.
  *
  * Returns the keyword's associated value ( zero or greater ) if found,
  * with the variable x set to the array index, or:
  *
- *  -3 if nothing to look up (target was null),
- *  -2 if ambiguous,
- *  -1 if not found.
+ *   -3  -  if nothing to look up (target was null),
+ *   -2  -  if ambiguous,
+ *   -1  -  if not found.
  *
  * A match is successful if the target matches a keyword exactly, or if
  * the target is a prefix of exactly one keyword.  It is ambiguous if the
@@ -1141,18 +1137,18 @@ gtword()
 
   while (bp < cmdbuf + CMDBL) { /* Loop */
 
-    ignore = echof = 0; /* Flag for whether to echo */
+    ignore = echof = 0;     /* Flag for whether to echo */
 
     if ((c = *bp) == NUL) { /* Get next character */
       if (dpx)
-        echof = 1; /* from reparse buffer */
-      c = getchar(); /* or from tty. */
+        echof = 1;          /* from reparse buffer */
+      c = getchar();        /* or from tty. */
 
       if (c == EOF) {
         /*** perror("ckucmd getchar");  (just return silently) ***/
         return (-4);
       }
-      c &= 127; /* Strip any parity bit. */
+      c &= 127;             /* Strip any parity bit. */
     } else
       ignore = 1;
 
@@ -1162,30 +1158,34 @@ gtword()
         quote = 1;
         continue;
       }
-      if (c == FF) { /* Formfeed. */
-        c = NL;      /* Replace with newline */
-        system("clear"); /* and clear the screen. */
+      if (c == FF) {        /* Formfeed. */
+        c = NL;             /* Replace with newline */
+        system("clear");    /* and clear the screen. */
       }
 
       if (c == HT)
-        c = ESC; /* Substitute ESC for tab. */
-	  
-      if (c == SP) { /* If space */
-        *bp++ = c;   /* deposit it in buffer. */
+        c = ESC;            /* Substitute ESC for tab. */
+          
+      if (c == SP) {        /* If space */
+        *bp++ = c;          /* deposit it in buffer. */
         if (echof)
-          putchar(c);      /* echo it. */
-        if (inword == 0) { /* If leading, gobble it. */
+          putchar(c);       /* echo it. */
+        if (inword == 0) {  /* If leading, gobble it. */
           pp++;
           continue;
-        } else { /* If terminating, return. */
+        } else {            /* If terminating, return. */
           np = bp;
           setatm(pp);
           inword = 0;
           return (cmflgs = 0);
         }
       }
-      /* XXX(jhj): 26 == ^Z handle? */
-	  /* XXX(jhj):  4 == ^D handle? */
+
+      /*
+       * XXX(jhj): 26 == ^Z handle?
+       * XXX(jhj):  4 == ^D handle?
+	   */
+
       if (
         c <   1 || \
         c > 127 || \
@@ -1212,7 +1212,8 @@ gtword()
         c ==  1 || \
         c ==  0) {
           continue;
-	  }
+      }
+
       if (c == NL || c == CR) { /* CR, LF */
         *bp = NUL;              /* End the string */
         if (echof) {            /* If echoing, */
@@ -1295,11 +1296,6 @@ gtword()
   printf("\n?Buffer full\n");
   return (cmflgs = -2);
 }
-
-/*
- * Utility
- * functions
- */
 
 /* A D D B U F -- Add the string pointed to by cp to the command buffer */
 
