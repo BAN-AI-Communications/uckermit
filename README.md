@@ -212,7 +212,7 @@ options specify either protocol transactions or terminal connection.
   - **`\`**
     - `Backslash` — Enter any of the above characters into the command,
       literally. To enter a backslash, type two backslashes in a row
-      (`\\\\`). A single backslash immediately preceding a carriage return
+      (`\\`). A single backslash immediately preceding a carriage return
       allows you to continue the command on the next line.
 
 - You may type the editing characters (`DEL`, `^W`, etc) repeatedly, to delete
