@@ -64,7 +64,7 @@ either protocol transactions or terminal connection.
 .BI \-s " fn"
 Send the specified file or files. If
 .I fn
-contains wildcard (meta) characters, the UNIX shell expands it into a
+contains wildcard (shell meta) characters, the UNIX shell expands it into a
 list.  If
 .I fn
 is '-' then
