@@ -13,7 +13,7 @@
 
 - **_[Current Status](https://github.com/BAN-AI-Communications/uckermit/issues/32)_**
 
-----
+---
 
 ## NAME
 
