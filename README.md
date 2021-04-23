@@ -2,11 +2,11 @@
 
 ## NAME
 
-* **_uckermit_** - minimalistic _kermit_ file transfer
+- **_uckermit_** - minimalistic _kermit_ file transfer
 
 ## SYNOPSIS
 
-* **uckermit** \[ option ... \] \[ file ... \]
+- **uckermit** \[ option ... \] \[ file ... \]
 
 ## DESCRIPTION
 
@@ -81,7 +81,7 @@ Pipes the incoming data (single or multiple files) to the indicated command, as
 in: `uckermit -k | sort > sorted.stuff`
 
 - **`-a fn1`**
-  - If you have specified a file transfer option, you may specify an alternate     name for a single file with the **-a** option. For example, `uckermit -s foo -a bar` sends the file foo telling the receiver that its name is bar. If more than one file arrives or is sent, only the first file is affected by the **-a** option: `uckermit -ra baz` stores the first incoming file under the name baz.
+  - If you have specified a file transfer option, you may specify an alternate name for a single file with the **-a** option. For example, `uckermit -s foo -a bar` sends the file foo telling the receiver that its name is bar. If more than one file arrives or is sent, only the first file is affected by the **-a** option: `uckermit -ra baz` stores the first incoming file under the name baz.
 - **`-x`**
   - Begin server operation. May be used in either local or remote mode.
 
@@ -134,7 +134,7 @@ either by default or else because the **-l** option has been specified.
 - **`-n`**
   - Like **`-c`,** but after a protocol transaction takes place; **`-c`** and
     **`-n`** may both be used in the same command. The use of **`-n`** and
-	**`-c`** is illustrated below.
+    **`-c`** is illustrated below.
 
 On a timesharing system, the **`-l`** and **`-b`** options will also have to be included with the **`-r`**, **`-k`**, or **`-s`** options if the other _μCKermit_ is on a remote system.
 
@@ -242,6 +242,7 @@ use at any time during an interactive session. Command files may be nested to
 any reasonable depth.
 
 - Here is a brief list of _μCKermit_ interactive commands:
+
   - **! command**
     - Execute a UNIX shell command. A space is required after after the !.
   - **% text**
@@ -298,6 +299,7 @@ any reasonable depth.
     - Send a file without error checking.
 
 - The \'set\' parameters are:
+
   - **attributes**
     - Turn attribute packet exchange on or off (default is on).
   - **block-check**
@@ -353,20 +355,20 @@ any reasonable depth.
 
 ## CONTACT
 
-* [Jeffrey H. Johnson](mailto:trnsz@pobox.com)
+- [Jeffrey H. Johnson](mailto:trnsz@pobox.com)
 
 ## HOMEPAGE
 
-* [GitHub](https://github.com/BAN-AI-Communications/uckermit)
+- [GitHub](https://github.com/BAN-AI-Communications/uckermit)
 
 ## ORIGINAL AUTHORS
 
-* Frank da Cruz, Columbia University Center for Computing Activities
-  * with contributions from many others.
+- Frank da Cruz, Columbia University Center for Computing Activities
+  - with contributions from many others.
 
 ## LICENSE
 
-***Revised 3-Clause BSD License for Columbia University Kermit Software***
+**_Revised 3-Clause BSD License for Columbia University Kermit Software_**
 
 Copyright (C) 1981-2011, Trustees of Columbia University in the City of New York.
 
@@ -390,21 +392,21 @@ All rights reserved.
 
 ## FILES
 
-* `$HOME/.uckermrc` _μCKermit_ initialization commands
-* `./.uckermrc` more _μCKermit_ initialization commands
+- `$HOME/.uckermrc` _μCKermit_ initialization commands
+- `./.uckermrc` more _μCKermit_ initialization commands
 
 ## SEE ALSO
 
-* `cu(1C)`, `ecu(1)`, `uucp(1C)`, `kermit(1)`
+- `cu(1C)`, `ecu(1)`, `uucp(1C)`, `kermit(1)`
 
-* _Christine Gianone_, _Kermit User\'s Guide_, Columbia University, 8th Edition
+- _Christine Gianone_, _Kermit User\'s Guide_, Columbia University, 8th Edition
 
-* _Frank da Cruz_, _Kermit, A File Transfer Protocol_, Digital Press (_1987_)
+- _Frank da Cruz_, _Kermit, A File Transfer Protocol_, Digital Press (_1987_)
 
 ## DIAGNOSTICS
 
-* The diagnostics produced by _μCKermit_ itself are _intended_ to be self-explanatory.
+- The diagnostics produced by _μCKermit_ itself are _intended_ to be self-explanatory.
 
 ## BUGS
 
-* Probably way too many.
+- Probably way too many.
