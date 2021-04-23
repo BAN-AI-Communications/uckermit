@@ -9,7 +9,7 @@
 [![DeepSourceA](https://deepsource.io/gh/BAN-AI-Communications/uckermit.svg/?label=active+issues)](https://deepsource.io/gh/BAN-AI-Communications/uckermit/?ref=repository-badge)
 [![DeepSourceR](https://deepsource.io/gh/BAN-AI-Communications/uckermit.svg/?label=resolved+issues)](https://deepsource.io/gh/BAN-AI-Communications/uckermit/?ref=repository-badge)
 
-* ***[Current Status](https://github.com/BAN-AI-Communications/uckermit/issues/32)***
+- **_[Current Status](https://github.com/BAN-AI-Communications/uckermit/issues/32)_**
 
 ## NAME
 
