@@ -2,11 +2,11 @@
 
 ## NAME
 
-**_uckermit_** - minimalistic _kermit_ file transfer
+* **_uckermit_** - minimalistic _kermit_ file transfer
 
 ## SYNOPSIS
 
-**uckermit** \[ option \...\] \[file \...\]
+* **uckermit** \[ option ... \] \[ file ... \]
 
 ## DESCRIPTION
 
@@ -53,13 +53,7 @@ protocol transactions or terminal connection.
 - **`-s fn`**
   - Send the specified file or files. If _fn_ contains wildcard (meta)
     characters, the UNIX shell expands it into a list. If _fn_ is \'-\' then
-    _μCKermit_ sends from standard input, which may come from a file:
-
-`uckermit -s - < foo.bar`
-
-or a parallel process:
-
-`ls -l | uckermit -s -`
+    _μCKermit_ sends from standard input, which may come from a file: `uckermit -s - < foo.bar` or a parallel process: `ls -l | uckermit -s -`
 
 You cannot use this mechanism to send terminal typein. If you want to send file
 whose name is \"-\" you can precede it with a path name, as in: `uckermit -s ./-`
@@ -67,8 +61,9 @@ whose name is \"-\" you can precede it with a path name, as in: `uckermit -s ./-
 - **`-r`**
   - Receive a file or files. Wait passively for files to arrive.
 - **`-k`**
-  - Receive (passively) a file or files, sending them to standard output. This
-    option can be used in several ways:
+  - Receive (passively) a file or files, sending them to standard output.
+
+This option can be used in several ways:
 
 `uckermit -k`
 
@@ -85,16 +80,8 @@ arrives, all are concatenated together into the single file _fn1._
 Pipes the incoming data (single or multiple files) to the indicated command, as
 in: `uckermit -k | sort > sorted.stuff`
 
-- **-a\*** fn1\*
-  - If you have specified a file transfer option, you may specify an alternate     name for a single file with the **-a** option. For example, `uckermit -s foo -a bar`
-
-sends the file foo telling the receiver that its name is bar. If more than one
-file arrives or is sent, only the first file is affected by the **-a** option:
-
-`uckermit -ra baz`
-
-stores the first incoming file under the name baz.
-
+- **`-a fn1`**
+  - If you have specified a file transfer option, you may specify an alternate     name for a single file with the **-a** option. For example, `uckermit -s foo -a bar` sends the file foo telling the receiver that its name is bar. If more than one file arrives or is sent, only the first file is affected by the **-a** option: `uckermit -ra baz` stores the first incoming file under the name baz.
 - **`-x`**
   - Begin server operation. May be used in either local or remote mode.
 
@@ -157,10 +144,10 @@ packets, other packets are shown by type (e.g. \'S\' for Send-Init), \'T\' is
 printed when there\'s a timeout, and \'%\' for each retransmission. In addition,
 you may type (to stdin) certain \"interrupt\" commands during file transfer:
 
-- *Control-F*: Interrupt the current File, and go on to the next (if any).
-- *Control-B*: Interrupt the entire Batch of files, terminate the transaction.
-- *Control-R*: Resend the current packet
-- *Control-A*: Display a status report for the current transaction.
+- `Control-F`: Interrupt the current File, and go on to the next (if any).
+- `Control-B`: Interrupt the entire Batch of files, terminate the transaction.
+- `Control-R`: Resend the current packet
+- `Control-A`: Display a status report for the current transaction.
 
 These interrupt characters differ from the ones used in other _Kermit_
 implementations to avoid conflict with UNIX shell interrupt characters. With
@@ -231,18 +218,18 @@ Certain characters have special functions in interactive commands:
 - **`CR`**
   - (Carriage Return) --- Enters the command for execution. **LF** (Linefeed),
     or,
-  - **FF** (formfeed) may also be used for this purpose.
+  - **`FF`** (formfeed) may also be used for this purpose.
 - **`\`**
   - (Backslash) --- Enter any of the above characters into the command,
     literally. To enter a backslash, type two backslashes in a row (\\\\). A
     single backslash immediately preceding a carriage return allows you to
     continue the command on the next line.
 
-You may type the editing characters (DEL, \^W, etc) repeatedly, to delete all
+You may type the editing characters (`DEL`, `^W`, etc) repeatedly, to delete all
 the way back to the prompt. No action will be performed until the command is
 entered by typing carriage return, linefeed, or formfeed. If you make any
 mistakes, you will receive an informative error message and a new prompt ---
-make liberal use of \'?\' and ESC to feel your way through the commands. One
+make liberal use of \'`?`\' and `ESC` to feel your way through the commands. One
 important command is \"help\" --- you should use it the first time you run
 _μCKermit._
 
@@ -309,6 +296,7 @@ any reasonable depth.
     - Execute commands from a file.
   - **transmit**
     - Send a file without error checking.
+
 - The \'set\' parameters are:
   - **attributes**
     - Turn attribute packet exchange on or off (default is on).
@@ -344,6 +332,7 @@ any reasonable depth.
     - Set server-related parameters (like timeout).
   - **speed**
     - Communication line speed.
+
 - The \'remote\' commands are:
   - **cwd**
     - Change remote working directory.
