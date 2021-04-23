@@ -2,11 +2,11 @@
 
 ## NAME
 
-- **_uckermit_** - minimalistic _kermit_ file transfer
+- **_uckermit_** - minimalistic **kermit** file transfer
 
 ## SYNOPSIS
 
-- **uckermit** \[ option ... \] \[ file ... \]
+- **uckermit** \[ `option ...` \] \[ `file ...` \]
 
 ## DESCRIPTION
 
@@ -157,17 +157,17 @@ options specify either protocol transactions or terminal connection.
       require that the opposite Kermit support the long packet protocol
       extension.
   - **`-w`**
-    - Write-Protect --- Avoid filename collisions for incoming files.
+    - Write-Protect — Avoid filename collisions for incoming files.
   - **`-q`**
-    - Quiet --- Suppress screen update during file transfer, for instance to
+    - Quiet — Suppress screen update during file transfer, for instance to
       allow a file transfer to proceed in the background.
   - **`-d`**
-    - Debug --- Record debugging information in the file `debug.log` in the
+    - Debug — Record debugging information in the file `debug.log` in the
       current directory. Use this option if you believe the program is
       misbehaving, and show the resulting log to your local _μCKermit_
       maintainer.
   - **`-h`**
-    - Help --- Display a brief synopsis of the command line options. The command
+    - Help — Display a brief synopsis of the command line options. The command
       line may contain no more than one protocol action option.
 
 ## INTERACTIVE OPERATION
@@ -191,36 +191,36 @@ options specify either protocol transactions or terminal connection.
       context, the message may be a brief phrase, a menu of keywords, or a list
       of files.
   - **`ESC`**
-    - The `Escape`, `Meta`, or `Altmode` key --- Request completion of the
+    - The `Escape`, `Meta`, or `Altmode` key — Request completion of the
       current keyword or filename, or insertion of a default value. The result
       will be a beep if the requested operation fails.
   - **`DEL`**
-    - The `Delete` or `Rubout` key --- Delete the previous character from the
+    - The `Delete` or `Rubout` key — Delete the previous character from the
       command. You may also use `BS` `Backspace`, `Control-H` for this function.
   - **`^W`**
-    - `Control-W` --- Erase the rightmost word from the command line.
+    - `Control-W` — Erase the rightmost word from the command line.
   - **`^U`**
-    - `Control-U` --- Erase the entire command.
+    - `Control-U` — Erase the entire command.
   - **`^R`**
-    - `Control-R` --- Redisplay the current command.
+    - `Control-R` — Redisplay the current command.
   - **`SP`**
-    - `Space` --- Delimits fields (keywords, filenames, numbers) within a
+    - `Space` — Delimits fields (keywords, filenames, numbers) within a
       command. `HT` (`Horizontal Tab`), may also be used for this purpose.
   - **`CR`**
-    - `Carriage Return` --- Enters the command for execution. **`LF`**
+    - `Carriage Return` — Enters the command for execution. **`LF`**
       (`Linefeed`), or **`FF`** (`Formfeed`) may also be used for this purpose.
   - **`\`**
-    - `Backslash` --- Enter any of the above characters into the command,
+    - `Backslash` — Enter any of the above characters into the command,
       literally. To enter a backslash, type two backslashes in a row
-      (` \\``\\ `). A single backslash immediately preceding a carriage return
+      (`\\\\`). A single backslash immediately preceding a carriage return
       allows you to continue the command on the next line.
 
 - You may type the editing characters (`DEL`, `^W`, etc) repeatedly, to delete
   all the way back to the prompt. No action will be performed until the command
   is entered by typing `carriage return`, `linefeed`, or `formfeed`. If you make
   any mistakes, you will receive an informative error message and a new prompt
-  --- make liberal use of \'`?`\' and `ESC` to feel your way through the
-  commands. One important command is \"`help`\" --- you should use it the first
+  — make liberal use of \'`?`\' and `ESC` to feel your way through the
+  commands. One important command is \"`help`\" — you should use it the first
   time you run _μCKermit._
 
 - Interactive _μCKermit_ accepts commands from files as well as from the
@@ -396,10 +396,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.**
 
 ## SEE ALSO
 
-- [cu(1C)](https://man.openbsd.org/cu),
-  [ecu(1)](https://github.com/BAN-AI-Communications/ecu),
-  [uucp(1C)](https://github.com/BAN-AI-Communications/bnu-hdb-uucp),
-  [kermit(1)](https://kermitproject.org/)
+- [cu(1C)](https://man.openbsd.org/cu)
+- [ecu(1)](https://github.com/BAN-AI-Communications/ecu)
+- [uucp(1C)](https://github.com/BAN-AI-Communications/bnu-hdb-uucp)
+- [kermit(1)](https://kermitproject.org/)
 
 - _Christine Gianone_,
   [Kermit User\'s Guide](https://kermitproject.org/booksonline.html), Columbia
@@ -411,7 +411,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.**
 
 ## DIAGNOSTICS
 
-- The diagnostics produced by _μCKermit_ itself are _intended_ to be
+- The diagnostics produced by _μCKermit_ itself are intended to be
   self-explanatory.
 
 ## BUGS
