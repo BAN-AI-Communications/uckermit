@@ -21,44 +21,44 @@ The following notation is used in command descriptions:
 
 _fn_
 
-: A UNIX file specification, possibly containing either of the \"wildcard\"
+> A UNIX file specification, possibly containing either of the \"wildcard\"
 characters \'\~\', \'\*\', or \'?\' (\'\~\' matches a user\'s home directory
 name,
 
 _fn1_
 
-: A UNIX file specification which may not contain \'\*\' or \'?\'.
+> A UNIX file specification which may not contain \'\*\' or \'?\'.
 
 _rfn_
 
-: A remote file specification in the remote system\'s own syntax, which may
+> A remote file specification in the remote system\'s own syntax, which may
 denote a single file or a group of files.
 
 _rfn1_
 
-: A remote file specification which should denote only a single file.
+> A remote file specification which should denote only a single file.
 
 _n_
 
-: A decimal number, in most cases between 0 and 94.
+> A decimal number, in most cases between 0 and 94.
 
 _c_
 
-: A decimal number between 0 and 127 representing the value of an ASCII
+> A decimal number between 0 and 127 representing the value of an ASCII
 character.
 
 _cc_
 
-: A decimal number between 0 and 31, or else exactly 127, representing the value
+> A decimal number between 0 and 31, or else exactly 127, representing the value
 of an ASCII control character.
 
 **\[ \]**
 
-: Any field in square braces is optional.
+> Any field in square braces is optional.
 
 {_x,y,z_}
 
-: Alternatives are listed in curly braces.
+> Alternatives are listed in curly braces.
 
 _μCKermit_ command line options may specify either actions or settings. If
 _μCKermit_ is invoked with a command line that specifies no actions, then it
@@ -69,7 +69,7 @@ protocol transactions or terminal connection.
 
 **-s\*** fn\*
 
-: Send the specified file or files. If _fn_ contains wildcard (meta) characters,
+> Send the specified file or files. If _fn_ contains wildcard (meta) characters,
 the UNIX shell expands it into a list. If _fn_ is \'-\' then _μCKermit_ sends
 from standard input, which may come from a file:
 
@@ -86,11 +86,11 @@ uckermit -s ./-
 
 **-r**
 
-: Receive a file or files. Wait passively for files to arrive.
+> Receive a file or files. Wait passively for files to arrive.
 
 **-k**
 
-: Receive (passively) a file or files, sending them to standard output. This
+> Receive (passively) a file or files, sending them to standard output. This
 option can be used in several ways:
 
 uckermit -k
@@ -112,7 +112,7 @@ uckermit -k \| sort \> sorted.stuff
 
 **-a\*** fn1\*
 
-: If you have specified a file transfer option, you may specify an alternate
+> If you have specified a file transfer option, you may specify an alternate
 name for a single file with the **-a** option. For example,
 
 uckermit -s foo -a bar
@@ -126,7 +126,7 @@ uckermit -ra baz
 
 **-x**
 
-: Begin server operation. May be used in either local or remote mode.
+> Begin server operation. May be used in either local or remote mode.
 
 Before proceeding, a few words about remote and local operation are necessary.
 _μCKermit_ is \"local\" if it is running on a PC or workstation that you are
@@ -142,7 +142,7 @@ following command sets _μCKermit_\'s \"mode\":
 
 **-l\*** dev\*
 
-: Line --- Specify a terminal line to use for file transfer and terminal
+> Line --- Specify a terminal line to use for file transfer and terminal
 connection, as in
 
 uckermit -l /dev/ttyS5
@@ -152,7 +152,7 @@ for successful communication with the remote system:
 
 **-b\*** n\*
 
-: Baud --- Specify the baud rate for the line given in the **-l** option, as in
+> Baud --- Specify the baud rate for the line given in the **-l** option, as in
 
 uckermit -l /dev/ttyS5 -b 9600
 
@@ -161,21 +161,21 @@ uckermit -l /dev/ttyS5 -b 9600
 
 **-p\*** x\*
 
-: Parity --- **e**, **o**, **m**, **s**, **n** (even, odd, mark, space, or
+> Parity --- **e**, **o**, **m**, **s**, **n** (even, odd, mark, space, or
 none). If parity is other than none, then the 8th-bit prefixing mechanism will
 be used for transferring 8-bit binary data, provided the opposite _μCKermit_
 agrees. The default parity is none.
 
 **-t**
 
-: Specifies half duplex, line turnaround with XON as the handshake character.
+> Specifies half duplex, line turnaround with XON as the handshake character.
 
 The following commands may be used only with a _μCKermit_ which is local ---
 either by default or else because the **-l** option has been specified.
 
 **-g\*** rfn\*
 
-: Actively request a remote server to send the named file or files; _rfn_ is a
+> Actively request a remote server to send the named file or files; _rfn_ is a
 file specification in the remote host\'s own syntax. If _fn_ happens to contain
 any special shell characters, like \'\*\', these must be quoted, as in
 
@@ -183,18 +183,18 @@ uckermit -g x\\\*.\\?
 
 **-f**
 
-: Send a \'finish\' command to a remote server.
+> Send a \'finish\' command to a remote server.
 
 **-c**
 
-: Establish a terminal connection over the specified or default communication
+> Establish a terminal connection over the specified or default communication
 line, before any protocol transaction takes place. Get back to the local system
 by typing the escape character (normally Control-Backslash) followed by the
 letter \'c\'.
 
 **-n**
 
-: Like **-c,** but after a protocol transaction takes place; **-c** and **-n**
+> Like **-c,** but after a protocol transaction takes place; **-c** and **-n**
 may both be used in the same command. The use of **-n** and **-c** is
 illustrated below.
 
@@ -225,35 +225,35 @@ Several other command-line options are provided:
 
 **-i**
 
-: Specifies that files should be sent or received exactly \"as is\" with no
+> Specifies that files should be sent or received exactly \"as is\" with no
 conversions. This option is necessary for transmitting binary files. It may also
 be used to slightly boost efficiency in UNIX-to-UNIX transfers of text files by
 eliminating CRLF/newline conversion.
 
 **-e n**
 
-: Specifies the (extended) receive-packet length, a number between 10 and about
+> Specifies the (extended) receive-packet length, a number between 10 and about
 1000 (depending on the system). Lengths of 95 or greater require that the
 opposite μCKermit support the long packet protocol extension.
 
 **-w**
 
-: Write-Protect --- Avoid filename collisions for incoming files.
+> Write-Protect --- Avoid filename collisions for incoming files.
 
 **-q**
 
-: Quiet --- Suppress screen update during file transfer, for instance to allow a
+> Quiet --- Suppress screen update during file transfer, for instance to allow a
 file transfer to proceed in the background.
 
 **-d**
 
-: Debug --- Record debugging information in the file debug.log in the current
+> Debug --- Record debugging information in the file debug.log in the current
 directory. Use this option if you believe the program is misbehaving, and show
 the resulting log to your local _μCKermit_ maintainer.
 
 **-h**
 
-: Help --- Display a brief synopsis of the command line options.
+> Help --- Display a brief synopsis of the command line options.
 
 The command line may contain no more than one protocol action option.
 
@@ -275,46 +275,46 @@ Certain characters have special functions in interactive commands:
 
 **?**
 
-: Question mark, typed at any point in a command, will produce a message
+> Question mark, typed at any point in a command, will produce a message
 explaining what is possible or expected at that point. Depending on the context,
 the message may be a brief phrase, a menu of keywords, or a list of files.
 
 **ESC**
 
-: (The Escape or Altmode key) --- Request completion of the current keyword or
+> (The Escape or Altmode key) --- Request completion of the current keyword or
 filename, or insertion of a default value. The result will be a beep if the
 requested operation fails.
 
 **DEL**
 
-: (The Delete or Rubout key) --- Delete the previous character from the command.
+> (The Delete or Rubout key) --- Delete the previous character from the command.
 You may also use BS (Backspace, Control-H) for this function.
 
 **\^W**
 
-: (Control-W) --- Erase the rightmost word from the command line.
+> (Control-W) --- Erase the rightmost word from the command line.
 
 **\^U**
 
-: (Control-U) --- Erase the entire command.
+> (Control-U) --- Erase the entire command.
 
 **\^R**
 
-: (Control-R) --- Redisplay the current command.
+> (Control-R) --- Redisplay the current command.
 
 **SP**
 
-: (Space) --- Delimits fields (keywords, filenames, numbers) within a command.
+> (Space) --- Delimits fields (keywords, filenames, numbers) within a command.
 HT (Horizontal Tab) may also be used for this purpose.
 
 **CR**
 
-: (Carriage Return) --- Enters the command for execution. **LF** (Linefeed) or
+> (Carriage Return) --- Enters the command for execution. **LF** (Linefeed) or
 **FF** (formfeed) may also be used for this purpose.
 
 **\\**
 
-: (Backslash) --- Enter any of the above characters into the command, literally.
+> (Backslash) --- Enter any of the above characters into the command, literally.
 To enter a backslash, type two backslashes in a row (\\\\). A single backslash
 immediately preceding a carriage return allows you to continue the command on
 the next line.
@@ -339,215 +339,215 @@ Here is a brief list of _μCKermit_ interactive commands:
 
 **! command**
 
-: Execute a UNIX shell command. A space is required after after the !.
+> Execute a UNIX shell command. A space is required after after the !.
 
 **% text**
 
-: A comment. Useful in take-command files.
+> A comment. Useful in take-command files.
 
 **bye**
 
-: Terminate and log out a remote _μCKermit_ server.
+> Terminate and log out a remote _μCKermit_ server.
 
 **close**
 
-: Close a log file.
+> Close a log file.
 
 **connect**
 
-: Establish a terminal connection to a remote system.
+> Establish a terminal connection to a remote system.
 
 **cwd**
 
-: Change Working Directory.
+> Change Working Directory.
 
 **dial**
 
-: Dial a telephone number.
+> Dial a telephone number.
 
 **directory**
 
-: Display a directory listing.
+> Display a directory listing.
 
 **echo**
 
-: Display arguments literally. Useful in take-command files.
+> Display arguments literally. Useful in take-command files.
 
 **exit**
 
-: Exit from the program, closing any open logs.
+> Exit from the program, closing any open logs.
 
 **finish**
 
-: Instruct a remote _μCKermit_ server to exit, but not log out.
+> Instruct a remote _μCKermit_ server to exit, but not log out.
 
 **get**
 
-: Get files from a remote _μCKermit_ server.
+> Get files from a remote _μCKermit_ server.
 
 **hangup**
 
-: Hang up the phone.
+> Hang up the phone.
 
 **help**
 
-: Display a help message for a given command.
+> Display a help message for a given command.
 
 **log**
 
-: Open a log file --- debugging, packet, session, transaction.
+> Open a log file --- debugging, packet, session, transaction.
 
 **quit**
 
-: Same as \'exit\'.
+> Same as \'exit\'.
 
 **receive**
 
-: Passively wait for files to arrive.
+> Passively wait for files to arrive.
 
 **remote**
 
-: Issue file management commands to a remote _μCKermit_ server.
+> Issue file management commands to a remote _μCKermit_ server.
 
 **script**
 
-: Execute a login script with a remote system.
+> Execute a login script with a remote system.
 
 **send**
 
-: Send files.
+> Send files.
 
 **server**
 
-: Begin server operation.
+> Begin server operation.
 
 **set**
 
-: Set various parameters.
+> Set various parameters.
 
 **show**
 
-: Display values of \'set\' parameters, program version, etc.
+> Display values of \'set\' parameters, program version, etc.
 
 **space**
 
-: Display current disk space usage.
+> Display current disk space usage.
 
 **statistics**
 
-: Display statistics about most recent transaction.
+> Display statistics about most recent transaction.
 
 **take**
 
-: Execute commands from a file.
+> Execute commands from a file.
 
 **transmit**
 
-: Send a file without error checking.
+> Send a file without error checking.
 
 The \'set\' parameters are:
 
 **attributes**
 
-: Turn attribute packet exchange on or off (default is on).
+> Turn attribute packet exchange on or off (default is on).
 
 **block-check**
 
-: Level of packet error detection.
+> Level of packet error detection.
 
 **delay**
 
-: How long to wait before sending first packet.
+> How long to wait before sending first packet.
 
 **duplex**
 
-: Specify which side echoes during \'connect\'.
+> Specify which side echoes during \'connect\'.
 
 **escape-character**
 
-: Character to prefix \"escape commands\" during \'connect\'.
+> Character to prefix \"escape commands\" during \'connect\'.
 
 **file**
 
-: Set various file parameters.
+> Set various file parameters.
 
 **flow-control **
 
-: Communication line full-duplex flow control.
+> Communication line full-duplex flow control.
 
 **handshake**
 
-: Communication line half-duplex turnaround character.
+> Communication line half-duplex turnaround character.
 
 **line**
 
-: Communication line device name.
+> Communication line device name.
 
 **modem-dialer**
 
-: Type of modem-dialer on communication line.
+> Type of modem-dialer on communication line.
 
 **parity**
 
-: Communication line character parity.
+> Communication line character parity.
 
 **prompt**
 
-: Change the _μCKermit_ program\'s prompt.
+> Change the _μCKermit_ program\'s prompt.
 
 **receive**
 
-: Set various parameters for inbound packets.
+> Set various parameters for inbound packets.
 
 **retry**
 
-: Set the packet retransmission limit.
+> Set the packet retransmission limit.
 
 **send**
 
-: Set various parameters for outbound packets.
+> Set various parameters for outbound packets.
 
 **server**
 
-: Set server-related parameters (like timeout).
+> Set server-related parameters (like timeout).
 
 **speed**
 
-: Communication line speed.
+> Communication line speed.
 
 The \'remote\' commands are:
 
 **cwd**
 
-: Change remote working directory.
+> Change remote working directory.
 
 **delete**
 
-: Delete remote files.
+> Delete remote files.
 
 **directory**
 
-: Display a listing of remote file names.
+> Display a listing of remote file names.
 
 **help**
 
-: Request help from a remote server.
+> Request help from a remote server.
 
 **host**
 
-: Issue a command to the remote host in its own command language.
+> Issue a command to the remote host in its own command language.
 
 **space**
 
-: Display current disk space usage on remote system.
+> Display current disk space usage on remote system.
 
 **type**
 
-: Display a remote file on your screen.
+> Display a remote file on your screen.
 
 **who**
 
-: Display who\'s logged in, or get information about a user.
+> Display who\'s logged in, or get information about a user.
 
 ## CONTACT
 
@@ -555,7 +555,7 @@ Jeffrey H. Johnson \<trnsz\@pobox.com\>
 
 ## HOMEPAGE
 
-\<[https://github.com/johnsonjh/uckermit/](https://github.com/johnsonjh/uckermit/)\>
+[https://github.com/BAN-AI-Communications/uckermit](https://github.com/BAN-AI-Communications/uckermit)
 
 ## ORIGINAL AUTHORS
 
@@ -566,38 +566,38 @@ contributions from many others.
 
 Revised 3-Clause BSD License for Columbia University Kermit Software
 
-:
+>
 
 Copyright (C) 1981-2011,
 
-: Trustees of Columbia University in the City of New York.
+> Trustees of Columbia University in the City of New York.
 
 All rights reserved.
 
-:
+>
 
 Redistribution and use in source and binary forms, with or without
 
-: modification, are permitted provided that the following conditions are met:
+> modification, are permitted provided that the following conditions are met:
 
 Redistributions of source code must retain the above copyright notice, this
 
-: list of conditions and the following disclaimer.
+> list of conditions and the following disclaimer.
 
 Redistributions in binary form must reproduce the above copyright notice,
 
-: this list of conditions and the following disclaimer in the documentation and
+> this list of conditions and the following disclaimer in the documentation and
 / or other materials provided with the distribution.
 
 Neither the name of Columbia University nor the names of its contributors
 
-: may be used to endorse or promote products derived from this software without
+> may be used to endorse or promote products derived from this software without
 specific prior written permission.
 
 **THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS
 IS\"**
 
-: AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+> AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
 DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
 ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
@@ -616,15 +616,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 cu(1C), ecu(1), uucp(1C), kermit(1)
 
-:
+>
 
 Christine Gianone,
 
-: _Kermit User\'s Guide_, Columbia University, 8th Edition
+> _Kermit User\'s Guide_, Columbia University, 8th Edition
 
 Frank da Cruz,
 
-: _Kermit, A File Transfer Protocol_, Digital Press (1987)
+> _Kermit, A File Transfer Protocol_, Digital Press (1987)
 
 ## DIAGNOSTICS
 
