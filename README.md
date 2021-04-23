@@ -21,8 +21,8 @@ The following notation is used in command descriptions:
 
 - _fn_
   - A UNIX file specification, possibly containing either of the \"_wildcard_\"
-    characters \'`~`\', \'`*`', or \'`?`\' (\'`~`\' matches a user\'s home directory
-    name,
+    characters \'`~`\', \'`*`', or \'`?`\' (\'`~`\' matches a user\'s home
+    directory name,
 - _fn1_
   - A UNIX file specification which may not contain \'`*`\' or \'`?`\'.
 - _rfn_
@@ -36,17 +36,17 @@ The following notation is used in command descriptions:
   - A decimal number between _0_ and _127_ representing the value of an ASCII
     character.
 - _cc_
-  - A decimal number between _0_ and _31_, or else exactly _127_, representing the
-    value of an ASCII control character.
+  - A decimal number between _0_ and _31_, or else exactly _127_, representing
+    the value of an ASCII control character.
 - **\[ \]**
   - Any field in square braces is optional.
 - {_x,y,z_}
   - Alternatives are listed in curly braces.
 
-_μCKermit_ command line options may specify either **_actions_** or **_settings_**. If
-_μCKermit_ is invoked with a command line that specifies no **actions**, then it
-will issue a prompt and begin interactive dialog. Action options specify either
-protocol transactions or terminal connection.
+_μCKermit_ command line options may specify either **_actions_** or
+**_settings_**. If _μCKermit_ is invoked with a command line that specifies no
+**actions**, then it will issue a prompt and begin interactive dialog. Action
+options specify either protocol transactions or terminal connection.
 
 ## COMMAND LINE OPTIONS
 
@@ -152,9 +152,10 @@ protocol transactions or terminal connection.
       may also be used to slightly boost efficiency in UNIX-to-UNIX transfers of
       text files by eliminating CRLF/newline conversion.
   - **`-e n`**
-    - Specifies the (_extended_) receive-packet length, a number between _10_ and
-      about _1200_ (depending on the system). Lengths of _95_ or greater require
-      that the opposite Kermit support the long packet protocol extension.
+    - Specifies the (_extended_) receive-packet length, a number between _10_
+      and about _1200_ (depending on the system). Lengths of _95_ or greater
+      require that the opposite Kermit support the long packet protocol
+      extension.
   - **`-w`**
     - Write-Protect --- Avoid filename collisions for incoming files.
   - **`-q`**
@@ -195,8 +196,7 @@ protocol transactions or terminal connection.
       will be a beep if the requested operation fails.
   - **`DEL`**
     - The `Delete` or `Rubout` key --- Delete the previous character from the
-      command. You may also use `BS` `Backspace`, `Control-H` for this
-      function.
+      command. You may also use `BS` `Backspace`, `Control-H` for this function.
   - **`^W`**
     - `Control-W` --- Erase the rightmost word from the command line.
   - **`^U`**
@@ -211,17 +211,17 @@ protocol transactions or terminal connection.
       (`Linefeed`), or **`FF`** (`Formfeed`) may also be used for this purpose.
   - **`\`**
     - `Backslash` --- Enter any of the above characters into the command,
-      literally. To enter a backslash, type two backslashes in a row (` \\``\\ `).
-      A single backslash immediately preceding a carriage return allows you to
-      continue the command on the next line.
+      literally. To enter a backslash, type two backslashes in a row
+      (` \\``\\ `). A single backslash immediately preceding a carriage return
+      allows you to continue the command on the next line.
 
 - You may type the editing characters (`DEL`, `^W`, etc) repeatedly, to delete
   all the way back to the prompt. No action will be performed until the command
-  is entered by typing `carriage return`, `linefeed`, or `formfeed`. If you make any
-  mistakes, you will receive an informative error message and a new prompt ---
-  make liberal use of \'`?`\' and `ESC` to feel your way through the commands.
-  One important command is \"`help`\" --- you should use it the first time you
-  run _μCKermit._
+  is entered by typing `carriage return`, `linefeed`, or `formfeed`. If you make
+  any mistakes, you will receive an informative error message and a new prompt
+  --- make liberal use of \'`?`\' and `ESC` to feel your way through the
+  commands. One important command is \"`help`\" --- you should use it the first
+  time you run _μCKermit._
 
 - Interactive _μCKermit_ accepts commands from files as well as from the
   keyboard. Upon startup, _μCKermit_ looks for the file .uckermrc in your home
