@@ -20,8 +20,8 @@ command line and interpret them.
 The following notation is used in command descriptions:
 
 - _fn_
-  - A UNIX file specification, possibly containing the \"_wildcard_\"
-    characters \'`~`\', \'`*`', or \'`?`\'.
+  - A UNIX file specification, possibly containing the \"_wildcard_\" characters
+    \'`~`\', \'`*`', or \'`?`\'.
     - \'`~`\' matches a user\'s home directory name.
 - _fn1_
   - A UNIX file specification which may not contain \'`*`\' or \'`?`\'.
