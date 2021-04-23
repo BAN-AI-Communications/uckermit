@@ -20,7 +20,7 @@ The following notation is used in command descriptions:
 .RE 1
 .TP 8
 .I fn
-A UNIX file specification, possibly containing either of the "wildcard"
+A UNIX file specification, possibly containing the "wildcard"
 characters '~', '*', or '?' ('~' matches a user's home directory name,
 '*' matches all character strings, '?' matches any single character).
 .TP
