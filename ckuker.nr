@@ -569,6 +569,15 @@ with contributions from many others.
 .TP
 Revised 3-Clause BSD License for Columbia University Kermit Software
 .TP
+Copyright (C) 2021,
+Jeffrey H. Johnson <trnsz@pobox.com>
+.TP
+Copyright (C) 1984,
+Jeff Damens, Columbia University Center for Computing Activites
+.TP
+Copyright (C) 1985,
+Herman Fischer, Encino CA
+.TP
 Copyright (C) 1981-2011,
 Trustees of Columbia University in the City of New York.
 .TP

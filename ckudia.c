@@ -1,9 +1,13 @@
 #ifndef NOCKUDIA
-char *dialv = "Dial Command, 4G(029), 23 Apr 2021";
+char *dialv = "Dial Command, 4G(033), 24 Apr 2021";
 
 /* C K U D I A -- Dialing program for connection to remote system */
 
 /*
+ * Copyright (C) 2021, Jeffrey H. Johnson <trnsz@pobox.com>
+ *
+ * Copyright (C) 1985, Herman Fischer, Encino CA
+ *
  * Copyright (C) 1981-2011,
  *   Trustees of Columbia University in the City of New York.
  *
@@ -13,18 +17,18 @@ char *dialv = "Dial Command, 4G(029), 23 Apr 2021";
  *   modification, are permitted provided that the following conditions
  *   are met:
  *
- *   - Redistributions of source code must retain the above copyright 
+ *   - Redistributions of source code must retain the above copyright
  *       notice, this list of conditions and the following disclaimer.
- *      
+ *
  *   - Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in   
+ *       notice, this list of conditions and the following disclaimer in
  *       the documentation and/or other materials provided with the
- *       distribution.                                                     
- *     
+ *       distribution.
+ *
  *   - Neither the name of Columbia University nor the names of its
  *       contributors may be used to endorse or promote products derived
- *       from this software without specific prior written permission. 
- *       
+ *       from this software without specific prior written permission.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -35,22 +39,10 @@ char *dialv = "Dial Command, 4G(029), 23 Apr 2021";
  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 /*
- * Original author: Herm Fischer (HFISCHER@USC-ECLB).
- * Contributed to Columbia University for inclusion in C-Kermit.
- *
- * Copyright (C) 1985,
- *   Herman Fischer, 16400 Ventura Blvd, Encino CA 91436.
- *
- * Permission is granted to any individual or institution to use, copy,
- *   or redistribute this software so long as it is not sold for profit,
- *   provided this copyright notice is retained.
- *
- * Microcom modem support by Bob Larson (Blarson@ecla.usc.edu)
- *
  * This module should work under all versions of UNIX. It calls externally
  * defined system-depended functions for i/o, but depends upon the existence
  * of various modem control functions.
@@ -59,7 +51,7 @@ char *dialv = "Dial Command, 4G(029), 23 Apr 2021";
  * that the computer and modem properly utilize the following data communi-
  * cations signals (that means one should prepare the modem to use, not
  * circumvent, these signals):
- *  
+ *
  *   Data Terminal Ready: This signal is asserted by the computer when
  *     Kermit is about to ask the modem to dial a call, and is removed
  *     when Kermit wishes to have the modem hang up a call. The signal
@@ -74,63 +66,6 @@ char *dialv = "Dial Command, 4G(029), 23 Apr 2021";
  *     Kermit is asking the modem to dial the call, because there is
  *     no consistant usage of this signal during the dialing phase
  *     among different modem manufacturers.)
- */
-
-/*
- *      21-Jul-85       Fixed failure returns hanging on no carrier signal
- *                      Requires tthang change too (ckutio.c revision)
- *                                                      -- Herm Fischer
- *
- *      28-Jun-85       Fixed bug with defaulting the modem-failure message
- *                      in lbuf.
- *                                                      -- Dan Schullman
- *
- *      27-Jun-85       Merged in code from Joe Orost at Berkeley for
- *                      supporting the US Robotics modem, which included
- *                      changing the single characters in MDMINF into
- *                      multi-character strings and modifying waitFor.
- *                                                      -- Dan Schullman
- *
- *      26-Jun-85       Allow interrupts to be used to abort dialing,
- *                      and ring the bell when a connection is made.
- *                      Reorganized some of the failure paths to use the
- *                      same code, and now close the line on failures.
- *                      Allow use of stored numbers with the DF100 and
- *                      DF200 modems.  Handlers now declared after the
- *                      call to setjmp.
- *                                                      -- Dan Schullman
- *
- *      24-May-85       DF03, DF100-series, DF200-series, & "unknown" modem
- *                      support added.  Also restructured the various data
- *                      tables, fixed some bugs related to missing data and
- *                      missing case labels and modified the failure message
- *                      to display the "reason" given by the modem.
- *                                                      -- Dan Schullman
- *
- *      16-Mar-87       Support for the ATT7300 UNIX PC internal modem was
- *                      added.
- *                                                      -- Richard E. Hill
- *
- *      21-Feb-88       Os9/68k and microcom modem support.
- *                                                      -- Bob Larson
- *
- *      14-Mar-88       Rewrite code for ATT7300 (here and in ckutio.c)
- *                      Avoids dial(3c) with it's LCK files, hangs up line
- *                      correctly, enables user interrupts and timeouts,
- *                      turns on/off the system getty() login procedure.
- *                      Correct Hayes command sequence at little.
- *                      Procedures: attdial, atthang, ongetty, offgetty.
- *                      Parts adapted from work of Richard E. Hill and
- *                      Kevin O'Gorman.
- *                                                      -- Joe R. Doupnik
- *
- *      13-Jan-89       Add IBM, Siemens, and Rolm CBX dialing support.
- *                                                      -- Frank da Cruz
- *
- *      29-Aug-89       Added support for AT&T 2212C, 2224B, 2224CEO, and
- *                      2296A switched-network modems in AT&T mode, and
- *                      for the AT&T Digital Terminal Data Module (DTDM).
- *                                                      -- Eric F. Jones
  */
 
 /*
@@ -173,7 +108,6 @@ char *dialv = "Dial Command, 4G(029), 23 Apr 2021";
  * PROBLEM THEN BECOMES ONE OF ALLOWING THE USER TO CANCEL THE DIALING.
  * WE COULD CHOOSE SOME PHRASE THAT WOULD PRESUMABLY NEVER BE A PART
  * OF A VALID AUTODIAL SEQUENCE (E.G., "QUIT" and "quit").
- *                                                              -- DS
  */
 
 #include "ckcdeb.h"
@@ -183,18 +117,18 @@ char *dialv = "Dial Command, 4G(029), 23 Apr 2021";
 #include <signal.h>
 #include <stdio.h>
 
-#include <setjmp.h>     /* Longjumps */
+#include <setjmp.h>
 
 #ifdef __linux__
 #include <string.h>
-#endif
+#endif /* ifdef __linux__ */
 
 extern int flow, local, mdmtyp, quiet, speed, parity, seslog, ttyfd;
 extern char ttname[], sesfil[];
 
 #define MDMINF struct mdminf
 
-MDMINF                  /* structure for modem-specific information */
+  MDMINF                /* structure for modem-specific information */
 {
   int dial_time;        /* time modem allows for dialing (secs) */
   char *pause_chars;    /* character(s) to tell modem to pause */
@@ -208,19 +142,19 @@ MDMINF                  /* structure for modem-specific information */
   int dial_rate;        /* delay between dialing characters (msecs) */
 };
 
-  /*
-   * Define symbolic modem numbers.
-   *
-   * The numbers MUST correspond to the ordering of entries
-   * within the ptrtab array, and start at one (1).
-   *
-   * It is assumed that there are relatively few of these
-   * values, and that the high(er) bytes of the value may
-   * be used for modem-specific mode information.
-   *
-   * REMEMBER that only the first eight characters of these
-   * names are guaranteed to be unique.
-   */
+/*
+ * Define symbolic modem numbers.
+ *
+ * The numbers MUST correspond to the ordering of entries
+ * within the ptrtab array, and start at one (1).
+ *
+ * It is assumed that there are relatively few of these
+ * values, and that the high(er) bytes of the value may
+ * be used for modem-specific mode information.
+ *
+ * REMEMBER that only the first eight characters of these
+ * names are guaranteed to be unique.
+ */
 
 #define n_ATTDTDM   1
 #define n_ATTMODEM  2
@@ -250,7 +184,7 @@ MDMINF                  /* structure for modem-specific information */
  * in some of the actions that are performed.
  */
 
-#define n_HAYESNV (n_HAYES + (1 << 8))
+#define n_HAYESNV ( n_HAYES + ( 1 << 8 ))
 
 /*
  * Declare structures containing modem-specific information.
@@ -261,12 +195,12 @@ MDMINF                  /* structure for modem-specific information */
 
 static MDMINF ATTMODEM = /* Information for AT&T switched-network modems */
 
- /* "Number" following "dial" can include: p's and
-  * t's to indicate pulse or tone (default) dialing,
-  * + for wait for dial tone, , for pause, r for
-  * last number dialed, and, except for 2224B, some
-  * comma-delimited options like o12=y, before number.
-  */
+                         /* "Number" following "dial" can include: p's and
+                          * t's to indicate pulse or tone (default) dialing,
+                          * + for wait for dial tone, , for pause, r for
+                          * last number dialed, and, except for 2224B, some
+                          * comma-delimited options like o12=y before number.
+                          */
 
 /* "Important" options for the modems:
  *
@@ -302,62 +236,62 @@ static MDMINF ATTMODEM = /* Information for AT&T switched-network modems */
  *                      front panel.
  */
 
-    {
-        20,             /* dial_time */
-        ",",            /* pause_chars */
-        2,              /* pause_time */
-        "+",            /* wake_str */
-        0,              /* wake_rate */
-        "",             /* wake_prompt */
-        "",             /* dmode_str */
-        "",             /* dmode_prompt */
-        "at%s\r",       /* dial_str */
-        0               /* dial_rate */
+{
+  20,                   /* dial_time */
+  ",",                  /* pause_chars */
+  2,                    /* pause_time */
+  "+",                  /* wake_str */
+  0,                    /* wake_rate */
+  "",                   /* wake_prompt */
+  "",                   /* dmode_str */
+  "",                   /* dmode_prompt */
+  "at%s\r",             /* dial_str */
+  0                     /* dial_rate */
 };
 
 static MDMINF ATTDTDM = /* Information for AT&T Digital Terminal Data Module
                          * For dialing: KYBD switch down, others usually up.
-                                                 */
+                         */
 
-    {
-        5,              /* dial_time */
-        "",             /* pause_chars */
-        0,              /* pause_time */
-        "",             /* wake_str */
-        0,              /* wake_rate */
-        "",             /* wake_prompt */
-        "",             /* dmode_str */
-        "",             /* dmode_prompt */
-        "%s\r",         /* dial_str */
-        0               /* dial_rate */
+{
+  5,                    /* dial_time */
+  "",                   /* pause_chars */
+  0,                    /* pause_time */
+  "",                   /* wake_str */
+  0,                    /* wake_rate */
+  "",                   /* wake_prompt */
+  "",                   /* dmode_str */
+  "",                   /* dmode_prompt */
+  "%s\r",               /* dial_str */
+  0                     /* dial_rate */
 };
 
 static MDMINF CERMETEK = /* Information for Cermetek Info-Mate 212A modem */
-    {
-        20,             /* dial_time */
-        "BbPpTt",       /* pause_chars */
-        0,              /* pause_time */
-        "  XY\016R\r",  /* wake_str */
-        200,            /* wake_rate */
-        "",             /* wake_prompt */
-        "",             /* dmode_str */
-        NULL,           /* dmode_prompt */
-        "\016D '%s'\r", /* dial_str */
-        200             /* dial_rate */
+{
+  20,                   /* dial_time */
+  "BbPpTt",             /* pause_chars */
+  0,                    /* pause_time */
+  "  XY\016R\r",        /* wake_str */
+  200,                  /* wake_rate */
+  "",                   /* wake_prompt */
+  "",                   /* dmode_str */
+  NULL,                 /* dmode_prompt */
+  "\016D '%s'\r",       /* dial_str */
+  200                   /* dial_rate */
 };
 
 static MDMINF DF03 =    /* Information for "DEC DF03-AC" modem */
-    {
-        27,             /* dial_time */
-        "=",            /* pause_chars */
-        15,             /* pause_time */
-        "\001\002",     /* wake_str */
-        0,              /* wake_rate */
-        "",             /* wake_prompt */
-        "",             /* dmode_str */
-        NULL,           /* dmode_prompt */
-        "%s",           /* dial_str */
-        0               /* dial_rate */
+{
+  27,                   /* dial_time */
+  "=",                  /* pause_chars */
+  15,                   /* pause_time */
+  "\001\002",           /* wake_str */
+  0,                    /* wake_rate */
+  "",                   /* wake_prompt */
+  "",                   /* dmode_str */
+  NULL,                 /* dmode_prompt */
+  "%s",                 /* dial_str */
+  0                     /* dial_rate */
 };
 
 static MDMINF DF100 =   /* Information for "DEC DF100-series" modem */
@@ -371,17 +305,17 @@ static MDMINF DF100 =   /* Information for "DEC DF100-series" modem */
                          * the use of phone numbers that you may have stored
                          * in the modem's memory.
                          */
-    {
-        30,             /* dial_time */
-        "=",            /* pause_chars */
-        15,             /* pause_time */
-        "\001",         /* wake_str */
-        0,              /* wake_rate */
-        "",             /* wake_prompt */
-        "",             /* dmode_str */
-        NULL,           /* dmode_prompt */
-        "%s#",          /* dial_str */
-        0               /* dial_rate */
+{
+  30,                   /* dial_time */
+  "=",                  /* pause_chars */
+  15,                   /* pause_time */
+  "\001",               /* wake_str */
+  0,                    /* wake_rate */
+  "",                   /* wake_prompt */
+  "",                   /* dmode_str */
+  NULL,                 /* dmode_prompt */
+  "%s#",                /* dial_str */
+  0                     /* dial_rate */
 };
 
 static MDMINF DF200 =   /* Information for "DEC DF200-series" modem */
@@ -395,180 +329,179 @@ static MDMINF DF200 =   /* Information for "DEC DF200-series" modem */
                          * the use of phone numbers that you may have stored
                          * in the modem's memory.
                          */
-    {
-        30,             /* dial_time */
-        "=W",           /* pause_chars */
-        15,             /* pause_time */
-        "\002",         /* wake_str */
-        0,              /* wake_rate */
-        "",             /* wake_prompt */
-        "",             /* dmode_str */
-        NULL,           /* dmode_prompt */
-        "%s!",          /* dial_str */
-        0               /* dial_rate */
+{
+  30,                   /* dial_time */
+  "=W",                 /* pause_chars */
+  15,                   /* pause_time */
+  "\002",               /* wake_str */
+  0,                    /* wake_rate */
+  "",                   /* wake_prompt */
+  "",                   /* dmode_str */
+  NULL,                 /* dmode_prompt */
+  "%s!",                /* dial_str */
+  0                     /* dial_rate */
 };
 
 static MDMINF GDC =     /* Information for GeneralDataComm 212A/ED modem */
-    {
-        32,             /* dial_time */
-        "%",            /* pause_chars */
-        3,              /* pause_time */
-        "\r\r",         /* wake_str */
-        500,            /* wake_rate */
-        "$",            /* wake_prompt */
-        "D\r",          /* dmode_str */
-        ":",            /* dmode_prompt */
-        "T%s\r",        /* dial_str */
-        0               /* dial_rate */
+{
+  32,                   /* dial_time */
+  "%",                  /* pause_chars */
+  3,                    /* pause_time */
+  "\r\r",               /* wake_str */
+  500,                  /* wake_rate */
+  "$",                  /* wake_prompt */
+  "D\r",                /* dmode_str */
+  ":",                  /* dmode_prompt */
+  "T%s\r",              /* dial_str */
+  0                     /* dial_rate */
 };
 
 static MDMINF HAYES =   /* Information for "Hayes" modem */
-    {
-        35,             /* dial_time */
-        ",",            /* pause_chars */
-        2,              /* pause_time */
-        "AT\r",         /* wake_str */
+{
+  35,                   /* dial_time */
+  ",",                  /* pause_chars */
+  2,                    /* pause_time */
+  "AT\r",               /* wake_str */
                         /* Note: Other wake_str's are possible here.
                          * For Hayes 2400 that is to be used for both
                          * inbound and outbound calls, "AT&F&D3" might
                          * be best. For outbound calls only, possibly
                          * "AT&F&D2". See the Hayes 2400 manual.
                          */
-        0,              /* wake_rate */
-        "",             /* wake_prompt */
-        "",             /* dmode_str */
-        "",             /* dmode_prompt */
-        "ATD%s\r",      /* dial_str */
-                                /* Note: The user can supply "P" or "T" */
-        0               /* dial_rate */
+  0,                    /* wake_rate */
+  "",                   /* wake_prompt */
+  "",                   /* dmode_str */
+  "",                   /* dmode_prompt */
+  "ATD%s\r",            /* dial_str */
+  0                     /* dial_rate */
 };
 
 static MDMINF PENRIL =  /* Information for "Penril" modem */
-    {
-        50,             /* dial_time */
-        "",             /* pause_chars */
-        0,              /* pause_time */
-        "\r\r",         /* wake_str */
-        300,            /* wake_rate */
-        ">",            /* wake_prompt */
-        "k\r",          /* dmode_str */
-        ":",            /* dmode_prompt */
-        "%s\r",         /* dial_str */
-        0               /* dial_rate */
+{
+  50,                   /* dial_time */
+  "",                   /* pause_chars */
+  0,                    /* pause_time */
+  "\r\r",               /* wake_str */
+  300,                  /* wake_rate */
+  ">",                  /* wake_prompt */
+  "k\r",                /* dmode_str */
+  ":",                  /* dmode_prompt */
+  "%s\r",               /* dial_str */
+  0                     /* dial_rate */
 };
 
 static MDMINF RACAL =   /* Information for "Racal Vadic" modem */
-    {
-        35,             /* dial_time */
-        "Kk",           /* pause_chars */
-        5,              /* pause_time */
-        "\005\r",       /* wake_str */
-        50,             /* wake_rate */
-        "*",            /* wake_prompt */
-        "D\r",          /* dmode_str */
-        "?",            /* dmode_prompt */
-        "%s\r",         /* dial_str */
-        0               /* dial_rate */
+{
+  35,                   /* dial_time */
+  "Kk",                 /* pause_chars */
+  5,                    /* pause_time */
+  "\005\r",             /* wake_str */
+  50,                   /* wake_rate */
+  "*",                  /* wake_prompt */
+  "D\r",                /* dmode_str */
+  "?",                  /* dmode_prompt */
+  "%s\r",               /* dial_str */
+  0                     /* dial_rate */
 };
 
 static MDMINF UNKNOWN = /* Information for "Unknown" modem */
-    {
-        30,             /* dial_time */
-        "",             /* pause_chars */
-        0,              /* pause_time */
-        "",             /* wake_str */
-        0,              /* wake_rate */
-        "",             /* wake_prompt */
-        "",             /* dmode_str */
-        NULL,           /* dmode_prompt */
-        "%s\r",         /* dial_str */
-        0               /* dial_rate */
+{
+  30,                   /* dial_time */
+  "",                   /* pause_chars */
+  0,                    /* pause_time */
+  "",                   /* wake_str */
+  0,                    /* wake_rate */
+  "",                   /* wake_prompt */
+  "",                   /* dmode_str */
+  NULL,                 /* dmode_prompt */
+  "%s\r",               /* dial_str */
+  0                     /* dial_rate */
 };
 
 static MDMINF USROBOT = /* Information for "US Robotics 212A" modem */
-    {
-        30,             /* dial_time */
-        ",",            /* pause_chars */
-        2,              /* pause_time */
-        "ATS2=01\r",    /* wake_str */
-        0,              /* wake_rate */
-        "OK\r",         /* wake_prompt */
-        "",             /* dmode_str */
-        NULL,           /* dmode_prompt */
-        "ATTD%s\r",     /* dial_str */
-        0               /* dial_rate */
+{
+  30,                   /* dial_time */
+  ",",                  /* pause_chars */
+  2,                    /* pause_time */
+  "ATS2=01\r",          /* wake_str */
+  0,                    /* wake_rate */
+  "OK\r",               /* wake_prompt */
+  "",                   /* dmode_str */
+  NULL,                 /* dmode_prompt */
+  "ATTD%s\r",           /* dial_str */
+  0                     /* dial_rate */
 };
 
 static MDMINF VENTEL =  /* Information for "Ventel" modem */
-    {
-        20,             /* dial_time */
-        "%",            /* pause_chars */
-        5,              /* pause_time */
-        "\r\r\r",       /* wake_str */
-        300,            /* wake_rate */
-        "$",            /* wake_prompt */
-        "",             /* dmode_str */
-        NULL,           /* dmode_prompt */
-        "<K%s\r>",      /* dial_str */
-        0               /* dial_rate */
+{
+  20,                   /* dial_time */
+  "%",                  /* pause_chars */
+  5,                    /* pause_time */
+  "\r\r\r",             /* wake_str */
+  300,                  /* wake_rate */
+  "$",                  /* wake_prompt */
+  "",                   /* dmode_str */
+  NULL,                 /* dmode_prompt */
+  "<K%s\r>",            /* dial_str */
+  0                     /* dial_rate */
 };
 
 static MDMINF CONCORD = /* Information for Condor CDS 220 2400b modem */
-    {
-        35,             /* dial_time */
-        ",",            /* pause_chars */
-        2,              /* pause_time */
-        "\r\r",         /* wake_str */
-        20,             /* wake_rate */
-        "CDS >",        /* wake_prompt */
-        "",             /* dmode_str */
-        NULL,           /* dmode_prompt */
-        "<D M%s\r>",    /* dial_str */
-        0               /* dial_rate */
+{
+  35,                   /* dial_time */
+  ",",                  /* pause_chars */
+  2,                    /* pause_time */
+  "\r\r",               /* wake_str */
+  20,                   /* wake_rate */
+  "CDS >",              /* wake_prompt */
+  "",                   /* dmode_str */
+  NULL,                 /* dmode_prompt */
+  "<D M%s\r>",          /* dial_str */
+  0                     /* dial_rate */
 };
 
 static MDMINF
-    ATTUPC = /* (Dummy) Information for "ATT7300/UNIX PC" internal modem */
-    {
-        20,             /* dial_time */
-        "",             /* pause_chars */
-        0,              /* pause_time */
-        "",             /* wake_str */
-        0,              /* wake_rate */
-        "",             /* wake_prompt */
-        "",             /* dmode_str */
-        NULL,           /* dmode_prompt */
-        "%s\r",         /* dial_str */
-        0               /* dial_rate */
+  ATTUPC =   /* (Dummy) Information for "ATT7300/UNIX PC" internal modem */
+{
+  20,                   /* dial_time */
+  "",                   /* pause_chars */
+  0,                    /* pause_time */
+  "",                   /* wake_str */
+  0,                    /* wake_rate */
+  "",                   /* wake_prompt */
+  "",                   /* dmode_str */
+  NULL,                 /* dmode_prompt */
+  "%s\r",               /* dial_str */
+  0                     /* dial_rate */
 };
 
 static MDMINF ROLM =    /* IBM / Siemens / Rolm 8000, 9000, 9751 CBX */
-    {
-        60,             /* dial_time */
-        "",             /* pause_chars */
-        0,              /* pause_time */
-        "\r\r",         /* wake_str */
-        5,              /* wake_rate */
-        "MODIFY?",      /* wake_prompt */
-        "",             /* dmode_str */
-        "",             /* dmode_prompt */
-        "CALL %s\r",    /* dial_str */
-        0               /* dial_rate */
+{
+  60,                   /* dial_time */
+  "",                   /* pause_chars */
+  0,                    /* pause_time */
+  "\r\r",               /* wake_str */
+  5,                    /* wake_rate */
+  "MODIFY?",            /* wake_prompt */
+  "",                   /* dmode_str */
+  "",                   /* dmode_prompt */
+  "CALL %s\r",          /* dial_str */
+  0                     /* dial_rate */
 };
 
 static MDMINF MICROCOM = /* Information for Microcom modems; native mode */
-                         /* (Long answer only) */
-    {
-        35,              /* dial_time */
-        ",!@",           /* pause_chars */
-        3,               /* pause_time */
-        "\r",            /* wake_str */
-        100,             /* wake_rate */
-        "!",             /* wake_prompt */
-        "",              /* dmode_str */
-        NULL,            /* dmode_prompt */
-        "d%s\r",         /* dial_str */
-        0                /* dial_rate */
+                        /* (Long answer only) */
+{
+  35,                   /* dial_time */
+  ",!@",                /* pause_chars */
+  3,                    /* pause_time */
+  "\r",                 /* wake_str */
+  100,                  /* wake_rate */
+  "!",                  /* wake_prompt */
+  "",                   /* dmode_str */
+  NULL,                 /* dmode_prompt */
+  "d%s\r",              /* dial_str */
+  0                     /* dial_rate */
 };
 
 /*
@@ -585,78 +518,81 @@ static MDMINF MICROCOM = /* Information for Microcom modems; native mode */
  */
 
 static MDMINF *ptrtab[] = {
-    &ATTDTDM,  &ATTMODEM, &CERMETEK, &DF03,  &DF100,   &DF200,
-    &GDC,      &HAYES,    &PENRIL,   &RACAL, &UNKNOWN, &USROBOT,
-    &VENTEL,   &CONCORD,  &ATTUPC, /* ATT7300 internal modem, jrd*/
-    &ROLM,                         /* Rolm CBX, fdc */
-    &MICROCOM,
+  &ATTDTDM,  &ATTMODEM, &CERMETEK, &DF03,  &DF100,   &DF200,
+  &GDC,      &HAYES,    &PENRIL,   &RACAL, &UNKNOWN, &USROBOT,
+  &VENTEL,   &CONCORD,  &ATTUPC,   /* ATT7300 */
+  &ROLM,                           /* Rolm CBX */
+  &MICROCOM,
 };
 
- /*
-  * Declare modem names and associated numbers for command
-  * parsing, and also for doing number-to-name translation.
-  */
+/*
+ * Declare modem names and associated numbers for command
+ * parsing, and also for doing number-to-name translation.
+ */
 
- /*
-  * The entries MUST be in alphabetical order by modem name.
-  */
+/*
+ * The entries MUST be in alphabetical order by modem name.
+ */
 
-struct keytab mdmtab[] = {"attdtdm",
-                          n_ATTDTDM,
-                          0,
-                          "attmodem",
-                          n_ATTMODEM,
-                          0,
-                          "att7300",
-                          n_ATTUPC,
-                          0,
-                          "cermetek",
-                          n_CERMETEK,
-                          0,
-                          "concord",
-                          n_CONCORD,
-                          0,
-                          "df03-ac",
-                          n_DF03,
-                          0,
-                          "df100-series",
-                          n_DF100,
-                          0,
-                          "df200-series",
-                          n_DF200,
-                          0,
-                          "direct",
-                          0,
-                          0,
-                          "gendatacomm",
-                          n_GDC,
-                          0,
-                          "hayes",
-                          n_HAYES,
-                          0,
-                          "microcom",
-                          n_MICROCOM,
-                          0,
-                          "penril",
-                          n_PENRIL,
-                          0,
-                          "racalvadic",
-                          n_RACAL,
-                          0,
-                          "rolm",
-                          n_ROLM,
-                          0,
-                          "unknown",
-                          n_UNKNOWN,
-                          0,
-                          "usrobotics-212a",
-                          n_USROBOT,
-                          0,
-                          "ventel",
-                          n_VENTEL,
-                          0};
+struct keytab mdmtab[] = {
+  "attdtdm",
+  n_ATTDTDM,
+  0,
+  "attmodem",
+  n_ATTMODEM,
+  0,
+  "att7300",
+  n_ATTUPC,
+  0,
+  "cermetek",
+  n_CERMETEK,
+  0,
+  "concord",
+  n_CONCORD,
+  0,
+  "df03-ac",
+  n_DF03,
+  0,
+  "df100-series",
+  n_DF100,
+  0,
+  "df200-series",
+  n_DF200,
+  0,
+  "direct",
+  0,
+  0,
+  "gendatacomm",
+  n_GDC,
+  0,
+  "hayes",
+  n_HAYES,
+  0,
+  "microcom",
+  n_MICROCOM,
+  0,
+  "penril",
+  n_PENRIL,
+  0,
+  "racalvadic",
+  n_RACAL,
+  0,
+  "rolm",
+  n_ROLM,
+  0,
+  "unknown",
+  n_UNKNOWN,
+  0,
+  "usrobotics-212a",
+  n_USROBOT,
+  0,
+  "ventel",
+  n_VENTEL,
+  0
+};
 
-int nmdm = (sizeof(mdmtab) / sizeof(struct keytab)); /* number of modems */
+int nmdm = ( sizeof ( mdmtab ) / \
+  sizeof ( struct keytab )); /* number of modems */
 
 #define DIALING   4          /* for ttpkt parameter */
 #define CONNECT   5
@@ -675,11 +611,12 @@ int nmdm = (sizeof(mdmtab) / sizeof(struct keytab)); /* number of modems */
 #define F_minit 4            /* cannot initialize modem */
 
 static char *F_reason[5] = { /* Failure reasons for message */
-                            "Unknown",
-                            "Timeout",
-                            "Interrupt",
-                            "Modem",
-                            "Initialize"};
+  "Unknown",
+  "Timeout",
+  "Interrupt",
+  "Modem",
+  "Initialize"
+};
 
 static int tries = 0;
 
@@ -692,13 +629,15 @@ static SIGTYP (*savAlrm)();  /* for saving alarm handler */
 static SIGTYP (*savInt)();   /* for saving interrupt handler */
 
 char *                       /* Copy a string of the */
-    xcpy(to, from, len)      /* the given length. */
-    register char *to,
-    *from;
+xcpy(to, from, len)          /* the given length. */
+register char *to,
+*from;
 register unsigned len;
 {
   while (len--)
+  {
     *to++ = *from++;
+  }
 }
 
 SIGTYP
@@ -718,7 +657,8 @@ ttolSlow(s, millisec)
 char *s;
 int millisec;
 {                            /* Output s-l-o-w-l-y */
-  for (; *s; s++) {
+  for (; *s; s++)
+  {
     ttoc(*s);
     msleep(millisec);
   }
@@ -739,24 +679,36 @@ waitFor(s)
 char *s;
 {
   CHAR c;
-  while ((c = *s++))                 /* while more characters remain... */
-    while (((ttinc(0) & 0177) != c)) /* wait for the character */
+  while (( c = *s++ ))       /* while more characters remain... */
+  {
+    while ((( ttinc(0) & \
+      0177 ) != c ))         /* wait for the character */
+    {
       ;
+    }
+  }
 }
 
 static
 didWeGet(s, r)
 char *s, *r;
-{                                    /* Looks in string s for response r */
-  int lr = strlen(r);                /* 0 means not found, 1 means found */
+{                            /* Looks in string s for response r */
+  int lr = strlen(r);        /* 0 means not found, 1 means found */
   int i;
   debug(F110, "didWeGet", r, 0);
   debug(F110, " in", s, 0);
   for (i = strlen(s) - lr; i >= 0; i--)
+  {
     if (s[i] == r[0])
+    {
       if (!strncmp(s + i, r, lr))
-        return 1;
-  return 0;
+      {
+        return ( 1 );
+      }
+    }
+  }
+
+  return ( 0 );
 }
 
 /* R E S E T -- Reset alarms, etc. on exit */
@@ -765,8 +717,8 @@ static
 reset()
 {
   alarm(0);
-  signal(SIGALRM, savAlrm);          /* restore alarm handler */
-  signal(SIGINT, savInt);            /* restore interrupt handler */
+  signal(SIGALRM, savAlrm);  /* restore alarm handler */
+  signal(SIGINT, savInt);    /* restore interrupt handler */
 }
 
 /* C K D I A L -- Dial up the remote system */
@@ -774,44 +726,52 @@ reset()
 ckdial(telnbr)
 char *telnbr;
 {
-
   char c;
   char *i, *j;
   int waitct, status;
   char errmsg[50], *erp;
-  MDMINF *pmdminf;      /* pointer to modem-specific info */
-  int augmdmtyp;        /* "augmented" modem type, to handle modem modes */
-  int mdmEcho = 0;      /* assume modem does not echo */
+  MDMINF *pmdminf;           /* pointer to modem-specific info */
+  int augmdmtyp;             /* augmented modem type, handle modem modes */
+  int mdmEcho = 0;           /* assume modem does not echo */
   int n, n1;
-  char *pc;             /* pointer to a character */
+  char *pc;                  /* pointer to a character */
 
-  if (!mdmtyp) {
+  if (!mdmtyp)
+  {
     printf("You must 'set modem' first\n");
-    return -2;
+    return ( -2 );
   }
-  if (!local) {
+
+  if (!local)
+  {
     printf("You must 'set line' first\n");
-    return -2;
+    return ( -2 );
   }
-  if (speed < 0) {
+
+  if (speed < 0)
+  {
     printf("You must 'set speed' first\n");
-    return -2;
+    return ( -2 );
   }
+
   debug(F110, "dial", telnbr, 0);
 
   /*
-   * Carrier no-wait can be invalidated
-   * by ckutio fun and games.  --jrd
+   * Carrier no-wait can
+   * be invalidated
    */
 
-  if (ttopen(ttname, &local, mdmtyp) < 0) { /* Open, no carrier wait */
+  if (ttopen(
+    ttname, &local, mdmtyp) < 0)      /* Open, no carrier wait */
+  {
     erp = errmsg;
     sprintf(erp, "Can't open %s", ttname);
     perror(errmsg);
-    return -2;
+    return ( -2 );
   }
-  pmdminf = ptrtab[mdmtyp - 1];             /* Set pointer to modem info */
-  augmdmtyp = mdmtyp;                       /* Init augmented modem type */
+
+  pmdminf   = ptrtab[mdmtyp - 1];            /* Set pointer to modem info */
+  augmdmtyp = mdmtyp;                        /* Init augmented modem type */
 
   /*
    * interdigit waits
@@ -821,11 +781,16 @@ char *telnbr;
   waitct = 1 * strlen(telnbr);        /* compute time to dial worst case */
   waitct += pmdminf->dial_time;       /* dialtone + completion wait times */
   for (i = telnbr; *i; i++)           /* add in pause characters time */
+  {
     for (j = pmdminf->pause_chars; *j; j++)
-      if (*i == *j) {
+    {
+      if (*i == *j)
+      {
         waitct += pmdminf->pause_time;
         break;
       }
+    }
+  }
 
   printf("Dialing thru %s, speed %d, number %s.\n", ttname, speed, telnbr);
   printf("The timeout for completing the call is %d seconds.\n", waitct);
@@ -838,64 +803,89 @@ char *telnbr;
    * (in case it wasn't "on hook")
    */
 
-  if (tthang() < 0) {
+  if (tthang() < 0)
+  {
     printf("Can't hang up tty line\n");
-    return -2;
+    return ( -2 );
   }
+
   if (augmdmtyp == n_ROLM)
+  {
     sleep(1);
+  }
 
   /*
    * Condition console terminal and communication line;
    * place line into "clocal" dialing state.
    */
 
-  if (ttpkt(speed, DIALING, parity) < 0) {
+  if (ttpkt(speed, DIALING, parity) < 0)
+  {
     printf("Can't condition communication line\n");
-    return -2;
+    return ( -2 );
   }
+
   if (augmdmtyp == n_ROLM)
+  {
     sleep(1);
+  }
 
   /*
    * Establish jump vector,
    * or handle "failure" jumps.
    */
 
-  if ((n = setjmp(sjbuf))) {      /* if a "failure jump" was taken... */
+  if (( n = setjmp(sjbuf)))       /* if a "failure jump" was taken... */
+  {
     alarm(0);                     /* disable timeouts */
-    if ((n1 = setjmp(sjbuf)))     /* failure while handling failure */
+    if (( n1 = setjmp(sjbuf)))    /* failure while handling failure */
+    {
       printf("%s failure while handling failure.\n", F_reason[n1]);
-    else {                        /* first (i.e., non-nested) failure */
+    }
+    else                          /* first (i.e., non-nested) failure */
+    {
       signal(SIGALRM, dialtime);  /* be sure to catch signals */
       if (signal(SIGINT, SIG_IGN) != SIG_IGN)
+      {
         signal(SIGINT, dialint);
+      }
+
       alarm(10);                  /* be sure to exit this section */
       ttclos();                   /* hangup and close the line */
     }
-    switch (n) {                  /* type of failure */
+
+    switch (n)                    /* type of failure */
+    {
     case F_time:                  /* timed out */
     {
       printf("No connection made within the allotted time.\n");
       debug(F110, "dial", "timeout", 0);
       break;
     }
+
     case F_int:                   /* dialing interrupted */
     {
       printf("Dialing interrupted.\n");
       debug(F110, "dial", "interrupted", 0);
       break;
     }
+
     case F_modem:                 /* modem detected a failure */
     {
       printf("Failed (\"");
       for (pc = lbuf; *pc; pc++)
+      {
         if (isprint(*pc))
+        {
           putchar(*pc);           /* display printable reason */
+        }
+      }
+
       printf("\").\n");
       debug(F110, "dial", lbuf, 0);
       break;
     }
+
     case F_minit:                 /* cannot initialize modem */
     {
       printf("Cannot initialize modem.\n");
@@ -904,7 +894,7 @@ char *telnbr;
     }
     }
     reset();                      /* reset alarms, etc. */
-    return -2;                    /* exit with failure code */
+    return ( -2 );                /* exit with failure code */
   }
 
   /*
@@ -916,74 +906,105 @@ char *telnbr;
    * just did this!
    */
 
-  /* ttflui(); */                      /* flush input buffer if any */
+  /* ttflui(); */                 /* flush input buffer if any */
 
-  savAlrm = signal(SIGALRM, dialtime); /* set alarm handler */
-  if ((savInt = signal(SIGINT, SIG_IGN)) != SIG_IGN)
-    signal(SIGINT, dialint);           /* set int handler if not ignored */
-  debug(F100, "ckdial giving modem 10 secs to wake up", "", 0);
-  alarm(10);                           /* give modem 10s to wake up. */
+  savAlrm = signal(
+    SIGALRM, dialtime);           /* set alarm handler */
+  if (( savInt = signal(
+    SIGINT, SIG_IGN)) != SIG_IGN)
+  {
+    signal(SIGINT, dialint);      /* set int handler if not ignored */
+  }
+
+  debug(F100,
+    "ckdial giving modem 10 secs to wake up", "", 0);
+  alarm(10);                      /* give modem 10s to wake up. */
 
   /*
-   * Put modem in command mode.
+   * Put modem in
+   * command mode.
    */
 
-#define OKAY   1                       /* modem attention attempt status */
-#define IGNORE 2
-#define GOT_O -2
-#define GOT_A -3
+#define OKAY    1                 /* modem attention attempt status */
+#define IGNORE  2
+#define GOT_O  -2
+#define GOT_A  -3
 
-  switch (augmdmtyp) {
-
+  switch (augmdmtyp)
+  {
   case n_HAYES:
   case n_HAYESNV:
-    while (tries++ < 4) {
-      ttol(HAYES.wake_str, strlen(HAYES.wake_str)); /* wakeup */
+    while (tries++ < 4)
+    {
+      ttol(
+        HAYES.wake_str,
+          strlen(
+            HAYES.wake_str));    /* wakeup */
       status = 0;
-      while (status <= 0) {
-        switch (ttinc(0) & 0177) {
-        case 'A':                                   /* echo, ignore */
+      while (status <= 0)
+      {
+        switch (ttinc(0) & 0177)
+        {
+        case 'A':                /* echo, ignore */
           status = GOT_A;
           break;
+
         case 'T':
-          if (status == GOT_A) {
-            mdmEcho = 1;                            /* expect echo later */
+          if (status == GOT_A)
+          {
+            mdmEcho = 1;         /* expect echo later */
             status = 0;
             break;
           }
+
           status = IGNORE;
           break;
+
         case LF:
         case CR:
           status = 0;
           break;
-        case '0':                                   /* numeric result */
-          augmdmtyp = n_HAYESNV;                    /* nonverbal result */
+
+        case '0':                /* numeric result */
+          augmdmtyp = n_HAYESNV; /* nonverbal result */
           status = OKAY;
           break;
-        case 'O':                                   /* maybe English code */
+
+        case 'O':                /* maybe English code */
           status = GOT_O;
           break;
+
         case 'K':
-          if (status == GOT_O) {
+          if (status == GOT_O)
+          {
             augmdmtyp = n_HAYES;
             status = OKAY;
             break;
-          }                                         /* default */
+          }                      /* default */
+
         default:
           status = IGNORE;
           break;
         }
       }
       if (status == OKAY)
+      {
         break;
+      }
+
       if (status == IGNORE)
+      {
         ttflui();
-      sleep(1);                                     /* wait, then retry */
+      }
+
+      sleep(1);                  /* wait, then retry */
     }
     if (status != 0)
+    {
       break;
-    longjmp(sjbuf, F_minit);                        /* modem-init failure */
+    }
+
+    longjmp(sjbuf, F_minit);     /* modem-init failure */
 
   /*
    * interdigit waits
@@ -993,13 +1014,18 @@ char *telnbr;
   case n_MICROCOM: {
     jmp_buf savejmp;
     alarm(0);
-    xcpy((char *)savejmp, (char *)sjbuf, sizeof savejmp);
-    if (setjmp(sjbuf)) {                            /* autobaud sequence */
+    xcpy((char *)savejmp,
+      (char *)sjbuf,
+        sizeof savejmp);
+    if (setjmp(sjbuf))           /* autobaud sequence */
+    {
       xcpy((char *)sjbuf, (char *)savejmp, sizeof savejmp);
       alarm(5);
       ttolSlow("44445", MICROCOM.wake_rate);
       waitFor(MICROCOM.wake_str);
-    } else {
+    }
+    else
+    {
       alarm(2);
       ttolSlow(MICROCOM.wake_str, MICROCOM.wake_rate);
       waitFor(MICROCOM.wake_str);
@@ -1007,51 +1033,74 @@ char *telnbr;
       xcpy((char *)sjbuf, (char *)savejmp, sizeof savejmp);
     }
   } break;
-  case n_ATTDTDM:                      /* DTDM requires BREAK to wake up */
-    ttsndb();                          /* Send BREAK */
-    break;                             /* ttsndb() defined in ckutio.c */
 
-  default:                             /* place modem into command mode */
-    debug(F111, "ckdial default, wake string",
-          pmdminf->wake_str,
-        pmdminf->wake_rate);
+  case n_ATTDTDM:                /* DTDM requires BREAK to wake up */
+    ttsndb();                    /* Send BREAK */
+    break;                       /* ttsndb() defined in ckutio.c */
+
+  default:                       /* place modem into command mode */
+    debug(
+      F111,
+      "ckdial default, wake string",
+      pmdminf->wake_str,
+      pmdminf->wake_rate);
     ttolSlow(pmdminf->wake_str, pmdminf->wake_rate);
-    debug(F110, "ckdial default, waiting for wake_prompt",
-          pmdminf->wake_prompt,
-            0);
+    debug(
+      F110,
+      "ckdial default, waiting for wake_prompt",
+      pmdminf->wake_prompt,
+      0);
     waitFor(pmdminf->wake_prompt);
     break;
   }
-  debug(F100, "ckdial got wake prompt", "", 0);
-  alarm(0);                          /* turn off alarm */
-  msleep(500);                       /* give things settling time */
-  alarm(10);                         /* alarm on dialing prompts */
+  debug(F100,
+    "ckdial got wake prompt",
+      "",
+        0);
+  alarm(0);                      /* turn off alarm */
+  msleep(500);                   /* give things settling time */
+  alarm(10);                     /* alarm on dialing prompts */
 
   /*
    * Dial the
    * number
    */
 
-  ttolSlow(pmdminf->dmode_str, pmdminf->dial_rate);
-  if (pmdminf->dmode_prompt) {       /* wait for prompt, if any expected */
+  ttolSlow(pmdminf->dmode_str,
+    pmdminf->dial_rate);
+  if (pmdminf->dmode_prompt)     /* wait for prompt, if any expected */
+  {
     waitFor(pmdminf->dmode_prompt);
     msleep(300);
   }
 
-  alarm(0);                          /* turn off alarm on dialing prompts */
-  alarm(waitct);                     /* time to allow for connecting */
-  ttflui();                          /* clear out stuff from waking modem */
+  alarm(0);                      /* turn off alarm on dialing prompts */
+  alarm(waitct);                 /* time to allow for connecting */
+  ttflui();                      /* clear out stuff from waking modem */
 
   if (augmdmtyp != n_ATTDTDM)
-    sprintf(lbuf, pmdminf->dial_str, telnbr); /* form dialing string */
+  {
+    sprintf(
+      lbuf,
+        pmdminf->dial_str,
+          telnbr);               /* form dialing string */
+  }
   else
+  {
     sprintf(lbuf, "%s\r", telnbr);
+  }
 
-  sprintf(lbuf, pmdminf->dial_str, telnbr);   /* form dialing string */
-  debug(F110, "dialing", lbuf, 0);
-  ttolSlow(lbuf, pmdminf->dial_rate);         /* send dialing string */
+  sprintf(lbuf,
+    pmdminf->dial_str,
+      telnbr);                   /* form dialing string */
+  debug(F110,
+    "dialing",
+      lbuf, 0);
+  ttolSlow(lbuf,
+    pmdminf->dial_rate);         /* send dialing string */
 
-  if (augmdmtyp == n_RACAL) {                 /* acknowledge dial string */
+  if (augmdmtyp == n_RACAL)      /* acknowledge dial string */
+  {
     sleep(3);
     ttflui();
     ttoc('\r');
@@ -1066,65 +1115,129 @@ char *telnbr;
    * to short-circuit the timeout, and
    * let carrier be the determination of
    * whether a connection has been made.
-   *                                --DS
    */
 
   status = 0;
-  strcpy(lbuf, "No Connection");              /* default failure reason */
-  while (status == 0) {
-    switch (augmdmtyp) {
+  strcpy(lbuf,
+    "No Connection");            /* default failure reason */
+  while (status == 0)
+  {
+    switch (augmdmtyp)
+    {
     default:
-      for (n = 0; n < LBUFL - 1; n++) {       /* accumulate response */
-        lbuf[n] = (ttinc(0) & 0177);
-        if (lbuf[n] == CR || lbuf[n] == LF)
+      for (
+        n = 0;
+          n < LBUFL - 1;
+            n++)                 /* accumulate response */
+      {
+        lbuf[n] = ( ttinc(0) & 0177 );
+        if (lbuf[n] == CR || \
+          lbuf[n] == LF)
+        {
           break;
+        }
       }
-      lbuf[n] = '\0';                         /* terminate response */
-      debug(F110, "dial modem response", lbuf, 0);
-      if (n) {                                /* if characters present */
-        switch (augmdmtyp) {
+
+      lbuf[n] = '\0';            /* terminate response */
+      debug(F110,
+        "dial modem response",
+          lbuf, 0);
+      if (n)                     /* if characters present */
+      {
+        switch (augmdmtyp)
+        {
         case n_ATTMODEM:
           if (didWeGet(lbuf, "Answered"))
+          {
             status = CONNECTED;
+          }
+
           if (didWeGet(lbuf, "Connected"))
+          {
             status = CONNECTED;
+          }
+
           if (didWeGet(lbuf, "Not connected"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "Not Connected"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "Busy"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "No dial tone"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "No Dial Tone"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "No answer"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "No Answer"))
+          {
             status = FAILED;
+          }
+
           break;
+
         case n_ATTDTDM:
           if (didWeGet(lbuf, "DENIED"))
+          {
             status = FAILED;
-          if (didWeGet(lbuf, "CHECK OPTIONS"))
-            status = FAILED;
-          if (didWeGet(lbuf, "DISCONNECTED"))
-            status = FAILED;
-          if (didWeGet(lbuf, "ANSWERED"))
-            status = CONNECTED;
-          if (didWeGet(lbuf, "BUSY"))
-            status = FAILED;
-          break;
-        case n_CERMETEK:
-          if (didWeGet(lbuf, "\016A")) {
-            status = CONNECTED;
-            ttolSlow("\016U 1\r", 200);       /* make transparent*/
           }
+
+          if (didWeGet(lbuf, "CHECK OPTIONS"))
+          {
+            status = FAILED;
+          }
+
+          if (didWeGet(lbuf, "DISCONNECTED"))
+          {
+            status = FAILED;
+          }
+
+          if (didWeGet(lbuf, "ANSWERED"))
+          {
+            status = CONNECTED;
+          }
+
+          if (didWeGet(lbuf, "BUSY"))
+          {
+            status = FAILED;
+          }
+
           break;
-        case n_DF100:              /* DF100 won't generate some of these */
+
+        case n_CERMETEK:
+          if (didWeGet(lbuf, "\016A"))
+          {
+            status = CONNECTED;
+            ttolSlow(
+		      "\016U 1\r", 200); /* make transparent*/
+          }
+
+          break;
+
+        case n_DF100:            /* DF100 won't generate some of these */
         case n_DF200:
           if (didWeGet(lbuf, "Attached"))
+          {
             status = CONNECTED;
+          }
 
           /*
            * The DF100 will respond with "Attached" even
@@ -1133,17 +1246,34 @@ char *telnbr;
            */
 
           if (didWeGet(lbuf, "Busy"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "Disconnected"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "Error"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "No answer"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "No dial tone"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "Speed:"))
+          {
             status = FAILED;
+          }
 
           /*
            * It appears that the "Speed:..." response comes after an
@@ -1158,68 +1288,140 @@ char *telnbr;
            */
 
           break;
+
         case n_GDC:
           if (didWeGet(lbuf, "ON LINE"))
+          {
             status = CONNECTED;
+          }
+
           if (didWeGet(lbuf, "NO CONNECT"))
+          {
             status = FAILED;
+          }
+
           break;
+
         case n_HAYES:
         case n_USROBOT:
-          if (didWeGet(lbuf, "CONNECT 1200")) {
-            if (speed != 1200) {
+          if (didWeGet(lbuf, "CONNECT 1200"))
+          {
+            if (speed != 1200)
+            {
               if (ttpkt(1200, DIALING) < 0)
+              {
                 printf("Can't change speed to 1200\r\n");
-              else {
+              }
+              else
+              {
                 speed = 1200;
                 status = CONNECTED;
                 if (!quiet)
+                {
                   printf("Speed changed to 1200\r\n");
+                }
               }
-            } /* Expand this to include more speeds */
+            }                    /* Expand this to include more speeds */
           }
+
           if (didWeGet(lbuf, "CONNECT"))
+          {
             status = CONNECTED;
+          }
+
           if (didWeGet(lbuf, "NO CARRIER"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "NO DIALTONE"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "BUSY"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "NO ANSWER"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "RING"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "ERROR"))
+          {
             status = FAILED;
+          }
+
           break;
+
         case n_PENRIL:
           if (didWeGet(lbuf, "OK"))
+          {
             status = CONNECTED;
+          }
+
           if (didWeGet(lbuf, "BUSY"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "NO RING"))
+          {
             status = FAILED;
+          }
+
           break;
+
         case n_RACAL:
           if (didWeGet(lbuf, "ON LINE"))
+          {
             status = CONNECTED;
+          }
+
           if (didWeGet(lbuf, "FAILED CALL"))
+          {
             status = FAILED;
+          }
+
           break;
+
         case n_ROLM:
           if (didWeGet(lbuf, "CALLING"))
+          {
             status = 0;
+          }
+
           if (didWeGet(lbuf, "COMPLETE"))
+          {
             status = CONNECTED;
+          }
+
           if (didWeGet(lbuf, "FAILED"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "NOT AVAILABLE"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "LACKS PERMISSION"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "NOT A DATALINE"))
+          {
             status = FAILED;
+          }
 
           /*
            * Early versions of the Rolm 9751 CBX
@@ -1235,83 +1437,147 @@ char *telnbr;
            */
 
           break;
+
         case n_VENTEL:
           if (didWeGet(lbuf, "ONLINE!"))
+          {
             status = CONNECTED;
+          }
+
           if (didWeGet(lbuf, "BUSY"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "DEAD PHONE"))
+          {
             status = FAILED;
+          }
+
           break;
+
         case n_CONCORD:
           if (didWeGet(lbuf, "INITIATING"))
+          {
             status = CONNECTED;
+          }
+
           if (didWeGet(lbuf, "BUSY"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "CALL FAILED"))
+          {
             status = FAILED;
+          }
+
           break;
+
         case n_MICROCOM:
-
-          /* 
-           * "RINGBACK" means phone
-           * line ringing, continue
-           */
-
           if (didWeGet(lbuf, "NO CONNECT"))
+          {
             status = FAILED;
-          if (didWeGet(lbuf, "CONNECT"))      /* trailing speed ignored */
+          }
+
+          if (didWeGet(lbuf,
+            "CONNECT"))          /* trailing speed ignored */
+          {
             status = CONNECTED;
+          }
+
           if (didWeGet(lbuf, "BUSY"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "NO DIALTONE"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "COMMAND ERROR"))
+          {
             status = FAILED;
+          }
+
           if (didWeGet(lbuf, "IN USE"))
+          {
             status = FAILED;
+          }
+
           break;
         }
       }
+
       break;
 
-    case n_DF03:                      /* because response lacks CR or NL */
+    case n_DF03:                 /* because response lacks CR or NL */
       c = ttinc(0) & 0177;
       if (c == 'A')
+      {
         status = CONNECTED;
+      }
+
       if (c == 'B')
+      {
         status = FAILED;
+      }
+
       break;
 
     case n_HAYESNV:
       c = ttinc(0) & 0177;
-      if (mdmEcho) {                  /* sponge up dialing string */
-        mdmEcho = c != '\r';          /* until return is echoed */
+      if (mdmEcho)               /* sponge up dialing string */
+      {
+        mdmEcho = c != '\r';     /* until return is echoed */
         break;
       }
+
       if (c == '1')
+      {
         status = CONNECTED;
+      }
+
       if (c == '3')
+      {
         status = FAILED;
+      }
+
       if (c == '5')
+      {
         status = CONNECTED;
+      }
+
       break;
 
-    case n_UNKNOWN:                   /* SHOULD WAIT FOR CARRIER/TIMEOUT */
+    case n_UNKNOWN:              /* SHOULD WAIT FOR CARRIER/TIMEOUT */
       break;
-    }                                 /* switch (augmdmtyp) */
-  }                                   /* while status == 0 */
-  alarm(0);                           /* turn off alarm on connecting */
-  if (status != CONNECTED)            /* modem-detected failure */
-    longjmp(sjbuf, F_modem);          /* exit (with reason in lbuf) */
-  msleep(500);                        /* allow some time...  */
-  alarm(3);                           /* precaution in case of trouble */
-  debug(F110, "dial", "succeeded", 0);
-  if (augmdmtyp != n_ROLM)            /* Rolm has wierd modem signaling */
-    ttpkt(speed, CONNECT, parity);    /* cancel dialing state ioctl */
-  reset();                            /* reset alarms, etc. */
+    }                            /* switch (augmdmtyp) */
+  }                              /* while status == 0 */
+  alarm(0);                      /* turn off alarm on connecting */
+  if (status != CONNECTED)       /* modem-detected failure */
+  {
+    longjmp(sjbuf, F_modem);     /* exit (with reason in lbuf) */
+  }
+
+  msleep(500);                   /* allow some time...  */
+  alarm(3);                      /* precaution in case of trouble */
+  debug(F110,
+    "dial", "succeeded", 0);
+  if (augmdmtyp != n_ROLM)       /* Rolm has wierd modem signaling */
+  {
+    ttpkt(
+      speed, CONNECT, parity);   /* cancel dialing state ioctl */
+  }
+
+  reset();                       /* reset alarms, etc. */
   if (!quiet)
-    printf("Call completed.\07\n");
-  return 0;                           /* return, and presumably connect */
+  {
+    printf(
+      "Call completed.\07\n");
+  }
+
+  return ( 0 );                  /* return, and presumably connect */
 }
-#endif
+#endif /* ifndef NOCKUDIA */
