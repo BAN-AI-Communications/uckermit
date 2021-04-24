@@ -1,4 +1,4 @@
-char *versio = "uCKermit, 4G(127), 24 Apr 2021";
+char *versio = "uCKermit, 4G(129), 24 Apr 2021";
 
 /* C K C M A I -- uCKermit Main program  */
 
@@ -248,9 +248,9 @@ extern int  dfflow;                 /* Default flow control */
  * buffers; see getpkt()
  */
 
-CHAR        zinbuffer[INBUFSIZE]
+CHAR        zinbuffer[INBUFSIZE];
 CHAR        zoutbuffer[INBUFSIZE];
-CHAR        *zinptr,
+CHAR        *zinptr;
 CHAR        *zoutptr;
 int         zincnt;
 int         zoutcnt;
