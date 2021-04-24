@@ -50,7 +50,7 @@ extern int  spsiz,    spmax,    rpsiz,    timint;
 extern int  npad,     ebq,      ebqflg,   rpt;
 extern int  rptq,     rptflg,   capas,    spsizf;
 extern int  pktnum,   prvpkt,   sndtyp,   bctr;
-extern int  bctu,     rsn,      rln;      maxtry;
+extern int  bctu,     rsn,      rln,      maxtry;
 extern int  size,     maxsize,  spktl,    nfils;
 extern int  stdouf,   warn,     timef,    parity;
 extern int  speed,    turn,     turnch,   delay;

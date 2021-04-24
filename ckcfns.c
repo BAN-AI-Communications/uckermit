@@ -1,4 +1,4 @@
-char *fnsv = "uCKermit Functions, 4G(083), 24 Apr 2021";
+char *fnsv = "uCKermit Functions, 4G(085), 24 Apr 2021";
 
 /* C K C F N S -- System-independent Kermit protocol support functions */
 
@@ -700,8 +700,7 @@ sinit()
     {
       if (server)
       {
-        errpkt("
-          File not found");
+        errpkt("File not found");
       }
       else
       {
