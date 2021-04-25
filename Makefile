@@ -1,6 +1,6 @@
 ###########################################################################
 #                                                                         #
-#                   Makefile, version 2.51, 2021-APR-24                   #
+#                   Makefile, version 2.53, 2021-APR-25                   #
 #                                                                         #
 ###########################################################################
 #                                                                         #
@@ -415,6 +415,7 @@ strip:
 		cut -f 1 -d " " 2>/dev/null || true)"K \
 		"$$(/bin/ls -l wermit 2>/dev/null | \
 		awk '{ print $$5 }' 2>/dev/null || true) bytes" || true
+	@printf '\n\n%s\n\n' "" 2>/dev/null || true
 	@strip wermit \
 		2>/dev/null || true
 	@strip -s wermit \
@@ -440,11 +441,9 @@ strip:
 		-R .got.plt \
 		wermit \
 		2>/dev/null || true
-	@size wermit 2>/dev/null || true
 	@size -A wermit 2>/dev/null || true
 	@sstrip -z wermit 2>/dev/null || true
-	@printf '%s\n' "" || true
-	@printf '\n%s ' "Stripped: " "$$(du -k wermit 2>/dev/null | \
+		@printf '\n%s ' "Stripped: " "$$(du -k wermit 2>/dev/null | \
 		cut -f 1 -d "	" 2>/dev/null | \
 		cut -f 1 -d " " 2>/dev/null || true)K" \
 		"$$(/bin/ls -l wermit 2>/dev/null | \
