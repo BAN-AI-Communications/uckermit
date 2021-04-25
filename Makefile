@@ -1,6 +1,6 @@
 ###########################################################################
 #                                                                         #
-#                   Makefile, version 2.45, 24 Apr 2021                   #
+#                   Makefile, version 2.49, 2021-APR-24                   #
 #                                                                         #
 ###########################################################################
 #                                                                         #
@@ -389,13 +389,13 @@ linux-small:
 	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DNOT_YET -Wall -Os \
 		-DO_NDELAY -DTIOCFLUSH -DTIOCFLUSH -DTIOCSINUSE -DFIONBIO -DUXIII \
 		-DTIOCEXCL -DSIGTSTP -DFIONREAD -DDIRENT -DNOCKUSCR \
-		-DNOCKUDIA -DNODOHLP -Wno-return-type -Wno-missing-braces \
+		-DNOCKUDIA -Wno-return-type -Wno-missing-braces -DNODOHLP \
 		-Wno-implicit-function-declaration -Wno-implicit-fallthrough \
 		-fno-asynchronous-unwind-tables -fno-unwind-tables -fno-ident \
 		-fno-exceptions -fdata-sections -ffunction-sections -ffast-math \
 		-fno-math-errno -Wno-implicit-int -DNOSTATS -fno-unroll-loops \
 		-fmerge-all-constants -funsigned-char -fomit-frame-pointer \
-		-fdelete-null-pointer-checks" \
+		-fdelete-null-pointer-checks -DNOBTEST -DNOICP" \
 			"LNKFLAGS = -Wl,-s \
 				-Wl,--gc-sections \
 				-Wl,--print-gc-sections \

@@ -1,4 +1,6 @@
-char *ckxv = "UNIX TTY I/O, 4G(079), 24 Apr 2021";
+#ifndef NOICP
+char *ckxv = "UNIX TTY I/O Module, 4G(081), 2021-APR-24";
+#endif /* ifndef NOICP */
 
 /* C K U T I O */
 
@@ -64,6 +66,7 @@ char *ckxv = "UNIX TTY I/O, 4G(079), 24 Apr 2021";
 #define DEVNAMLEN 25
 #endif /* ifndef DEVNAMLEN */
 
+#ifndef NOICP
 #ifdef BSD4
 #define ANYBSD
 #ifdef MAXNAMLEN
@@ -120,6 +123,7 @@ char *ckxsys = " AT&T System III/System V";
 #endif /* isiii */
 #endif /* xenix */
 #endif /* uxiii */
+#endif /* ifndef NOICP */
 
 /*
  * Where is the
@@ -2907,25 +2911,30 @@ char c;
 
 /* C O N X O -- Write x characters to the console terminal */
 
+int
 conxo(x, s)
 char *s;
 int x;
 {
   write(1, s, x);
+  return ( 0 );
 }
 
 /* C O N O L -- Write a line to the console terminal */
 
+int
 conol(s)
 char *s;
 {
   int len;
   len = strlen(s);
   write(1, s, len);
+  return ( 0 );
 }
 
 /* C O N O L A -- Write an array of lines to the console terminal */
 
+int
 conola(s)
 char *s[];
 {
@@ -2934,19 +2943,23 @@ char *s[];
   {
     conol(s[i]);
   }
+  return ( 0 );
 }
 
 /* C O N O L L -- Output a string followed by CRLF */
 
+int
 conoll(s)
 char *s;
 {
   conol(s);
   write(1, "\r\n", 2);
+  return ( 0 );
 }
 
 /* C O N C H K -- Return how many characters available at console */
 
+#ifndef NOICP
 conchk()
 {
   int x;
@@ -2982,6 +2995,7 @@ conchk()
 #endif /* ifdef UXIII */
 #endif /* ifdef V7 */
 }
+#endif /* ifndef NOICP */
 
 /* C O N I N C -- Get a character from the console */
 

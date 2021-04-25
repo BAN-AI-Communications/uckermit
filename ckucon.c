@@ -1,4 +1,6 @@
-char *connv = "Connect Command for UNIX, 4G(031), 24 Apr 2021";
+#ifndef NOICP
+char *connv = "UNIX Connect Command, 4G(033), 2021-APR-24";
+#endif /* ifndef NOICP */
 
 /* C K U C O N -- Dumb terminal connection to remote system, for UNIX */
 

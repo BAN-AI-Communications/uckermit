@@ -1,5 +1,5 @@
 #ifndef NOCKUDIA
-char *dialv = "Dial Command, 4G(033), 24 Apr 2021";
+char *dialv = "UNIX Dial Support, 4G(035), 2021-APR-24";
 
 /* C K U D I A -- Dialing program for connection to remote system */
 

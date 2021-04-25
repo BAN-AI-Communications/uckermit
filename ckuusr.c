@@ -1,4 +1,6 @@
-char *userv = "User Interface, 4G(099), 24 Apr 2021";
+#ifndef NOICP
+char *userv = "UNIX User Interface, 4G(103), 2021-APR-24";
+#endif /* ifndef NOICP */
 
 /* C K U U S R -- "User Interface" for UNIX Kermit (Part 1) */
 
@@ -113,12 +115,22 @@ char *userv = "User Interface, 4G(099), 24 Apr 2021";
 #include <string.h>
 #endif /* ifdef __linux__ */
 
-extern int size, rpsiz, urpsiz, speed, local, server, displa, binary,
-  parity, deblog, escape, xargc, flow, turn, duplex, nfils,
-  ckxech, pktlog, seslog, tralog, stdouf, turnch, dfloc, keep,
-  maxrps, warn, quiet, cnflg, tlevel, mdmtyp, zincnt;
+#ifndef NOSERVER
+extern int server;
+#endif /* ifndef NOSERVER */
 
-extern char *versio, *protv, *ckxv, *ckzv, *fnsv, *connv, *dftty, *cmdv;
+extern int size, rpsiz, urpsiz, speed, local, binary;
+#ifndef NOICP
+extern int displa;
+#endif /* ifndef NOICP */
+extern int  parity, deblog, escape, xargc, flow, turn, duplex, nfils;
+extern int  ckxech, pktlog, seslog, tralog, stdouf, turnch, dfloc, keep;
+extern int  maxrps, warn, quiet, cnflg, tlevel, mdmtyp, zincnt;
+
+extern char *versio, *protv, *ckxv, *ckzv, *fnsv, *dftty, *cmdv;
+#ifndef NOICP
+extern char *connv;
+#endif /* ifndef NOICP */
 extern char *wartv;
 #ifndef NOCKUDIA
 extern char *dialv;
@@ -126,7 +138,8 @@ extern char *dialv;
 #ifndef NOCKUSCR
 extern char *loginv;
 #endif /* ifndef NOCKUSCR */
-extern char *ckxsys, *ckzsys, *cmarg, *cmarg2, **xargv, **cmlist;
+extern char *ckxsys, *ckzsys, *cmarg, *cmarg2;
+extern char **xargv, **cmlist;
 extern char *DIRCMD, *PWDCMD, cmerrp[];
 extern CHAR sstate, ttname[];
 extern CHAR *zinptr;
@@ -143,23 +156,26 @@ extern int backgrd;            /* Kermit executing in background */
  * this kermit is executing in background
  * ( '&' on shell command line ).
  */
-
+#ifndef NOICP
 char line[CMDBL + 10], *lp; /* Character buffer for anything */
+#endif /* ifndef NOICP */
 char debfil[50];            /* Debugging log file name */
 char pktfil[50];            /* Packet log file name */
 char sesfil[50];            /* Session log file name */
 char trafil[50];            /* Transaction log file name */
 
-int cflg,     /* Command-line connect cmd given */
-  action,     /* Action selected on command line*/
-  repars,     /* Reparse needed */
-  cwdf = 0;   /* CWD has been done */
+int cflg;                   /* Command-line connect cmd given */
+int action;                 /* Action selected on command line*/
+#ifndef NOICP
+int repars;                 /* Reparse needed */
+int cwdf = 0;               /* CWD has been done */
 
-#define MAXTAKE 20 /* Maximum nesting of TAKE files */
-FILE *tfile[MAXTAKE]; /* File pointers for TAKE command */
+#define MAXTAKE 20          /* Maximum nesting of TAKE files */
+FILE *tfile[MAXTAKE];       /* File pointers for TAKE command */
 
-char *homdir;     /* Pointer to home directory string */
-char cmdstr[100]; /* Place to build generic command */
+char *homdir;               /* Pointer to home directory string */
+#endif /* ifndef NOICP */
+char cmdstr[100];           /* Place to build generic command */
 
 /* C M D L I N -- Get arguments from command line */
 
@@ -227,19 +243,25 @@ cmdlin()
   {
     if (local)
     {
+#ifndef NOICP
       displa = 1;
+#endif /* ifndef NOICP */
     }
 
     if (stdouf)
     {
+#ifndef NOICP
       displa = 0;
       quiet = 1;
+#endif /* ifndef NOICP */
     }
   }
 
   if (quiet)
   {
+#ifndef NOICP
     displa = 0; /* No display if quiet requested */
+#endif /* ifndef NOICP */
   }
 
   if (cflg)
@@ -256,10 +278,12 @@ cmdlin()
     }
   }
 
+#ifndef NOICP
   if (displa)
   {
     concb(escape); /* (for console "interrupts") */
   }
+#endif /* ifndef NOICP */
 
   return ( action );   /* Then do any requested protocol */
 }
@@ -277,6 +301,7 @@ char x;
   {
     switch (x)
     {
+#ifndef NOSERVER
     case 'x': /* server */
       if (action)
       {
@@ -285,7 +310,7 @@ char x;
 
       action = 'x';
       break;
-
+#endif
     case 'f':
       if (action)
       {
@@ -550,7 +575,7 @@ char x;
       break;
 
     default:
-      fatal("invalid argument, type 'kermit -h' for help");
+      fatal("invalid argument, try '-h' for help");
     }
 
     x = *++xp; /* See if options are bundled */
@@ -562,25 +587,34 @@ char x;
  * Misc
  */
 
+int
 fatal(msg)
 char *msg;
 {
   /* Fatal error message */
-  fprintf(stderr, "\r\nFatal: %s\n", msg);
+  fprintf(stderr, "\rFatal: %s\r\n", msg);
   tlog(F110, "Fatal:", msg, 0l);
-  doexit(BAD_EXIT); /* Exit indicating failure */
+  doexit(BAD_EXIT);   /* Exit indicating failure */
 }
 
+int
 ermsg(msg)
 char *msg;
 {
   /* Print error message */
   if (!quiet)
   {
-    fprintf(stderr, "\r\n%s - %s\n", cmerrp, msg);
+    fprintf(stderr, "\r\n%s - %s\n",
+#ifndef NOICP
+      cmerrp,
+#else /* ifndef NOICP */
+	  "",
+#endif /* ifndef NOICP */
+        msg);
   }
 
   tlog(F110, "Error -", msg, 0l);
+  return ( 0 );
 }
 
 /*
@@ -593,6 +627,7 @@ char *msg;
  * Table
  */
 
+#ifndef NOICP
 struct keytab cmdtab[] = {
 #ifndef NOPUSH
   "!",          XXSHE,
@@ -648,8 +683,10 @@ struct keytab cmdtab[] = {
 #endif /* ifndef NOCKUSCR */
   "send",       XXSEN,
   0,
+#ifndef NOSERVER
   "server",     XXSER,
   0,
+#endif /* ifndef NOSERVER */
   "set",        XXSET,
   0,
   "show",       XXSHO,
@@ -738,9 +775,11 @@ struct keytab prmtab[] = {
   "send",
   XYSEND,
   0,
+#ifndef NOSERVER
   "server",
   XYSERV,
   0,
+#endif /* ifndef NOSERVER */
   "speed",
   XYSPEE,
   0,
@@ -754,6 +793,7 @@ struct keytab prmtab[] = {
   XYTIMO,
   CM_INV   /* moved to send/receive */
 };
+
 int nprm = \
   ( sizeof ( prmtab ) / sizeof ( struct keytab )); /* How many parameters */
 
@@ -793,6 +833,7 @@ struct keytab logtab[] = {
 };
 
 int nlog = ( sizeof ( logtab ) / sizeof ( struct keytab ));
+#endif /* ifndef NOICP */
 
 /*
  * Show command
@@ -802,12 +843,15 @@ int nlog = ( sizeof ( logtab ) / sizeof ( struct keytab ));
 #define SHPAR 0 /* Parameters */
 #define SHVER 1 /* Versions */
 
+#ifndef NOICP
 struct keytab shotab[] = {
   "parameters", SHPAR, 0, "versions", SHVER, 0
 };
+#endif /* ifndef NOICP */
 
 /* C M D I N I -- Initialize the interactive command parser */
 
+#ifndef NOICP
 cmdini()
 {
   tlevel = -1;         /* Take file level */
@@ -848,25 +892,29 @@ cmdini()
 
   congm(); /* Get console tty modes */
 }
+#endif /* ifndef NOICP */
 
 /*
  * Display version herald
  * and initial prompt
  */
 
+#ifndef NOICP
 herald()
 {
   if (!backgrd)
   {
     printf("%s,%s\n", versio, ckxsys);
 #ifndef NODOHLP
-    printf("Type ? for help\n");
+    printf("Interactive mode.  Type '?' for help.\n");
 #endif /* ifndef NODOHLP */
   }
 }
+#endif /* ifndef NOICP */
 
 /* T R A P -- Terminal interrupt handler */
 
+#ifndef NOICP
 trap(
 #ifdef DEBUG
   sig,
@@ -877,13 +925,14 @@ trap(
 int sig, code;
 #endif /* ifdef DEBUG */
 {
-  fprintf(stderr, "^C...\n");
+  fprintf(stderr, "\r^C...\n");
 #ifdef DEBUG
   debug(F101, "trap() caught signal", "", sig);
   debug(F101, " code", "", code);
 #endif /* ifdef DEBUG */
   doexit(GOOD_EXIT); /* Exit indicating success */
 }
+#endif /* ifndef NOICP */
 
 /* S T P T R A P -- Handle SIGTSTP signals */
 
@@ -913,12 +962,14 @@ int sig, code;
   concb(escape); /* Put console back in Kermit mode */
   if (!backgrd)
   {
+#ifndef NOICP
     prompt(); /* Reissue prompt when fg'd */
+#endif /* ifndef NOICP */
   }
 }
 
 /* P A R S E R -- Top-level interactive command parser */
-
+#ifndef NOICP
 parser()
 {
   int xx, cbn;
@@ -995,7 +1046,7 @@ again:
 
       cmini(ckxech);
     }
-
+#ifndef NOICP
     repars = 1;
     displa = 0;
     while (repars)
@@ -1033,6 +1084,7 @@ again:
         continue;
       }
     }
+#endif /* ifndef NOICP */
   }
 
   /*
@@ -1047,6 +1099,7 @@ again:
 
   return ( sstate );
 }
+#endif /* ifndef NOICP */
 
 /* D O E X I T -- Exit from the program. */
 
@@ -1155,6 +1208,7 @@ char type, *arg1, *arg2, *arg3;
  *   0: parse was successful (even tho command may have failed).
  */
 
+#ifndef NOICP
 docmd(cx)
 int cx;
 {
@@ -1635,7 +1689,7 @@ int cx;
     }
 
     return ( 0 );
-
+#ifndef NOSERVER
   case XXSER: /* Server */
     if (( x = cmcfm()) < 0)
     {
@@ -1649,7 +1703,7 @@ int cx;
     }
 
     return ( 0 );
-
+#endif
   case XXSET: /* Set */
     x = cmkey(prmtab, nprm, "Parameter", "");
     if (x == -3)
@@ -1790,12 +1844,13 @@ int cx;
       printf("\nVersions:\n");
       printf(" * %s,%s\n",   versio, ckxsys);
       printf("   * %s\n",    protv);
-      printf("     * %s\n",  wartv);
       printf("   * %s\n",    fnsv);
       printf("   * %s\n",    cmdv);
+#ifndef NOICP
       printf("   * %s\n",    userv);
+#endif /* ifndef NOICP */
       printf("   * %s\n",    ckxv);
-      printf("   * %s,%s\n", ckzv,   ckzsys);
+      printf("   *%s %s\n",  ckzsys, ckzv);
       printf("   * %s\n",    connv);
 #ifndef NOCKUDIA
       printf("   * %s\n",    dialv);
@@ -1929,6 +1984,7 @@ int cx;
     return ( -2 );
   }
 }
+#endif /* ifndef NOICP */
 
 /* D O C O N E C T -- Do the connect command */
 
@@ -1939,6 +1995,7 @@ int cx;
  * connection is made.
  */
 
+#ifndef NOICP
 doconect()
 {
   int x;
@@ -1948,6 +2005,7 @@ doconect()
   concb(escape);     /* Put console into cbreak mode, */
   return ( x );      /* for more command parsing. */
 }
+#endif /* ifndef NOICP */
 
 /* T R A N S M I T -- Raw upload */
 
@@ -1963,7 +2021,7 @@ doconect()
  *  - Maybe allow user to specify terminators other than CR?
  *  - Maybe allow user to specify prompts other than single characters?
  */
-
+#ifndef NOICP
 int tr_int;                             /* Flag if TRANSMIT interrupted */
 
 #ifdef __linux__
@@ -2107,3 +2165,4 @@ char t;
   zclose(ZIFILE);                       /* close file, */
   return ( z );                         /* and return successfully. */
 }
+#endif /* ifndef NOICP */

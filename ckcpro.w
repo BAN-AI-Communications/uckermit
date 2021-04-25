@@ -1,4 +1,6 @@
-char *protv = "uCKermit Protocol Module, 4G(047), 24 Apr 2021";
+#ifndef NOICP
+char *protv = "Kermit Protocol Module, 4G(057), 2021-APR-24";
+#endif /* ifndef NOICP */
 
 /* C K C P R O -- uCKermit Protocol Module in Wart preprocessor notation */
 
@@ -81,11 +83,14 @@ char *protv = "uCKermit Protocol Module, 4G(047), 24 Apr 2021";
   extern char sstate, *versio, *srvtxt, *cmarg, *cmarg2, *rpar();
   extern char data[], filnam[], srvcmd[], ttname[], *srvptr;
   extern int pktnum, timint, nfils, hcflg, xflg, speed, flow, mdmtyp;
-  extern int prvpkt, cxseen, czseen, server, local;
+  extern int prvpkt, cxseen, czseen, local;
+#ifndef NOSERVER
+  extern int server;
+#endif /* ifndef NOSERVER */
   extern int displa, bctu, bctr, quiet;
 #ifndef NOSTATS
   extern int tsecs;
-#endif
+#endif /* ifndef NOSTATS */
   extern int parity, backgrd, nakstate, atcapu;
   extern int putsrv(), puttrm(), putfil(), errpkt();
   extern CHAR *rdatap, recpkt[];
@@ -110,10 +115,14 @@ char *protv = "uCKermit Protocol Module, 4G(047), 24 Apr 2021";
 
 #define SERVE  \
   tinit(); BEGIN serve
+#ifndef NOSERVER
 #define RESUME \
   if (server) { SERVE; } else \
     { sleep(2); \
           return; }
+#else /* ifndef NOSERVER */
+#define RESUME { sleep(2); return; }
+#endif /* ifndef NOSERVER */
 %%
 
  /*
@@ -165,7 +174,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
         vcmd = 0;                     /* and then un-remember it. */
     }
     if (vstate == get)
-          srinit();                       /* If sending GET command, do that */
+          srinit();                   /* If sending GET command, do that */
     BEGIN vstate;                     /* Switch to desired state */
 }
 
@@ -221,9 +230,9 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
     if (syscmd(srvcmd,""))            /* Try to execute the command */
       BEGIN ssinit;                   /* If OK, send back its output */
     else {                            /* Otherwise */
-        errpkt(
-                  "Can't do system command"); /* report error */
-        SERVE;                        /* & go back to server command wait */
+      errpkt(
+        "Can't do system command");   /* report error */
+          SERVE;                      /* & go back to server command wait */
     }
 }
 
@@ -503,7 +512,11 @@ E {                                   /* Got Error packet, in any state */
     tsecs = gtimer();                 /* Get timers */
 #endif
     quiet = x;                        /* restore quiet state */
-    if (backgrd && !server)
+    if (backgrd 
+#ifndef NOSERVER
+	&& !server
+#endif
+	)
           fatal("Protocol error");
     RESUME;
 }
@@ -553,6 +566,7 @@ proto()
                   SCR_EM,0,0l,"Can't condition line");
         return;
     }
+#ifndef NOSERVER
     if (sstate == 'x') {              /* If entering server mode, */
         server = 1;                   /* set flag, */
         if (!quiet) {
@@ -564,13 +578,14 @@ proto()
                 conoll(ttname);
             }
         }
-    } else server = 0;
+    } else { server = 0; }
+#endif
     if (sstate == 'v' && !local && !quiet)
       conoll(
-            "Escape back to your local Kermit and give a SEND command...");
+        "Escape back to your local Kermit and give a SEND command...");
     if (sstate == 's' && !local && !quiet)
       conoll(
-            "Escape back to your local Kermit and give a RECEIVE command...");
+        "Escape back to your local Kermit and give a RECEIVE command...");
     sleep(1);
 
  /*
@@ -582,13 +597,14 @@ proto()
   */
 
     wart();                           /* Enter the state table switcher. */
-    
+#ifndef NOSERVER
     if (server) {                     /* Back from packet protocol. */
         server = 0;
         if (!quiet)                   /* Give appropriate message */
             conoll(
                           "uCKermit server done");
     }
+#endif
     ttres();
     screen(
           SCR_TC,0,0l,"");                /* Transaction complete */

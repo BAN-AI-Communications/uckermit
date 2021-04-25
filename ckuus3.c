@@ -57,9 +57,15 @@
 #include <string.h>
 #endif /* ifdef __linux__ */
 
+#ifndef NOICP
 extern int size, spsiz, rpsiz, urpsiz, npad, timint,
-  srvtim, rtimo, speed, local, server, lpcapr,
-  fmask, cmask, backgrd, atcapr, flow, displa,
+  srvtim, rtimo, speed, local, lpcapr;
+
+#ifndef NOSERVER
+extern int server;
+#endif /* ifndef NOSERVER */
+
+extern int fmask, cmask, backgrd, atcapr, flow, displa,
   binary, fncnv, delay, parity, deblog, escape,
   xargc, turn, duplex, cxseen, czseen, nfils,
   ckxech, pktlog, seslog, tralog, stdouf, turnch,
@@ -791,6 +797,7 @@ int xx;
     return ( 0 );
   }
 }
+#endif /* ifndef NOICP */
 
 /* C H K S P D -- Check if argument is a valid baud rate */
 
@@ -833,6 +840,7 @@ int x;
   }
 }
 
+#ifndef NOICP
 /* S E T O N -- Parse on/off (default on), set parameter to result */
 
 seton(prm)
@@ -1088,6 +1096,7 @@ char *s, t;
   debug(F111, "rfilop", s, t);
   return ( setgen(t, s, "", ""));
 }
+#endif /* ifndef NOICP */
 
 /* S C R E E N -- Screen display function */
 
@@ -1111,12 +1120,15 @@ char *s;
   int len;                            /* Length of string */
   char buf[80];                       /* Output buffer */
   len = strlen(s);                    /* Length of string */
-  if (( f != SCR_WM ) && ( f != SCR_EM )) /* Always update warning & errors */
+  if (( f != SCR_WM ) && \
+    ( f != SCR_EM ))                  /* Always update warning & errors */
   {
+#ifndef NOICP
     if (!displa || quiet)
     {
-      return; /* No update if display flag off */
+      return;                         /* No update if display flag off */
     }
+#endif /* ifndef NOICP */
   }
 
   switch (f)
@@ -1302,6 +1314,7 @@ char *s;
 
 /* I N T M S G -- Issue message about terminal interrupts */
 
+#ifndef NOICP
 intmsg(n)
 long n;
 {
@@ -1690,3 +1703,4 @@ char *s1, *s2;
   }
 }
 #endif /* ifdef TLOG */
+#endif /* ifndef NOICP */
