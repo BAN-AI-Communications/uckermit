@@ -56,7 +56,12 @@ extern int  stdouf,   warn,     timef,    parity;
 extern int  speed,    turn,     turnch,   delay;
 extern int  displa,   pktlog,   tralog,   seslog;
 extern int  xflg,     mypadn,   deblog,   hcflg;
-extern int  binary,   fncnv,    local,    server;
+extern int  binary,   fncnv,    local;
+
+#ifndef NOSERVER
+extern int  server;
+#endif /* ifndef NOSERVER */
+
 extern int  cxseen,   czseen,   nakstate, quiet;
 
 extern long filcnt,   ffc,      flci,     flco;
@@ -163,7 +168,9 @@ input()
     type = rpack();
   }
 
+#ifndef NOICP
   chkint();                       /* Check for console interrupts. */
+#endif /* ifndef NOICP */
 
   debug(F101, " nakstate", "", nakstate);
   debug(F000, " type",    "=", type);
@@ -232,7 +239,9 @@ input()
       type = rpack();               /* Else try to read a packet. */
     }
 
+#ifndef NOICP
     chkint();                       /* Look again */
+#endif /* ifndef NOICP */
     if (type == sndtyp)             /* for interruptions */
     {
       type = rpack();               /* and for echoes. */

@@ -1,4 +1,6 @@
-char *fnsv = "uCKermit Functions, 4G(085), 24 Apr 2021";
+#ifndef NOICP
+char *fnsv = "Kermit Support Functions, 4G(089), 2021-APR-24";
+#endif /* ifndef NOICP */
 
 /* C K C F N S -- System-independent Kermit protocol support functions */
 
@@ -63,7 +65,13 @@ extern int  parity,   speed,     turn,    turnch;
 extern int  delay,    displa,    pktlog,  tralog;
 extern int  seslog,   xflg,      mypadn,  tsecs;
 extern int  deblog,   hcflg,     binary,  savmod;
-extern int  fncnv,    local,     server,  cxseen;
+extern int  fncnv,    local;
+
+#ifndef NOSERVER
+extern int  server;
+#endif /* ifndef NOSERVER */
+
+extern int  cxseen;
 extern int  czseen,   nakstate,  rq,      rqf;
 extern int  sq,       wslots,    urpsiz,  rln;
 extern int  atcapr,   atcapb,    atcapu,  lpcapr;
@@ -617,10 +625,12 @@ tinit()
   spktl           = 0;             /* And its length */
   nakstate        = 0;             /* Say we're not in a NAK'ing state */
 
+#ifndef NOSERVER
   if (server)                      /* If acting as server, */
   {
     timint        = srvtim;        /* Use server timeout interval. */
   }
+#endif /* ifndef NOSERVER */
 }
 
 /* R I N I T -- Respond to S or I packet */
@@ -676,6 +686,7 @@ sinit()
     nfils = zxpand(cmarg);          /* Look up literal name. */
     if (nfils < 0)
     {
+#ifndef NOSERVER
       if (server)
       {
         errpkt(
@@ -683,9 +694,12 @@ sinit()
       }
       else
       {
+#endif /* ifndef NOSERVER */
         screen(SCR_EM, 0, 0l,
           "Too many files");
+#ifndef NOSERVER
       }
+#endif /* ifndef NOSERVER */
 
       return ( 0 );
     }
@@ -698,33 +712,39 @@ sinit()
 
     if (nfils < 1)                  /* If no match, report error. */
     {
+#ifndef NOSERVER
       if (server)
       {
         errpkt("File not found");
       }
       else
       {
+#endif /* ifndef NOSERVER */
         screen(SCR_EM, 0, 0l,
           "File not found");
+#ifndef NOSERVER
       }
-
+#endif /* ifndef NOSERVER */
       return ( 0 );
     }
 
     x = gnfile();                   /* Position to first file. */
     if (x < 1)
     {
+#ifndef NOSERVER
       if (!server)
       {
+#endif /* ifndef NOSERVER */
         screen(SCR_EM, 0, 0l,
           "No readable file to send");
+#ifndef NOSERVER
       }
       else
       {
         errpkt(
           "No readable file to send");
       }
-
+#endif /* ifndef NOSERVER */
       return ( 0 );
     }
   }
@@ -760,7 +780,11 @@ sinit()
 
   ttflui();                         /* Flush input buffer. */
 
-  if (!local && !server)
+  if (!local
+#ifndef NOSERVER
+    && !server
+#endif /* ifndef NOSERVER */
+      )
   {
     sleep(delay);
   }
@@ -918,7 +942,9 @@ struct zattr *zz;
     }
 
     screen(SCR_AN, 0, 0l, f);
+#ifndef NOICP
     intmsg(filcnt);
+#endif /* ifndef NOICP */
   }
   else                              /* Did not open file OK. */
   {
@@ -1078,7 +1104,9 @@ int x;
       "Sending from:", cmdstr, 0l);    /* Transaction log */
   }
 
+#ifndef NOICP
   intmsg(++filcnt);             /* Count file, give interrupt msg */
+#endif /* ifndef NOICP */
   first = 1;                    /* Init file character lookahead. */
   n_len = -1;                   /* Init the packet encode-ahead length */
   ffc = 0;                      /* Init file character counter. */

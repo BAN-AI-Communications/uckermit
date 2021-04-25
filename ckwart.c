@@ -1,4 +1,6 @@
-char *wartv = "Wart Preprocessor, 1A(213), 24 Apr 2021";
+#ifndef NOICP
+char *wartv = "Wart Preprocessor, 1A(217), 2021-APR-24";
+#endif /* ifndef NOICP */
 
 /* W A R T */
 
@@ -163,7 +165,9 @@ FILE *infp, *outfp;
   fprintf(outfp, "C source file.     */\n\n");
   fprintf(outfp, "%c* Wart Version Info: */\n", '/');
 #endif /* ifndef NODOHLP */
-  fprintf(outfp, "char *wartv = \"%s\";\n\n", wartv);
+#ifndef NOICP
+/*  fprintf(outfp, "char *wartv = \"%s\";\n\n", wartv); */
+#endif /* ifndef NOICP */
 
   initial(infp, outfp);       /* read state names, initial defs */
   prolog(outfp);              /* write out our initial code */

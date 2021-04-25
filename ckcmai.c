@@ -1,4 +1,4 @@
-char *versio = "uCKermit, 4G(129), 24 Apr 2021";
+char *versio = "uCKermit, 4G(133), 2021-APR-24";
 
 /* C K C M A I -- uCKermit Main program  */
 
@@ -43,7 +43,9 @@ char *versio = "uCKermit, 4G(129), 24 Apr 2021";
 #include "ckcker.h"                 /* Kermit symbols */
 
 #ifdef __linux__
+#include <stdlib.h>
 #include <string.h>                 /* String manipulation */
+#include <stdio.h>
 #endif /* ifdef __linux__ */
 
 /*
@@ -67,6 +69,7 @@ FINISH     REMOTE HELP\n\
 \n\0";
 #endif /* ifdef NODOHLP */
 
+#ifndef NOSERVER
 #ifdef NODOHLP
 char *srvtxt = "\r\n\
 uCKermit server starting.\n\
@@ -80,6 +83,7 @@ commands from there.  To shut down the uCKermit server, issue the\r\n\
 FINISH or BYE command and then reconnect.\n\
 \r\n\0";
 #endif /* ifdef NODOHLP */
+#endif /* ifndef NOSERVER */
 
 /*
  * Declarations for
@@ -91,9 +95,11 @@ int         spsiz  = DSPSIZ,        /* curent packet size to send */
             spsizf = 0,             /* Flag to override what you ask for */
             rpsiz  = DRPSIZ,        /* Biggest we want to receive */
             urpsiz = DRPSIZ,        /* User-requested rpsiz */
-            maxrps = MAXRP,         /* Maximum incoming long packet size */
-            maxsps = MAXSP,         /* Maximum outbound l.p. size */
-            maxtry = MAXTRY,        /* Maximum retries per packet */
+            maxrps = MAXRP;         /* Maximum incoming long packet size */
+#ifndef NOICP
+int         maxsps = MAXSP;         /* Maximum outbound l.p. size */
+#endif /* ifndef NOICP */
+int         maxtry = MAXTRY,        /* Maximum retries per packet */
             wslots = 1,             /* Window size */
             timint = DMYTIM,        /* Timeout interval I use */
             srvtim = DSRVTIM,       /* Server command wait timeout */
@@ -175,8 +181,10 @@ int         parity,                 /* Parity specified, 0, 'e', 'o', etc */
             duplex = 0,             /* Duplex, full by default */
             escape = 034,           /* Escape character for connect */
             delay  = DDELAY,        /* Initial delay before sending */
-            mdmtyp = 0,             /* Modem type (initially none)  */
-            tlevel = -1;            /* Take-file command level */
+            mdmtyp = 0;             /* Modem type (initially none)  */
+#ifndef NOICP
+int         tlevel = -1;            /* Take-file command level */
+#endif /* ifndef NOICP */
 
 /*
  * Statistics
@@ -188,9 +196,11 @@ long        filcnt,                 /* Number of files in transaction */
             flco,                   /* Chars to line, current file  */
             tlci,                   /* Chars from line in transaction */
             tlco,                   /* Chars to line in transaction */
-            ffc,                    /* Chars to/from current file */
-            tfc;                    /* Chars to/from files in transaction */
+            ffc;                    /* Chars to/from current file */
+#ifndef NOSTATS
+long        tfc;                    /* Chars to/from files in transaction */
 int         tsecs;                  /* Seconds for transaction */
+#endif
 
 /*
  * Flags
@@ -214,7 +224,9 @@ int         deblog   = 0,           /* Flag for debug logging */
             warn     = 0,           /* Flag for file warning */
             quiet    = 0,           /* Be quiet during file transfer */
             local    = 0,           /* Flag for external tty vs stdout */
+#ifndef NOSERVER
             server   = 0,           /* Flag for being a server */
+#endif /* ifndef NOSERVER */
             cnflg    = 0,           /* Connect after transaction */
             cxseen   = 0,           /* Flag for cancelling a file */
             czseen   = 0,           /* Flag for cancelling file group */
@@ -226,7 +238,9 @@ int         deblog   = 0,           /* Flag for debug logging */
  * parser to protocol module
  */
 
+#ifndef NOICP
 char        parser();               /* The parser itself */
+#endif /* ifndef NOICP */
 char        sstate  = 0;            /* Starting state for automaton */
 char        *cmarg  = "";           /* Pointer to command data */
 char        *cmarg2 = "";           /* Pointer to 2nd command data */
@@ -236,12 +250,13 @@ char        **cmlist;               /* Pointer to file list in argv */
  * Miscellaneous
  */
 
-char        **xargv;                /* Global copies of argv */
-int         xargc;                  /*  and argc  */
+char        **xargv;                /* Global copies of */
+int         xargc;                  /* argv and argc */
 extern char *dftty;                 /* Default tty name */
 extern int  dfloc;                  /* Default location: remote/local */
 extern int  dfprty;                 /* Default parity */
 extern int  dfflow;                 /* Default flow control */
+extern char *ckzsys;
 
 /*
  * Input and output
@@ -266,12 +281,16 @@ char **argv;
   char *strcpy();
 #endif /* ifndef __linux__ */
 
-  xargc  = argc;                    /* Make global copies of argc */
-  xargv  = argv;                    /*  ...and argv. */
+  xargc  = argc;                    /* Make global copies of */
+  xargv  = argv;                    /* argv and argc */
   sstate = 0;                       /* No default start state. */
   if (sysinit() < 0)
   {
+#ifndef NOICP
     doexit(BAD_EXIT);               /* System-dependent initialization. */
+#else /* ifndef NOICP */
+	exit(BAD_EXIT);
+#endif /* ifndef NOICP */
   }
 
   strcpy(ttname, dftty);            /* Set up default tty name. */
@@ -284,6 +303,7 @@ char **argv;
    * before doing command line
    */
 
+#ifndef NOICP
   cmdini();                         /* Sets tlevel */
   while (tlevel > -1)               /* Execute init file. */
   {
@@ -293,6 +313,7 @@ char **argv;
       proto();                      /* Enter protocol if requested. */
     }
   }
+#endif /* ifndef NOICP */
 
   /*
    * Look for a UNIX-style
@@ -314,8 +335,11 @@ char **argv;
       {
         conect();                   /* connect if requested, */
       }
-
+#ifndef NOICP
       doexit(GOOD_EXIT);            /* and then exit with status 0. */
+#else /* ifndef NOICP */
+	  return( GOOD_EXIT );
+#endif /* ifndef NOICP */
     }
   }
 
@@ -335,5 +359,19 @@ char **argv;
     }
   }
 #endif /* ifndef NOICP */
-  return ( 0 );
+
+  /*
+   * If interactive mode
+   * is not available...
+   */
+
+  printf("\r%s,%s", versio, ckzsys);
+  printf("\r\nFatal: No action requested");
+#ifdef NODOHLP
+  printf(", unable to proceed.\r\n");
+#else /* ifdef NODOHLP */
+  printf(", try '-h' for help.\r\n");
+#endif /* ifdef NODOHLP */
+
+  return ( 1 );
 }

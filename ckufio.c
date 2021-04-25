@@ -1,4 +1,6 @@
-char *ckzv = "UNIX File Support, 4G(067), 24 Apr 2021";
+#ifndef NOICP
+char *ckzv = "File Support, 4G(069), 2021-APR-24";
+#endif /* ifndef NOICP */
 
 /* C K U F I O -- Kermit file system support for UNIX systems */
 
@@ -116,12 +118,6 @@ static char monlens[] = {
 #define NAMEENV "LOGNAME"   /* Environment variable for tilde */
 #endif /* ifdef UXIII */
 
-/*
- * Berkeley UNIX Version 4.x
- * including 4.1bsd support,
- * from Charles E. Brooks
- */
-
 #ifdef BSD4
 #ifdef MAXNAMLEN
 #define BSD42
@@ -143,31 +139,12 @@ char *ckzsys = " 4.2 BSD";
 char *ckzsys = " 4.1 BSD";
 #endif /* ifdef MAXNAMLEN */
 #endif /* ifdef BSD4 */
-
-/*
- * 2.9bsd support contributed
- * by Bradley Smith, UCLA
- */
-
 #ifdef BSD29
 char *ckzsys = " 2.9 BSD";
 #endif /* ifdef BSD29 */
-
-/*
- * UNIX
- * V7
- */
-
 #ifdef V7
 char *ckzsys = " Version 7 UNIX";
 #endif /* ifdef V7 */
-
-/*
- * Sys III/V, Xenix, PC/IX,...
- * support by Herm Fischer,
- * Litton Data Systems
- */
-
 #ifdef UXIII
 #ifdef XENIX
 #ifdef M_I386
@@ -198,7 +175,9 @@ char *ckzsys = " AT&T System III/System V";
  */
 
 char *DELCMD = "rm -f ";             /* For file deletion */
+#ifndef NOICP
 char *PWDCMD = "pwd ";               /* For saying where I am */
+#endif /* ifndef NOICP */
 char *TYPCMD = "cat ";               /* For typing a file */
 char *DIRCMD = "ls -l ";             /* For directory listing */
 #ifdef BSD4
@@ -772,6 +751,7 @@ char *name;
  * the file would be denied, 0 otherwise.
  */
 
+#ifndef NOICP
 zchko(name)
 char *name;
 {
@@ -820,6 +800,7 @@ char *name;
     return ( 0 );
   }
 }
+#endif /* ifndef NOICP */
 
 /* Z D E L E T -- Delete the named file */
 
@@ -923,11 +904,13 @@ char *dirnam;
 
 /* Z H O M E -- Return pointer to user's home directory */
 
+#ifndef NOICP
 char *
 zhome()
 {
   return ( getenv("HOME"));
 }
+#endif /* ifndef NOICP */
 
 /* Z G T D I R -- Return pointer to user's current directory */
 

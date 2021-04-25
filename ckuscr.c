@@ -1,5 +1,5 @@
 #ifndef NOCKUSCR
-char *loginv = "Script Command, 4G(025), 24 Apr 2021";
+char *loginv = "Script Processor, 4G(025), 2021-APR-24";
 
 /* C K U S C R -- Login script for logging onto remote system */
 

@@ -1,4 +1,6 @@
-char *cmdv = "UNIX Command Package, V2(047), 24 Apr 2021";
+#ifndef NOICP
+char *cmdv = "JSYS Command Parser, 4G(051), 2021-APR-24";
+#endif /* ifndef NOICP */
 
 /* C K U C M D -- Interactive command package for UNIX */
 
@@ -105,40 +107,49 @@ char *cmdv = "UNIX Command Package, V2(047), 24 Apr 2021";
  * variables
  */
 
-int psetf = 0,                   /* Flag that prompt has been set */
-  cc = 0,                        /* Character count */
-  dpx = 0;                       /* Duplex (0 = full) */
+#ifndef NOICP
+int psetf = 0;                   /* Flag that prompt has been set */
+int   cc  = 0;                   /* Character count */
+int  dpx  = 0;                   /* Duplex (0 = full) */
+#endif /* ifndef NOICP */
 
+#ifndef NOICP
 int hw = HLPLW,                  /* Help line width */
   hc = HLPCW,                    /* Help line column width */
   hh,                            /* Current help column number */
   hx;                            /* Current help line position */
+#endif /* ifndef NOICP */
 
+#ifndef NOICP
 #define PROML 60                 /* Maximum length for prompt */
-
 char cmprom[PROML + 1];          /* Program's prompt */
 char *dfprom = "Command? ";      /* Default prompt */
 char cmerrp[PROML + 1];          /* Program's error message prefix */
+
 int cmflgs;                      /* Command flags */
 
 char cmdbuf[CMDBL + 4];          /* Command buffer */
 char hlpbuf[HLPBL + 4];          /* Help string buffer */
 char atmbuf[ATMBL + 4];          /* Atom buffer */
 char filbuf[ATMBL + 4];          /* File name buffer */
+#endif /* ifndef NOICP */
 
 /*
  * Command buffer
  * pointers
  */
 
-static char *bp,                 /* Current command buffer position */
-  *pp,                           /* Start of current field */
-  *np;                           /* Start of next field */
+#ifndef NOICP
+static char *bp;                 /* Current command buffer position */
+static char *pp;                 /* Start of current field */
+static char *np;                 /* Start of next field */
+#endif /* ifndef NOICP */
 
 long zchki();
 
 /* C M S E T P -- Set the program prompt */
 
+#ifndef NOICP
 cmsetp(s)
 char *s;
 {
@@ -158,9 +169,11 @@ char *s;
     *sy = NUL;                   /* Delete any final '>'. */
   }
 }
+#endif /* ifndef NOICP */
 
 /* C M S A V P -- Save a copy of the current prompt */
 
+#ifndef NOICP
 cmsavp(s, n)
 int n;
 char s[];
@@ -169,9 +182,11 @@ char s[];
   strncpy(s, cmprom, n - 1);
   s[n] = NUL;
 }
+#endif /* ifndef NOICP */
 
 /* P R O M P T -- Issue the program prompt */
 
+#ifndef NOICP
 prompt()
 {
   if (psetf == 0)
@@ -181,15 +196,18 @@ prompt()
 
   printf("\r%s", cmprom);        /* Print the prompt. */
 }
+#endif /* ifndef NOICP */
 
 /* C M R E S -- Reset pointers to beginning of command buffer */
 
+#ifndef NOICP
 cmres()
 {
   cc = 0;                        /* Reset character counter. */
   pp = np = bp = cmdbuf;         /* Point to command buffer. */
   cmflgs = -5;                   /* Parse not yet started. */
 }
+#endif /* ifndef NOICP */
 
 /* C M I N I -- Clear the command and atom buffers, reset pointers */
 
@@ -200,6 +218,7 @@ cmres()
  *  0 somebody else handles echoes
  */
 
+#ifndef NOICP
 cmini(d)
 int d;
 {
@@ -236,6 +255,7 @@ char *s;
     s++;
   }
 }
+#endif /* ifndef NOICP */
 
 /* C M N U M -- Parse a number in the indicated radix */
 
@@ -250,6 +270,7 @@ char *s;
  *    0 otherwise, with n set to number that was parsed
  */
 
+#ifndef NOICP
 cmnum(xhlp, xdef, radix, n)
 char *xhlp, *xdef;
 int radix, *n;
@@ -292,6 +313,7 @@ int radix, *n;
     return ( -2 );
   }
 }
+#endif /* ifndef NOICP */
 
 /* C M O F I -- Parse the name of an output file */
 
@@ -307,6 +329,7 @@ int radix, *n;
  *    0 or 1 otherwise, with xp pointing to name.
  */
 
+#ifndef NOICP
 cmofi(xhlp, xdef, xp)
 char *xhlp, *xdef, **xp;
 {
@@ -358,6 +381,7 @@ char *xhlp, *xdef, **xp;
     return ( x );
   }
 }
+#endif /* ifndef NOICP */
 
 /* C M I F I -- Parse the name of an existing file */
 
@@ -381,6 +405,7 @@ char *xhlp, *xdef, **xp;
  *        '*' or '?', 0 otherwise.
  */
 
+#ifndef NOICP
 cmifi(xhlp, xdef, xp, wild)
 char *xhlp, *xdef, **xp;
 int *wild;
@@ -392,7 +417,8 @@ int *wild;
   char *tilde_expand(), *dirp;
 #endif /* ifdef DTILDE */
 
-  cc = xc = 0;                   /* Initialize counts & pointers */
+  cc = 0;
+  xc = 0;                        /* Initialize counts & pointers */
   *xp = "";
   if (( x = cmflgs ) != 1)       /* Already confirmed? */
   {
@@ -653,6 +679,7 @@ int *wild;
     x = gtword();
   }
 }
+#endif /* ifndef NOICP */
 
 /*  C M D I R  --  Parse a directory specification  */
 
@@ -673,6 +700,7 @@ int *wild;
  *    2 if a wildcard was included.
  */
 
+#ifndef NOICP
 cmdir(xhlp, xdef, xp)
 char *xhlp, *xdef, **xp;
 {
@@ -683,7 +711,8 @@ char *xhlp, *xdef, **xp;
   char *tilde_expand(), *dirp;
 #endif /* ifdef DTILDE */
 
-  cc = xc = 0;                   /* Initialize counts & pointers */
+  cc = 0;
+  xc = 0;                   /* Initialize counts & pointers */
   *xp = "";
 
   (void)sp;
@@ -788,9 +817,11 @@ char *xhlp, *xdef, **xp;
     x = gtword();
   }
 }
+#endif /* ifndef NOICP */
 
 /* C H K W L D -- Check for wildcard characters '*' or '?' */
 
+#ifndef NOICP
 chkwld(s)
 char *s;
 {
@@ -804,6 +835,7 @@ char *s;
 
   return ( 0 );
 }
+#endif /* ifndef NOICP */
 
 /* C M F L D -- Parse an arbitrary field */
 
@@ -815,6 +847,7 @@ char *s;
  *   0 otherwise, xp pointing to string result.
  */
 
+#ifndef NOICP
 cmfld(xhlp, xdef, xp)
 char *xhlp, *xdef, **xp;
 {
@@ -905,6 +938,7 @@ char *xhlp, *xdef, **xp;
     x = gtword();
   }
 }
+#endif /* ifndef NOICP */
 
 /* C M T X T -- Get a text string, including confirmation */
 
@@ -921,6 +955,7 @@ char *xhlp, *xdef, **xp;
  *  and xp pointing to result string.
  */
 
+#ifndef NOICP
 cmtxt(xhlp, xdef, xp)
 char *xhlp;
 char *xdef;
@@ -1011,6 +1046,7 @@ char **xp;
     x = gtword();
   }
 }
+#endif /* ifndef NOICP */
 
 /* C M K E Y -- Parse a keyword */
 
@@ -1028,6 +1064,7 @@ char **xp;
  *   n >= 0  --  value associated with keyword
  */
 
+#ifndef NOICP
 cmkey(table, n, xhlp, xdef)
 struct keytab table[];
 int n;
@@ -1152,8 +1189,11 @@ char *xhlp, *xdef;
       for (i = 0; i < n; i++)
       {
         if (
-          !strncmp(table[i].kwd, atmbuf, cc) && \
-          !btest(table[i].flgs, CM_INV))
+          !strncmp(table[i].kwd, atmbuf, cc)
+#ifndef NOBTEST
+		  && !btest(table[i].flgs, CM_INV)
+#endif /* ifndef NOBTEST */
+		)
         {
           addhlp(table[i].kwd);
         }
@@ -1170,6 +1210,7 @@ char *xhlp, *xdef;
     zz = gtword();
   }
 }
+#endif /* ifndef NOICP */
 
 /*  C M C F M  --  Parse command confirmation (end of line)  */
 
@@ -1180,6 +1221,7 @@ char *xhlp, *xdef;
  *   0: Confirmation was received
  */
 
+#ifndef NOICP
 cmcfm()
 {
   int x, xc;
@@ -1235,6 +1277,7 @@ cmcfm()
     }
   }
 }
+#endif /* ifndef NOICP */
 
 /*
  * Keyword help
@@ -1243,14 +1286,17 @@ cmcfm()
 
 /* C L R H L P -- Initialize/Clear the help line buffer */
 
+#ifndef NOICP
 clrhlp()
 {
   hlpbuf[0] = NUL;               /* Clear the help buffer */
   hh = hx = 0;
 }
+#endif /* ifndef NOICP */
 
 /* A D D H L P -- Add a string to the help line buffer */
 
+#ifndef NOICP
 addhlp(s)
 char *s;
 {                                /* Add a word to the help buffer */
@@ -1283,15 +1329,18 @@ char *s;
     return;
   }
 }
+#endif /* ifndef NOICP */
 
 /* D M P H L P -- Dump the help line buffer */
 
+#ifndef NOICP
 dmphlp()
 {                                /* Print the help buffer */
   hlpbuf[hx++] = NUL;
   printf(" %s\n", hlpbuf);
   clrhlp();
 }
+#endif /* ifndef NOICP */
 
 /* L O O K U P -- Lookup the string in the given array of strings */
 
@@ -1318,6 +1367,7 @@ dmphlp()
  * target matches two or more keywords from the table.
  */
 
+#ifndef NOICP
 lookup(table, cmd, n, x)
 char *cmd;
 struct keytab table[];
@@ -1626,9 +1676,11 @@ gtword()
   printf("\n?Buffer full\n");    /* buffer is full. */
   return ( cmflgs = -2 );
 }
+#endif /* ifndef NOICP */
 
 /* A D D B U F -- Add the string pointed to by cp to the command buffer */
 
+#ifndef NOICP
 addbuf(cp)
 char *cp;
 {
@@ -1644,6 +1696,7 @@ char *cp;
   np = bp;                       /* Update the next-field pointer */
   return ( len );                /* Return the length */
 }
+#endif /* ifndef NOICP */
 
 /* S E T A T M -- Deposit a token in the atom buffer */
 
@@ -1660,6 +1713,7 @@ char *cp;
  * set global "cc" to this length.
  */
 
+#ifndef NOICP
 setatm(cp)
 char *cp;
 {
@@ -1687,9 +1741,11 @@ char *cp;
   *ap++ = NUL;
   return ( cc );                 /* Return length */
 }
+#endif /* ifndef NOICP */
 
 /* R D I G I T S -- Verify that all the characters in line ARE DIGITS */
 
+#ifndef NOICP
 rdigits(s)
 char *s;
 {
@@ -1704,9 +1760,11 @@ char *s;
   }
   return ( 1 );
 }
+#endif /* ifndef NOICP */
 
 /* L O W E R -- Lowercase a string */
 
+#ifndef NOICP
 lower(s)
 char *s;
 {
@@ -1722,11 +1780,16 @@ char *s;
   }
   return ( n );
 }
+#endif /* ifndef NOICP */
 
 /* T E S T -- Bit test */
 
+#ifndef NOICP
+#ifndef NOBTEST
 btest(x, m)
 int x, m;
 {                                /* Returns 1 if any bits from m are */
   return (( x & m ) ? 1 : 0 );   /*  on in x, else 0 */
 }
+#endif /* ifndef NOBTEST */
+#endif /* ifndef NOICP */

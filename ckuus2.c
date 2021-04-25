@@ -110,45 +110,47 @@ int bcharc;
 #endif /* ifndef NODOHLP */
 
 static char *hlp1[] = {
-  "\r",
-  " Usage: kermit [ -x arg [ -x arg ] ... [ -yyy ] ... ] ]\n",
+  "\rUsage: [ -x arg [ -x arg ] ... [ -yyy ] ... ] ]\n",
 #ifndef NODOHLP
-  "   'x' is an option that requires an argument,\n",
-  "     'y' is an option with no argument:\n",
-  "       ACTION (* options also require -l and -b) --\n",
-  "         -s file(s) Send (Use '-s -' to send from stdin)\n",
-  "         -r         Receive\n",
-  "         -k         Receive to stdout\n",
-  "       * -g file(s) Get remote file(s) from server (quoting wildcards)\n",
-  "         -a name    Alternate name (used with -s, -r, and -g)\n",
+  "    ('x' options require arguments, 'y' options do not)\n",
+  "    ACTION -- (* options require setting '-l' and '-b')\n",
+  "        -s file(s) Send (Use '-s -' to send from stdin)\n",
+  "        -r         Receive\n",
+  "        -k         Receive to stdout\n",
+  "      * -g file(s) Get remote file(s) from server (quote wildcards)\n",
+  "        -a name    Alternate name (used with -s, -r, and -g)\n",
 #ifndef NOSERVER
-  "         -x         Enter Kermit server mode\n",
+  "        -x         eXecute in Kermit server mode\n",
 #endif /* ifndef NOSERVER */
-  "       * -f         Finish remote server\n",
-  "       * -c         Connect before transaction\n",
-  "       * -n         Connect after transaction\n",
-  "       SETTING --\n",
-  "         -l line    Communication line device\n",
-  "         -b baud    Line speed, e.g. 38400\n",
-  "         -i         Binary file (text is default)\n",
-  "         -p x       Parity, 'x' is one of 'e', 'o', 'm', 's', or 'n'\n",
-  "         -t         Set line turnaround to XON/XOFF (half duplex)\n",
-  "         -w         Do not overwrite existing files\n",
-  "         -q         Be quiet during file transfer\n",
+  "      * -f         Finish remote server\n",
+  "      * -c         Connect before transaction\n",
+  "      * -n         coNnect after transaction\n",
+  "   SETTING --\n",
+  "        -l line    communication Line device\n",
+  "        -b baud    Baud rate (speed), e.g. 38400\n",
+  "        -i         bInary file (text is default)\n",
+  "        -p x       Parity, 'x' is one of 'e', 'o', 'm', 's', or 'n'\n",
+  "        -t         set line Turnaround to XON/XOFF (half duplex)\n",
+  "        -w         do not overWrite existing files\n",
+  "        -q         be Quiet during file transfer\n",
 #ifdef DEBUG
-  "         -d         Log debugging info to debug.log\n",
+  "        -d         log Debugging info to debug.log\n",
 #endif /* ifdef DEBUG */
-  "         -e length  (Extended) Receive packet length\n",
-  " If no ACTION is specified, kernit enters interactive dialog.\n",
+  "        -e length  set Extended receive packet length\n",
+#ifndef NOICP
+  "If no ACTION is specified, uCKermit enters interactive mode.\n",
+#endif /* ifndef NOICP */
 #endif /* ifndef NODOHLP */
   ""
 };
 
 /* U S A G E */
 
+int
 usage()
 {
   conola(hlp1);
+  return ( 0 );
 }
 
 /*
@@ -159,18 +161,19 @@ usage()
 #ifndef NODOHLP
 static char *tophlp[] = {
   "\n\
-Type ? for a list of commands, type 'help x' for any command x.\n\
-While typing commands, use the following special characters:\n\n\
- DEL, RUBOUT, BACKSPACE, CTRL-H: Delete the most recent character typed.\n\
- CTRL-W:  Delete the most recent word typed.\n",
+Type '?' for a list of commands; Type 'help X' for any command 'X'.\n\
+In interactive mode, the following characters have special meaning:\n\n\
+ CTRL-H:  (or BACKSPACE, DELETE): Delete the most recent character.\n\
+ CTRL-W:  Delete the most recent full word.\n",
   "\
- CTRL-U:  Delete the current line.\n\
- CTRL-R:  Redisplay the current line.\n\
- ?:       (question mark) Display help on the current command or field.\n\
- ESCAPE:  (or TAB) Attempt to complete the current field.\n",
+ CTRL-U:  Delete the current full line.\n\
+ CTRL-R   Redisplay the current full line.\n\
+ CTRL-L:  Clear the display and then execute the current full line.\n\
+      ?:  (QUESTION) Display help for the current command or field.\n\
+ ESCAPE:  (or TAB) Attempt completing the current command or field.\n",
   "\
- \\        (backslash) include the following character literally.\n\n\
-From system level, type 'kermit -h' to get help about command line args.\
+      \\:  (BACKSLASH) Include, literally, the next input character.\n\n\
+Execute this program using the '-h' flag to see additional options.\
 \n",
   ""
 };
@@ -412,17 +415,21 @@ Tell the remote Kermit server to shut down without logging out."));
 
 #endif /* ifndef NOCKUDIA */
 
+#ifndef NODOHLP
   case XXHLP:
     return ( hmsga(tophlp));
 
   case XXLOG:
     return ( hmsga(hmxxlg));
 
+#ifndef NOCKUSCR
   case XXLOGI:
     return ( hmsga(hmxxlogi));
+#endif /* ifndef NOCKUSCR */
 
   case XXREC:
     return ( hmsga(hmxxrc));
+#endif /* ifndef NODOHLP */
 
   case XXREM:
     if (( y = cmkey(remcmd, nrmt, "Remote command", "")) == -2)
@@ -548,6 +555,7 @@ char *s[];
 /* B C A R C B -- Format helper for baud rates */
 
 #ifndef NODOHLP
+#ifndef NOICP
 bcarcb(calsp)
 long calsp;
 {
@@ -796,6 +804,7 @@ long calsp;
     bcharc = 0;
   }
 }
+#endif /* ifndef NOICP */
 #endif /* ifndef NODOHLP */
 
 /* D O H S E T -- Give help for SET command */
@@ -1150,14 +1159,9 @@ about the specified user."));
   }
 }
 
-/*
- * The following functions moved here
- * from ckuusr.c because that module
- * got too big for PDP-11s.
- */
-
 /* D O L O G -- Do the log command */
 
+#ifndef NOICP
 dolog(x)
 int x;
 {
@@ -1265,6 +1269,7 @@ int x;
     return ( -2 );
   }
 }
+#endif /* ifndef NOICP */
 
 /* D E B O P N -- Open a debugging file */
 
@@ -1305,6 +1310,7 @@ char *s;
 
 /* S H O P A R -- Show Parameters */
 
+#ifndef NOICP
 shopar()
 {
 #ifndef NOCKUDIA
@@ -1548,9 +1554,11 @@ shopar()
 #endif /* ifdef KERMRC */
   puts("\n");
 }
+#endif /* ifndef NOICP */
 
 /* D O S T A T -- Display file transfer statistics */
 
+#ifndef NOICP
 #ifndef NOSTATS
 dostat()
 {
@@ -1667,6 +1675,7 @@ tstats()
   tlog(F100, "", "", 0L);   /* Leave a blank line */
 }
 #endif /* ifndef NOSTATS */
+#endif /* ifndef NOICP */
 
 /* S D E B U -- Record spar results in debugging log */
 
