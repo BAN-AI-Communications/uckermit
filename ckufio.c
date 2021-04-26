@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *ckzv = "File Support, 4G(069), 2021-APR-24";
+char *ckzv = "File Support, 4G(071), 2021-APR-26";
 #endif /* ifndef NOICP */
 
 /* C K U F I O -- Kermit file system support for UNIX systems */
@@ -639,7 +639,8 @@ zoutdump()
     return ( -1 );                  /* and fail. */
   }
 
-  if (( x = fwrite(zoutbuffer, 1, zoutcnt, fp[ZOFILE])))
+  x = fwrite(zoutbuffer, 1, zoutcnt, fp[ZOFILE]);
+  if (x)
   {
     debug(F101, "zoutdump fwrite wrote", "", x);
     zoutcnt = 0;                    /* reset output buffer count */
@@ -710,8 +711,8 @@ zchki(name)
 char *name;
 {
   struct stat buf;
-  int x;
-  long y;
+  int x = 0;
+  long y = 0;
 
   (void)y;
   x = stat(name, &buf);
@@ -730,7 +731,8 @@ char *name;
 
   debug(F111, "zchki stat ok:", name, x);
 
-  if (( x = access(name, R_OK)) < 0)         /* Is the file accessible? */
+  x = access(name, R_OK);
+  if (x < 0)                                 /* Is the file accessible? */
   {
     debug(F111, " access failed:", name, x); /* No */
     return ( -3 );
@@ -1508,7 +1510,10 @@ char *p;
     debug(F101, "splitpath malloc", "", cur);
     if (cur == NULL)
     {
-      fatal("malloc fails in splitpath()");
+      fprintf(stderr, "\rFatal: malloc fails in splitpath()\r\n");
+      doexit(BAD_EXIT);
+      /* fatal("malloc fails in splitpath()"); */
+          exit(BAD_EXIT); /* Appease clang ccc-analyzer */
     }
 
     cur->fwd = NULL;
@@ -1598,7 +1603,6 @@ int len;
   {
     free(head);                      /* return the path segments */
   }
-
   return ( numfnd );                 /* and return the number of matches */
 }
 

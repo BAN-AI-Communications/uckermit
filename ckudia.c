@@ -1227,7 +1227,7 @@ char *telnbr;
           {
             status = CONNECTED;
             ttolSlow(
-		      "\016U 1\r", 200); /* make transparent*/
+                      "\016U 1\r", 200); /* make transparent*/
           }
 
           break;

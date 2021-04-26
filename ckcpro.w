@@ -514,9 +514,9 @@ E {                                   /* Got Error packet, in any state */
     quiet = x;                        /* restore quiet state */
     if (backgrd 
 #ifndef NOSERVER
-	&& !server
+        && !server
 #endif
-	)
+        )
           fatal("Protocol error");
     RESUME;
 }

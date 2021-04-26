@@ -1,5 +1,5 @@
 #ifndef NOCKUSCR
-char *loginv = "Script Processor, 4G(025), 2021-APR-24";
+char *loginv = "Script Processor, 4G(027), 2021-APR-26";
 
 /* C K U S C R -- Login script for logging onto remote system */
 
@@ -545,6 +545,7 @@ flushi()
       }
 
       n = ttxin(n, fls_buf);          /* then read it, */
+          (void)n;
       zsout(ZSFILE, fls_buf);         /* and log it. */
     }
   }

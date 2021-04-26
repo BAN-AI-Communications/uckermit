@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *fnsv = "Kermit Support Functions, 4G(089), 2021-APR-24";
+char *fnsv = "Kermit Support Functions, 4G(091), 2021-APR-2r6;
 #endif /* ifndef NOICP */
 
 /* C K C F N S -- System-independent Kermit protocol support functions */
@@ -207,7 +207,7 @@ register CHAR *buf;
 register int (*fn)();
 {
   register unsigned int a, a7, b8;   /* Low order 7 bits, and the 8th bit */
-  int x;
+  int x = 0;
 
   rpt = 0;                           /* Initialize repeat count. */
 
@@ -275,7 +275,8 @@ register int (*fn)();
     {
       for (; rpt > 0; rpt--)         /* Output the char RPT times */
       {
-        if (( x = zmchout(a)) < 0)   /* zmchout is a macro */
+        x = zmchout(a);
+        if (x < 0)   /* zmchout is a macro */
         {
           debug(F101,
             "decode zmchout", "", x);
@@ -435,7 +436,7 @@ int bufmax;
          * be doing a repeat (unless CR,CR,LF which becomes
          * "~ <n-1> CR CR LF", which is OK, but not most
          * efficient). The actual conversion from NL to CRLF
-		 * is done after the rptflg if...
+                 * is done after the rptflg if...
          */
 
         ( binary || \
@@ -535,16 +536,16 @@ int bufmax;
       if (( dp - data ) > bufmax)        /* if packet is overfull */
       {
         for (p1 = leftover, p2 = odp;
-	      ( *p1 = *p2 ) != '\0';
-	        p1++, p2++)
+              ( *p1 = *p2 ) != '\0';
+                p1++, p2++)
         {
           ;
         }
 
         debug(F111,
-	      "getpkt leftover", leftover, size);
+              "getpkt leftover", leftover, size);
         debug(F101,
-	      " osize", "", ( odp - data ));
+              " osize", "", ( odp - data ));
         size = ( odp - data );           /* Return truncated packet. */
         *odp = '\0';                     /* Mark real end */
       }
@@ -1836,6 +1837,7 @@ char *vdir;
   vdir[xunchar(*vdir) + 1] = '\0';       /* Terminate string with a null */
 
   dirp = vdir + 1;
+  (void)dirp;
 #ifdef DTILDE
   dirp = tilde_expand(vdir + 1);         /* Attempt to expand tilde */
   if (*dirp == '\0')

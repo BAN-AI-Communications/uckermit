@@ -1,4 +1,4 @@
-char *versio = "uCKermit, 4G(133), 2021-APR-24";
+char *versio = "uCKermit, 4G(135), 2021-APR-26";
 
 /* C K C M A I -- uCKermit Main program  */
 
@@ -289,7 +289,7 @@ char **argv;
 #ifndef NOICP
     doexit(BAD_EXIT);               /* System-dependent initialization. */
 #else /* ifndef NOICP */
-	exit(BAD_EXIT);
+        exit(BAD_EXIT);
 #endif /* ifndef NOICP */
   }
 
@@ -338,7 +338,7 @@ char **argv;
 #ifndef NOICP
       doexit(GOOD_EXIT);            /* and then exit with status 0. */
 #else /* ifndef NOICP */
-	  return( GOOD_EXIT );
+          return( GOOD_EXIT );
 #endif /* ifndef NOICP */
     }
   }

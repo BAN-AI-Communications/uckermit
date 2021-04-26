@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *wartv = "Wart Preprocessor, 1A(217), 2021-APR-24";
+char *wartv = "Wart Preprocessor, 1A(219), 2021-APR-26";
 #endif /* ifndef NOICP */
 
 /* W A R T */
@@ -367,7 +367,9 @@ statelist(fp, t)
 FILE *fp;
 Trans t;
 {
-  int curtok, sval;
+  int curtok = 0;
+  int sval = 0;
+
   curtok = COMMA;
   while (curtok != RBRACK)
   {
@@ -376,12 +378,14 @@ Trans t;
       fatal("missing comma");
     }
 
-    if (( curtok = gettoken(fp)) != WORD)
+        curtok = gettoken(fp);
+    if ( curtok != WORD)
     {
       fatal("missing state name");
     }
 
-    if (( sval = lkup(tokval)) == -1)
+        sval = lkup(tokval);
+    if (sval == -1)
     {
       fprintf(stderr, "state %s undefined\n", tokval);
       fatal("undefined state");

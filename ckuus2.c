@@ -415,7 +415,6 @@ Tell the remote Kermit server to shut down without logging out."));
 
 #endif /* ifndef NOCKUDIA */
 
-#ifndef NODOHLP
   case XXHLP:
     return ( hmsga(tophlp));
 
@@ -429,7 +428,6 @@ Tell the remote Kermit server to shut down without logging out."));
 
   case XXREC:
     return ( hmsga(hmxxrc));
-#endif /* ifndef NODOHLP */
 
   case XXREM:
     if (( y = cmkey(remcmd, nrmt, "Remote command", "")) == -2)
@@ -512,8 +510,9 @@ Specify 0 for no waiting."));
     {
       return ( x );
     }
-
+#ifndef NODOHLP
     printf("Not available yet - %s\n", cmdbuf);
+#endif /* ifndef NODOHLP */
     break;
   }
   return ( 0 );

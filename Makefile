@@ -1,6 +1,6 @@
 ###########################################################################
 #                                                                         #
-#                   Makefile, version 2.53, 2021-APR-25                   #
+#                   Makefile, version 2.57, 2021-APR-26                   #
 #                                                                         #
 ###########################################################################
 #                                                                         #
@@ -376,7 +376,7 @@ linux:
 		-Wno-implicit-fallthrough -Wno-missing-braces -Os -fno-math-errno \
 		-fno-asynchronous-unwind-tables -fdata-sections -funsigned-char \
 		-ffunction-sections -fomit-frame-pointer -fmerge-all-constants \
-		-fdelete-null-pointer-checks -ffast-math \
+		-fdelete-null-pointer-checks -ffast-math -DNOBTEST \
 		-fno-unroll-loops" \
 			"LNKFLAGS = -Wl,-s \
 				-Wl,--gc-sections \
@@ -442,6 +442,9 @@ strip:
 		wermit \
 		2>/dev/null || true
 	@size -A wermit 2>/dev/null || true
+	@readelf -a wermit 2>/dev/null || true
+	@~/src/bloaty/build/bloaty -n 0 -v wermit \
+		2>/dev/null || true
 	@sstrip -z wermit 2>/dev/null || true
 		@printf '\n%s ' "Stripped: " "$$(du -k wermit 2>/dev/null | \
 		cut -f 1 -d "	" 2>/dev/null | \

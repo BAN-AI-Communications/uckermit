@@ -478,22 +478,22 @@ int *wild;
 
       *wild = chkwld(*xp);
       debug(F101,
-	    " *wild", "", *wild);
+            " *wild", "", *wild);
       if (*wild != 0)
       {
         y = zxpand(*xp);
         if (y == 0)
         {
           printf(
-	        "\n?No files match - %s\n",
-	         *xp);
+                "\n?No files match - %s\n",
+                 *xp);
           return ( -2 );
         }
         else if (y < 0)
         {
           printf(
-	        "\n?Too many files match - %s\n",
-	          *xp);
+                "\n?Too many files match - %s\n",
+                  *xp);
           return ( -2 );
         }
         else
@@ -1142,7 +1142,7 @@ char *xhlp, *xdef;
       y = lookup(
         table, atmbuf, n, &z);  /* Something in atmbuf */
       debug(F111,
-	    "cmkey: esc", atmbuf,
+            "cmkey: esc", atmbuf,
           y);
       if (y == -2)
       {
@@ -1191,9 +1191,9 @@ char *xhlp, *xdef;
         if (
           !strncmp(table[i].kwd, atmbuf, cc)
 #ifndef NOBTEST
-		  && !btest(table[i].flgs, CM_INV)
+                  && !btest(table[i].flgs, CM_INV)
 #endif /* ifndef NOBTEST */
-		)
+                )
         {
           addhlp(table[i].kwd);
         }
@@ -1562,7 +1562,7 @@ gtword()
       }
 
       if (!ignore && \
-	    ( c == '?' ))            /* Question mark */
+            ( c == '?' ))            /* Question mark */
       {
         putchar(c);
         *bp = NUL;

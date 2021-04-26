@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *ckxv = "UNIX TTY I/O Module, 4G(081), 2021-APR-24";
+char *ckxv = "UNIX TTY I/O Module, 4G(083), 2021-APR-26";
 #endif /* ifndef NOICP */
 
 /* C K U T I O */
@@ -927,6 +927,7 @@ tthang()
 
 #ifndef XENIX
   ttc_save = fcntl(ttyfd, F_GETFL, 0);
+  (void)ttc_save;
   close(ttyfd);                          /* close/reopen file descriptor */
   ttyfd = -1;                            /* in case reopen fails */
 #ifndef UXIII
@@ -2369,7 +2370,7 @@ CHAR *dest, eol;
           return ( i );
         }
         else if (( dest[i] & 0177 ) \
-	      == CTRLC)                    /* Check for ^C^C */
+              == CTRLC)                    /* Check for ^C^C */
         {
           if (++ccn > 1)               /* If we got 2 in a row, clean up */
           {
@@ -2389,11 +2390,11 @@ CHAR *dest, eol;
     }
   }
 
-  debug(F100, "ttinl timout", "", 0);  /* Get here on timeout. */
-  debug(F111, " with", dest, i);
-  alarm(0);                            /* Turn off timer */
-  signal(SIGALRM, SIG_DFL);            /* and interrupt, */
-  return ( x );                        /* and return error code. */
+  /* debug(F100, "ttinl timout", "", 0); */ /* Get here on timeout. */
+  /* debug(F111, " with", dest, i); */
+  alarm(0);                                 /* Turn off timer */
+  signal(SIGALRM, SIG_DFL);                 /* and interrupt, */
+  return ( x );                             /* and return error code */
 }
 
 /* T T I N C -- Read a character from the communication line */
@@ -2415,10 +2416,10 @@ int timo;
 #ifdef MYREAD
 
     /* 
-	 * myread comm line failure
-	 * returns -1 thru myread, so,
-	 * no &= 0377
-	 */
+         * myread comm line failure
+         * returns -1 thru myread, so,
+         * no &= 0377
+         */
 
     while (( n = myread()) == -1)
     {

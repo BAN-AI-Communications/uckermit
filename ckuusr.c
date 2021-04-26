@@ -608,7 +608,7 @@ char *msg;
 #ifndef NOICP
       cmerrp,
 #else /* ifndef NOICP */
-	  "",
+          "",
 #endif /* ifndef NOICP */
         msg);
   }
