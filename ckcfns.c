@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *fnsv = "Kermit Support Functions, 4G(091), 2021-APR-2r6;
+char *fnsv = "Kermit Support Functions, 4G(093), 2021-APR-26";
 #endif /* ifndef NOICP */
 
 /* C K C F N S -- System-independent Kermit protocol support functions */
