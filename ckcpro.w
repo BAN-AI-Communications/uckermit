@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *protv = "Kermit Protocol Module, 4G(057), 2021-APR-24";
+char *protv = "Kermit Protocol Module, 4G(059), 2021-APR-27";
 #endif /* ifndef NOICP */
 
 /* C K C P R O -- uCKermit Protocol Module in Wart preprocessor notation */
@@ -158,7 +158,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
 #ifndef NOSTATS
     resetc();                       /* Reset counters */
     rtimer();                       /* Reset timer */
-#endif
+#endif /* ifndef NOSTATS */
     BEGIN rfile;                    /* Go into receive-file state */
 }
 
@@ -388,7 +388,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
     ack();                            /* Acknowledge */
 #ifndef NOSTATS
     tsecs = gtimer();                 /* Get timing for statistics */
-#endif
+#endif /* ifndef NOSTATS */
     reot();                           /* Do EOT things */
     RESUME;                           /* and quit */
 }
@@ -426,7 +426,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
 #ifndef NOSTATS
         resetc();                     /* reset per-transaction counters */
         rtimer();                     /* reset timers */
-#endif
+#endif /* ifndef NOSTATS */
         BEGIN ssfile;                 /* and switch to receive-file state */
     } else {                          /* otherwise send error msg & quit */
         s = xflg ? \
@@ -494,7 +494,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
     } else {                          /* No next file */
 #ifndef NOSTATS
         tsecs = gtimer();             /* get statistics timers */
-#endif
+#endif /* ifndef NOSTATS */
         seot();                       /* send EOT packet */
         BEGIN sseot;                  /* enter send-eot state */
     }
@@ -510,12 +510,12 @@ E {                                   /* Got Error packet, in any state */
     clsif(); clsof(1);                /* discarding any output file. */
 #ifndef NOSTATS
     tsecs = gtimer();                 /* Get timers */
-#endif
+#endif /* ifndef NOSTATS */
     quiet = x;                        /* restore quiet state */
     if (backgrd 
 #ifndef NOSERVER
         && !server
-#endif
+#endif /* ifndef NOSERVER */
         )
           fatal("Protocol error");
     RESUME;
@@ -579,7 +579,7 @@ proto()
             }
         }
     } else { server = 0; }
-#endif
+#endif /* ifndef NOSERVER */
     if (sstate == 'v' && !local && !quiet)
       conoll(
         "Escape back to your local Kermit and give a SEND command...");
@@ -604,7 +604,7 @@ proto()
             conoll(
                           "uCKermit server done");
     }
-#endif
+#endif /* ifndef NOSERVER */
     ttres();
     screen(
           SCR_TC,0,0l,"");                /* Transaction complete */
