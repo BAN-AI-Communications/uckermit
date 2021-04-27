@@ -1,6 +1,6 @@
 # μ*C֊Kermit*
 
-## _micro_–C֊Kermit
+## _micro_–C֊Kermit (*microkermit*)
 
 [![License: BSD](https://img.shields.io/badge/License-BSD%20-blue.svg)](https://github.com/BAN-AI-Communications/uckermit/blob/master/LICENSE)
 [![LocCount](https://img.shields.io/tokei/lines/github/BAN-AI-Communications/uckermit.svg)](https://github.com/XAMPPRocky/tokei)
