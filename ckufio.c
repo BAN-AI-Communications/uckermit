@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *ckzv = "File Support, 4G(071), 2021-APR-26";
+char *ckzv = "File Support, 4G(073), 2021-APR-27";
 #endif /* ifndef NOICP */
 
 /* C K U F I O -- Kermit file system support for UNIX systems */
@@ -59,18 +59,18 @@ char *ckzv = "File Support, 4G(071), 2021-APR-26";
 #define TIMESTAMP
 #include <sys/timeb.h>
 #include <time.h>
-#ifdef NOT_YET
+#ifdef TIMEZONE
 static long timezone;
-#endif /* ifdef NOT_YET */
+#endif /* ifdef TIMEZONE */
 #endif /* ifdef BSD4 */
 
 #ifdef UXIII
 #define TIMESTAMP
 #include <time.h>
-#ifdef NOT_YET
+#ifdef TIMEZONE
 void tzset();
 extern long timezone;
-#endif /* ifdef NOT_YET */
+#endif /* ifdef TIMEZONE */
 #endif /* ifdef UXIII */
 
 #ifdef __linux__
@@ -1300,7 +1300,7 @@ char *name;
 #endif /* ifdef TIMESTAMP */
 }
 
-#ifdef NOT_YET
+#ifdef TIMEZONE
 
 /*
  * Apparently, the definition of timezone is a big problem.
@@ -1391,7 +1391,7 @@ struct tm *tm;
       timezone );
 }
 #endif /* ifdef TIMESTAMP */
-#endif /* ifdef NOT_YET */
+#endif /* ifdef TIEMZONE */
 
 zmail(p, f)
 char *p;

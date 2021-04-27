@@ -1,6 +1,6 @@
 ###########################################################################
 #                                                                         #
-#                   Makefile, version 2.57, 2021-APR-26                   #
+#                   Makefile, version 2.59, 2021-APR-27                   #
 #                                                                         #
 ###########################################################################
 #                                                                         #
@@ -370,7 +370,7 @@ v7:
 linux:
 	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DDEBUG -DTLOG -DUXIII \
 		-DO_NDELAY -DTIOCFLUSH -DTIOCFLUSH -DTIOCSINUSE -DFIONBIO -Wall \
-		-DTIOCEXCL -DSIGTSTP -DFIONREAD -DNOT_YET -Wall -Wno-return-type \
+		-DTIOCEXCL -DSIGTSTP -DFIONREAD -DTIMEZONE -Wall -Wno-return-type \
 		-Wno-unused-variable -Wno-implicit-int -fno-unwind-tables \
 		-fno-exceptions -Wno-implicit-function-declaration -DDIRENT \
 		-Wno-implicit-fallthrough -Wno-missing-braces -Os -fno-math-errno \
@@ -386,7 +386,7 @@ linux:
 ###########################################################################
 #Linux WIP size-reduction target (development)
 linux-small:
-	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DNOT_YET -Wall -Os \
+	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DTIMEZONE -Wall -Os \
 		-DO_NDELAY -DTIOCFLUSH -DTIOCFLUSH -DTIOCSINUSE -DFIONBIO -DUXIII \
 		-DTIOCEXCL -DSIGTSTP -DFIONREAD -DDIRENT -DNOCKUSCR \
 		-DNOCKUDIA -Wno-return-type -Wno-missing-braces -DNODOHLP \
