@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *fnsv = "Kermit Support Functions, 4G(093), 2021-APR-26";
+char *fnsv = "Kermit Support Functions, 4G(095), 2021-APR-27";
 #endif /* ifndef NOICP */
 
 /* C K C F N S -- System-independent Kermit protocol support functions */
@@ -244,7 +244,7 @@ register int (*fn)();
       a7 = a & 0177;                 /* Only look at low 7 bits. */
       if (
         ( a7 >= 0100 && a7 <= 0137 ) \
-        || a7 == '?')                /* Uncontrollify, */
+          || a7 == '?')              /* Uncontrollify, */
       {
         a = ctl(a);                  /* if in control range */
       }
@@ -436,7 +436,7 @@ int bufmax;
          * be doing a repeat (unless CR,CR,LF which becomes
          * "~ <n-1> CR CR LF", which is OK, but not most
          * efficient). The actual conversion from NL to CRLF
-                 * is done after the rptflg if...
+         * is done after the rptflg if...
          */
 
         ( binary || \
@@ -458,7 +458,7 @@ int bufmax;
       }
       else if (rpt == 1)                 /* Run broken, only 2? */
       {
-                                         /* XXX(jhj): Now empty */
+      /* ... */                          /* XXX(jhj): Now empty */
       }
       else if (rpt > 1)                  /* More than two */
       {

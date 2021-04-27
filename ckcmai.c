@@ -1,4 +1,4 @@
-char *versio = "uCKermit, 4G(135), 2021-APR-26";
+char *versio = "uCKermit, 4G(139), 2021-APR-27";
 
 /* C K C M A I -- uCKermit Main program  */
 
@@ -215,13 +215,13 @@ int         deblog   = 0,           /* Flag for debug logging */
             xflg     = 0,           /* Flag for X instead of F packet */
             hcflg    = 0,           /* Doing Host command */
             fncnv    = 1,           /* Flag for file name conversion */
-            binary   = 0,           /* Flag for binary file */
+            binary   = 1,           /* Flag for binary file */
             savmod   = 0,           /* Saved file mode (whole session) */
             bsave    = 0,           /* Saved file mode (per file) */
             bsavef   = 0,           /* Flag if bsave was used. */
             cmask    = 0177,        /* Connect byte mask */
             fmask    = 0377,        /* File byte mask */
-            warn     = 0,           /* Flag for file warning */
+            warn     = 1,           /* Flag for file warning */
             quiet    = 0,           /* Be quiet during file transfer */
             local    = 0,           /* Flag for external tty vs stdout */
 #ifndef NOSERVER
@@ -365,7 +365,7 @@ char **argv;
    * is not available...
    */
 
-  printf("\r%s,%s", versio, ckzsys);
+  printf("\r%s (%s)", versio, ckzsys);
   printf("\r\nFatal: No action requested");
 #ifdef NODOHLP
   printf(", unable to proceed.\r\n");

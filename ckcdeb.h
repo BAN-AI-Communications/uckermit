@@ -64,7 +64,6 @@
 /*
  * Structure definitions for Kermit file attributes.
  * All strings come as pointer and length combinations.
- *
  * Empty string (or, for numeric variables, -1) = unused.
  */
 

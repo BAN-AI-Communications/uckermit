@@ -89,7 +89,12 @@
 #define ZSFILE    7           /* Current session log file */
 #define ZSYSFN    8           /* Input from a system function */
 #define ZNFILS    9           /* How many defined file numbers */
+
+#ifdef MINBIF
+#define INBUFSIZE 256
+#else /* ifdef MINBUF */
 #define INBUFSIZE 1024        /* Size of the input & output buffer */
+#endif /* ifdef MINBUF */
 
 #define zminchar() \
   ((( --zincnt ) >= 0 ) ? \

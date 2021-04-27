@@ -80,11 +80,11 @@
 #endif /* ifndef UXIII */
 
 #ifdef BSD41
-#include <sys/timeb.h>            /* BSD 4.1 ... ceb */
+#include <sys/timeb.h>            /* BSD 4.1 */
 #endif /* ifdef BSD41 */
 
 #ifdef BSD29
-#include <sys/timeb.h>            /* BSD 2.9 (Vic Abell, Purdue) */
+#include <sys/timeb.h>            /* BSD 2.9 */
 #endif /* ifdef BSD29 */
 
 #ifdef ultrix
@@ -113,30 +113,30 @@ static char *hlp1[] = {
   "\rUsage: [ -x arg [ -x arg ] ... [ -yyy ] ... ] ]\n",
 #ifndef NODOHLP
   "    ('x' options require arguments, 'y' options do not)\n",
-  "    ACTION -- (* options require setting '-l' and '-b')\n",
-  "        -s file(s) Send (Use '-s -' to send from stdin)\n",
-  "        -r         Receive\n",
-  "        -k         Receive to stdout\n",
-  "      * -g file(s) Get remote file(s) from server (quote wildcards)\n",
-  "        -a name    Alternate name (used with -s, -r, and -g)\n",
+  "    ACTION -- (* options require setting both '-l' and '-b')\n",
+  "        -s file(s) send (use '-s -' to send from stdin)\n",
+  "        -r         receive\n",
+  "        -k         receive, to console (stdout)\n",
+  "      * -g file(s) get remote file(s) from server (quoting wildcards)\n",
+  "        -a name    alternate name (applies to '-s', '-r', and '-g')\n",
 #ifndef NOSERVER
-  "        -x         eXecute in Kermit server mode\n",
+  "        -x         start in Kermit SERVER mode\n",
 #endif /* ifndef NOSERVER */
-  "      * -f         Finish remote server\n",
-  "      * -c         Connect before transaction\n",
-  "      * -n         coNnect after transaction\n",
+  "      * -f         send FINISH command to remote server\n",
+  "      * -c         connect (pre-transaction)\n",
+  "      * -n         connect (post-transaction)\n",
   "   SETTING --\n",
-  "        -l line    communication Line device\n",
-  "        -b baud    Baud rate (speed), e.g. 38400\n",
-  "        -i         bInary file (text is default)\n",
-  "        -p x       Parity, 'x' is one of 'e', 'o', 'm', 's', or 'n'\n",
-  "        -t         set line Turnaround to XON/XOFF (half duplex)\n",
-  "        -w         do not overWrite existing files\n",
-  "        -q         be Quiet during file transfer\n",
+  "        -l line    communication line device (e.g. '/dev/ttyS1')\n",
+  "        -b baud    baud rate (e.g. '38400')\n",
+  "        -i         disable binary mode (perform text conversion)\n",
+  "        -p x       parity ('x' is one of 'e', 'o', 'm', 's', or 'n')\n",
+  "        -t         set line turnaround to XON/XOFF (half duplex mode)\n",
+  "        -w         enable overwriting of existing local files\n",
+  "        -q         quiet mode (disables file transfer status display)\n",
 #ifdef DEBUG
-  "        -d         log Debugging info to debug.log\n",
+  "        -d         enable debug log file (writes to debug.log)\n",
 #endif /* ifdef DEBUG */
-  "        -e length  set Extended receive packet length\n",
+  "        -e length  set extended receive packet length (e.g. 1200)\n",
 #ifndef NOICP
   "If no ACTION is specified, uCKermit enters interactive mode.\n",
 #endif /* ifndef NOICP */
@@ -309,16 +309,15 @@ Type of packet block check to be used for error detection, 1, 2, or 3.\n",
 #ifndef NODOHLP
 static char *hmxyf[] = {
   "\
-set file: names, type, warning, display.\n\n",
+set file: names, type, overwrite, display.\n\n",
   "'names' are normally 'converted', which means file names are converted\n",
   "to 'common form' during transmission; 'literal' means use filenames\n",
-  "literally (useful between like systems).\n\n",
-  "'type' is normally 'text', in which conversion is done between UNIX\n",
-  "newlines and CRLF line delimiters; 'binary' means to do no conversion.\n",
-  "Use 'binary' for executable programs or binary data.\n\n",
-  "'warning' is 'on' or 'off', normally off.  When off, incoming files "
-  "will\n",
-  "overwrite existing files of the same name.  When on, new names will be\n",
+  "literally (useful between like system types).\n\n",
+  "'type' defaults to 'binary' with no conversion of local and remote\n",
+  "newlines and CR-LF line delimiters; 'text' enables this conversion.\n",
+  "Use 'binary' for executable programs or data, and 'text' otherwise.\n\n",
+  "'overwrite' is 'on' or 'off', normally off.  When on, incoming files\n",
+  "overwrite existing files of the same name.  When off, new names will be\n",
   "given to incoming files whose names are the same as existing files.\n",
   "\n\
 'display' is normally 'on', causing file transfer progress to be displayed\n",
@@ -1443,7 +1442,7 @@ shopar()
   }
 
   printf("\n Length Limit: %11d%9d\n", maxsps, maxrps);
-  printf("\nFile parameters:              Attributes:       ");
+  printf("\nFile parameters:               Attributes:       ");
   if (atcapr)
   {
     printf("on");
@@ -1453,7 +1452,7 @@ shopar()
     printf("off");
   }
 
-  printf("\n File Names:   ");
+  printf("\n File Names:    ");
   if (fncnv)
   {
     printf("%-12s", "converted");
@@ -1475,7 +1474,7 @@ shopar()
   }
 
 #endif /* ifdef DEBUG */
-  printf("\n File Type:    ");
+  printf("\n Transfer Mode: ");
   if (binary)
   {
     printf("%-12s", "binary");
@@ -1495,14 +1494,14 @@ shopar()
     printf("none");
   }
 
-  printf("\n File Warning: ");
+  printf("\n Overwrite:     ");
   if (warn)
   {
-    printf("%-12s", "on");
+    printf("%-12s", "off");
   }
   else
   {
-    printf("%-12s", "off");
+    printf("%-12s", "on");
   }
 
   printf("   Session Log:      ");
@@ -1515,7 +1514,7 @@ shopar()
     printf("none");
   }
 
-  printf("\n File Display: ");
+  printf("\n Info Display:  ");
   if (quiet)
   {
     printf("%-12s", "off");

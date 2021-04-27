@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *userv = "UNIX User Interface, 4G(103), 2021-APR-24";
+char *userv = "UNIX User Interface, 4G(109), 2021-APR-27";
 #endif /* ifndef NOICP */
 
 /* C K U U S R -- "User Interface" for UNIX Kermit (Part 1) */
@@ -521,12 +521,12 @@ char x;
 
       break;
 
-    case 'i': /* Treat files as binary */
-      binary = 1;
+    case 'i': /* Treat files as text */
+      binary = 0;
       break;
 
-    case 'w': /* File warning */
-      warn = 1;
+    case 'w': /* File overwrite */
+      warn = 0;
       break;
 
     case 'q': /* Quiet */
@@ -804,31 +804,20 @@ int nprm = \
 
 struct keytab remcmd[] = {
   "cd",        XZCWD,    CM_INV,
-  "cwd",
-  XZCWD,
-  0,           "delete",
-  XZDEL,
-  0,
-  "directory", XZDIR,
-  0,
-  "help",
-  XZHLP,
-  0,           "host",
-  XZHOS,
-  0,
-  "space",     XZSPA,
-  0,
-  "type",
-  XZTYP,
-  0,           "who",
-  XZWHO, 0
+  "cwd",       XZCWD,    0,
+  "delete",    XZDEL,    0,
+  "directory", XZDIR,    0,
+  "help",      XZHLP,    0,
+  "host",      XZHOS,    0,
+  "space",     XZSPA,    0,
+  "type",      XZTYP,    0,
+  "who",       XZWHO,    0
 };
 
 int nrmt = ( sizeof ( remcmd ) / sizeof ( struct keytab ));
 
 struct keytab logtab[] = {
-  "debugging", LOGD, 0, "packets",      LOGP,
-  0,
+  "debugging", LOGD, 0, "packets",      LOGP, 0,
   "session",   LOGS, 0, "transactions", LOGT, 0
 };
 
@@ -2047,7 +2036,10 @@ char t;
 
   SIGTYP (*oldsig)();                   /* For saving old interrupt trap. */
   int z = 0;                            /* Return code. */
-  int x, c, i, n;                       /* Workers... */
+  int x = 0;                            /* Workers... */
+  int c = 0;                            /* XXX(jhj): x/c/i/n = 0 */
+  int i = 0;
+  int n = 0;
                                         /* CHAR tt; */
   (void)n;
   dopar(t);                             /* Turnaround char, with parity */

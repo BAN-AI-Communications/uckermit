@@ -267,20 +267,17 @@ must be preceeded by the escape character (e.g. Control-\\).
 .RE
 .PP
 Several other command-line options are provided:
-.TP 8
+.TP 7
 .B \-i
-Specifies that files should be sent or received exactly "as is" with no
-conversions.  This option is necessary for transmitting binary files.
-It may also be used to slightly boost efficiency in UNIX-to-UNIX
-transfers of text files by eliminating CRLF/newline conversion.
+Specifies that files should be sent or received using text conversion.
 .TP
 .B \-e " n"
 Specifies the (extended) receive-packet length, a number between 10
 and about 1200 (depending on the system).  Lengths of 95 or greater require
-that the opposite Kermit support the long packet protocol extension.
+that the opposite Kermit program support the long packet protocol extension.
 .TP
 .B \-w
-Write-Protect \(em Avoid filename collisions for incoming files.
+Overwrite \(em Overwrite existing files with incoming files.
 .TP
 .B \-q
 Quiet \(em Suppress screen update during file transfer, for instance to

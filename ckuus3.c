@@ -116,8 +116,8 @@ struct keytab dpxtab[] = {
 };
 
 struct keytab filtab[] = {
-  "display", XYFILD, 0, "names",   XYFILN, 0,
-  "type",    XYFILT, 0, "warning", XYFILW, 0
+  "display", XYFILD, 0, "names",  XYFILN, 0,
+  "type",    XYFILT, 0, "rename", XYFILW, 0
 };
 
 int nfilp = ( sizeof ( filtab ) / sizeof ( struct keytab ));
@@ -237,13 +237,14 @@ doprm(xx)
 int xx;
 {
   int x = 0;
-  int y, z;
+  int y = 0;
+  int z = 0;               /* XXX(jhj): init y & z to 0 */
   char *s;
 
   switch (xx)
   {
-  case XYEOL: /* These have all been moved to set send/receive... */
-  case XYLEN: /* Let the user know what to do. */
+  case  XYEOL: /* These have all been moved to set send/receive... */
+  case  XYLEN: /* Let the user know what to do. */
   case XYMARK:
   case XYNPAD:
   case XYPADC:
@@ -407,7 +408,7 @@ int xx;
 
       return ( 0 );
 
-    case XYFILW: /* Warning/Write-Protect */
+    case XYFILW: /* Rename */
       return ( seton(&warn));
 
     default:

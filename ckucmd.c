@@ -1070,7 +1070,11 @@ struct keytab table[];
 int n;
 char *xhlp, *xdef;
 {
-  int i, y, z, zz, xc;
+  int i = 0;
+  int y = 0;
+  int z = 0;
+  int zz = 0;
+  int xc = 0;                    /* XXX(jhj): init to 0 */
   char *xp;
 
   xc = cc = 0;                   /* Clear character counters. */

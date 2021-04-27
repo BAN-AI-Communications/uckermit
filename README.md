@@ -163,17 +163,14 @@ options specify either protocol transactions or terminal connection.
 
 * Several other command-line options are provided:
   - **`-i`**
-    - Specifies that files should be sent or received exactly \"as is\" with no
-      conversions. This option is necessary for transmitting binary files. It
-      may also be used to slightly boost efficiency in UNIX-to-UNIX transfers of
-      text files by eliminating CRLF/newline conversion.
+    - Specifies that files should be sent or received with text conversion.
   - **`-e n`**
     - Specifies the (_extended_) receive-packet length, a number between _10_
       and about _1200_ (depending on the system). Lengths of _95_ or greater
       require that the opposite Kermit support the long packet protocol
       extension.
   - **`-w`**
-    - Write-Protect — Avoid filename collisions for incoming files.
+    - Overwrite — Allow overwriting of local files with incoming files.
   - **`-q`**
     - Quiet — Suppress screen update during file transfer, for instance to allow
       a file transfer to proceed in the background.
@@ -413,10 +410,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.**
 
 ## SEE ALSO
 
-- [cu(1C)](https://man.openbsd.org/cu)
-- [ecu(1)](https://github.com/BAN-AI-Communications/ecu)
-- [uucp(1C)](https://github.com/BAN-AI-Communications/bnu-hdb-uucp)
-- [kermit(1)](https://kermitproject.org/)
+- [cu](https://man.openbsd.org/cu)
+- [ecu](https://github.com/BAN-AI-Communications/ecu)
+- [UUCP](https://github.com/BAN-AI-Communications/bnu-hdb-uucp)
+- [Kermit](https://kermitproject.org/)
 
 - _Christine Gianone_,
   [Kermit User\'s Guide](https://kermitproject.org/booksonline.html), Columbia

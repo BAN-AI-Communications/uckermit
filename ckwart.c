@@ -1,5 +1,7 @@
 #ifndef NOICP
-char *wartv = "Wart Preprocessor, 1A(219), 2021-APR-26";
+#ifdef WARTVER
+char *wartv = "Wart Preprocessor, 1A(221), 2021-APR-27";
+#endif /* ifndef WARTVER */
 #endif /* ifndef NOICP */
 
 /* W A R T */

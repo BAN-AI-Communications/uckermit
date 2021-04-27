@@ -1,6 +1,6 @@
 ###########################################################################
 #                                                                         #
-#                   Makefile, version 2.59, 2021-APR-27                   #
+#                   Makefile, version 2.61, 2021-APR-27                   #
 #                                                                         #
 ###########################################################################
 #                                                                         #
@@ -386,7 +386,7 @@ linux:
 ###########################################################################
 #Linux WIP size-reduction target (development)
 linux-small:
-	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DTIMEZONE -Wall -Os \
+	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -Wall -Os \
 		-DO_NDELAY -DTIOCFLUSH -DTIOCFLUSH -DTIOCSINUSE -DFIONBIO -DUXIII \
 		-DTIOCEXCL -DSIGTSTP -DFIONREAD -DDIRENT -DNOCKUSCR \
 		-DNOCKUDIA -Wno-return-type -Wno-missing-braces -DNODOHLP \
@@ -395,7 +395,7 @@ linux-small:
 		-fno-exceptions -fdata-sections -ffunction-sections -ffast-math \
 		-fno-math-errno -Wno-implicit-int -DNOSTATS -fno-unroll-loops \
 		-fmerge-all-constants -funsigned-char -fomit-frame-pointer \
-		-fdelete-null-pointer-checks -DNOBTEST -DNOICP" \
+		-fdelete-null-pointer-checks -DNOBTEST -DNOICP -DMINBUF" \
 			"LNKFLAGS = -Wl,-s \
 				-Wl,--gc-sections \
 				-Wl,--print-gc-sections \

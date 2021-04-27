@@ -1,5 +1,5 @@
 #ifndef NOCKUDIA
-char *dialv = "UNIX Dial Support, 4G(035), 2021-APR-24";
+char *dialv = "UNIX Dial Support, 4G(039), 2021-APR-27";
 
 /* C K U D I A -- Dialing program for connection to remote system */
 
@@ -620,7 +620,11 @@ static char *F_reason[5] = { /* Failure reasons for message */
 
 static int tries = 0;
 
+#ifdef MINBUF
+#define LBUFL 48
+#else /* ifdef MINBUF */
 #define LBUFL 100
+#endif /* ifdef MINBUF */
 static char lbuf[LBUFL];
 
 static jmp_buf sjbuf;
@@ -728,7 +732,8 @@ char *telnbr;
 {
   char c;
   char *i, *j;
-  int waitct, status;
+  int waitct = 0;            /* XXX(jhj): waitct = 0 init */
+  int status = 0;            /* XXX(jhj): status = 0 init */
   char errmsg[50], *erp;
   MDMINF *pmdminf;           /* pointer to modem-specific info */
   int augmdmtyp;             /* augmented modem type, handle modem modes */

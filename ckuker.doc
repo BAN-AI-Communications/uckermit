@@ -1,7 +1,7 @@
 
 
 
-                                    μCKERMIT
+                                   μC-KERMIT
 
 
 
@@ -152,11 +152,11 @@ are  separated  by a carriage-return linefeed sequence (CRLF, ASCII 13 followed
 by ASCII 10).  Binary files are likely to contain data in the high bits of  the
 file bytes, and have no particular line or record structure.
 
-When  transferring  files,  μCKermit  will convert between upper and lower case
-filenames and between LF and CRLF line terminators automatically,  unless  told
-to  do otherwise.  When binary files must be transferred, the program should be
-instructed not to perform LF/CRLF conversion (-i on the command  line  or  "set
-file type binary" interactively; see below).
+When  transferring  files,  μCKermit can convert  between  upper and lower case
+filenames as well as LF and CR-LF line endings  completely automatically.  When
+text files are to transferred between differing systems, the  program should be
+instructed perform LF/CR-LF conversion  by adding '-i' on the command  line  or
+issuing the "set file type text" command in interactive mode.
 
 
 1.2. File Transfer
@@ -165,18 +165,18 @@ If  μCKermit  is  in  local mode, the screen (stdout) is continously updated to
 show the progress of the file transer.  A dot is printed for  every  four  data
 packets, other packets are shown by type:
 
-    I Exchange Parameter Information
-    R Receive Initiate
-    S Send Initiate
-    A Attribute packet
-    F File Header
-    G Generic Server Command
-    C Remote Host Command
-    N Negative Acknowledgement (NAK)
-    E Fatal Error
-    T Indicates a timeout occurred
-    Q Indicates a damaged, undesired, or illegal packet was received
-    % Indicates a packet was retransmitted
+    I      Exchange Parameter Information
+    R      Receive Initiate
+    S      Send Initiate
+    A      Attribute packet
+    F      File Header
+    G      Generic Server Command
+    C      Remote Host Command
+    N      Negative Acknowledgement (NAK)
+    E      Fatal Error
+    T      Indicates a timeout occurred
+    Q      Indicates a damaged, undesired, or illegal packet was received
+    %      Indicates a packet was retransmitted
 
 You may type the following "interrupt" commands during file transfer:
 
@@ -187,16 +187,15 @@ You may type the following "interrupt" commands during file transfer:
 
 These  interrupt characters differ from the ones used in other Kermit implemen-
 tations to avoid conflict with commonly used UNIX shell  interrupt  characters.
-With  Version  7,  System  III, and System V implementations of UNIX, interrupt
-commands must be preceeded by the 'connect'  escape  character  (e.g.  normally
-Ctrl-\).   Ctrl-F and Ctrl-B are effective only during the transfer of data (D)
-packets, and cannot be used to interrupt a transfer that has  not  yet  reached
-that stage.
+With UNIX V7, UNIX System  III, and UNIX System V systems, interrupt  commands 
+must be preceeded by the 'connect'  escape  character  (e.g.  normally Ctrl-\).
+Ctrl-F and Ctrl-B  are effective only  during the transfer of data (D) packets,
+and cannot be used to interrupt a transfer that has not yet reached that stage.
 
     CAUTION:  If Control-F or Control-B is used to cancel an incoming file,
-    and a file of the same name previously existed, and the "file  warning"
-    feature  is  not  enabled, then the previous copy of the file will dis-
-    appear.
+    and  a  file of  the  same  name  previously  existed,  and  the  "file
+	rename"  feature is enabled,  then the  previous copy  of the file will
+	disappear.
 
 EMERGENCY EXIT:  When running  μCKermit in  remote mode, if you have  started a
 protocol operation (sending or receiving a file, server command wait, etc), you
@@ -265,7 +264,7 @@ tings.  If μCKermit is invoked with a command line that specifies  no  actions,
 then  it  will  issue  a  prompt  and begin interactive dialog.  Action options
 specify either protocol transactions or terminal connection.
 
-An implicit 'take' command is executed upon your  .kermrc4 file  when  μCKermit
+An implicit 'take' command is executed upon your .uckermrc file  when  μCKermit
 starts  up,  upon either interactive or command-line invocation.  This file may
 contain μCKermit interactive-mode commands, which are explained later.
 
@@ -352,7 +351,7 @@ for successful communication with the remote system:
 -b n    Baud -- Specify the transmission speed in bits per second ("baud rate")
         for the line given in the -l option, as in:
 
-            kermit -l /dev/ttyS5 -b 9600
+            kermit -l /dev/ttyS5 -b 38400
 
         This  option  should  always  be included with the -l option, since the
         speed of an external line is not necessarily what you expect.
@@ -378,7 +377,7 @@ The following commands may be used only with a μCKermit which is in local mode.
 
             kermit -g "profile exec"
 
--f      Send a 'finish' command to a remote server.
+-f      Send a 'FINISH' command to a remote server.
 
 -c      Establish  a  terminal  connection  over  the specified or default com-
         munication line, before any protocol transaction takes place.  Get back
@@ -394,14 +393,9 @@ included with the -r, -k, or -s options.
 
 Several other command-line options are provided:
 
--i      Specifies that files should be sent or received exactly "as is" with no
-        conversions.  This option is necessary for transmitting  binary  files.
-        It may also be used in UNIX-to-UNIX transfers (it must be given to both
-        μCKermit  programs), where  it will  improve performance by circumvent-
-        ing  the  normal  text-file conversions, and will allow mixture of text
-        and binary files in a single file group.
+-i      Specifies  that  files be treated  as text  and  subject to conversion.
 
--w      Write-Protect -- Avoid filename collisions for incoming files.
+-w      Allow overwrite  --  Local  files will  be replaced  by incoming files.
 
 -e n    Extended packet length -- Specify that μCKermit is allowed  to  receive
         packets  up  to length n, where n may be between 10 and some large num-
@@ -601,8 +595,8 @@ mands:
         treated as a continuation line; this is useful for readability in  com-
         mand files, especially in the 'script' command.
 
-    ^Z  (Control-Z)  --  On  systems (like Berkeley UNIX, Ultrix) with job con-
-        trol, suspend Kermit, i.e. put it into the  background in  such  a  way
+    ^Z  (Control-Z)  --  On  systems  (like BSD or Linux)  with  job  control,
+	    suspend  uCKermit,  i.e. put  it into the  background in  such  a  way
         that  it  can  be  brought  back into the foreground (e.g. with an 'fg'
         shell command) with all its settings intact.
 
@@ -617,15 +611,17 @@ A command line beginning with a percent sign "%" is ignored.  Such lines may be
 used to include illustrative commentary in Kermit command dialogs.
 
 Interactive μCKermit accepts commands from files as well as from the  keyboard.
-When you start μCKermit the program looks for the file .kermrc4 in your home or
-current directory (first it looks in the home directory, then  in  the  current
+When you start μCKermit, the program looks for the file .uckermrc in your home
+or current directory (first it looks in the home directory, then in the current
 one)  and  executes any commands it finds there.  These commands must be in in-
 teractive format, not UNIX command-line format.    A  "take"  command  is  also
 provided  for  use  at  any  time  during  an  interactive  session,  to  allow
 interactive-format commands to be executed from a file; command  files  may  be
 nested to any reasonable depth.
 
+
 Here is a brief list of μCKermit interactive commands:
+
               %  Comment
               !  Execute a UNIX shell command, or start a shell.
             bye  Terminate and log out a remote Kermit server.
@@ -747,8 +743,7 @@ use cpio.
 
 Another  Note  --  The 'send' command does not skip over "invisible" files that
 match the file specification; UNIX systems  usually  treat  files  whose  names
-start  with  a dot (like .login, .cshrc, and .kermrc4) as invisible.  Similarly
-for "temporary" files whose names start with "#".
+start  with  a  dot  (like  .login, .bashrc,  and  .uckermrc)  as  "invisible".
 
 
                              THE 'RECEIVE' COMMAND
@@ -999,7 +994,7 @@ escape-character cc
     used  in  System  III/V implementations to prefix interrupt commands during
     file transfers.
 
-file {display, names, type, warning}
+file {display, names, type, rename}
     Establish various file-related parameters:
 
     display {on, off}
@@ -1025,38 +1020,40 @@ file {display, names, type, warning}
         tween  UNIX  newline  characters  and  the carriage-return/linefeed se-
         quences required by the canonical Kermit file transmission format,  and
         in  common use on non-UNIX systems.  Binary means to transmit file con-
-        tents without conversion.  Binary (`-i' in command  line  notation)  is
-        necessary  for  binary  files, and desirable in all UNIX-to-UNIX trans-
-        actions to cut down on overhead.
+        tents without conversion.  Text mode (`-i' in command line notation) is
+        necessary  for source code, or similar textual files, but not desirable
+		for similar system types (such as UNIX-to-UNIX transactions) because of
+		the added overhead required.
 
         The optional trailing parameter tells the bytesize for  file  transfer.
         It  is  8  by  default.    If you specify 7, the high order bit will be
         stripped from each byte of sent and received files.  This is useful for
         transferring text files that may have extraneous high order bits set in
-        their disk representation (e.g.  Wordstar  or  similar  word  processor
+        their disk representation (e.g.  WordStar  or  similar  word  processor
         files).
 
-    warning {on, off}
-        Normally off, which means that incoming files will  silently  overwrite
-        existing files of the same name.  When on (`-w' on command line) Kermit
-        will check if an arriving file would overwrite an existing file; if so,
-        it  will construct a new name for the arriving file, of the form foo~n,
-        where foo is the name they share and n is a "generation number"; if foo
-        exists,  then  the new file will be called foo~1.  If foo and foo~1 ex-
-        ist, the new file will be foo~2, and so on.  If the new name  would  be
-        longer than the maximum length for a filename, then characters would be
-        deleted from the end first, for instance, thelongestname  on  a  system
-        with a limit of 14 characters would become thelongestn~1.
+    rename {on, off}
+        Normally on, which means  that incoming files cannot silently overwrite
+        existing  files  of the same name.   When off  (`-w'  on  command  line)
+		uC-Kermit  will allow an arriving file to  simply overwrite an existing
+		file; when off, it  will construct a new name for the arriving file, of
+		the form foo~n, where foo is the name they share and n is a "generation
+		number"; if foo exists,  then  the new  file will  be called foo~1.  If
+		foo and foo~1 exist, the new file will be foo~2, and so on.  If the new
+		name  would  be  longer  than the maximum length for a  filename,  then
+		characters   would  be  deleted  from  the  end  first,  for  instance,
+		"thelongestname"  on  a  system with a limit  of  14 characters  would
+		become "thelongestn~1".
 
             CAUTION:  If Control-F or Control-B is used to cancel an incom-
             ing file, and a file of the same name previously  existed,  and
-            the  "file  warning"  feature is not enabled, then the previous
-            copy of the file will disappear.
+            the "rename" feature is not enabled, then the previous  copy of
+			the file will disappear!
 
-flow-control {none, xon/xoff}
-    Normally xon/xoff for full duplex flow control.  Should be set to 'none' if
-    the other system cannot do xon/xoff flow control, or if you have  issued  a
-    'set  handshake' command.  If set to xon/xoff, then handshake should be set
+flow-control {none, XON/XOFF}
+    Normally XON/XOFF for full duplex flow control.  Should be set to 'none' if
+    the other system cannot do XON/XOFF flow control, or if you have  issued  a
+    'set  handshake' command.  If set to XON/XOFF, then handshake should be set
     to none.  This setting applies during both  terminal  connection  and  file
     transfer.    Warning:  This command may have no effect on certain UNIX sys-
     tems, where Kermit puts the communication line into 'rawmode', and  rawmode
@@ -1068,7 +1065,7 @@ incomplete {discard, keep}
     far is normally discarded.  If you "set incomplete  keep"  then  such  file
     fragments will be kept.
 
-handshake {xon, xoff, cr, lf, bell, esc, none}
+handshake {XON, XOFF, cr, lf, bell, esc, none}
     Normally none.  Otherwise, half-duplex communication line turnaround  hand-
     shaking  is  done, which means μCKermit  will  not  reply to a packet until
     it has received the indicated handshake character or has timed out  waiting
@@ -1084,10 +1081,10 @@ line [device-name]
     Kermit will enter remote mode (useful when  logged  in  through  the  "back
     port"  of  a  system normally used as a local-mode workstation).  When UNIX
     Kermit enters local mode, it attempts to synchronize  with  other  programs
-    (like  uucp)  that  use  external  communication lines so as to prevent two
+    (like  UUCP)  that  use  external  communication lines so as to prevent two
     programs using the same  line  at  once;  before  attempting  to  lock  the
     specified  line,  it  will  close  and  unlock  any  external line that was
-    previously in use.  The method used for locking is the  "uucp  lock  file",
+    previously in use.  The method used for locking is the  "UUCP  lock  file",
     explained in more detail later.
 
 modem-dialer {direct, hayes, racalvadic, ventel, ...}
@@ -1312,7 +1309,7 @@ one:
     % for IBM mainframe communication
     %
     set parity mark
-    set handshake xon
+    set handshake XON
     set flow-control none
     set duplex half
 
@@ -1325,20 +1322,14 @@ commands:
     %
     set parity none
     set handshake none
-    set flow-control xon/xoff
+    set flow-control XON/XOFF
     set duplex full
 
-An implicit 'take' command is executed upon your .kermrc4  file  when  μCKermit
-starts  up,  upon either  interactive or command-line invocation.  The .kermrc4
+An implicit 'take' command is executed upon your .uckermrc file  when  μCKermit
+starts  up, upon either  interactive or command-line invocation.  The .uckermrc
 file should contain 'set' or other commands you want to be  in  effect  at  all
-times.   For instance, you might want override the default action when incoming
-files have the same names as existing files -- in that case, put the command
-
-    set file warning on
-
-in your .kermrc4 file.  On some non-UNIX systems  that run  μCKermit,  the  in-
-itialization   file  might  have  a  different  name,  such  as  kermit.ini  or
-ckermit.ini.
+times.  On some non-UNIX  systems that run  μCKermit,  the initialization  file
+might have a different name, such as uckermit.ini.
 
 Errors encountered during execution of take files (such as failure to  complete
 dial  or script operations) cause termination of the current take file, popping
@@ -1451,7 +1442,7 @@ clusive basis.  If it is desired to dial a call and then return  to  the  shell
 is necessary to place the dialed call under one device name (say,  "/dev/cua0")
 and then escape to the shell within Kermit on a linked device which is separate
 from the dialed line (say, "/dev/cul0").  This is the same  technique  used  by
-uucp (to allow locks to be placed separately for dialing and conversing).
+UUCP (to allow locks to be placed separately for dialing and conversing).
 
 Because  modem  dialers have strict requirements to override the carrier-detect
 signal most UNIX implementations expect, the sequence for dialing is more rigid
@@ -1696,7 +1687,7 @@ These two commands are identical.  Both of them do the following:
 
    - Attempt to insure that the terminal is returned to normal.
    - Relinquish access to any communication line assigned via 'set line'.
-   - Relinquish any uucp and multiuser locks on the communications line.
+   - Relinquish any UUCP and multiuser locks on the communications line.
    - Hang up the modem, if the communications line supports data  terminal
      ready.
    - Close any open logs or other files.
@@ -1714,7 +1705,7 @@ munication  line.  When  you  issue  the 'set line' command  to  μCKermit, UNIX
 would normally grant you access to the line  even  if  some  other  process  is
 making  use  of  it.    The  method adopted by most UNIX systems to handle this
 situation is the "UUCP lock  file".    UUCP,  the  UNIX-to-UNIX  Copy  program,
-creates  a  file  in  its  directory  (usually /usr/spool/uucp, on some systems
+creates  a  file  in  its  directory  (usually /usr/spool/UUCP, on some systems
 /etc/locks) with a name like LCK..name, where name is the device name, for  in-
 stance tty07.
 
@@ -1724,17 +1715,17 @@ external  line using the 'set line' command or `-l' on the command line, Kermit
 looks in the UUCP directory for a lock file corresponding to that device.   For
 instance, if you 'set line /dev/ttyS6' then Kermit looks for the file
 
-    /usr/spool/uucp/LCK..ttyi6
+    /usr/spool/UUCP/LCK..ttyi6
 
 If it finds this file, it gives you an error message and a directory listing of
 the file so that you can see who is using it, e.g.
 
-    -r--r--r--  1 fdc        8 Feb  7 13:02 /usr/spool/uucp/LCK..ttyi6
+    -r--r--r--  1 fdc        8 Feb  7 13:02 /usr/spool/UUCP/LCK..ttyi6
 
 In this case, you would look up user fdc to find out how soon the line will be-
 come free.
 
-This  convention  requires  that  the  uucp  directory be publicly readable and
+This  convention  requires  that  the  UUCP  directory be publicly readable and
 writable.  If it is not, the program will issue an appropriate warning message,
 but will allow you to proceed at your own risk (and the risk of anyone else who
 might also be using the same line).
@@ -1742,7 +1733,7 @@ might also be using the same line).
 If no lock file is found, μCKermit  will  attempt create  one, thus  preventing
 anyone  who subsequently tries to run Kermit, UUCP, tip, or similar programs on
 the same line from gaining access until you release the line.  If Kermit  could
-not  create  the  lock  file (for instance because the uucp directory is write-
+not  create  the  lock  file (for instance because the UUCP directory is write-
 protected), then you will receive a warning message  but  will  be  allowed  to
 proceed  at  your  -- and everyone else's -- risk.  When Kermit terminates nor-
 mally, your lock file is removed.
@@ -1753,12 +1744,12 @@ has more than one path associated with it, then a lock can be  circumvented  by
 using an alias.
 
 When a lock-creating program abruptly terminates, e.g. because it crashes or is
-killed via shell  command,  the  lock  file  remains  in  the  uucp  directory,
+killed via shell  command,  the  lock  file  remains  in  the  UUCP  directory,
 spuriously  indicating  that  the line is in use.  If the lock file is owned by
 yourself, you may remove it.  Otherwise, you'll have to get the  owner  or  the
-system manager to remove it, or else wait for a system task to do so; uucp sup-
+system manager to remove it, or else wait for a system task to do so; UUCP sup-
 ports a function (uuclean) which removes these files after a predetermined  age
--- uucp sites tend to run this function periodically via crontab.
+-- UUCP sites tend to run this function periodically via crontab.
 
 Locking  is  not needed, or used, if communications occur over the user's login
 terminal line (normally /dev/tty).
@@ -1767,7 +1758,7 @@ It may be seen that line locking is fraught with peril.  It is included in UNIX
 Kermit  only because other UNIX communication programs rely on it.  While it is
 naturally desirable to assure exclusive access  to  a  line,  it  is  also  un-
 desirable  to  refuse  access  to a vacant line only because of a spurious lock
-file, or because the uucp directory is not appropriately protected.
+file, or because the UUCP directory is not appropriately protected.
 
 
 1.6. File Attributes
@@ -1874,7 +1865,7 @@ processor  that  is  (or may be) associated with the port, then you can use the
 port in the normal manner.
 
     $ /usr/bin/getoff.sh tty000
-    $ kermit
+    $ uckermit
     uCKermit>set line /dev/tty000
     uCKermit>set speed 9600
         (start doing work...)
@@ -1884,22 +1875,14 @@ port in the normal manner.
 You may omit the getoff/getoff lines if the line is not used for logging in.
 
 
-1.9. μCKermit under VAX/VMS
+1.9. Kermit for VMS
 
-μCKermit can be built using VAX-11 C to run under VMS.  Most  of  the  descrip-
-tions  in this manual hold true, but it should be noted that as of this writing
-the VMS support is not thoroughly tested, and no explicit  support  exists  for
-the various types of VMS files and their attributes.
+The related C-Kermit program supports VMS.
 
 
-1.10. μCKermit on the Macintosh and other Systems
+1.10. Kermit on the Macintosh and other Systems
 
-The  "protocol kernel" of μCKermit is also used by Columbia's Macintosh Kermit.
-The user and system interface is  entirely  different,  and  is  covered  in  a
-separate document.
-
-There  is  also  a Kermit for the Commodore Amiga based on μCKermit, as well as
-versions for MS-DOS, Data General operating systems, etc.
+Kermit applications exist for Amiga, Atari ST, Macintosh, IBM PC, and others.
 
 
 1.11. μCKermit Restrictions and Known Bugs
@@ -1913,8 +1896,8 @@ versions for MS-DOS, Data General operating systems, etc.
    2. Flow control:  μCKermit attempts to use XON/XOFF flow control during
       protocol  operations,  but  it also puts the communication line into
       "rawmode".  On many systems, rawmode disables flow control, so  even
-      though  you  may  have  "set flow xon/xoff", no flow control will be
-      done.  This is highly system and UNIX-version dependent.
+      though  you  may  have  "set flow XON/XOFF", no flow control will be
+      done.  This is highly operating system (and UNIX-version) dependent.
 
    3. Modem controls:  If a connection is made over a  communication  line
       (rather  than  on  the controlling terminal line), and that line has
@@ -1925,7 +1908,7 @@ versions for MS-DOS, Data General operating systems, etc.
       modem-dialer' and 'dial' commands.)
 
    4. Login Scripts:  The present login scripts implementation follows the
-      UNIX conventions of uucp's "L.sys" file, rather than the normal Ker-
+      UNIX conventions of UUCP's "L.sys" file, rather than the normal Ker-
       mit "INPUT/OUTPUT" style.
 
    5. Dial-out vs dial-in  communications  lines:    μCKermit  requires  a
