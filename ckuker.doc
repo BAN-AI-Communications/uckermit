@@ -33,11 +33,11 @@ modification, are  permitted  provided  that the following conditions  are met:
 
  * Redistributions in  binary  form must reproduce the  above copyright notice,
      this list of conditions and  the following disclaimer in the documentation
-	 and/or other materials provided with the distribution.
+         and/or other materials provided with the distribution.
 
  * Neither the name of Columbia University nor the names of its contributors
      may be used to endorse or promote products derived from this software
-	 without specific prior written permission.
+         without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING, BUT  NOT LIMITED TO, THE IMPLIED
@@ -194,8 +194,8 @@ and cannot be used to interrupt a transfer that has not yet reached that stage.
 
     CAUTION:  If Control-F or Control-B is used to cancel an incoming file,
     and  a  file of  the  same  name  previously  existed,  and  the  "file
-	rename"  feature is enabled,  then the  previous copy  of the file will
-	disappear.
+        rename"  feature is enabled,  then the  previous copy  of the file will
+        disappear.
 
 EMERGENCY EXIT:  When running  μCKermit in  remote mode, if you have  started a
 protocol operation (sending or receiving a file, server command wait, etc), you
@@ -596,7 +596,7 @@ mands:
         mand files, especially in the 'script' command.
 
     ^Z  (Control-Z)  --  On  systems  (like BSD or Linux)  with  job  control,
-	    suspend  uCKermit,  i.e. put  it into the  background in  such  a  way
+            suspend  uCKermit,  i.e. put  it into the  background in  such  a  way
         that  it  can  be  brought  back into the foreground (e.g. with an 'fg'
         shell command) with all its settings intact.
 
@@ -1022,8 +1022,8 @@ file {display, names, type, rename}
         in  common use on non-UNIX systems.  Binary means to transmit file con-
         tents without conversion.  Text mode (`-i' in command line notation) is
         necessary  for source code, or similar textual files, but not desirable
-		for similar system types (such as UNIX-to-UNIX transactions) because of
-		the added overhead required.
+                for similar system types (such as UNIX-to-UNIX transactions) because of
+                the added overhead required.
 
         The optional trailing parameter tells the bytesize for  file  transfer.
         It  is  8  by  default.    If you specify 7, the high order bit will be
@@ -1035,20 +1035,20 @@ file {display, names, type, rename}
     rename {on, off}
         Normally on, which means  that incoming files cannot silently overwrite
         existing  files  of the same name.   When off  (`-w'  on  command  line)
-		uC-Kermit  will allow an arriving file to  simply overwrite an existing
-		file; when off, it  will construct a new name for the arriving file, of
-		the form foo~n, where foo is the name they share and n is a "generation
-		number"; if foo exists,  then  the new  file will  be called foo~1.  If
-		foo and foo~1 exist, the new file will be foo~2, and so on.  If the new
-		name  would  be  longer  than the maximum length for a  filename,  then
-		characters   would  be  deleted  from  the  end  first,  for  instance,
-		"thelongestname"  on  a  system with a limit  of  14 characters  would
-		become "thelongestn~1".
+                uC-Kermit  will allow an arriving file to  simply overwrite an existing
+                file; when off, it  will construct a new name for the arriving file, of
+                the form foo~n, where foo is the name they share and n is a "generation
+                number"; if foo exists,  then  the new  file will  be called foo~1.  If
+                foo and foo~1 exist, the new file will be foo~2, and so on.  If the new
+                name  would  be  longer  than the maximum length for a  filename,  then
+                characters   would  be  deleted  from  the  end  first,  for  instance,
+                "thelongestname"  on  a  system with a limit  of  14 characters  would
+                become "thelongestn~1".
 
             CAUTION:  If Control-F or Control-B is used to cancel an incom-
             ing file, and a file of the same name previously  existed,  and
             the "rename" feature is not enabled, then the previous  copy of
-			the file will disappear!
+                        the file will disappear!
 
 flow-control {none, XON/XOFF}
     Normally XON/XOFF for full duplex flow control.  Should be set to 'none' if
