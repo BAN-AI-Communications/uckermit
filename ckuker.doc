@@ -112,7 +112,7 @@ Program)  for  file  transfer  with  including  the use of scheduled (e.g. late
 night) unattended operation.  UUCP can only be used between computers that sup-
 port  UUCP,  but  μCKermit  can  be used to transfer files with the much larger
 variety of computers that have Kermit (or even with computers that  don't  have
-Kermit, if you use μCKermit's "raw" uploading and downloading features).
+Kermit,  if you  use  μCKermit's "raw"  uploading  and  downloading  features).
 
 
 1.1. The UNIX File System
@@ -128,35 +128,35 @@ denotes the file bar in the directory /usr/cmg.  Alphabetic case is significant
 in UNIX file and directory names, i.e. "a" is a different file  (or  directory)
 from "A".  Wildcard or "meta" characters allow groups of files to be specified.
 "*" matches any string; "?" matches any single  character;  tilde  "~"  at  the
-beginning  of  a  file specification matches the user's home directory, or fol-
-lowed immediately by another username, that user's home directory.
+beginning   of  a  file  specification   matches  the  user's  home  directory,
+or followed  immediately  by  another  username, that  user's  home  directory.
 
 When μCKermit is invoked with file arguments  specified  on  the  UNIX  command
 line, the  UNIX shell (Bourne Shell, C-Shell, Korn Shell, etc) expands the meta
 characters itself, and in this case a wider variety may be available.  For  ex-
 ample,
 
-    kermit -s ~/ck[uvm]*.{upd,bwr}]
+    uckermit -s ~/ck[uvm]*.{upd,bwr}]
 
 is expanded (by the Berkeley C-Shell) into a list of  all the files in the user
 home directory (~/) that start with the characters "ck", followed by  a  single
 character  "u", "v", or "m", followed by zero or more characters, followed by a
 dot, followed by one of the strings "upd" or "bwr".  Internally,  the  μCKermit
-program itself expands only the "~", "*", and "?" meta characters.
+program   itself   expands  only  the  "~",  "*",  and  "?"   meta  characters.
 
 UNIX  files are linear (sequential) streams of 8-bit bytes.  Text files consist
 streams of ASCII characters (or characters in other codes) with lines separated
 by  the UNIX newline character, which is linefeed (LF, ASCII 10).  This distin-
 guishes UNIX text files from those on most other ASCII systems, in which  lines
 are  separated  by a carriage-return linefeed sequence (CRLF, ASCII 13 followed
-by ASCII 10).  Binary files are likely to contain data in the high bits of  the
-file bytes, and have no particular line or record structure.
+by  ASCII  10).   Binary  files  are  likely to contain  data in the  high bits
+of   the  file  bytes,  and  have  no  particular  line  or  record  structure.
 
 When  transferring  files,  μCKermit can convert  between  upper and lower case
 filenames as well as LF and CR-LF line endings  completely automatically.  When
 text files are to transferred between differing systems, the  program should be
-instructed perform LF/CR-LF conversion  by adding '-i' on the command  line  or
-issuing the "set file type text" command in interactive mode.
+instructed perform LF/CR-LF  conversion  by  adding '-i'  on the  command  line
+or   issuing   the   "set  file  type  text"   command  in   interactive  mode.
 
 
 1.2. File Transfer
@@ -194,8 +194,8 @@ and cannot be used to interrupt a transfer that has not yet reached that stage.
 
     CAUTION:  If Control-F or Control-B is used to cancel an incoming file,
     and  a  file of  the  same  name  previously  existed,  and  the  "file
-        rename"  feature is enabled,  then the  previous copy  of the file will
-        disappear.
+    rename"  feature is enabled,  then the  previous copy  of the file will
+    disappear.
 
 EMERGENCY EXIT:  When running  μCKermit in  remote mode, if you have  started a
 protocol operation (sending or receiving a file, server command wait, etc), you
@@ -225,7 +225,7 @@ Bell Laboratories in "UNIX/World", Vol.1, No.3, 1984. The rules that apply are:
    - Command names must include lower case letters and digits only.
    - An option name is a single character.
    - Options are delimited by '-'.
-   - Options  with  no  arguments  may  be  grouped  (bundled)  behind one
+   - Options with no arguments may be grouped (bundled) behind one
      delimiter.
    - Option-arguments cannot be optional.
    - Arguments immediately follow options, separated by whitespace.
@@ -262,26 +262,26 @@ cc      A decimal number between 0 and 31, or else  exactly  127,  representing
 μCKermit  command  line options may specify any combination of actions and set-
 tings.  If μCKermit is invoked with a command line that specifies  no  actions,
 then  it  will  issue  a  prompt  and begin interactive dialog.  Action options
-specify either protocol transactions or terminal connection.
+specify   either    protocol    transactions     or    terminal     connection.
 
 An implicit 'take' command is executed upon your .uckermrc file  when  μCKermit
 starts  up,  upon either interactive or command-line invocation.  This file may
-contain μCKermit interactive-mode commands, which are explained later.
+contain  μCKermit  interactive-mode  commands,   which  are  explained   later.
 
 -s fn   Send the specified file or files.    If  fn  contains  wildcard  (meta)
         characters,  the  UNIX  shell expands it into a list.  fn may also be a
         list of files, as in:
 
-            kermit -s ckcmai.c ckuker.h mail.txt
+            uckermit -s ckcmai.c ckuker.h mail.txt
 
         If fn is '-' then kermit sends from standard input, which may come from
         a file:
 
-            kermit -s - < foo.bar
+            uckermit -s - < foo.bar
 
         or a parallel process:
 
-            ls -l | grep cmg | kermit -s -
+            ls -l | grep cmg | uckermit -s -
 
         You  cannot use this mechanism to send terminal typein.  If you want to
         send a file whose actual name is "-" you can precede  it  with  a  path
@@ -294,35 +294,35 @@ contain μCKermit interactive-mode commands, which are explained later.
 -k      Receive  (passively)  a file or files, sending them to standard output.
         This option can be used in several ways:
 
-        kermit -k
+        uckermit -k
             Displays  the  incoming  files  on  your screen; to be used only in
             "local mode" (see below).
 
-        kermit -k > fn1
+        uckermit -k > fn1
             Sends  the  incoming file or files to the named file, fn1.  If more
             than one file arrives,  all  are  concatenated  together  into  the
             single file fn1.
 
-        kermit -k | command
+        uckermit -k | command
             Pipes the incoming data (single or multiple files) to the indicated
             command, as in
 
-                kermit -k | sort > sorted.stuff
+                uckermit -k | sort > sorted.stuff
 
 -a fn1  If you have specified a file transfer option, you may give an alternate
-        name for a single file with the -a ("as") option.  For example,
+        name for a  single  file with the  '-a'  ("as")  option.  For  example,
 
-            kermit -s foo -a bar
+            uckermit -s foo -a bar
 
         sends the file foo telling the receiver that its name is bar.  If  more
         than  one  file  arrives or is sent, only the first file is affected by
         the -a option:
 
-            kermit -ra baz
+            uckermit -ra baz
 
         stores the first incoming file under the name baz.
 
--x      Begin server operation.  May be used in either local or remote mode.
+-x      Kermit  server  operation.  May be used in either local or remote mode.
 
 Before proceeding, a few words about remote and local operation are  necessary.
 μCKermit  is  "local"  if it is running on PC or workstation that you are using
@@ -409,7 +409,7 @@ Several other command-line options are provided:
 
 -d      Debug -- Record debugging information in the file debug.log in the cur-
         rent  directory.    Use  this option if you believe the program is mis-
-        behaving, and show the resulting log to your local Kermit maintainer.
+        behaving,  and show the  resulting log to your local Kermit maintainer.
 
 -h      Help -- Display a brief synopsis of the command line options.
 
@@ -444,7 +444,7 @@ During transmission, files are encoded as follows:
 Command Line Examples:
 
 
-    kermit -l /dev/ttyS5 -b 1200 -cn -r
+    uckermit -l /dev/ttyS5 -b 1200 -cn -r
 
 This command connects you to the system on the other end of ttyi5 at 1200 baud,
 where you presumably log in and run Kermit with a 'send' command.    After  you
@@ -453,29 +453,29 @@ transfer is completed, you are reconnected to the remote system so that you can
 logout.
 
 
-    kermit -l /dev/ttyS4 -b 1800 -cntp m -r -a foo
+    uckermit -l /dev/ttyS4 -b 1800 -cntp m -r -a foo
 
 This  command  is like the preceding one, except the remote system in this case
 uses half duplex communication with mark parity.  The first file  that  arrives
 is stored under the name foo.
 
 
-    kermit -l /dev/ttyS6 -b 9600 -c | tek
+    uckermit -l /dev/ttyS6 -b 9600 -c | tek
 
 This  example  uses  Kermit to connect your terminal to the system at the other
 end of ttyi6.  The μCKermit terminal connection does not provide any particular
 terminal   emulation,   so   μCKermit's   standard   i/o  is  piped  through  a
-(hypothetical) program called tek, which performs (say) Tektronix emulation.
+(hypothetical)  program  called  tek, which performs (say) Tektronix emulation.
 
 
-    kermit -l /dev/ttyS6 -b 9600 -nf
+    uckermit -l /dev/ttyS6 -b 9600 -nf
 
 This command would be used to shut down a remote server and then connect to the
-remote system, in order to log out or to make further use of it.  The -n option
-is invoked after -f (-c would have been invoked before).
+remote system, in  order  to  log  out  or  to make  further  use  of  it.  The
+'-n'  option  is  invoked  after '-f' ('-c' would  have  been  invoked before).
 
 
-    kermit -l /dev/ttyS6 -b 9600 -qg foo.\* &
+    uckermit -l /dev/ttyS6 -b 9600 -qg foo.\* &
 
 This command causes μCKermit to be invoked in the background, getting  a  group
 of files from a remote server (note the quoting of the `*' character).  No dis-
@@ -484,30 +484,30 @@ commands.    This  allows other work to be done while file transfers proceed in
 the background.
 
 
-    kermit -l /dev/ttyS6 -b 9600 -g foo.\* > foo.log < /dev/null &
+    uckermit -l /dev/ttyS6 -b 9600 -g foo.\* > foo.log < /dev/null &
 
 This command is like the previous one, except the  file  transfer  display  has
-been  redirected  to  the  file foo.log.  Standard input is also redirected, to
-prevent μCKermit from sampling it for interruption commands.
+been  redirected  to  the  file  foo.log.  Standard  input is  also redirected,
+to   prevent   μCKermit   from   sampling   it   for   interruption   commands.
 
 
-    kermit -iwx
+    uckermit -iwx
 
 This command starts up μCKermit as a server.  Files  are  transmitted  with  no
 newline/carriage-return-linefeed conversion; the -i option is necessary for bi-
 nary file transfer and recommended for UNIX-to-UNIX transfers.  Incoming  files
-that have the same names as existing files are given new, unique names.
+that   have   the   same   names as existing files are given new, unique names.
 
 
-    kermit -l /dev/ttyS6 -b 9600
+    uckermit -l /dev/ttyS6 -b 9600
 
 This  command  sets  the  communication  line  and  speed.   Since no action is
 specified, μCKermit issues a prompt and enters an interactive dialog with  you.
-Any  settings  given on the command line remain in force during the dialog, un-
-less explicitly changed.
+Any  settings  given  on  the  command line  remain in force during the dialog,
+unless explicitly changed.
 
 
-    kermit
+    uckermit
 
 This command starts up Kermit interactively with all default settings.
 
@@ -517,7 +517,7 @@ standard input and output.  On the orginating system, in this case the  remote,
 type (for instance):
 
 
-    tar cf - /usr/home/fdc | kermit -is -
+    tar cf - /usr/home/fdc | uckermit -is -
 
 This  causes  tar  to  send the  directory /usr/home/fdc (and all its files and
 all its subdirectories  and  all their files...) to  standard output instead of
@@ -525,16 +525,16 @@ to a tape; kermit  receives  this as  standard input  and sends  it as a binary
 file. On the receiving system, in this case the local one, type (for instance):
 
 
-    kermit -il /dev/ttyS5 -b 9600 -k | tar xf -
+    uckermit -il /dev/ttyS5 -b 9600 -k | tar xf -
 
 Kermit receives the tar archive, and sends it via standard output  to  its  own
-copy of tar, which extracts from it a replica of the original directory tree.
+copy of  tar, which extracts  from it a replica of the original directory tree.
 
 A  final example shows how a UNIX compression utility might be used to speed up
 Kermit file transfers:
 
-    compress file | kermit -is -     (sender)
-    kermit -ik | uncompress          (receiver)
+    compress file | uckermit -is -      (sender)
+    uckermit -ik | uncompress           (receiver)
 
 
 Exit Status Codes:
@@ -543,7 +543,7 @@ Exit Status Codes:
 countered,  where  the  exit  status  is set to one.  With background operation
 (e.g., `&' at end of invoking command line) driven by scripted interactive com-
 mands  (redirected  standard  input  and/or take files), any failed interactive
-command (such as failed dial or script attempt) causes the fatal error exit.
+command (such as failed  dial or  script  attempt) causes the fatal error exit.
 
 
 1.4. Interactive Operation
@@ -596,7 +596,7 @@ mands:
         mand files, especially in the 'script' command.
 
     ^Z  (Control-Z)  --  On  systems  (like BSD or Linux)  with  job  control,
-            suspend  uCKermit,  i.e. put  it into the  background in  such  a  way
+        suspend  uCKermit,  i.e. put  it into the  background in  such  a  way
         that  it  can  be  brought  back into the foreground (e.g. with an 'fg'
         shell command) with all its settings intact.
 
@@ -608,7 +608,7 @@ liberal use of `?' and ESC to feel your way through the commands.   One  impor-
 tant command is "help" -- you should use it the first time you run μCKermit.
 
 A command line beginning with a percent sign "%" is ignored.  Such lines may be
-used to include illustrative commentary in Kermit command dialogs.
+used  to  include  illustrative   commentary   in   Kermit   command   dialogs.
 
 Interactive μCKermit accepts commands from files as well as from the  keyboard.
 When you start μCKermit, the program looks for the file .uckermrc in your home
@@ -877,7 +877,7 @@ Syntax: log {debugging, packets, session, transactions} [ fn1 ]
 μCKermit's progress may be logged in various ways.  The 'log' command  opens  a
 log,  the  'close' command closes it.  In addition, all open logs are closed by
 the 'exit' and 'quit' commands.  A name may be specified for a log file; if the
-name is omitted, the file is created with a default name as shown below.
+name  is  omitted,  the  file  is created  with a  default name as shown below.
 
 log debugging
     This produces a voluminous log of the internal workings of μCKermit, of use
@@ -1013,7 +1013,7 @@ file {display, names, type, rename}
         fore, any directory path appearing in  a  received  file  specification
         must exist and be write-accessible.  When literal naming is being used,
         the sender should not use path names in the file  specification  unless
-        the same path exists on the target system and is writable.
+        the  same   path  exists  on   the  target  system  and  is   writable.
 
     type {binary, text} [{7, 8}]
         The file type is normally text, which means that conversion is done be-
@@ -1022,8 +1022,8 @@ file {display, names, type, rename}
         in  common use on non-UNIX systems.  Binary means to transmit file con-
         tents without conversion.  Text mode (`-i' in command line notation) is
         necessary  for source code, or similar textual files, but not desirable
-                for similar system types (such as UNIX-to-UNIX transactions) because of
-                the added overhead required.
+        for similar system types (such as UNIX-to-UNIX transactions) because of
+        the added overhead required.
 
         The optional trailing parameter tells the bytesize for  file  transfer.
         It  is  8  by  default.    If you specify 7, the high order bit will be
@@ -1035,20 +1035,20 @@ file {display, names, type, rename}
     rename {on, off}
         Normally on, which means  that incoming files cannot silently overwrite
         existing  files  of the same name.   When off  (`-w'  on  command  line)
-                uC-Kermit  will allow an arriving file to  simply overwrite an existing
-                file; when off, it  will construct a new name for the arriving file, of
-                the form foo~n, where foo is the name they share and n is a "generation
-                number"; if foo exists,  then  the new  file will  be called foo~1.  If
-                foo and foo~1 exist, the new file will be foo~2, and so on.  If the new
-                name  would  be  longer  than the maximum length for a  filename,  then
-                characters   would  be  deleted  from  the  end  first,  for  instance,
-                "thelongestname"  on  a  system with a limit  of  14 characters  would
-                become "thelongestn~1".
+        uC-Kermit  will allow an arriving file to  simply overwrite an existing
+        file; when off, it  will construct a new name for the arriving file, of
+        the form foo~n, where foo is the name they share and n is a "generation
+        number"; if foo exists,  then  the new  file will  be called foo~1.  If
+        foo and foo~1 exist, the new file will be foo~2, and so on.  If the new
+        name  would  be  longer  than the maximum length for a  filename,  then
+        characters   would  be  deleted  from  the  end  first,  for  instance,
+        "thelongestname"  on  a  system with a limit  of  14 characters  would
+        become "thelongestn~1".
 
-            CAUTION:  If Control-F or Control-B is used to cancel an incom-
-            ing file, and a file of the same name previously  existed,  and
-            the "rename" feature is not enabled, then the previous  copy of
-                        the file will disappear!
+              CAUTION:  If Control-F or Control-B is used to cancel an incom-
+              ing file, and a file of the same name previously  existed,  and
+              the "rename" feature is not enabled, then the previous  copy of
+              the file will disappear!
 
 flow-control {none, XON/XOFF}
     Normally XON/XOFF for full duplex flow control.  Should be set to 'none' if
@@ -1070,7 +1070,7 @@ handshake {XON, XOFF, cr, lf, bell, esc, none}
     shaking  is  done, which means μCKermit  will  not  reply to a packet until
     it has received the indicated handshake character or has timed out  waiting
     for  it;  the  handshake setting applies only during file transfer.  If you
-    set handshake to other than none, then flow should be set to none.
+    set  handshake  to  otherC  than  none,  then  flow  should be set to none.
 
 line [device-name]
     The device name for the communication line to be used for file transfer and
@@ -1114,14 +1114,14 @@ prompt [string]
 send parameter
     Establish parameters to use when sending packets.  These will be in  effect
     only for the initial packet sent, since the other Kermit may override these
-    parameters during the protocol parameter exchange (unless noted below).
+    parameters  during  the  protocol  parameter exchange (unless noted below).
 
     end-of-packet cc
         Specifies the control character needed by the other Kermit to recognize
         the end of a packet.  μCKermit sends this character at the end of  each
         packet.    Normally  13  (carriage return), which most Kermit implemen-
         tations require.  Other Kermits require no  terminator  at  all,  still
-        others may require a different terminator, like linefeed (10).
+        others  may  require  a  different   terminator,  like  linefeed  (10).
 
     packet-length n
         Specify the maximum packet length to  send.    Normally  90.    Shorter
@@ -1130,7 +1130,7 @@ send parameter
         higher  the  overhead,  but the lower the chance of a packet being cor-
         rupted by noise, and the less time  to  retransmit  corrupted  packets.
         This  command  overrides the value requested by the other Kermit during
-        protocol initiation unless the other Kermit requests a shorter length.
+        protocol initiation unless the other  Kermit requests a shorter length.
 
     pad-character cc
         Designate  a  character  to send before each packet.  Normally, none is
@@ -1153,11 +1153,11 @@ send parameter
         the latter case, the recipient of such an echo can  change  the  packet
         prefix for outbound packets to be different from that of arriving pack-
         ets, so that the echoed packets will be ignored.  The  opposite  Kermit
-        must also be told to change the prefix for its inbound packets.
+        must  also  be  told  to  change  the  prefix  for its inbound packets.
 
     timeout n
         Specifies the number of seconds you want the other Kermit to wait for a
-        packet before timing it out and requesting retransmission.
+        packet  before   timing   it   out   and   requesting   retransmission.
 
 receive parameter
     Establish parameters to request the other Kermit to use when sending  pack-
@@ -1180,7 +1180,7 @@ receive parameter
     pad-character cc
         μCKermit normally does not need to have incoming packets preceded  with
         pad characters.  This command allows μCKermit to request the other Ker-
-        mit to use cc as a pad character.  Default cc is NUL, ASCII 0.
+        mit  to  use  cc  as  a  pad  character.   Default cc is  NUL, ASCII 0.
 
     padding n
         How many pad characters to ask for, normally 0.
@@ -1386,7 +1386,7 @@ firmware  or  emulation  software  in your terminal or PC.  If special terminal
 emulation is desired, then the 'connect' command can invoked from the UNIX com-
 mand line (-c or -n), piped through a terminal emulation filter, e.g.
 
-    kermit -l /dev/acu -b 1200 -c | tek
+    uckermit -l /dev/acu -b 1200 -c | tek
 
 
                              THE 'HANGUP' COMMAND:
