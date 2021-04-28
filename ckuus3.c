@@ -1,4 +1,4 @@
-/* C K U U S 3 -- "User Interface" for UNIX Kermit, part 3 */
+/* C K U U S 3 -- "User Interface" */
 
 /*
  * Copyright (C) 2021, Jeffrey H. Johnson <trnsz@pobox.com>
@@ -104,7 +104,9 @@ extern FILE *tfile[];       /* Array of take command fd's */
  */
 
 struct keytab blktab[] = {
-  "1", 1, 0, "2", 2, 0, "3", 3, 0
+  "1", 1, 0,
+  "2", 2, 0,
+  "3", 3, 0
 };
 
 /*
@@ -113,12 +115,15 @@ struct keytab blktab[] = {
  */
 
 struct keytab dpxtab[] = {
-  "full", 0, 0, "half", 1, 0
+  "full", 0, 0,
+  "half", 1, 0
 };
 
 struct keytab filtab[] = {
-  "display", XYFILD, 0, "names",  XYFILN, 0,
-  "type",    XYFILT, 0, "rename", XYFILW, 0
+  "display", XYFILD, 0,
+  "names",   XYFILN, 0,
+  "type",    XYFILT, 0,
+  "rename",  XYFILW, 0
 };
 
 int nfilp = ( sizeof ( filtab ) / sizeof ( struct keytab ));
@@ -129,9 +134,12 @@ int nfilp = ( sizeof ( filtab ) / sizeof ( struct keytab ));
  */
 
 struct keytab srtab[] = {
-  "end-of-packet",   XYEOL,  0, "packet-length", XYLEN,  0,
-  "pad-character",   XYPADC, 0, "padding",       XYNPAD, 0,
-  "start-of-packet", XYMARK, 0, "timeout",       XYTIMO, 0
+  "end-of-packet",   XYEOL,  0,
+  "packet-length",   XYLEN,  0,
+  "pad-character",   XYPADC, 0,
+  "padding",         XYNPAD, 0,
+  "start-of-packet", XYMARK, 0,
+  "timeout",         XYTIMO, 0
 };
 
 int nsrtab = ( sizeof ( srtab ) / sizeof ( struct keytab ));
@@ -142,7 +150,8 @@ int nsrtab = ( sizeof ( srtab ) / sizeof ( struct keytab ));
  */
 
 struct keytab flotab[] = {
-  "none", 0, 0, "xon/xoff", 1, 0
+  "none", 0, 0,
+  "xon/xoff", 1, 0
 };
 
 int nflo = ( sizeof ( flotab ) / sizeof ( struct keytab ));
@@ -153,19 +162,25 @@ int nflo = ( sizeof ( flotab ) / sizeof ( struct keytab ));
  */
 
 struct keytab hshtab[] = {
-  "bell",  007,     0, "cr",    015,   0, "esc",    033,
-  0,      "lf",   012,    0, "none", 999,     0, "xoff",
-  023,       0, "xon",  021, 0
+  "bell",  007,  0,
+  "cr",    015,  0,
+  "esc",   033,  0,
+  "lf",    012,  0,
+  "none",  999,  0,
+  "xoff",  023,  0,
+  "xon",   021,  0
 };
 
 int nhsh = ( sizeof ( hshtab ) / sizeof ( struct keytab ));
 
 struct keytab fntab[] = { /* File naming */
-  "converted", 1, 0, "literal", 0, 0
+  "converted", 1, 0,
+  "literal",   0, 0
 };
 
 struct keytab fttab[] = { /* File types */
-  "binary", 1, 0, "text", 0, 0
+  "binary", 1, 0,
+  "text",   0, 0
 };
 
 #ifndef NOCKUDIA
@@ -179,10 +194,11 @@ extern int nmdm;
  */
 
 struct keytab partab[] = {
-  "even",  'e',        0, "mark",
-  'm',         0, "none",      0,
-  0,       "odd", 'o',         0,
-  "space", 's', 0
+  "even",  'e',  0,
+  "mark",  'm',  0,
+  "none",    0,  0,
+  "odd",   'o',  0,
+  "space", 's',  0
 };
 
 int npar = ( sizeof ( partab ) / sizeof ( struct keytab ));
@@ -762,7 +778,7 @@ int xx;
     }
 
     lp = line;
-    sprintf(lp, "Baud rate for %s", ttname);
+    sprintf(lp, "Baud for %s", ttname);
     if (( y = cmnum(line, "", 10, &x)) < 0)
     {
       return ( y );
@@ -779,9 +795,9 @@ int xx;
 #ifndef NODOHLP
       printf("?Unsupported line speed - %d\n", x);
 #else /* ifndef NODOHLP */
-	  printf("?Bad speed - %d\n", x);
+          printf("?Bad speed - %d\n", x);
 #endif /* ifndef NODOHLP */
-	}
+        }
     else
     {
       speed = y;

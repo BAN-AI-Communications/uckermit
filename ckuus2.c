@@ -1,4 +1,4 @@
-/* C K U U S 2 -- "User Interface" STRINGS module for UNIX Kermit */
+/* C K U U S 2 -- "User Interface" STRINGS module */
 
 /*
  * Copyright (C) 2021, Jeffrey H. Johnson <trnsz@pobox.com>
@@ -112,19 +112,18 @@ int bcharc;
 static char *hlp1[] = {
   "\rUsage: [ -x arg [ -x arg ] [ -yy ] ] ]\n",
 #ifndef NODOHLP
-  "    ('x' options require args, 'y' options do not)\n",
   "    ACTION -- (* options require setting '-l' and '-b')\n",
   "        -s file(s) send (use '-s -' for stdin)\n",
   "        -r         receive\n",
-  "        -k         receive, to console (stdout)\n",
+  "        -k         receive to console\n",
   "      * -g file(s) get remote file(s) from server (quote wildcards)\n",
   "        -a name    alternate name (for '-s', '-r', and '-g')\n",
 #ifndef NOSERVER
   "        -x         start server mode\n",
 #endif /* ifndef NOSERVER */
   "      * -f         send finish command to remote\n",
-  "      * -c         connect, pre-transaction\n",
-  "      * -n         connect, post-transaction\n",
+  "      * -c         connect pre-transaction\n",
+  "      * -n         connect post-transaction\n",
   "   SETTING --\n",
   "        -l line    line device (e.g. '/dev/ttyS1')\n",
   "        -b baud    baud (e.g. '9600')\n",
@@ -165,16 +164,14 @@ Type '?' for a list of commands; Type 'help X' for any command 'X'.\n\
 In interactive mode, the following characters have special meaning:\n\n\
  CTRL-H:  (or BACKSPACE, DELETE): Delete the most recent character.\n\
  CTRL-W:  Delete the most recent full word.\n",
-  "\
+"\
  CTRL-U:  Delete the current full line.\n\
  CTRL-R   Redisplay the current full line.\n\
  CTRL-L:  Clear the display and then execute the current full line.\n\
       ?:  (QUESTION) Display help for the current command or field.\n\
  ESCAPE:  (or TAB) Attempt completing the current command or field.\n",
-  "\
-      \\:  (BACKSLASH) Include, literally, the next input character.\n\n\
-Execute this program using the '-h' flag to see additional options.\
-\n",
+"\
+      \\:  (BACKSLASH) Include, literally, the next input character.\n\n",
   ""
 };
 #endif /* ifndef NODOHLP */
@@ -1305,9 +1302,7 @@ shopar()
   extern int nmdm;
 #endif /* ifndef NOCKUDIA */
 
-  printf("\n%s,%s, ", versio, ckxsys);
-  puts("Communications Parameters:");
-  printf(" Line: %s, speed: %d, mode: ", ttname, speed);
+  printf("\r\nLine: %s, speed: %d, mode: ", ttname, speed);
   if (local)
   {
     printf("local");
@@ -1328,7 +1323,7 @@ shopar()
   }
 
 #endif /* ifndef NOCKUDIA */
-  printf("\n Bits: %d", ( parity ) ? 7 : 8);
+  printf("\nBits: %d", ( parity ) ? 7 : 8);
   printf(", parity: ");
   switch (parity)
   {
@@ -1369,7 +1364,7 @@ shopar()
   printf("flow: ");
   if (flow == 1)
   {
-    printf("xon/xoff");
+    printf("XON/XOFF");
   }
   else if (flow == 0)
   {
@@ -1390,8 +1385,13 @@ shopar()
     printf("none\n");
   }
 
-  printf("Terminal emulation: %d bits\n", ( cmask == 0177 ) ? 7 : 8);
-  printf("\nProtocol Parameters:   Send    Receive");
+  printf("Terminal emulation: %d bits", ( cmask == 0177 ) ? 7 : 8);
+
+#ifdef KERMRC
+  printf(", Initialization file: %s", KERMRC);
+#endif /* ifdef KERMRC */
+
+  printf("\n\nProtocol Parameters:   Send    Receive");
   if (timef || spsizf)
   {
     printf("    (* = override)");
@@ -1408,7 +1408,7 @@ shopar()
   }
 
   printf("       Server timeout:%4d\n", srvtim);
-  printf("\n Padding:      %11d%9d", npad, mypadn);
+  printf(" Padding:      %11d%9d", npad, mypadn);
   printf("        Block Check: %6d\n", bctr);
   printf(" Pad Character:%11d%9d", padch, mypadc);
   printf("        Delay:       %6d\n", delay);
@@ -1534,11 +1534,8 @@ shopar()
   {
     printf("discard");
   }
+printf("\r\n\n");
 
-#ifdef KERMRC
-  printf("\n Init file: %s", KERMRC);
-#endif /* ifdef KERMRC */
-  puts("\n");
 }
 #endif /* ifndef NOICP */
 
@@ -1548,7 +1545,7 @@ shopar()
 #ifndef NOSTATS
 dostat()
 {
-  printf("\nMost recent transaction --\n");
+  printf("\r\n");
   printf(" Files: %ld\n", filcnt);
   printf(" Total file characters  : %ld\n", tfc);
   printf(" Communication line in  : %ld\n", tlci);
@@ -1595,7 +1592,7 @@ dostat()
   }
   else
   {
-    printf("\n");
+    printf("\r\n");
   }
 
   return ( 0 );

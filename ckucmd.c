@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *cmdv = "JSYS Command Parser, 4G(053)";
+char *cmdv = "Command Parser, 4G(053)";
 #endif /* ifndef NOICP */
 
 /* C K U C M D -- Interactive command package for UNIX */

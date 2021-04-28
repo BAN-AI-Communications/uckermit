@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *ckxv = "TTY I/O Module, 4G(087)";
+char *ckxv = "TTY I/O Module, 4G(089)";
 #endif /* ifndef NOICP */
 
 /* C K U T I O */
@@ -362,7 +362,6 @@ char *initrawq(), *qaddr[2] =
 
 char *dftty = CTTNAM;             /* Remote by default, use normal */
 int dfloc = 0;                    /* controlling terminal name. */
-
 int dfprty = 0;                   /* Default parity (0 = none) */
 int ttprty = 0;                   /* Parity in use. */
 int ttmdm = 0;                    /* Modem in use. */
@@ -373,7 +372,6 @@ int iniflags = 0;                 /* fcntl flags for ttyfd */
 #endif /* ifdef ultrix */
 int ckxech = 0;                   /* 0 if system normally echoes */
                                   /* console characters, else 1 */
-
 /*
  * Declarations of variables
  * global within this module
@@ -673,14 +671,16 @@ int *lcl, modem;
   if (kmem[TTY] < 0)                 /*  If open, then skip this.  */
   {
     qaddr[TTY] = initrawq(ttyfd);    /* Init the queue. */
-    if (( kmem[TTY] = open("/dev/kmem", 0)) < 0)
+    if (( kmem[TTY] = \
+      open("/dev/kmem", 0)) < 0)
     {
-      fprintf(stderr, "Can't read /dev/kmem in ttopen.\n");
+      fprintf(
+        stderr,
+          "Can't read /dev/kmem in ttopen.\n");
       perror("/dev/kmem");
       exit(1);
     }
   }
-
 #endif /* ifdef V7 */
 
   /*
@@ -691,15 +691,18 @@ int *lcl, modem;
 #ifndef XENIX
 #ifndef unos
 #ifdef TIOCEXCL
-
   if (xlocal)
   {
     if (ioctl(ttyfd, TIOCEXCL, NULL) < 0)
     {
 #ifndef NODOHLP
-      fprintf(stderr, "Warning, problem getting exclusive access\n");
+      fprintf(
+        stderr,
+          "Warning, problem getting exclusive access\n");
 #else /* NODOHLP */
-      fprintf(stderr, "TIOCEXCL failed\n"); 
+      fprintf(
+        stderr,
+          "TIOCEXCL failed\n"); 
 #endif /* NODOHLP */
     }
   }
@@ -730,7 +733,6 @@ int *lcl, modem;
       ioctl(ttyfd, TIOCNMODEM, &temp);
     }
   }
-
 #endif /* ifdef ultrix */
 
   /*
@@ -788,7 +790,6 @@ ttclos()
   {
     ioctl(ttyfd, TIOCNCAR, NULL);
   }
-
 #endif /* ifdef ultrix */
   if (xlocal)
   {
@@ -799,7 +800,7 @@ ttclos()
 #else /* ifndef NODOHLP */
       fprintf(stderr, "ttunlck failed\r\n");
 #endif /* ifndef NODOHLP */
-	}
+        }
 
     if (tthang())                    /* Hang up phone line */
     {
@@ -808,7 +809,7 @@ ttclos()
 #else /* ifndef NODOHLP */
       fprintf(stderr, "tthang failed\r\n");
 #endif /* ifndef NODOHLP */
-	}
+        }
   }
 
   ttres();                           /* Reset modes. */
@@ -835,7 +836,7 @@ ttclos()
         stderr,
         "TIOCNXCL failed\r\n");
 #endif /* ifndef NODOHLP */
-	}
+        }
   }
 
 #endif /* ifdef TIOCNXCL */
@@ -1002,7 +1003,8 @@ ttres()
 
   if (ttmdm)
   {
-    if (fcntl(ttyfd, F_SETFL, fcntl(ttyfd, F_GETFL, 0) & ~O_NDELAY) < 0)
+    if (fcntl(ttyfd, F_SETFL, fcntl(ttyfd, F_GETFL, 0) & \
+      ~O_NDELAY) < 0)
     {
       return ( -1 );
     }
@@ -1081,7 +1083,8 @@ char *ttname;
 
   char *lockdir = LOCK_DIR;
   device =
-    (( devname = xxlast(ttname, '/')) != NULL ? devname + 1 : ttname );
+    (( devname = xxlast(ttname, '/')) != \
+      NULL ? devname + 1 : ttname );
 
 #ifdef ISIII
   (void)strcpy(lockfil, device);
@@ -1094,26 +1097,34 @@ char *ttname;
 #ifndef NODOHLP
     fprintf(
       stderr,
-      "Warning, read access to lock directory \"%s\" denied\n",
-      lockdir);
+        "Warning, read access to lock directory \"%s\" denied\n",
+          lockdir);
 #else /* ifndef NODOHLP */
     fprintf (stderr, "read lock failed\n");
 #endif /* ifndef NODOHLP */
     return ( 1 );                      /* cannot check or set lock file */
   }
 
-  strcat(strcat(strcpy(flfnam, lockdir), "/"), lockfil);
+  strcat( \
+    strcat( \
+      strcpy(flfnam, lockdir), "/"),
+        lockfil);
   debug(F110, "look4lk", flfnam, 0);
 
   if (!access(flfnam, 00))             /* print out lock file entry */
   {
     char lckcmd[40];
-    strcat(strcpy(lckcmd, "ls -l "), flfnam);
+    strcat( \
+      strcpy(lckcmd, "ls -l "),
+        flfnam);
     system(lckcmd);                    /* XXX(jhj): make conditional */
-    if (( access(flfnam, 02) == 0 ) && ( access(lockdir, 02) == 0 ))
+    if (( access(flfnam, 02) == 0 ) && \
+      ( access(lockdir, 02) == 0 ))
     {
 #ifndef NODOHLP
-      printf("(You may type \"! rm %s\" to remove this file)\n", flfnam);
+      printf(
+        "(You may type \"! rm %s\" to remove this file)\n",
+          flfnam);
 #endif /* ifndef NODOHLP */
     }
 
@@ -1168,7 +1179,9 @@ char *ttfd;
   }
 #else  /* ifdef HDBUUCP */
   write(
-    lck_fil, &pid_buf, sizeof ( pid_buf ));   /* UUCP expects int in file */
+    lck_fil,
+      &pid_buf,
+        sizeof ( pid_buf ));           /* UUCP expects int in file */
 #endif /* HDBUUCP */
   close(lck_fil);
   chmod(flfnam, 0644);                 /* make it readable by UUCP */
@@ -1246,7 +1259,9 @@ int speed, flow, parity;
   }
 
   ttprty = parity;              /* Let other tt functions see this. */
-  debug(F101, "ttpkt setting ttprty", "", ttprty);
+  debug(F101,
+    "ttpkt setting ttprty",
+      "", ttprty);
   if (xlocal)
   {
     s = ttsspd(speed);          /* Check the speed */
@@ -1395,7 +1410,6 @@ int speed, flow, parity;
   ttraw.c_cc[4] = 1;      /* [VMIN]  Maybe should be bigger for all Sys V? */
   ttraw.c_cc[5] = 0;      /* [VTIME] Should be set high enough to ignore */
                           /* intercharacter spacing? */
-
   /*
    * But then we have to distinguish
    * between Sys III and Sys V..
@@ -1799,8 +1813,7 @@ esctrp()
 
 conint(f)
 SIGTYP (*f)();
-{
-  /* Set an interrupt trap. */
+{                             /* Set an interrupt trap. */
   int x, y;
 #ifndef BSD4
 
@@ -1831,9 +1844,11 @@ SIGTYP (*f)();
   int ctpgrp;                 /* this process's group is the */
                               /* same as the controlling */
   mypgrp = getpgrp(0);        /* terminal's process group. */
-  ioctl(1, TIOCGPGRP, &ctpgrp);
+  ioctl(1,
+    TIOCGPGRP, &ctpgrp);
   x = ( mypgrp != ctpgrp );   /* If they differ, then background. */
-  debug(F101, "conint process group test", "", x);
+  debug(F101,
+    "conint process group test", "", x);
 #else  /* ifdef BSD4 */
   x = ( signal(SIGINT, SIG_IGN) == SIG_IGN );
   debug(F101, "conint signal test", "", x);
@@ -1903,7 +1918,7 @@ SIGTYP (*f)();
     signal(SIGQUIT, SIG_IGN); /* Others, ignore like 4D & earlier. */
 #endif /* ifdef V7 */
 #endif /* ifdef UXIII */
-    conif = 1; /* Flag console interrupts on. */
+    conif = 1;                /* Flag console interrupts on. */
   }
 
   return;
@@ -1912,9 +1927,9 @@ SIGTYP (*f)();
 /* C O N N O I -- Reset console terminal interrupts */
 
 connoi()
-{
-  /* Console-no-interrupts */
-  debug(F100, "connoi", "", 0);
+{                             /* Console-no-interrupts */
+  debug(F100,
+    "connoi", "", 0);
 #ifdef SIGTSTP
   signal(SIGTSTP, SIG_DFL);
 #endif /* ifdef SIGTSTP */
@@ -1965,7 +1980,11 @@ myread()
       {
         if (ttmdm)
         {
-          debug(F101, "myread read=0, ttmdm", "", ttmdm);
+          debug(F101,
+            "myread read=0",
+              "ttmdm",
+                "",
+                  ttmdm);
           errno = 9999;    /* magic number for no carrier */
           return ( -2 );   /* end of file has no errno */
         }
@@ -1986,11 +2005,9 @@ myread()
         {
           return ( -2 );
         }
-
 #else  /* ifdef EWOULDBLOCK */
         return ( -2 );
-
-#endif /* ewouldblock */
+#endif /* ifdef EWOULDBLOCK */
       }
 
       readit = inbuf[inbuf_item = 0];
@@ -2238,7 +2255,6 @@ CHAR *buf;
   {
     ;
   }
-
 #else  /* ifdef MYREAD */
   debug(F101, "ttxin: n", "", n);
   x = read(ttyfd, buf, n);
@@ -2402,7 +2418,7 @@ CHAR *dest, eol;
           return ( i );
         }
         else if (( dest[i] & 0177 ) \
-              == CTRLC)                    /* Check for ^C^C */
+          == CTRLC)                    /* Check for ^C^C */
         {
           if (++ccn > 1)               /* If we got 2 in a row, clean up */
           {
@@ -2446,12 +2462,11 @@ int timo;
   if (timo <= 0)                       /* Untimed. */
   {
 #ifdef MYREAD
-
     /* 
-         * myread comm line failure
-         * returns -1 thru myread, so,
-         * no &= 0377
-         */
+     * myread comm line failure
+     * returns -1 thru myread, so,
+     * no &= 0377
+     */
 
     while (( n = myread()) == -1)
     {

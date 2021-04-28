@@ -1,8 +1,8 @@
 #ifndef NOICP
-char *userv = "User Interface, 4G(113)";
+char *userv = "User Interface, 4G(115)";
 #endif /* ifndef NOICP */
 
-/* C K U U S R -- "User Interface" for UNIX Kermit (Part 1) */
+/* C K U U S R -- "User Interface" (Part 1) */
 
 /*
  * Copyright (C) 2021 Jeffrey H. Johnson <trnsz@pobox.com>
@@ -145,7 +145,7 @@ extern CHAR sstate, ttname[];
 extern CHAR *zinptr;
 char *strcpy(), *getenv();
 
-extern char cmdbuf[]; /* Command buffer */
+extern char cmdbuf[];          /* Command buffer */
 
 extern char *SPACMD, *zhome(); /* Space command, home directory. */
 extern int backgrd;            /* Kermit executing in background */
@@ -156,6 +156,7 @@ extern int backgrd;            /* Kermit executing in background */
  * this kermit is executing in background
  * ( '&' on shell command line ).
  */
+
 #ifndef NOICP
 char line[CMDBL + 10], *lp; /* Character buffer for anything */
 #endif /* ifndef NOICP */
@@ -187,25 +188,25 @@ char cmdstr[100];           /* Place to build generic command */
 
 cmdlin()
 {
-  char x; /* Local general-purpose int */
+  char x;                   /* Local general-purpose int */
 
-  cmarg = ""; /* Initialize globals */
+  cmarg = "";               /* Initialize globals */
   cmarg2 = "";
   action = cflg = 0;
 
-  while (--xargc > 0)   /* Go through command line words */
+  while (--xargc > 0)       /* Go through command line words */
   {
     xargv++;
     debug(F111, "xargv", *xargv, xargc);
-    if (**xargv == '-')   /* Got an option (begins with dash) */
+    if (**xargv == '-')     /* Got an option (begins with dash) */
     {
       x = *( *xargv + 1 );  /* Get the option letter */
       if (doarg(x) < 0)
       {
-        doexit(BAD_EXIT); /* Go handle the option */
+        doexit(BAD_EXIT);   /* Go handle the option */
       }
     }
-    else                  /* No dash where expected */
+    else                    /* No dash where expected */
     {
       usage();
       doexit(BAD_EXIT);
@@ -630,75 +631,49 @@ char *msg;
 #ifndef NOICP
 struct keytab cmdtab[] = {
 #ifndef NOPUSH
-  "!",          XXSHE,
-  0,
+  "!",          XXSHE, 0,
 #endif /* ifndef NOPUSH */
   "%",          XXCOM, CM_INV,
-  "bye",        XXBYE,
-  0,
+  "bye",        XXBYE, 0,
   "c",          XXCON, CM_INV,
-  "cd",         XXCWD,
-  0,
-  "close",      XXCLO,
-  0,
-  "connect",    XXCON,
-  0,
-  "cwd",        XXCWD,
-  0,
+  "cd",         XXCWD, 0,
+  "close",      XXCLO, 0,
+  "connect",    XXCON, 0,
+  "cwd",        XXCWD, 0,
 #ifndef NOCKUDIA
-  "dial",       XXDIAL,
-  0,
+  "dial",       XXDIAL, 0,
 #endif /* ifndef NOCKUDIA */
-  "directory",  XXDIR,
-  0,
-  "echo",       XXECH,
-  0,
-  "exit",       XXEXI,
-  0,
-  "finish",     XXFIN,
-  0,
-  "get",        XXGET,
-  0,
+  "directory",  XXDIR, 0,
+  "echo",       XXECH, 0,
+  "exit",       XXEXI, 0,
+  "finish",     XXFIN, 0,
+  "get",        XXGET, 0,
 #ifndef NOCKUDIA
-  "hangup",     XXHAN,
-  0,
+  "hangup",     XXHAN, 0,
 #endif /* ifndef NOCKUDIA */
 #ifndef NODOHLP
-  "help",       XXHLP,
-  0,
+  "help",       XXHLP, 0,
 #endif /* ifndef NODOHLP */
-  "log",        XXLOG,
-  0,
-  "quit",       XXQUI,
-  0,
-  /* "r",          XXREC,  CM_INV, */
-  "receive",    XXREC,
-  0,
-  "remote",     XXREM,
-  0,
-  /* "s",          XXSEN,  CM_INV, */
+  "log",        XXLOG, 0,
+  "quit",       XXQUI, 0, 
+/* "r",         XXREC,  CM_INV, */
+  "receive",    XXREC, 0,
+  "remote",     XXREM, 0,
+/* "s",         XXSEN,  CM_INV, */
 #ifndef NOCKUSCR
-  "script",     XXLOGI,
-  0,
+  "script",     XXLOGI, 0,
 #endif /* ifndef NOCKUSCR */
-  "send",       XXSEN,
-  0,
+  "send",       XXSEN, 0,
 #ifndef NOSERVER
-  "server",     XXSER,
-  0,
+  "server",     XXSER, 0,
 #endif /* ifndef NOSERVER */
-  "set",        XXSET,
-  0,
-  "show",       XXSHO,
-  0,
-  "space",      XXSPA,
-  0,
+  "set",        XXSET, 0,
+  "show",       XXSHO, 0,
+  "space",      XXSPA, 0,
 #ifndef NOSTATS
-  "statistics", XXSTA,
-  0,
+  "statistics", XXSTA, 0,
 #endif /* ifndef NOSTATS */
-  "take",       XXTAK,
-  0,
+  "take",       XXTAK, 0,
   "transmit",   XXTRA, 0
 };
 
@@ -710,88 +685,36 @@ int ncmd = ( sizeof ( cmdtab ) / sizeof ( struct keytab ));
  */
 
 struct keytab prmtab[] = {
-  "attributes",
-  XYATTR,
-  0,
-  "baud",
-  XYSPEE,
-  CM_INV,
-  "block-check",
-  XYCHKT,
-  0,
-  "delay",
-  XYDELA,
-  0,
-  "duplex",
-  XYDUPL,
-  0,
-  "end-of-packet",
-  XYEOL,
-  CM_INV,   /* moved to send/receive */
-  "escape-character",
-  XYESC,
-  0,
-  "file",
-  XYFILE,
-  0,
-  "flow-control",
-  XYFLOW,
-  0,
-  "handshake",
-  XYHAND,
-  0,
-  "incomplete",
-  XYIFD,
-  0,
-  "line",
-  XYLINE,
-  0,
+  "attributes", XYATTR, 0,
+  "baud", XYSPEE, CM_INV,
+  "block-check", XYCHKT, 0,
+  "delay", XYDELA, 0,
+  "duplex", XYDUPL, 0,
+  "end-of-packet", XYEOL, CM_INV,      /* moved to send/receive */
+  "escape-character", XYESC, 0,
+  "file", XYFILE, 0,
+  "flow-control", XYFLOW, 0,
+  "handshake", XYHAND, 0,
+  "incomplete", XYIFD, 0,
+  "line", XYLINE, 0,
 #ifndef NOCKUDIA
-  "modem-dialer",
-  XYMODM,
-  0,
+  "modem-dialer", XYMODM, 0,
 #endif /* ifndef NOCKUDIA */
-  "packet-length",
-  XYLEN,
-  CM_INV,   /* moved to send/receive */
-  "pad-character",
-  XYPADC,
-  CM_INV,   /* moved to send/receive */
-  "padding",
-  XYNPAD,
-  CM_INV,   /* moved to send/receive */
-  "parity",
-  XYPARI,
-  0,
-  "prompt",
-  XYPROM,
-  0,
-  "receive",
-  XYRECV,
-  0,
-  "retry",
-  XYRETR,
-  0,
-  "send",
-  XYSEND,
-  0,
+  "packet-length", XYLEN, CM_INV,      /* moved to send/receive */
+  "pad-character", XYPADC, CM_INV,     /* moved to send/receive */
+  "padding", XYNPAD, CM_INV,           /* moved to send/receive */
+  "parity", XYPARI, 0,
+  "prompt", XYPROM, 0,
+  "receive", XYRECV, 0,
+  "retry", XYRETR, 0,
+  "send", XYSEND, 0,
 #ifndef NOSERVER
-  "server",
-  XYSERV,
-  0,
+  "server", XYSERV, 0,
 #endif /* ifndef NOSERVER */
-  "speed",
-  XYSPEE,
-  0,
-  "start-of-packet",
-  XYMARK,
-  CM_INV,   /* moved to send/receive */
-  "terminal",
-  XYTERM,
-  0,
-  "timeout",
-  XYTIMO,
-  CM_INV   /* moved to send/receive */
+  "speed", XYSPEE, 0,
+  "start-of-packet", XYMARK, CM_INV,   /* moved to send/receive */
+  "terminal", XYTERM, 0,
+  "timeout", XYTIMO, CM_INV            /* moved to send/receive */
 };
 
 int nprm = \
@@ -817,8 +740,10 @@ struct keytab remcmd[] = {
 int nrmt = ( sizeof ( remcmd ) / sizeof ( struct keytab ));
 
 struct keytab logtab[] = {
-  "debugging", LOGD, 0, "packets",      LOGP, 0,
-  "session",   LOGS, 0, "transactions", LOGT, 0
+  "debugging",    LOGD, 0,
+  "packets",      LOGP, 0,
+  "session",      LOGS, 0,
+  "transactions", LOGT, 0
 };
 
 int nlog = ( sizeof ( logtab ) / sizeof ( struct keytab ));
@@ -834,7 +759,8 @@ int nlog = ( sizeof ( logtab ) / sizeof ( struct keytab ));
 
 #ifndef NOICP
 struct keytab shotab[] = {
-  "parameters", SHPAR, 0, "versions", SHVER, 0
+  "parameters", SHPAR, 0,
+  "versions",   SHVER, 0
 };
 #endif /* ifndef NOICP */
 
@@ -977,7 +903,7 @@ parser()
 
   if (local && !backgrd)
   {
-    printf("\n");       /*** Temporary kludge ***/
+    printf("\n");       /* Ensure prompt will be visibl3 */
   }
 
   sstate = 0;           /* Start with no start state. */
@@ -1255,10 +1181,10 @@ int cx;
 
   case XXCWD:
     if (( x = cmdir(
-            "Name of local directory, or carriage return",
-            homdir,
-            &s))
-        < 0)
+      "Name of local directory, or carriage return",
+        homdir,
+          &s))
+            < 0)
     {
       return ( x );
     }
@@ -1356,7 +1282,6 @@ int cx;
 
     debug(F110, "ckuusr calling ckdial", s, 0);
     return ( ckdial(s));
-
 #endif /* ifndef NOCKUDIA */
 
   case XXDIR: /* directory */
@@ -1381,7 +1306,9 @@ int cx;
       if (( x = *s ) == 0134) /* Convert octal escapes */
       {
         s++;                  /* up to 3 digits */
-        for (x = y = 0; *s >= '0' && *s <= '7' && y < 3; s++, y++)
+        for (x = y = 0;
+          *s >= '0' && *s <= '7' && y < 3;
+            s++, y++)
         {
           x = x * 8 + (int)*s - 48;
         }
@@ -1641,7 +1568,7 @@ int cx;
     {
       if (x == -3)
       {
-        printf("?A file specification is required\n");
+        printf("?File specification is required\n");
         return ( -2 );
       }
 
@@ -1831,22 +1758,22 @@ int cx;
       break;
 
     case SHVER:
-      printf("\nVersions:\n");
-      printf(" * %s,%s\n",   versio, ckxsys);
-      printf("   * %s\n",    protv);
-      printf("   * %s\n",    fnsv);
-      printf("   * %s\n",    cmdv);
+      printf("\r\nVersions:\n");
+      printf(" * %s,%s\n",  versio, ckxsys);
+      printf("  * %s\n",    protv);
+      printf("  * %s\n",    fnsv);
+      printf("  * %s\n",    cmdv);
 #ifndef NOICP
-      printf("   * %s\n",    userv);
+      printf("  * %s\n",    userv);
 #endif /* ifndef NOICP */
-      printf("   * %s\n",    ckxv);
-      printf("   *%s %s\n",  ckzsys, ckzv);
-      printf("   * %s\n",    connv);
+      printf("  * %s\n",    ckxv);
+      printf("  *%s %s\n",  ckzsys, ckzv);
+      printf("  * %s\n",    connv);
 #ifndef NOCKUDIA
-      printf("   * %s\n",    dialv);
+      printf("  * %s\n",    dialv);
 #endif /* ifndef NOCKUDIA */
 #ifndef NOCKUSCR
-      printf("   * %s\n",    loginv);
+      printf("  * %s\n",    loginv);
 #endif /* ifndef NOCKUSCR */
       printf("\n");
       break;
@@ -2043,7 +1970,7 @@ char t;
   int n = 0;
                                         /* CHAR tt; */
   (void)n;
-  CHAR dopar(char t);                        /* Turnaround char, with parity */
+  CHAR dopar(char t);                   /* Turnaround char, with parity */
 
 #ifdef DEBUG
   debug(F101, "transmit turnaround", "", t);

@@ -1,4 +1,4 @@
-/* C K U U S R . H -- Symbol definitions for uCKermit modules */
+/* C K U U S R . H -- Symbol definitions for modules */
 
 /*
  * Copyright (C) 2021, Jeffrey H. Johnson <trnsz@pobox.com>

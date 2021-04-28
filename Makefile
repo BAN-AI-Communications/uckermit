@@ -1,6 +1,6 @@
 ###########################################################################
 #                                                                         #
-#                   Makefile, version 2.69, 2021-APR-28                   #
+#                   Makefile, version 2.75, 2021-APR-28                   #
 #                                                                         #
 ###########################################################################
 #                                                                         #
@@ -366,7 +366,7 @@ v7:
 		-DNPTYPE=$(NPTYPE) $(DIRECT)"
 #
 ###########################################################################
-#Modern Linux with GCC or clang (development)
+#Modern Linux, GCC 10 (development)
 linux:
 	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DDEBUG -DTLOG -DUXIII \
 		-DO_NDELAY -DTIOCFLUSH -DTIOCSINUSE -Wall -DSIGTSTP -DFIONREAD \
@@ -376,14 +376,15 @@ linux:
 		-Wno-missing-braces -fno-math-errno -fdata-sections -DNOBTEST \
 		-fno-asynchronous-unwind-tables -funsigned-char -ffast-math \
 		-ffunction-sections -fomit-frame-pointer -fmerge-all-constants \
-		-fdelete-null-pointer-checks -ffast-math -fno-unroll-loops -flto" \
+		-fdelete-null-pointer-checks -ffast-math -fno-unroll-loops -flto \
+		-funsafe-math-optimizations" \
 			"LNKFLAGS = -flto -Wl,-s \
 				-Wl,--gc-sections \
 				-Wl,--print-gc-sections \
 				-Wl,-z,relro,-z,now"
 #
 ###########################################################################
-#Linux WIP size-reduction target (development)
+#Linux WIP size-reduction, GCC 10 (development)
 linux-small:
 	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DUXIII -Wall -Os \
 		-DO_NDELAY -DTIOCFLUSH -DSIGTSTP -DFIONREAD -DDIRENT -DNOCKUSCR \
@@ -393,8 +394,9 @@ linux-small:
 		-fno-exceptions -fdata-sections -ffunction-sections -ffast-math \
 		-fno-math-errno -Wno-implicit-int -DNOSTATS -fno-unroll-loops \
 		-fmerge-all-constants -funsigned-char -fomit-frame-pointer \
-		-fdelete-null-pointer-checks -DNOBTEST -DNOICP -DMINBUF -flto" \
-			"LNKFLAGS = -flto -Wl,-s \
+		-fdelete-null-pointer-checks -DNOBTEST -DNOICP -DMINBUF -flto \
+		-funsafe-math-optimizations" \
+			"LNKFLAGS = -flto -fuse-ld=gold -Wl,-s \
 				-Wl,--gc-sections \
 				-Wl,--print-gc-sections \
 				-Wl,-z,relro,-z,now"
@@ -425,7 +427,9 @@ strip:
 		-R .note.ABI-tag \
 		-R .comment \
 		-R .note \
+		-R .tm_clone_table \
 		-R .got \
+		-R .shstrtab \
 		-R .note.gnu.build-id \
 		-R .gnu.version \
 		-R .gnu.hash \
