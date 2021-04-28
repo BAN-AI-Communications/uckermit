@@ -1,10 +1,10 @@
 ###########################################################################
 #                                                                         #
-#                   Makefile, version 2.63, 2021-APR-28                   #
+#                   Makefile, version 2.65, 2021-APR-28                   #
 #                                                                         #
 ###########################################################################
 #                                                                         #
-#     -- Makefile to build uCKermit for UNIX and UNIX-like systems --     #
+# Makefile to build uCKermit (microkermit) for UNIX and UNIX-like systems #
 #                                                                         #
 ###########################################################################
 #                                                                         #
@@ -369,15 +369,14 @@ v7:
 #Modern Linux with GCC or clang (development)
 linux:
 	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DDEBUG -DTLOG -DUXIII \
-		-DO_NDELAY -DTIOCFLUSH -DTIOCFLUSH -DTIOCSINUSE -DFIONBIO -Wall \
-		-DTIOCEXCL -DSIGTSTP -DFIONREAD -DTIMEZONE -Wall -Wno-return-type \
-		-Wno-unused-variable -Wno-implicit-int -fno-unwind-tables \
-		-fno-exceptions -Wno-implicit-function-declaration -DDIRENT \
-		-Wno-implicit-fallthrough -Wno-missing-braces -Os -fno-math-errno \
-		-fno-asynchronous-unwind-tables -fdata-sections -funsigned-char \
+		-DO_NDELAY -DTIOCFLUSH -DTIOCSINUSE -Wall -DSIGTSTP -DFIONREAD \
+		-DTIMEZONE -Wall -Wno-return-type -Wno-unused-variable -Os \
+		-Wno-implicit-int -fno-unwind-tables -fno-exceptions -DDIRENT \
+		-Wno-implicit-function-declaration -Wno-implicit-fallthrough \
+		-Wno-missing-braces -fno-math-errno -fdata-sections -DNOBTEST \
+		-fno-asynchronous-unwind-tables -funsigned-char -ffast-math \
 		-ffunction-sections -fomit-frame-pointer -fmerge-all-constants \
-		-fdelete-null-pointer-checks -ffast-math -DNOBTEST \
-		-fno-unroll-loops" \
+		-fdelete-null-pointer-checks -ffast-math -fno-unroll-loops" \
 			"LNKFLAGS = -Wl,-s \
 				-Wl,--gc-sections \
 				-Wl,--print-gc-sections \
@@ -386,9 +385,8 @@ linux:
 ###########################################################################
 #Linux WIP size-reduction target (development)
 linux-small:
-	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -Wall -Os \
-		-DO_NDELAY -DTIOCFLUSH -DTIOCFLUSH -DTIOCSINUSE -DFIONBIO -DUXIII \
-		-DTIOCEXCL -DSIGTSTP -DFIONREAD -DDIRENT -DNOCKUSCR \
+	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DUXIII -Wall -Os \
+		-DO_NDELAY -DTIOCFLUSH -DSIGTSTP -DFIONREAD -DDIRENT -DNOCKUSCR \
 		-DNOCKUDIA -Wno-return-type -Wno-missing-braces -DNODOHLP \
 		-Wno-implicit-function-declaration -Wno-implicit-fallthrough \
 		-fno-asynchronous-unwind-tables -fno-unwind-tables -fno-ident \

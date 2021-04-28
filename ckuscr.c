@@ -1,5 +1,5 @@
 #ifndef NOCKUSCR
-char *loginv = "Script Processor, 4G(027), 2021-APR-26";
+char *loginv = "Script Processor, 4G(031)";
 
 /* C K U S C R -- Login script for logging onto remote system */
 
@@ -386,13 +386,13 @@ char *cmdstr;
   tlog(F100, loginv, "", 0l);
   if (!local)
   {
-    printf("You must 'set line' first\n");
+    printf("'set line' first\n");
     return ( -2 );
   }
 
   if (speed < 0)
   {
-    printf("You must 'set speed' first\n");
+    printf("'set speed' first\n");
     return ( -2 );
   }
 
@@ -428,7 +428,7 @@ char *cmdstr;
 
   if (ttvt(speed, flow) < 0)
   {
-    printf("Can't condition communication line\n");
+    printf("Can't condition line\n");
     return ( -2 );
   }
 

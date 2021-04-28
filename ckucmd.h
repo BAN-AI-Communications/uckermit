@@ -1,4 +1,4 @@
-/* C K U C M D . H -- Header file for UNIX cmd package */
+/* C K U C M D . H -- Header file for cmd package */
 
 /*
  * Copyright (C) 2021, Jeffrey H. Johnson <trnsz@pobox.com>

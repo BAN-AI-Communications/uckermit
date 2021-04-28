@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *userv = "UNIX User Interface, 4G(109), 2021-APR-27";
+char *userv = "User Interface, 4G(111)";
 #endif /* ifndef NOICP */
 
 /* C K U U S R -- "User Interface" for UNIX Kermit (Part 1) */
@@ -234,7 +234,7 @@ cmdlin()
   {
     if (isatty(1))
     {
-      fatal("unredirected -k can only be used in local mode");
+      fatal("unredirected -k only for local mode");
     }
   }
 
@@ -347,7 +347,7 @@ char x;
 
       if (*( xp + 1 ))
       {
-        fatal("invalid argument bundling after -s");
+        fatal("invalid arg after -s");
       }
 
       z = nfils = 0;        /* Initialize file counter, flag */
@@ -410,7 +410,7 @@ char x;
 
       if (*( xp + 1 ))
       {
-        fatal("invalid argument bundling after -g");
+        fatal("invalid arg after -g");
       }
 
       xargv++, xargc--;
@@ -438,7 +438,7 @@ char x;
     case 'a': /* "as" */
       if (*( xp + 1 ))
       {
-        fatal("invalid argument bundling after -a");
+        fatal("invalid arg after -a");
       }
 
       xargv++, xargc--;
@@ -453,13 +453,13 @@ char x;
     case 'l': /* set line */
       if (*( xp + 1 ))
       {
-        fatal("invalid argument bundling after -l");
+        fatal("invalid arg after -l");
       }
 
       xargv++, xargc--;
       if (( xargc < 1 ) || ( **xargv == '-' ))
       {
-        fatal("communication line device name missing");
+        fatal("device name missing");
       }
 
       strcpy(ttname, *xargv);
@@ -472,7 +472,7 @@ char x;
     case 'b': /* set baud */
       if (*( xp + 1 ))
       {
-        fatal("invalid argument bundling");
+        fatal("invalid arg");
       }
 
       xargv++, xargc--;
@@ -488,7 +488,7 @@ char x;
       }
       else
       {
-        fatal("unsupported baud rate");
+        fatal("unsupported baud");
       }
 
       break;
@@ -496,7 +496,7 @@ char x;
     case 'e': /* Extended packet length */
       if (*( xp + 1 ))
       {
-        fatal("invalid argument bundling");
+        fatal("invalid arg");
       }
 
       xargv++, xargc--;
@@ -540,7 +540,7 @@ char x;
     case 'p': /* set parity */
       if (*( xp + 1 ))
       {
-        fatal("invalid argument bundling");
+        fatal("invalid arg");
       }
 
       xargv++, xargc--;
@@ -575,7 +575,7 @@ char x;
       break;
 
     default:
-      fatal("invalid argument, try '-h' for help");
+      fatal("invalid arg, try '-h' for help");
     }
 
     x = *++xp; /* See if options are bundled */
@@ -1281,7 +1281,7 @@ int cx;
     x = cmkey(logtab, nlog, "Which log to close", "");
     if (x == -3)
     {
-      printf("?You must tell which log\n");
+      printf("?Which log?\n");
       return ( -2 );
     }
 
@@ -1574,7 +1574,7 @@ int cx;
     x = cmkey(logtab, nlog, "What to log", "");
     if (x == -3)
     {
-      printf("?You must specify what is to be logged\n");
+      printf("?What is to be logged?\n");
       return ( -2 );
     }
 
@@ -1621,14 +1621,14 @@ int cx;
   case XXREM: /* Remote */
     if (!local)
     {
-      printf("\nYou have to 'set line' first\n");
+      printf("\n'set line' first\n");
       return ( -2 );
     }
 
     x = cmkey(remcmd, nrmt, "Remote Kermit server command", "");
     if (x == -3)
     {
-      printf("?You must specify a command for the remote server\n");
+      printf("?Command for remote server?\n");
       return ( -2 );
     }
 
@@ -1697,7 +1697,7 @@ int cx;
     x = cmkey(prmtab, nprm, "Parameter", "");
     if (x == -3)
     {
-      printf("?You must specify a parameter to set\n");
+      printf("?Parameter to set?\n");
       return ( -2 );
     }
 

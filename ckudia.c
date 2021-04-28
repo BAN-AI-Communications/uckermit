@@ -1,5 +1,5 @@
 #ifndef NOCKUDIA
-char *dialv = "UNIX Dial Support, 4G(039), 2021-APR-27";
+char *dialv = "Dial Support, 4G(045)";
 
 /* C K U D I A -- Dialing program for connection to remote system */
 
@@ -743,19 +743,19 @@ char *telnbr;
 
   if (!mdmtyp)
   {
-    printf("You must 'set modem' first\n");
+    printf("'set modem' first\n");
     return ( -2 );
   }
 
   if (!local)
   {
-    printf("You must 'set line' first\n");
+    printf("'set line' first\n");
     return ( -2 );
   }
 
   if (speed < 0)
   {
-    printf("You must 'set speed' first\n");
+    printf("'set speed' first\n");
     return ( -2 );
   }
 
@@ -826,7 +826,7 @@ char *telnbr;
 
   if (ttpkt(speed, DIALING, parity) < 0)
   {
-    printf("Can't condition communication line\n");
+    printf("Can't condition line\n");
     return ( -2 );
   }
 

@@ -1,9 +1,9 @@
 /* C K C D E B -- Logging, debugging, and shared definitions. */
 
 /*
- * This file is included by all uCKermit modules, including the modules
- * that aren't specific to Kermit. It specifies format codes for
- * debug(), tlog(), and similar functions, and includes any necessary
+ * This file is included by all modules, including the modules
+ * that aren't specific to uCKermit. It specifies format codes
+ * for debug, tlog, & similar functions. It includes necessary
  * typedefs to be used by all uCKermit modules.
  */
 

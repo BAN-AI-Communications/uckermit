@@ -1,4 +1,4 @@
-/* C K C F N 2 -- System-independent Kermit protocol support functions */
+/* C K C F N 2 -- System-independent protocol support functions */
 
 /*
  * Copyright (C) 2021, Jeffrey H. Johnson <trnsz@pobox.com>
@@ -63,10 +63,8 @@ extern int  server;
 #endif /* ifndef NOSERVER */
 
 extern int  cxseen,   czseen,   nakstate, quiet;
-
 extern long filcnt,   ffc,      flci,     flco;
 extern long tlci,     tlco,     tfc,      fsize;
-
 extern char *cmarg,   *cmarg2,  **cmlist;
 
 extern CHAR padch,    mypadc,   eol,      seol;
@@ -332,14 +330,17 @@ register char *d;
     sndpkt[i++] = tochar(j / 95); /* High part */
     sndpkt[i++] = tochar(j % 95); /* Low part */
     sndpkt[i] = '\0';             /* Header checksum */
-    sndpkt[i++] = tochar(chk1(sndpkt + lp));
+    sndpkt[i++] = \
+      tochar(chk1(sndpkt + lp));
   }
   else
   {
     sndpkt[lp] = tochar(j + 2);   /* Normal LEN */
   }
 
-  for (cp = &sndpkt[i]; len-- > 0; i++)
+  for (cp = &sndpkt[i];
+    len-- > 0;
+      i++)
   {
     *cp++ = *d++;                 /* Packet data */
   }
@@ -349,20 +350,26 @@ register char *d;
   switch (bctu)                   /* Block check */
   {
   case 1:                         /* 1 = 6-bit chksum */
-    sndpkt[i++] = tochar(chk1(sndpkt + lp));
+    sndpkt[i++] = \
+      tochar(chk1(sndpkt + lp));
     break;
 
   case 2:                         /* 2 = 12-bit chksum */
     j = chk2(sndpkt + lp);
-    sndpkt[i++] = (unsigned)tochar(( j >> 6 ) & 077);
-    sndpkt[i++] = (unsigned)tochar(j & 077);
+    sndpkt[i++] = \
+      (unsigned)tochar(( j >> 6 ) & 077);
+    sndpkt[i++] = \
+      (unsigned)tochar(j & 077);
     break;
 
   case 3:                         /* 3 = 16-bit CRC */
     crc = chk3(sndpkt + lp);
-    sndpkt[i++] = (unsigned)tochar((( crc & 0170000 )) >> 12);
-    sndpkt[i++] = (unsigned)tochar(( crc >> 6 ) & 077);
-    sndpkt[i++] = (unsigned)tochar(crc & 077);
+    sndpkt[i++] = \
+      (unsigned)tochar((( crc & 0170000 )) >> 12);
+    sndpkt[i++] = \
+      (unsigned)tochar(( crc >> 6 ) & 077);
+    sndpkt[i++] = \
+      (unsigned)tochar(crc & 077);
     break;
   }
   sndpkt[i++] = seol;             /* End of line (packet terminator) */
@@ -376,7 +383,9 @@ register char *d;
   switch (parity)
   {
   case 'e':                       /* Even */
-    for (cp = &sndpkt[i - 1]; cp >= sndpkt; cp--)
+    for (cp = &sndpkt[i - 1];
+      cp >= sndpkt;
+        cp--)
     {
       *cp = partab[(int)*cp];
     }
@@ -384,7 +393,10 @@ register char *d;
     break;
 
   case 'm':                       /* Mark */
-    for (cp = &sndpkt[i - 1]; cp >= sndpkt; cp--)
+    for (
+      cp = &sndpkt[i - 1];
+        cp >= sndpkt;
+          cp--)
     {
       *cp = *cp | 128;
     }
@@ -392,9 +404,12 @@ register char *d;
     break;
 
   case 'o':                       /* Odd */
-    for (cp = &sndpkt[i - 1]; cp >= sndpkt; cp--)
+    for (cp = &sndpkt[i - 1];
+      cp >= sndpkt;
+        cp--)
     {
-      *cp = partab[(int)*cp] ^ 128;
+      *cp = \
+        partab[(int)*cp] ^ 128;
     }
 
     break;
@@ -432,7 +447,8 @@ register CHAR *pkt;
 {
   register unsigned int chk;
   chk = chk2(pkt);
-  chk = ((( chk & 0300 ) >> 6 ) + chk ) & 077;
+  chk = \
+    ((( chk & 0300 ) >> 6 ) + chk ) & 077;
   return ( chk );
 }
 
@@ -445,7 +461,9 @@ register CHAR *pkt;
   register long chk;
   register unsigned int m;
   m = ( parity ) ? 0177 : 0377;
-  for (chk = 0; *pkt != '\0'; pkt++)
+  for (chk = 0;
+    *pkt != '\0';
+      pkt++)
   {
     chk += *pkt & m;
   }
@@ -468,10 +486,15 @@ register CHAR *pkt;
   register LONG c, crc;
   register unsigned int m;
   m = ( parity ) ? 0177 : 0377;
-  for (crc = 0; *pkt != '\0'; pkt++)
+  for (crc = 0;
+    *pkt != '\0';
+      pkt++)
   {
     c = ( *pkt & m ) ^ crc;
-    crc = ( crc >> 8 ) ^ ( crcta[( c & 0xF0 ) >> 4] ^ crctb[c & 0x0F] );
+    crc = \
+      ( crc >> 8 ) ^ \
+        ( crcta[( c & 0xF0 ) >> 4] ^ \
+          crctb[c & 0x0F] );
   }
 
   return ( crc & 0xFFFF );

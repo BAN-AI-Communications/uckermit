@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *protv = "Kermit Protocol Module, 4G(059), 2021-APR-27";
+char *protv = "Kermit Protocol Module, 4G(067)";
 #endif /* ifndef NOICP */
 
 /* C K C P R O -- uCKermit Protocol Module in Wart preprocessor notation */
@@ -231,21 +231,21 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
       BEGIN ssinit;                   /* If OK, send back its output */
     else {                            /* Otherwise */
       errpkt(
-        "Can't do system command");   /* report error */
+        "Can't do command");          /* report error */
           SERVE;                      /* & go back to server command wait */
     }
 }
 
 <serve>. {                            /* Any other command in this state */
     errpkt(
-        "Unimplemented server function"); /* we don't know about */
+        "Not a server function");     /* we don't know about */
     SERVE;                            /* back to server command wait */
 }
 
 <generic>C {                          /* Got REMOTE CWD command */
     if (!cwd(srvcmd+1))
-          errpkt(
-            "Can't change directory");    /* Try to do it */
+      errpkt(
+        "Can't change directory");    /* Try to do it */
     SERVE;                            /* Back to server command wait */
 }
 
@@ -254,7 +254,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
       BEGIN ssinit;                   /* send the results back */
     else {                            /* otherwise */
         errpkt(
-                  "Can't list directory");    /* report failure */
+          "Can't list directory");    /* report failure */
         SERVE;                        /* & return to server command wait */
     }
 }
@@ -264,7 +264,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
       BEGIN ssinit;                   /* If OK send results back */
     else {                            /* otherwise */
         errpkt(
-                  "Can't remove file");       /* report failure */
+          "Can't remove file");       /* report failure */
         SERVE;                        /* & return to server command wait */
     }
 }
@@ -286,7 +286,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
     if (sndhlp()) BEGIN ssinit;       /* Try to send it */
     else {                            /* If not ok, */
         errpkt(
-                  "Can't send help");         /* send error message instead */
+          "Can't send help");         /* send error message instead */
         SERVE;                        /* & return to server command wait */
     }
 }
@@ -296,7 +296,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
       BEGIN ssinit;                   /* OK */
     else {                            /* not OK */
         errpkt(
-                  "Can't type file");         /* give error message */
+          "Can't type file");         /* give error message */
         SERVE;                        /* wait for next server command */
     }
 }
@@ -311,7 +311,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
       BEGIN ssinit;                   /* send it */
     else {                            /* otherwise */
         errpkt(
-                  "Can't check space");       /* send error message */
+          "Can't check space");       /* send error message */
         SERVE;                        /* and await next server command */
     }
 }
@@ -321,14 +321,14 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
       BEGIN ssinit;
     else {
         errpkt(
-                  "Can't do who command");
+          "Can't do command");
         SERVE;
     }
 }
 
 <generic>. {                          /* Anything else in this state ... */
     errpkt(
-          "Unimplemented generic server function");              /* Complain */
+      "Not a server function");       /* Complain */
     SERVE;                            /* & return to server command wait */
 }
 
@@ -368,18 +368,18 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
     else                              /* otherwise */
       x = opena(filnam,&iattr);       /* open the file, with attributes */
     if (x) {                          /* If file was opened ok */
-        if (
-                 decode(
-                   rdatap,putfil) < 0) {      /* decode first data packet */
-          errpkt(
-                    "Error writing data");
-           RESUME;
+      if (
+        decode(
+          rdatap,putfil) < 0) {       /* decode first data packet */
+        errpkt(
+          "Error writing data");
+         RESUME;
         }
         ack();                        /* acknowledge it */
         BEGIN rdata;                  /* and switch to receive-data state */
     } else {                          /* otherwise */
         errpkt(
-                  "Can't open file");         /* send error message */
+          "Can't open file");         /* send error message */
         RESUME;                       /* and quit. */
     }
 }
@@ -399,10 +399,10 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
     else if (czseen)                  /* If file-group interrupt */
       ack1("Z");                      /* put "Z" in ACK */
     else if (
-          decode(
-            rdatap,putfil) < 0) {         /* Normal case, */
-        errpkt(
-                  "Error writing data");      /*   decode data to file */
+      decode(
+        rdatap,putfil) < 0) {         /* Normal case, */
+      errpkt(
+          "Error writing data");      /*   decode data to file */
         RESUME;                       /* Send ACK if data written */
     } else ack();                     /* to file OK. */
 }
@@ -410,7 +410,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
 <rdata,rattr>Z {                      /* End Of File (EOF) Packet */
     if (reof(&iattr) < 0) {           /* Close & dispose of the file */
         errpkt(
-                  "Can't close file");        /* If problem, send error message */
+          "Can't close file");        /* If problem, send error message */
         RESUME;                       /* and quit */
     } else {                          /* otherwise */
         ack();                        /* acknowledge the EOF packet */
@@ -430,8 +430,8 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
         BEGIN ssfile;                 /* and switch to receive-file state */
     } else {                          /* otherwise send error msg & quit */
         s = xflg ? \
-                  "Can't execute command" : \
-                    "Can't open file";
+          "Can't do command" : \
+            "Can't open file";
         errpkt(s);
         RESUME;
     }
@@ -443,12 +443,12 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
     putsrv('\0');                     /* Terminate with null */
     if (*srvcmd) {                    /* If remote name was recorded */
       tlog(
-            F110," stored as",srvcmd,0);  /* Record it in transaction log. */
+        F110," stored as",srvcmd,0);  /* Record it in transaction log. */
         }
     if (atcapu) {                     /* If attributes are to be used */
         if (sattr(xflg) < 0) {        /* set and send them */
-            errpkt(
-                        "Can't send attributes"); /* if problem, say so */
+          errpkt(
+            "Can't send attributes"); /* if problem, say so */
               RESUME;                 /* and quit */
         } else BEGIN ssattr;          /* if ok, switch to attribute state */
     } else if (sdata() < 0) {         /* No attributes, send data */
@@ -487,9 +487,9 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
         if (sfile(xflg))              /* Yes try sending next file header */
           BEGIN ssfile;               /* if ok, enter send-file state */
         else {                        /* otherwise */
-            errpkt(
-                          "Can't open file");     /* send error message */
-                RESUME;               /* and quit */
+          errpkt(
+            "Can't open file");       /* send error message */
+              RESUME;                 /* and quit */
         }
     } else {                          /* No next file */
 #ifndef NOSTATS
@@ -544,26 +544,26 @@ proto()
 
     if (local && (speed < 0)) {
         screen(
-                  SCR_EM,0,0l,"You must 'set speed' first");
+          SCR_EM,0,0l,"'set speed' first");
         return;
     }
 
     x = -1;
     if (ttopen(ttname,&x,mdmtyp) < 0) {
         debug(
-                  F111,"failed: proto ttopen local",ttname,local);
+          F111,"failed: proto ttopen local",ttname,local);
         screen(
-                  SCR_EM,0,0l,"Can't open line");
+          SCR_EM,0,0l,"Can't open line");
         return;
     }
     if (x > -1) local = x;
     debug(
-          F111,"proto ttopen local",ttname,local);
+      F111,"proto ttopen local",ttname,local);
 
     x = (local) ? speed : -1;
     if (ttpkt(x,flow,parity) < 0) {   /* Put line in packet mode, */
         screen(
-                  SCR_EM,0,0l,"Can't condition line");
+          SCR_EM,0,0l,"Can't condition line");
         return;
     }
 #ifndef NOSERVER
@@ -571,21 +571,32 @@ proto()
         server = 1;                   /* set flag, */
         if (!quiet) {
             if (!local)               /* and issue appropriate message. */
-                conol(srvtxt);
+              conol(srvtxt);
             else {
-                conol(
-                                  "Entering server mode on ");
-                conoll(ttname);
+              conol(
+                "Starting Server mode on ");
+                  conoll(ttname);
             }
         }
     } else { server = 0; }
 #endif /* ifndef NOSERVER */
     if (sstate == 'v' && !local && !quiet)
+#ifdef NODOHLP
+      conoll(
+        "... SEND now.");
+#else /* ifdef NODOHLP */
       conoll(
         "Escape back to your local Kermit and give a SEND command...");
+#endif /* ifdef NODOHLP */
+
     if (sstate == 's' && !local && !quiet)
+#ifdef NODOHLP
+      conoll(
+        "... RECEIVE now.");
+#else /* ifdef NODOHLP */
       conoll(
         "Escape back to your local Kermit and give a RECEIVE command...");
+#endif /* ifdef NODOHLP */
     sleep(1);
 
  /*
@@ -599,13 +610,13 @@ proto()
     wart();                           /* Enter the state table switcher. */
 #ifndef NOSERVER
     if (server) {                     /* Back from packet protocol. */
-        server = 0;
+      server = 0;
         if (!quiet)                   /* Give appropriate message */
-            conoll(
-                          "uCKermit server done");
+          conoll(
+            "Server done");
     }
 #endif /* ifndef NOSERVER */
     ttres();
     screen(
-          SCR_TC,0,0l,"");                /* Transaction complete */
+      SCR_TC,0,0l,"");                /* Transaction complete */
 }

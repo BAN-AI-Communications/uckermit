@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *ckzv = "File Support, 4G(073), 2021-APR-27";
+char *ckzv = "File Support, 4G(085)";
 #endif /* ifndef NOICP */
 
 /* C K U F I O -- Kermit file system support for UNIX systems */
@@ -100,9 +100,11 @@ extern long timezone;
  * month of the year.
  */
 
+#ifndef NODOHLP
 static char monlens[] = {
   31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
 };
+#endif /* ifndef NODOHLP */
 
 #include <sys/stat.h>       /* File status */
 
@@ -356,7 +358,11 @@ char *name;
   {
     if (isatty(0))
     {
+#ifdef NODOHLP
+      ermsg("Not on a tty");
+#else /* ifdef NODOHLP */
       ermsg("Terminal input not allowed");
+#endif /* ifdef NODOHLP */
       debug(F110, "zopeni: attempts input from unredirected stdin", "", 0);
       return ( 0 );
     }
@@ -596,7 +602,8 @@ char *s;
  */
 
 zchout(n, c)
-register int n;
+/* register */
+int n;
 char c;
 {
   /* if (chkfn(n) < 1) return(-1); */
@@ -684,7 +691,11 @@ int n;
 #endif /* ifndef NOPUSH */
   default:
     debug(F101, "chkfn: file number out of range", "", n);
+#ifndef NODOHLP
     fprintf(stderr, "?File number out of range - %d\n", n);
+#else /* ifndef NODOHLP */
+    fprintf(stderr, "?chkfn fail - %d\n", n);
+#endif /* ifndef NODOHLP */
     return ( -1 );
   }
   return (( fp[n] == NULL ) ? 0 : 1 );
@@ -989,13 +1000,21 @@ char *comand;
     close(1);                                  /* simulate dup2 */
     if (dup(pipes[1]) != 1)
     {
+#ifdef NODOHLP
+      conol("zxcmd(o) failed\n");
+#else /* ifdef NODOHLP */
       conol("trouble duping stdout in routine zxcmd\n");
+#endif /* ifdef NODOHLP */
     }
 
     close(2);                                  /* simulate dup2 */
     if (dup(pipes[1]) != 2)
     {
+#ifdef NODOHLP
+      conol("zxcmd(e) failed\n");
+#else /* ifdef NODOHLP */
       conol("trouble duping stderr in routine zxcmd\n");
+#endif /* ifdef NODOHLP */
     }
 
 #endif /* ifndef UXIII */
@@ -1004,7 +1023,8 @@ char *comand;
     if (shpath == NULL)
     {
       p = getpwuid(getuid());                  /* get login data */
-      if (p == (struct passwd *)NULL || !*( p->pw_shell ))
+      if (p == (struct passwd *)NULL || \
+        !*( p->pw_shell ))
       {
         shpath = defShel;
       }
@@ -1510,7 +1530,11 @@ char *p;
     debug(F101, "splitpath malloc", "", cur);
     if (cur == NULL)
     {
+#ifdef NODOHLP
+      fprintf(stderr, "\rmalloc fail\r\n");
+#else /* ifdef NODOHLP */
       fprintf(stderr, "\rFatal: malloc fails in splitpath()\r\n");
+#endif /* ifdef NODOHLP */
       doexit(BAD_EXIT);
       /* fatal("malloc fails in splitpath()"); */
           exit(BAD_EXIT); /* Appease clang ccc-analyzer */
