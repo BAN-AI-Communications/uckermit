@@ -1,6 +1,6 @@
 ###########################################################################
 #                                                                         #
-#                   Makefile, version 2.61, 2021-APR-27                   #
+#                   Makefile, version 2.63, 2021-APR-28                   #
 #                                                                         #
 ###########################################################################
 #                                                                         #
@@ -362,8 +362,8 @@ sr10-bsd:
 #Version 7 UNIX (see comments above)
 v7:
 	make wermit "CFLAGS=-DV7 -DDEBUG -DTLOG -DPROCNAME=\\\"$(PROC)\\\" \
-	-DBOOTNAME=\\\"$(BOOTFILE)\\\" -DNPROCNAME=\\\"$(NPROC)\\\" \
-	-DNPTYPE=$(NPTYPE) $(DIRECT)"
+		-DBOOTNAME=\\\"$(BOOTFILE)\\\" -DNPROCNAME=\\\"$(NPROC)\\\" \
+		-DNPTYPE=$(NPTYPE) $(DIRECT)"
 #
 ###########################################################################
 #Modern Linux with GCC or clang (development)
@@ -533,17 +533,19 @@ sco386:
 is3:
 	make wermit \
 		"CFLAGS = -DISIII -DUXIII -DDEBUG -DTLOG -Ddata=datax -O -i" \
-		"LNKFLAGS = -i"
+		  "LNKFLAGS = -i"
 #
 ###########################################################################
 #Clean up intermediate, compiled executable, debug, log, and object files
 clean:
 	-rm -f ckcmai.o ckucmd.o ckuusr.o ckuus2.o ckuus3.o ckcpro.o ckcfns.o \
-		ckcfn2.o ckucon.o ckutio.o ckufio.o ckudia.o ckuscr.o ckwart.o
+		   ckcfn2.o ckucon.o ckutio.o ckufio.o ckudia.o ckuscr.o ckwart.o
 	-rm -f ckcpro.c
 	-rm -f uckermit uermit ckermit kermit wermit a.out
 	-rm -f ckwart wart
 	-rm -f *.log
 	-rm -f ck*.s
+	-rm -f core* vgcore*
+	-rm -f massif.out.*
 #
 ###########################################################################
