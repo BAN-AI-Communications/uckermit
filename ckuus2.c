@@ -110,31 +110,31 @@ int bcharc;
 #endif /* ifndef NODOHLP */
 
 static char *hlp1[] = {
-  "\rUsage: [ -x arg [ -x arg ] ... [ -yyy ] ... ] ]\n",
+  "\rUsage: [ -x arg [ -x arg ] [ -yy ] ] ]\n",
 #ifndef NODOHLP
-  "    ('x' options require arguments, 'y' options do not)\n",
-  "    ACTION -- (* options require setting both '-l' and '-b')\n",
-  "        -s file(s) send (use '-s -' to send from stdin)\n",
+  "    ('x' options require args, 'y' options do not)\n",
+  "    ACTION -- (* options require setting '-l' and '-b')\n",
+  "        -s file(s) send (use '-s -' for stdin)\n",
   "        -r         receive\n",
   "        -k         receive, to console (stdout)\n",
-  "      * -g file(s) get remote file(s) from server (quoting wildcards)\n",
-  "        -a name    alternate name (applies to '-s', '-r', and '-g')\n",
+  "      * -g file(s) get remote file(s) from server (quote wildcards)\n",
+  "        -a name    alternate name (for '-s', '-r', and '-g')\n",
 #ifndef NOSERVER
-  "        -x         start in Kermit SERVER mode\n",
+  "        -x         start server mode\n",
 #endif /* ifndef NOSERVER */
-  "      * -f         send FINISH command to remote server\n",
-  "      * -c         connect (pre-transaction)\n",
-  "      * -n         connect (post-transaction)\n",
+  "      * -f         send finish command to remote\n",
+  "      * -c         connect, pre-transaction\n",
+  "      * -n         connect, post-transaction\n",
   "   SETTING --\n",
-  "        -l line    communication line device (e.g. '/dev/ttyS1')\n",
-  "        -b baud    baud rate (e.g. '38400')\n",
-  "        -i         disable binary mode (perform text conversion)\n",
-  "        -p x       parity ('x' is one of 'e', 'o', 'm', 's', or 'n')\n",
-  "        -t         set line turnaround to XON/XOFF (half duplex mode)\n",
-  "        -w         enable overwriting of existing local files\n",
-  "        -q         quiet mode (disables file transfer status display)\n",
+  "        -l line    line device (e.g. '/dev/ttyS1')\n",
+  "        -b baud    baud (e.g. '9600')\n",
+  "        -i         disable binary mode (do text conversion)\n",
+  "        -p x       parity ('e', 'o', 'm', 's', or 'n')\n",
+  "        -t         set line turnaround to XON (half duplex)\n",
+  "        -w         overwrite existing files\n",
+  "        -q         quiet mode (no status display)\n",
 #ifdef DEBUG
-  "        -d         enable debug log file (writes to debug.log)\n",
+  "        -d         debug mode (write debug.log)\n",
 #endif /* ifdef DEBUG */
   "        -e length  set extended receive packet length (e.g. 1200)\n",
 #ifndef NOICP
@@ -287,12 +287,7 @@ The 'set' command is used to establish various communication or file\n",
   "'set' parameters.  Help is available for each individual parameter;\n",
   "type 'help set ?' to see what's available.\n", ""
 };
-#else  /* ifndef NODOHLP */
-static char *hmhset[] = {
-  "\
-Type 'help set ?' to see settings available.\n", ""
-};
-#endif /* ifndef NODOHLP */
+#endif  /* ifndef NODOHLP */
 
 #ifndef NODOHLP
 static char *hmxychkt[] = {
@@ -339,24 +334,17 @@ The 'remote' command is used to send file management instructions to a\n",
   "further information about a particular remote command 'x'.\n",
   ""
 };
-#else  /* ifndef NODOHLP */
-static char *hmhrmt[] = {
-  "\
-Type 'remote ?' for available remote commands.\n"
-  "Type 'help remote x' for information for remote command 'x'.\n",
-  ""
-};
 #endif /* ifndef NODOHLP */
 
 /* D O H L P -- Give a help message */
 
+#ifndef NODOHLP
 dohlp(xx)
 int xx;
 {
   int x;
-#ifndef NODOHLP
   int y;
-#endif /* ifndef NODOHLP */
+
 
   if (xx < 0)
   {
@@ -365,7 +353,6 @@ int xx;
 
   switch (xx)
   {
-#ifndef NODOHLP
   case XXBYE:
     return ( hmsg(hmxxbye));
 
@@ -503,22 +490,21 @@ Raw upload. Send a file, a line at a time (text) or a character at a time.\n\
 For text, wait for turnaround character (default 10 = LF) after each line.\n\
 Specify 0 for no waiting."));
 
-#endif /* ifndef NODOHLP */
   default:
     if (( x = cmcfm()) < 0)
     {
       return ( x );
     }
-#ifndef NODOHLP
     printf("Not available yet - %s\n", cmdbuf);
-#endif /* ifndef NODOHLP */
     break;
   }
   return ( 0 );
 }
+#endif /* ifndef NODOHLP */
 
 /* H M S G -- Get confirmation, then print the given message */
 
+#ifndef NODOHLP
 hmsg(s)
 char *s;
 {
@@ -549,6 +535,7 @@ char *s[];
   putc('\n', stdout);
   return ( 0 );
 }
+#endif /* ifndef NODOHLP */
 
 /* B C A R C B -- Format helper for baud rates */
 
@@ -559,175 +546,175 @@ long calsp;
 {
 #ifndef MAXBRATE
 #ifdef B4000000
-#define MAXBRATE 4000000
+#define MAXBRATE 1
 #endif /* ifdef B4000000 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B3500000
-#define MAXBRATE 3500000
+#define MAXBRATE 1
 #endif /* ifdef B3500000 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B2500000
-#define MAXBRATE 2500000
+#define MAXBRATE 1
 #endif /* ifdef B2500000 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B2000000
-#define MAXBRATE 2000000
+#define MAXBRATE 1
 #endif /* ifdef B2000000 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B1152000
-#define MAXBRATE 1152000
+#define MAXBRATE 1
 #endif /* ifdef B1152000 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B1000000
-#define MAXBRATE 1000000
+#define MAXBRATE 1
 #endif /* ifdef B1000000 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B921600
-#define MAXBRATE 921600
+#define MAXBRATE 1
 #endif /* ifdef B921600 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B576000
-#define MAXBRATE 576000
+#define MAXBRATE 1
 #endif /* ifdef B576000 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B500000
-#define MAXBRATE 500000
+#define MAXBRATE 1
 #endif /* ifdef B500000 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B460000
-#define MAXBRATE 460000
+#define MAXBRATE 1
 #endif /* ifdef B460000 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B230000
-#define MAXBRATE 230000
+#define MAXBRATE 1
 #endif /* ifdef B230000 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B115200
-#define MAXBRATE 115200
+#define MAXBRATE 1
 #endif /* ifdef B115200 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B76800
-#define MAXBRATE 76800
+#define MAXBRATE 1
 #endif /* ifdef B76800 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B57600
-#define MAXBRATE 57600
+#define MAXBRATE 1
 #endif /* ifdef B57600 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B38400
-#define MAXBRATE 38400
+#define MAXBRATE 1
 #endif /* ifdef B38400 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B19200
-#define MAXBRATE 19200
+#define MAXBRATE 1
 #endif /* ifdef B19200 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B9600
-#define MAXBRATE 9600
+#define MAXBRATE 1
 #endif /* ifdef B9600 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B4800
-#define MAXBRATE 4800
+#define MAXBRATE 1
 #endif /* ifdef B4800 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B2400
-#define MAXBRATE 2400
+#define MAXBRATE 1
 #endif /* ifdef B2400 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B1800
-#define MAXBRATE 1800
+#define MAXBRATE 1
 #endif /* ifdef B1800 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B1200
-#define MAXBRATE 1200
+#define MAXBRATE 1
 #endif /* ifdef B1200 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B600
-#define MAXBRATE 600
+#define MAXBRATE 1
 #endif /* ifdef B600 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B300
-#define MAXBRATE 300
+#define MAXBRATE 1
 #endif /* ifdef B300 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B200
-#define MAXBRATE 200
+#define MAXBRATE 1
 #endif /* ifdef B200 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B150
-#define MAXBRATE 150
+#define MAXBRATE 1
 #endif /* ifdef B150 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B134
-#define MAXBRATE 134
+#define MAXBRATE 1
 #endif /* ifdef B134 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B110
-#define MAXBRATE 110
+#define MAXBRATE 1
 #endif /* ifdef B110 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B75
-#define MAXBRATE 75
+#define MAXBRATE 1
 #endif /* ifdef B75 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B50
-#define MAXBRATE 50
+#define MAXBRATE 1
 #endif /* ifdef B50 */
 #endif /* ifndef MAXBRATE */
 
@@ -735,10 +722,6 @@ long calsp;
 #ifdef B0
 #define MAXBRATE 0
 #endif /* ifdef B0 */
-#endif /* ifndef MAXBRATE */
-
-#ifndef MAXBRATE
-#define MAXBRATE 19200         /* XXX(jhj): Ugh */
 #endif /* ifndef MAXBRATE */
 
   int brpln = 0;
@@ -807,6 +790,7 @@ long calsp;
 
 /* D O H S E T -- Give help for SET command */
 
+#ifndef NODOHLP
 dohset(xx)
 int xx;
 {
@@ -822,7 +806,7 @@ int xx;
 
   switch (xx)
   {
-#ifndef NODOHLP
+
   case XYATTR:
     puts("Turn Attribute packet exchange off or on");
     return ( 0 );
@@ -937,16 +921,12 @@ types of modems are supported by this program.");
 
   case XYRETR:
     puts(
-      "\
-How many times to retransmit a particular packet before giving up");
+      "How many times to retransmit a packet before giving up");
     return ( 0 );
 
   case XYSPEE:
     puts(
-      "\
-Communication line speed for external tty line specified in most recent");
-    puts("\
-'set line' command.  Any of the common baud rates:");
+      "Set speed of line specified by last 'set line' command to:");
 #ifdef B0
     bcarcb(0);
 #endif /* ifdef B0 */
@@ -1077,15 +1057,16 @@ Server command wait timeout interval, how often the uCKermit server issues");
 a NAK while waiting for a command packet.  Specify 0 for no NAKs at all.");
     return ( 0 );
 
-#endif /* ifndef NODOHLP */
   default:
     printf("Not available yet - %s\n", cmdbuf);
     return ( 0 );
   }
 }
+#endif /* ifndef NODOHLP */
 
 /* D O H R M T -- Give help about REMOTE command */
 
+#ifndef NODOHLP
 dohrmt(xx)
 int xx;
 {
@@ -1102,7 +1083,6 @@ int xx;
 
   switch (xx)
   {
-#ifndef NODOHLP
   case XZCWD:
     return ( hmsg(
                "\
@@ -1145,7 +1125,6 @@ Ask the remote Kermit server to type the named file(s) on your screen."));
 Ask the remote Kermit server to list who's logged in, or to give information\n\
 about the specified user."));
 
-#endif /* ifndef NODOHLP */
   default:
     if (( x = cmcfm()) < 0)
     {
@@ -1156,6 +1135,7 @@ about the specified user."));
     return ( -2 );
   }
 }
+#endif /* ifndef NODOHLP */
 
 /* D O L O G -- Do the log command */
 

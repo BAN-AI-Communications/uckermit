@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *ckxv = "UNIX TTY I/O Module, 4G(083), 2021-APR-26";
+char *ckxv = "TTY I/O Module, 4G(087)";
 #endif /* ifndef NOICP */
 
 /* C K U T I O */
@@ -696,7 +696,11 @@ int *lcl, modem;
   {
     if (ioctl(ttyfd, TIOCEXCL, NULL) < 0)
     {
+#ifndef NODOHLP
       fprintf(stderr, "Warning, problem getting exclusive access\n");
+#else /* NODOHLP */
+      fprintf(stderr, "TIOCEXCL failed\n"); 
+#endif /* NODOHLP */
     }
   }
 
@@ -790,13 +794,21 @@ ttclos()
   {
     if (ttunlck())                   /* Release UUCP-style lock */
     {
+#ifndef NODOHLP
       fprintf(stderr, "Warning, problem releasing lock\r\n");
-    }
+#else /* ifndef NODOHLP */
+      fprintf(stderr, "ttunlck failed\r\n");
+#endif /* ifndef NODOHLP */
+	}
 
     if (tthang())                    /* Hang up phone line */
     {
+#ifndef NODOHLP
       fprintf(stderr, "Warning, problem hanging up the phone\r\n");
-    }
+#else /* ifndef NODOHLP */
+      fprintf(stderr, "tthang failed\r\n");
+#endif /* ifndef NODOHLP */
+	}
   }
 
   ttres();                           /* Reset modes. */
@@ -814,10 +826,16 @@ ttclos()
   {
     if (ioctl(ttyfd, TIOCNXCL, NULL) < 0)
     {
+#ifndef NODOHLP
       fprintf(
         stderr,
         "Warning, problem relinquishing exclusive access\r\n");
-    }
+#else /* ifndef NODOHLP */
+      fprintf(
+        stderr,
+        "TIOCNXCL failed\r\n");
+#endif /* ifndef NODOHLP */
+	}
   }
 
 #endif /* ifdef TIOCNXCL */
@@ -1073,10 +1091,14 @@ char *ttname;
 
   if (access(lockdir, 04) < 0)         /* read access denied on lock dir */
   {
+#ifndef NODOHLP
     fprintf(
       stderr,
       "Warning, read access to lock directory \"%s\" denied\n",
       lockdir);
+#else /* ifndef NODOHLP */
+    fprintf (stderr, "read lock failed\n");
+#endif /* ifndef NODOHLP */
     return ( 1 );                      /* cannot check or set lock file */
   }
 
@@ -1090,7 +1112,9 @@ char *ttname;
     system(lckcmd);                    /* XXX(jhj): make conditional */
     if (( access(flfnam, 02) == 0 ) && ( access(lockdir, 02) == 0 ))
     {
+#ifndef NODOHLP
       printf("(You may type \"! rm %s\" to remove this file)\n", flfnam);
+#endif /* ifndef NODOHLP */
     }
 
     return ( -1 );
@@ -1098,7 +1122,11 @@ char *ttname;
 
   if (access(lockdir, 02) < 0)         /* lock file cannot be written */
   {
+#ifdef NODOHLP
+    fprintf(stderr, "write lock failed\n");
+#else /* ifdef NODOHLP */
     fprintf(stderr, "Warning, write access to lock directory denied\n");
+#endif /* ifdef NODOHLP */
     return ( 1 );
   }
 
@@ -1673,8 +1701,12 @@ ttsspd(speed)
 #endif /* ifdef B4000000 */
   default:
     spdok = 0;
+#ifndef NODOHLP
     fprintf(stderr, "Unsupported line speed - %d\n", speed);
     fprintf(stderr, "Current speed not changed\n");
+#else /* ifndef NODOHLP */
+    fprintf(stderr, "Bad speed - %d\n", speed);
+#endif /* ifndef NODOHLP */
     break;
   }
   if (spdok)

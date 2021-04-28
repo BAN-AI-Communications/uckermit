@@ -338,7 +338,7 @@ int xx;
     return ( 0 );
 
   case XYESC:
-    y = cmnum("Decimal ASCII code for escape character", "", 10, &x);
+    y = cmnum("ASCII code for escape character", "", 10, &x);
     return ( setcc(&escape, x, y));
 
   case XYFILE:
@@ -755,8 +755,8 @@ int xx;
   case XYSPEE:
     if (!local)
     {
-      printf("\nSpeed setting can only be done on an external line\n");
-      printf("You must 'set line' before issuing this command\n");
+      printf("\nSpeed setting only for external lines,\n");
+        printf("You must 'set line' first\n");
       return ( 0 );
     }
 
@@ -775,8 +775,12 @@ int xx;
     y = chkspd(x);
     if (y < 0)
     {
+#ifndef NODOHLP
       printf("?Unsupported line speed - %d\n", x);
-    }
+#else /* ifndef NODOHLP */
+	  printf("?Bad speed - %d\n", x);
+#endif /* ifndef NODOHLP */
+	}
     else
     {
       speed = y;
@@ -1221,7 +1225,9 @@ char *s;
       return;
 
     default:
+#ifndef NODOHLP
       conoll("*** screen() called with bad status ***");
+#endif /* ifndef NODOHLP */
       p = 0;
       return;
     }
@@ -1307,7 +1313,9 @@ char *s;
     return;
 
   default:
+#ifndef NODOHLP
     conoll("*** screen() called with bad object ***");
+#endif /* ifndef NODOHLP */
     p = 0;
     return;
   }
@@ -1339,7 +1347,7 @@ long n;
      * before kb input
      */
 
-    sprintf(buf, "Type escape (%s) followed by:", chstr(escape));
+    sprintf(buf, "Escape character (%s) then:", chstr(escape));
     screen(SCR_TN, 0, 0l, buf);
 #endif /* ifdef UXIII */
     screen(

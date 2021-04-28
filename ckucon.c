@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *connv = "UNIX Connect Command, 4G(033), 2021-APR-24";
+char *connv = "Connect Command, 4G(045)";
 #endif /* ifndef NOICP */
 
 /* C K U C O N -- Dumb terminal connection to remote system, for UNIX */
@@ -97,19 +97,19 @@ conect()
 
   if (!local)
   {
-    printf("You must 'set line' first\n");
+    printf("'set line' first\n");
     return ( -2 );
   }
 
   if (speed < 0)
   {
-    printf("You must 'set speed' first\n");
+    printf("'set speed' first\n");
     return ( -2 );
   }
 
   if (( escape < 0 ) || ( escape > 0177 ))
   {
-    printf("Your escape character is not ASCII - %d\n", escape);
+    printf("not ASCII - %d\n", escape);
     return ( -2 );
   }
 
@@ -122,13 +122,15 @@ conect()
   }
 
   dohangup = 0;
-  printf("Connecting thru %s, speed %d.\r\n", ttname, speed);
-  printf("The escape character is %s (%d).\r\n", chstr(escape), escape);
-  printf("Type the escape character followed by C to get back,\r\n");
-  printf("or followed by ? to see other options.\r\n");
+  printf(
+    "[Connecting on %s, speed %d]\r\n",
+      ttname, speed);
+  printf(
+    "[Escape character %s (%d) + '?' for help]\r\n",
+      chstr(escape), escape);
   if (seslog)
   {
-    printf("(Session logged to %s.)\r\n", sesfil);
+    printf("[Session logged to %s]\r\n", sesfil);
   }
 
   /*
@@ -138,14 +140,14 @@ conect()
 
   if (conbin(escape) < 0)
   {
-    printf("Can't condition console terminal\n");
+    printf("Can't condition terminal\n");
     return ( -2 );
   }
 
   if (ttvt(speed, flow) < 0)
   {
     conres();
-    printf("Can't condition communication line\n");
+    printf("Can't condition line\n");
     return ( -2 );
   }
 
@@ -155,8 +157,9 @@ conect()
   if (pid == -1)
   {
     conres();                        /* Reset the console. */
-    perror("Can't create keyboard fork");
-    printf("[Back at Local System]\n");
+    perror("kybrd fork failed");
+    printf(
+      "[Back Local]\n");
     return ( 0 );
   }
 
@@ -213,7 +216,7 @@ conect()
       tthang();
     }
 
-    printf("\r[Back at Local System]\n");
+    printf("\r[Back Local]\n");
     return ( 0 );
   }
   else                               /* Inferior reads, prints port input */
@@ -225,7 +228,7 @@ conect()
       {
         if (errno == 9999)           /* this value set by myread() */
         {
-          printf("\r\nCommunications disconnect ");
+          printf("\r\nComm disconnect ");
         }
         else if (io_retry++ < 3)
         {
@@ -280,20 +283,20 @@ hconne()
 {
   int c;
   static char *hlpmsg[] = {
-    "\
-\r\n  C to close the connection, or:",
-    "\r\n  0 (zero) to send a null",
-    "\r\n  B to send a BREAK",
-    "\r\n  H to hangup",
-    "\r\n  Q to hangup and quit Kermit",
-    "\r\n  S for status",
-    "\r\n  ? for help",
-    "\r\n escape character twice to send the escape character.\r\n\r\n",
+    "\r\n\r\n Escape character twice to send it,\r\n",
+    "\r\n c: close connection",
+    "\r\n 0: send NULL",
+    "\r\n b: send BREAK",
+    "\r\n h: hangup",
+    "\r\n q: hangup & quit",
+    "\r\n s: status",
+    "\r\n ?: help",
+    "\r\n\r\n",
     ""
   };
 
   conola(hlpmsg);                    /* Print the help message. */
-  conol("Command>");                 /* Prompt for command. */
+  conol(">");                        /* Prompt for command. */
   c = coninc(0) & 0177;              /* Get character, strip any parity. */
   conoc(c);                          /* Echo it. */
   conoll("");

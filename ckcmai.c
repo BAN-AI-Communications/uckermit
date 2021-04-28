@@ -1,4 +1,4 @@
-char *versio = "uCKermit, 4G(139), 2021-APR-27";
+char *versio = "uCKermit, 4G(149), 2021-APR-28";
 
 /* C K C M A I -- uCKermit Main program  */
 
@@ -55,7 +55,7 @@ char *versio = "uCKermit, 4G(139), 2021-APR-27";
 
 #ifdef NODOHLP
 char *hlptxt =
-"uCKermit Server REMOTE HELP unavailable.\n\
+"HELP unavailable.\n\
 \n\0";
 #else  /* ifdef NODOHLP */
 char *hlptxt =
@@ -72,12 +72,11 @@ FINISH     REMOTE HELP\n\
 #ifndef NOSERVER
 #ifdef NODOHLP
 char *srvtxt = "\r\n\
-uCKermit server starting.\n\
-\r\n\0";
+Server starting.\n\r\n\0";
 #else  /* ifdef NODOHLP */
 char *srvtxt =
 "\r\n\
-uCKermit server starting.  Return to your local machine by typing\r\n\
+uCKermit Server starting.  Return to your local machine by typing\r\n\
 its escape sequence for closing the connection, and issue further\r\n\
 commands from there.  To shut down the uCKermit server, issue the\r\n\
 FINISH or BYE command and then reconnect.\n\
@@ -365,12 +364,12 @@ char **argv;
    * is not available...
    */
 
-  printf("\r%s (%s)", versio, ckzsys);
-  printf("\r\nFatal: No action requested");
+  printf("\r%s,%s", versio, ckzsys);
+  printf("\r\nError: No action requested");
 #ifdef NODOHLP
-  printf(", unable to proceed.\r\n");
+  printf(".\r\n");
 #else /* ifdef NODOHLP */
-  printf(", try '-h' for help.\r\n");
+  printf(", use -h for help\r\n");
 #endif /* ifdef NODOHLP */
 
   return ( 1 );
