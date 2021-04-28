@@ -1,6 +1,6 @@
 ###########################################################################
 #                                                                         #
-#                   Makefile, version 2.67, 2021-APR-28                   #
+#                   Makefile, version 2.69, 2021-APR-28                   #
 #                                                                         #
 ###########################################################################
 #                                                                         #
@@ -408,7 +408,8 @@ linux-tiny:
 # strip binary aggressively (development)
 strip:
 	@test -f wermit
-	@printf '\n%s ' "Original: " "$$(du -k wermit 2>/dev/null | \
+	@printf '\n%s ' "Original: " "$$(du --apparent-size \
+			-k wermit 2>/dev/null | \
 		cut -f 1 -d "	" 2>/dev/null | \
 		cut -f 1 -d " " 2>/dev/null || true)"K \
 		"$$(/bin/ls -l wermit 2>/dev/null | \
@@ -444,7 +445,8 @@ strip:
 	@~/src/bloaty/build/bloaty -n 0 -v wermit \
 		2>/dev/null || true
 	@sstrip -z wermit 2>/dev/null || true
-		@printf '\n%s ' "Stripped: " "$$(du -k wermit 2>/dev/null | \
+		@printf '\n%s ' "Stripped: " "$$(du --apparent-size \
+			-k wermit 2>/dev/null | \
 		cut -f 1 -d "	" 2>/dev/null | \
 		cut -f 1 -d " " 2>/dev/null || true)K" \
 		"$$(/bin/ls -l wermit 2>/dev/null | \
