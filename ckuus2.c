@@ -546,175 +546,175 @@ long calsp;
 {
 #ifndef MAXBRATE
 #ifdef B4000000
-#define MAXBRATE 1
+#define MAXBRATE 4000000
 #endif /* ifdef B4000000 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B3500000
-#define MAXBRATE 1
+#define MAXBRATE 3500000
 #endif /* ifdef B3500000 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B2500000
-#define MAXBRATE 1
+#define MAXBRATE 2500000
 #endif /* ifdef B2500000 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B2000000
-#define MAXBRATE 1
+#define MAXBRATE 2000000
 #endif /* ifdef B2000000 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B1152000
-#define MAXBRATE 1
+#define MAXBRATE 1152000
 #endif /* ifdef B1152000 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B1000000
-#define MAXBRATE 1
+#define MAXBRATE 1000000
 #endif /* ifdef B1000000 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B921600
-#define MAXBRATE 1
+#define MAXBRATE 921600
 #endif /* ifdef B921600 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B576000
-#define MAXBRATE 1
+#define MAXBRATE 576000
 #endif /* ifdef B576000 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B500000
-#define MAXBRATE 1
+#define MAXBRATE 500000
 #endif /* ifdef B500000 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B460000
-#define MAXBRATE 1
+#define MAXBRATE 460000
 #endif /* ifdef B460000 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B230000
-#define MAXBRATE 1
+#define MAXBRATE 230000
 #endif /* ifdef B230000 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B115200
-#define MAXBRATE 1
+#define MAXBRATE 115200
 #endif /* ifdef B115200 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B76800
-#define MAXBRATE 1
+#define MAXBRATE 76800
 #endif /* ifdef B76800 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B57600
-#define MAXBRATE 1
+#define MAXBRATE 57500
 #endif /* ifdef B57600 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B38400
-#define MAXBRATE 1
+#define MAXBRATE 38400
 #endif /* ifdef B38400 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B19200
-#define MAXBRATE 1
+#define MAXBRATE 19200
 #endif /* ifdef B19200 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B9600
-#define MAXBRATE 1
+#define MAXBRATE 9600
 #endif /* ifdef B9600 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B4800
-#define MAXBRATE 1
+#define MAXBRATE 4800
 #endif /* ifdef B4800 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B2400
-#define MAXBRATE 1
+#define MAXBRATE 2400
 #endif /* ifdef B2400 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B1800
-#define MAXBRATE 1
+#define MAXBRATE 1800
 #endif /* ifdef B1800 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B1200
-#define MAXBRATE 1
+#define MAXBRATE 1200
 #endif /* ifdef B1200 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B600
-#define MAXBRATE 1
+#define MAXBRATE 600
 #endif /* ifdef B600 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B300
-#define MAXBRATE 1
+#define MAXBRATE 300
 #endif /* ifdef B300 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B200
-#define MAXBRATE 1
+#define MAXBRATE 200
 #endif /* ifdef B200 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B150
-#define MAXBRATE 1
+#define MAXBRATE 150
 #endif /* ifdef B150 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B134
-#define MAXBRATE 1
+#define MAXBRATE 134
 #endif /* ifdef B134 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B110
-#define MAXBRATE 1
+#define MAXBRATE 110
 #endif /* ifdef B110 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B75
-#define MAXBRATE 1
+#define MAXBRATE 75
 #endif /* ifdef B75 */
 #endif /* ifndef MAXBRATE */
 
 #ifndef MAXBRATE
 #ifdef B50
-#define MAXBRATE 1
+#define MAXBRATE 50
 #endif /* ifdef B50 */
 #endif /* ifndef MAXBRATE */
 
@@ -722,6 +722,14 @@ long calsp;
 #ifdef B0
 #define MAXBRATE 0
 #endif /* ifdef B0 */
+#endif /* ifndef MAXBRATE */
+
+#ifndef MAXBRATE
+#ifdef __linux__ /* ifdef __linux__ */
+#define MAXBRATE 38400
+#else /* ifdef __linux__ */
+#define MAXBRATE 19200
+#endif /* ifdef __linux__ */
 #endif /* ifndef MAXBRATE */
 
   int brpln = 0;

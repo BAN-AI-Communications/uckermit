@@ -1,6 +1,6 @@
 ###########################################################################
 #                                                                         #
-#                   Makefile, version 2.65, 2021-APR-28                   #
+#                   Makefile, version 2.67, 2021-APR-28                   #
 #                                                                         #
 ###########################################################################
 #                                                                         #
@@ -376,8 +376,8 @@ linux:
 		-Wno-missing-braces -fno-math-errno -fdata-sections -DNOBTEST \
 		-fno-asynchronous-unwind-tables -funsigned-char -ffast-math \
 		-ffunction-sections -fomit-frame-pointer -fmerge-all-constants \
-		-fdelete-null-pointer-checks -ffast-math -fno-unroll-loops" \
-			"LNKFLAGS = -Wl,-s \
+		-fdelete-null-pointer-checks -ffast-math -fno-unroll-loops -flto" \
+			"LNKFLAGS = -flto -Wl,-s \
 				-Wl,--gc-sections \
 				-Wl,--print-gc-sections \
 				-Wl,-z,relro,-z,now"
@@ -393,8 +393,8 @@ linux-small:
 		-fno-exceptions -fdata-sections -ffunction-sections -ffast-math \
 		-fno-math-errno -Wno-implicit-int -DNOSTATS -fno-unroll-loops \
 		-fmerge-all-constants -funsigned-char -fomit-frame-pointer \
-		-fdelete-null-pointer-checks -DNOBTEST -DNOICP -DMINBUF" \
-			"LNKFLAGS = -Wl,-s \
+		-fdelete-null-pointer-checks -DNOBTEST -DNOICP -DMINBUF -flto" \
+			"LNKFLAGS = -flto -Wl,-s \
 				-Wl,--gc-sections \
 				-Wl,--print-gc-sections \
 				-Wl,-z,relro,-z,now"

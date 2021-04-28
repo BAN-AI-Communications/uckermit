@@ -81,16 +81,17 @@ extern CHAR stchr, mystch, sstate, padch, mypadc, eol, seol, ctlq;
 extern CHAR filnam[], ttname[];
 char *strcpy();
 
-extern char cmdbuf[]; /* Command buffer */
+extern char cmdbuf[];       /* Command buffer */
 
-extern char line[100], *lp; /* Character buffer for anything */
+extern char \
+  line[CMDBL + 10], *lp;    /* Character buffer for anything */
 extern char debfil[50],     /* Debugging log file name */
   pktfil[50],               /* Packet log file name */
   sesfil[50],               /* Session log file name */
   trafil[50];               /* Transaction log file name */
 
-extern int tlevel;    /* Take Command file level */
-extern FILE *tfile[]; /* Array of take command fd's */
+extern int tlevel;          /* Take Command file level */
+extern FILE *tfile[];       /* Array of take command fd's */
 
 /*
  * Keyword tables

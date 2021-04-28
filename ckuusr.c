@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *userv = "User Interface, 4G(111)";
+char *userv = "User Interface, 4G(113)";
 #endif /* ifndef NOICP */
 
 /* C K U U S R -- "User Interface" for UNIX Kermit (Part 1) */
@@ -959,6 +959,7 @@ int sig, code;
 
 /* P A R S E R -- Top-level interactive command parser */
 #ifndef NOICP
+char
 parser()
 {
   int xx, cbn;
@@ -2042,7 +2043,7 @@ char t;
   int n = 0;
                                         /* CHAR tt; */
   (void)n;
-  dopar(t);                             /* Turnaround char, with parity */
+  CHAR dopar(char t);                        /* Turnaround char, with parity */
 
 #ifdef DEBUG
   debug(F101, "transmit turnaround", "", t);
