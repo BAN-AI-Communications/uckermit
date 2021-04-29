@@ -1,7 +1,5 @@
 # μ*C֊Kermit*
-
 ## _micro_–C֊Kermit (_microkermit_)
-
 [![License: BSD](https://img.shields.io/badge/License-BSD%20-blue.svg)](https://github.com/BAN-AI-Communications/uckermit/blob/master/LICENSE)
 [![LocCount](https://img.shields.io/tokei/lines/github/BAN-AI-Communications/uckermit.svg)](https://github.com/XAMPPRocky/tokei)
 [![GitHubCodeSize](https://img.shields.io/github/languages/code-size/BAN-AI-Communications/uckermit.svg)](https://github.com/BAN-AI-Communications/uckermit)
@@ -12,19 +10,15 @@
 [![DeepSourceR](https://deepsource.io/gh/BAN-AI-Communications/uckermit.svg/?label=resolved+issues)](https://deepsource.io/gh/BAN-AI-Communications/uckermit/?ref=repository-badge)
 
 ## Overview
-
 - **_[Current Status](https://github.com/BAN-AI-Communications/uckermit/issues/32)_**
 
 ## NAME
-
 - **_uckermit_** - minimalistic **kermit** file transfer
 
 ## SYNOPSIS
-
 - **uckermit** \[ `option ...` \] \[ `file ...` \]
 
 ## DESCRIPTION
-
 _μCKermit_ is a file transfer program that allows files to be moved between
 machines of many different operating systems and architectures.
 
@@ -66,7 +60,6 @@ _μCKermit_ command line options may specify either **_actions_** or
 options specify either protocol transactions or terminal connection.
 
 ## COMMAND LINE OPTIONS
-
 - **`-s fn`**
   - Send the specified file or files. If _fn_ contains wildcard (_shell meta_)
     characters, the UNIX shell expands it into a list. If _fn_ is \'`-`\' then
@@ -138,32 +131,26 @@ options specify either protocol transactions or terminal connection.
     system by typing the escape character (normally `Control-\`) followed by the
     letter \'`c`\'.
 - **`-n`**
-
   - Like **`-c`,** but after a protocol transaction takes place; **`-c`** and
     **`-n`** may both be used in the same command. The use of **`-n`** and
     **`-c`** is illustrated below.
-
 - On a timesharing system, the **`-l`** and **`-b`** options will also have to
   be included with the **`-r`**, **`-k`**, or **`-s`** options if the other
   _μCKermit_ is on a remote system.
-
 - If _uckermit_ is in local mode, the screen (stdout) is continously updated to
   show the progress of the file transer. A dot is printed for every four data
   packets, other packets are shown by type (e.g. \'`S`\' for _Send-Init_),
   \'`T`\' is printed when there\'s a timeout, and \'`%`\' for each
   retransmission. In addition, you may type (to stdin) certain \"interrupt\"
   commands during file transfer:
-
   - `Control-F`: Interrupt the current File, and go on to the next (if any).
   - `Control-B`: Interrupt the entire Batch of files, terminate the transaction.
   - `Control-R`: Resend the current packet
   - `Control-A`: Display a status report for the current transaction.
-
 - These interrupt characters differ from the ones used in other _Kermit_
   implementations to avoid conflict with UNIX shell interrupt characters. With
   System III and System V implementations of UNIX, interrupt commands must be
   preceeded by the escape character (e.g. `Control-\`).
-
 - Several other command-line options are provided:
   - **`-i`**
     - Specifies that files should be sent or received with text conversion.
@@ -187,20 +174,15 @@ options specify either protocol transactions or terminal connection.
       line may contain no more than one protocol action option.
 
 ## INTERACTIVE OPERATION
-
 - _μCKermit_\'s interactive command prompt is \"`uCKermit>`\". In response to
   this prompt, you may type any valid command.
-
 - _μCKermit_ executes the command and then prompts you for another command. The
   process continues until you instruct the program to terminate.
-
 - Commands begin with a keyword, normally an English verb, such as \"`send`\".
   You may omit trailing characters from any keyword, so long as you specify
   sufficient characters to distinguish it from any other keyword valid in that
   field.
-
 - Certain characters have special functions in interactive commands:
-
   - **`?`**
     - Question mark, typed at any point in a command, will produce a message
       explaining what is possible or expected at that point. Depending on the
@@ -231,7 +213,6 @@ options specify either protocol transactions or terminal connection.
       literally. To enter a backslash, type two backslashes in a row (`\\`). A
       single backslash immediately preceding a carriage return allows you to
       continue the command on the next line.
-
 - You may type the editing characters (`DEL`, `^W`, etc) repeatedly, to delete
   all the way back to the prompt. No action will be performed until the command
   is entered by typing `carriage return`, `linefeed`, or `formfeed`. If you make
@@ -239,7 +220,6 @@ options specify either protocol transactions or terminal connection.
   make liberal use of \'`?`\' and `ESC` to feel your way through the commands.
   One important command is \"`help`\" — you should use it the first time you run
   _μCKermit._
-
 - Interactive _μCKermit_ accepts commands from files as well as from the
   keyboard. Upon startup, _μCKermit_ looks for the file .uckermrc in your home
   or current directory (first it looks in the home directory, then in the
@@ -247,9 +227,7 @@ options specify either protocol transactions or terminal connection.
   in interactive format, not UNIX command-line format. A \"`take`\" command is
   also provided for use at any time during an interactive session. Command files
   may be nested to any reasonable depth.
-
 - Here is a brief list of _μCKermit_ **interactive commands**:
-
   - **! command**
     - Execute a UNIX shell command. _A space is required after after the `!`_.
   - **% text**
@@ -304,9 +282,7 @@ options specify either protocol transactions or terminal connection.
     - Execute commands from a file.
   - **transmit**
     - Send a file without error checking.
-
 - The \'`set`\' parameters are:
-
   - **attributes**
     - Turn attribute packet exchange on or off (_default is on_).
   - **block-check**
@@ -341,7 +317,6 @@ options specify either protocol transactions or terminal connection.
     - Set server-related parameters (_like timeout_).
   - **speed**
     - Communication line speed.
-
 - The \'`remote`\' commands are:
   - **cwd**
     - Change remote working directory.
@@ -361,15 +336,12 @@ options specify either protocol transactions or terminal connection.
     - Display who\'s logged in, or get information about a user.
 
 ## CONTACT
-
 - [Jeffrey H. Johnson](mailto:trnsz@pobox.com)
 
 ## HOMEPAGE
-
 - [μCKermit GitHub](https://github.com/BAN-AI-Communications/uckermit)
 
 ## ORIGINAL AUTHORS
-
 - **Frank da Cruz**, _Columbia University Center for Computing Activities_,
   - with contributions from many others.
 
@@ -407,12 +379,10 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.**
 
 ## FILES
-
 - `$HOME/.uckermrc` _μCKermit_ initialization commands
 - `./.uckermrc` more _μCKermit_ initialization commands
 
 ## SEE ALSO
-
 - [cu](https://man.openbsd.org/cu)
 - [ecu](https://github.com/BAN-AI-Communications/ecu)
 - [UUCP](https://github.com/BAN-AI-Communications/bnu-hdb-uucp)
@@ -427,10 +397,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.**
   Digital Press (1986)
 
 ## DIAGNOSTICS
-
 - The diagnostics produced by _μCKermit_ itself are intended to be
   self-explanatory.
 
 ## BUGS
-
 - Probably **_way_** too many.
