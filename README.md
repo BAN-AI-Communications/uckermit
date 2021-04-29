@@ -146,6 +146,7 @@ options specify either protocol transactions or terminal connection.
 - On a timesharing system, the **`-l`** and **`-b`** options will also have to
   be included with the **`-r`**, **`-k`**, or **`-s`** options if the other
   _μCKermit_ is on a remote system.
+
 - If _uckermit_ is in local mode, the screen (stdout) is continously updated to
   show the progress of the file transer. A dot is printed for every four data
   packets, other packets are shown by type (e.g. \'`S`\' for _Send-Init_),
@@ -157,7 +158,6 @@ options specify either protocol transactions or terminal connection.
   - `Control-B`: Interrupt the entire Batch of files, terminate the transaction.
   - `Control-R`: Resend the current packet
   - `Control-A`: Display a status report for the current transaction.
-  -
 
 - These interrupt characters differ from the ones used in other _Kermit_
   implementations to avoid conflict with UNIX shell interrupt characters. With
@@ -374,11 +374,9 @@ All rights reserved.
 
   - Redistributions of source code must retain the above copyright notice, this
     list of conditions and the following disclaimer.
-
   - Redistributions in binary form must reproduce the above copyright notice,
     this list of conditions and the following disclaimer in the documentation
     and or other materials provided with the distribution.
-
   - Neither the name of Columbia University nor the names of its contributors
     may be used to endorse or promote products derived from this software
     without specific prior written permission.
@@ -405,11 +403,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.**
 - [ecu](https://github.com/BAN-AI-Communications/ecu)
 - [UUCP](https://github.com/BAN-AI-Communications/bnu-hdb-uucp)
 - [Kermit](https://kermitproject.org/)
-
 - _Christine Gianone_,
   [Kermit User\'s Guide](https://kermitproject.org/booksonline.html), Columbia
   University, 8th Edition
-
 - _Frank da Cruz_,
   [Kermit, A File Transfer Protocol](https://kermitproject.org/booksonline.html),
   Digital Press (1986)
