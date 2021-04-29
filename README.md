@@ -1,5 +1,7 @@
 # μ*C֊Kermit*
+
 ## _micro_–C֊Kermit (_microkermit_)
+
 [![License: BSD](https://img.shields.io/badge/License-BSD%20-blue.svg)](https://github.com/BAN-AI-Communications/uckermit/blob/master/LICENSE)
 [![LocCount](https://img.shields.io/tokei/lines/github/BAN-AI-Communications/uckermit.svg)](https://github.com/XAMPPRocky/tokei)
 [![GitHubCodeSize](https://img.shields.io/github/languages/code-size/BAN-AI-Communications/uckermit.svg)](https://github.com/BAN-AI-Communications/uckermit)
@@ -10,15 +12,19 @@
 [![DeepSourceR](https://deepsource.io/gh/BAN-AI-Communications/uckermit.svg/?label=resolved+issues)](https://deepsource.io/gh/BAN-AI-Communications/uckermit/?ref=repository-badge)
 
 ## Overview
+
 - **_[Current Status](https://github.com/BAN-AI-Communications/uckermit/issues/32)_**
 
 ## NAME
+
 - **_uckermit_** - minimalistic **kermit** file transfer
 
 ## SYNOPSIS
+
 - **uckermit** \[ `option ...` \] \[ `file ...` \]
 
 ## DESCRIPTION
+
 _μCKermit_ is a file transfer program that allows files to be moved between
 machines of many different operating systems and architectures.
 
@@ -60,6 +66,7 @@ _μCKermit_ command line options may specify either **_actions_** or
 options specify either protocol transactions or terminal connection.
 
 ## COMMAND LINE OPTIONS
+
 - **`-s fn`**
   - Send the specified file or files. If _fn_ contains wildcard (_shell meta_)
     characters, the UNIX shell expands it into a list. If _fn_ is \'`-`\' then
@@ -174,6 +181,7 @@ options specify either protocol transactions or terminal connection.
       line may contain no more than one protocol action option.
 
 ## INTERACTIVE OPERATION
+
 - _μCKermit_\'s interactive command prompt is \"`uCKermit>`\". In response to
   this prompt, you may type any valid command.
 - _μCKermit_ executes the command and then prompts you for another command. The
@@ -336,12 +344,15 @@ options specify either protocol transactions or terminal connection.
     - Display who\'s logged in, or get information about a user.
 
 ## CONTACT
+
 - [Jeffrey H. Johnson](mailto:trnsz@pobox.com)
 
 ## HOMEPAGE
+
 - [μCKermit GitHub](https://github.com/BAN-AI-Communications/uckermit)
 
 ## ORIGINAL AUTHORS
+
 - **Frank da Cruz**, _Columbia University Center for Computing Activities_,
   - with contributions from many others.
 
@@ -379,10 +390,12 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.**
 
 ## FILES
+
 - `$HOME/.uckermrc` _μCKermit_ initialization commands
 - `./.uckermrc` more _μCKermit_ initialization commands
 
 ## SEE ALSO
+
 - [cu](https://man.openbsd.org/cu)
 - [ecu](https://github.com/BAN-AI-Communications/ecu)
 - [UUCP](https://github.com/BAN-AI-Communications/bnu-hdb-uucp)
@@ -397,8 +410,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.**
   Digital Press (1986)
 
 ## DIAGNOSTICS
+
 - The diagnostics produced by _μCKermit_ itself are intended to be
   self-explanatory.
 
 ## BUGS
+
 - Probably **_way_** too many.
