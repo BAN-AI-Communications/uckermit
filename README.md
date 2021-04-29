@@ -138,6 +138,7 @@ options specify either protocol transactions or terminal connection.
     system by typing the escape character (normally `Control-\`) followed by the
     letter \'`c`\'.
 - **`-n`**
+
   - Like **`-c`,** but after a protocol transaction takes place; **`-c`** and
     **`-n`** may both be used in the same command. The use of **`-n`** and
     **`-c`** is illustrated below.
