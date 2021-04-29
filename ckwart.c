@@ -1,6 +1,6 @@
 #ifndef NOICP
 #ifdef WARTVER
-char *wartv = "     Wart, 1A(225)";
+char *wartv = "     Wart, 1A(227)";
 #endif /* ifndef WARTVER */
 #endif /* ifndef NOICP */
 
@@ -65,29 +65,14 @@ char *wartv = "     Wart, 1A(225)";
 #define WORD   4
 #define COMMA  5
 
-/*
- * Storage
- * sizes
- */
-
-#define MAXSTATES 16          /* max number of states */
-#define MAXWORD 32            /* max # of chars/word */
+#define MAXSTATES 30          /* max number of states */
+#define MAXWORD 60            /* max # of chars/word */
 #define SBYTES \
   (( MAXSTATES + 7 ) / 8 )    /* # of bytes for state bitmask */
-
-/*
- * Name of wart function
- * in generated program
- */
 
 #ifndef FNAME
 #define FNAME "wart"
 #endif /* ifndef FNAME */
-
-/*
- * Structure for
- * state information
- */
 
 struct
 trans
@@ -358,11 +343,6 @@ FILE *fp, *out;
   }
   return ( head );
 }
-
-/*
- * Read a list of (comma-separated) states,
- * set them in the given transition.
- */
 
 int
 statelist(fp, t)
