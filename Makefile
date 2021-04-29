@@ -1,6 +1,6 @@
 ###########################################################################
 #                                                                         #
-#                   Makefile, version 2.85, 2021-APR-29                   #
+#                   Makefile, version 2.87, 2021-APR-29                   #
 #                                                                         #
 ###########################################################################
 #                                                                         #
@@ -379,8 +379,6 @@ linux:
 		-fdelete-null-pointer-checks -funsafe-math-optimizations -g" \
 			"LNKFLAGS = \
 				-Wl,-flto \
-				-Wl,-O,2 \
-				-wl,--no-eh-frame-hdr \
 				-Wl,--gc-sections \
 				-Wl,--print-gc-sections"
 #
@@ -395,12 +393,9 @@ linux-small:
 		-fno-exceptions -fdata-sections -ffunction-sections -ffast-math \
 		-fno-math-errno -Wno-implicit-int -DNOSTATS -fmerge-all-constants \
 		-funsigned-char -fdelete-null-pointer-checks -DNOBTEST -DNOICP \
-		-DMINBUF -DNOATTR -funsafe-math-optimizations -g -flto -DNODISP \
-		-ULCKDIR" \
+		-DMINBUF -DNOATTR -funsafe-math-optimizations -g -flto -DNODISP" \
 			"LNKFLAGS = \
 				-Wl,-flto \
-				-Wl,-O,2 \
-				-Wl,--no-eh-frame-hdr \
 				-Wl,--gc-sections \
 				-Wl,--print-gc-sections"
 #
@@ -440,13 +435,12 @@ strip:
 	@strip --strip-all wermit \
 		2>/dev/null || true
 	@strip --strip-dwo \
-		-R .note.ABI-tag \
-		-R .comment \
+		-R .note.\* \
+		-R .comment.* \
 		-R .note \
+		-R .comment \
 		-R .tm_clone_table \
 		-R .got \
-		-R .shstrtab \
-		-R .note.gnu.build-id \
 		-R .gnu.version \
 		-R .gnu.hash \
 		-R .gnu.build.attributes \
@@ -456,8 +450,6 @@ strip:
 		-R .eh_frame \
 		-R .rela.eh_frame \
 		-R .note.gnu.gold-version \
-		-R .jcr \
-		-R .got.plt \
 		wermit \
 		2>/dev/null || true
 	@sstrip -z wermit 2>/dev/null || true
