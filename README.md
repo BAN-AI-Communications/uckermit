@@ -138,27 +138,22 @@ options specify either protocol transactions or terminal connection.
     system by typing the escape character (normally `Control-\`) followed by the
     letter \'`c`\'.
 - **`-n`**
-
   - Like **`-c`,** but after a protocol transaction takes place; **`-c`** and
     **`-n`** may both be used in the same command. The use of **`-n`** and
     **`-c`** is illustrated below.
-
 - On a timesharing system, the **`-l`** and **`-b`** options will also have to
   be included with the **`-r`**, **`-k`**, or **`-s`** options if the other
   _μCKermit_ is on a remote system.
-
 - If _uckermit_ is in local mode, the screen (stdout) is continously updated to
   show the progress of the file transer. A dot is printed for every four data
   packets, other packets are shown by type (e.g. \'`S`\' for _Send-Init_),
   \'`T`\' is printed when there\'s a timeout, and \'`%`\' for each
   retransmission. In addition, you may type (to stdin) certain \"interrupt\"
   commands during file transfer:
-
   - `Control-F`: Interrupt the current File, and go on to the next (if any).
   - `Control-B`: Interrupt the entire Batch of files, terminate the transaction.
   - `Control-R`: Resend the current packet
   - `Control-A`: Display a status report for the current transaction.
-
 - These interrupt characters differ from the ones used in other _Kermit_
   implementations to avoid conflict with UNIX shell interrupt characters. With
   System III and System V implementations of UNIX, interrupt commands must be
