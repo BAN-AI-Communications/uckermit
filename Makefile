@@ -1,6 +1,6 @@
 ###########################################################################
 #                                                                         #
-#                   Makefile, version 2.79, 2021-APR-29                   #
+#                   Makefile, version 2.81, 2021-APR-29                   #
 #                                                                         #
 ###########################################################################
 #                                                                         #
@@ -393,11 +393,15 @@ linux-small:
 		-fno-exceptions -fdata-sections -ffunction-sections -ffast-math \
 		-fno-math-errno -Wno-implicit-int -DNOSTATS -fmerge-all-constants \
 		-funsigned-char -fdelete-null-pointer-checks -DNOBTEST -DNOICP \
-		-DMINBUF -DNOATTR -funsafe-math-optimizations -g -flto -DNODISP" \
-			"LNKFLAGS = -flto \
+		-DMINBUF -DNOATTR -funsafe-math-optimizations -g -flto -DNODISP \
+		-ULCKDIR" \
+			"LNKFLAGS = \
+				-Wl,-t \
+				-Wl,-flto \
+				-Wl,-O,2 \
+				-Wl,--no-eh-frame-hdr \
 				-Wl,--gc-sections \
-				-Wl,--print-gc-sections \
-				-Wl,-z,relro,-z,now"
+				-Wl,--print-gc-sections"
 #
 ###########################################################################
 #Linux WIP size-reduction target (alternate target name)
