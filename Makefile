@@ -423,13 +423,13 @@ strip:
 		awk '{ print $$5 }' 2>/dev/null || true) bytes" || true
 	@printf '\n%s\n' "" 2>/dev/null || true
 	@cp -f wermit .wermit.old.1
-	@~/src/bloaty/build/bloaty --domain=vm -n 0 -w -s vm \
+	@bloaty --domain=vm -n 0 -w -s vm \
 		-d sections,symbols wermit \
 		2>/dev/null || true
 	@printf '\n%s\n\n' \
 		"Change since $$(stat -c %y .wermit.old.1.saved)" \
 		2>/dev/null || true
-	@~/src/bloaty/build/bloaty --domain=vm -n 0 -w -s vm \
+	@bloaty --domain=vm -n 0 -w -s vm \
 		-d sections,symbols wermit \
 		-- .wermit.old.1.saved \
 		2>/dev/null || true
@@ -472,13 +472,13 @@ strip:
 		awk '{ print $$5 }' 2>/dev/null || true) bytes" || true
 	@printf '\n%s\n' 2>/dev/null || true
 	@cp -f wermit .wermit.old.2
-	@~/src/bloaty/build/bloaty -n 0 -w -s vm \
+	@bloaty -n 0 -w -s vm \
 		-d sections,symbols wermit \
 		2>/dev/null || true
 	@printf '\n%s\n\n' \
 		"Change since $$(stat -c %y .wermit.old.2.saved)" \
 		2>/dev/null || true
-	@~/src/bloaty/build/bloaty -n 0 -w -s vm \
+	@bloaty -n 0 -w -s vm \
         -d sections,symbols wermit \
         -- .wermit.old.2.saved \
         2>/dev/null || true
