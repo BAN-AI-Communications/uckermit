@@ -142,11 +142,11 @@ options specify either protocol transactions or terminal connection.
     **`-n`** may both be used in the same command. The use of **`-n`** and
     **`-c`** is illustrated below.
 
-* On a timesharing system, the **`-l`** and **`-b`** options will also have to
+- On a timesharing system, the **`-l`** and **`-b`** options will also have to
   be included with the **`-r`**, **`-k`**, or **`-s`** options if the other
   _μCKermit_ is on a remote system.
 
-* If _uckermit_ is in local mode, the screen (stdout) is continously updated to
+- If _uckermit_ is in local mode, the screen (stdout) is continously updated to
   show the progress of the file transer. A dot is printed for every four data
   packets, other packets are shown by type (e.g. \'`S`\' for _Send-Init_),
   \'`T`\' is printed when there\'s a timeout, and \'`%`\' for each
@@ -158,12 +158,12 @@ options specify either protocol transactions or terminal connection.
   - `Control-R`: Resend the current packet
   - `Control-A`: Display a status report for the current transaction.
 
-* These interrupt characters differ from the ones used in other _Kermit_
+- These interrupt characters differ from the ones used in other _Kermit_
   implementations to avoid conflict with UNIX shell interrupt characters. With
   System III and System V implementations of UNIX, interrupt commands must be
   preceeded by the escape character (e.g. `Control-\`).
 
-* Several other command-line options are provided:
+- Several other command-line options are provided:
   - **`-i`**
     - Specifies that files should be sent or received with text conversion.
   - **`-e n`**
@@ -187,7 +187,7 @@ options specify either protocol transactions or terminal connection.
 
 ## INTERACTIVE OPERATION
 
-- _μCKermit_\'s interactive command prompt is \"`uCKermit> `\". In response to
+- _μCKermit_\'s interactive command prompt is \"`uCKermit>`\". In response to
   this prompt, you may type any valid command.
 
 - _μCKermit_ executes the command and then prompts you for another command. The
@@ -247,7 +247,7 @@ options specify either protocol transactions or terminal connection.
   also provided for use at any time during an interactive session. Command files
   may be nested to any reasonable depth.
 
-* Here is a brief list of _μCKermit_ **interactive commands**:
+- Here is a brief list of _μCKermit_ **interactive commands**:
 
   - **! command**
     - Execute a UNIX shell command. _A space is required after after the `!`_.
@@ -304,7 +304,7 @@ options specify either protocol transactions or terminal connection.
   - **transmit**
     - Send a file without error checking.
 
-* The \'`set`\' parameters are:
+- The \'`set`\' parameters are:
 
   - **attributes**
     - Turn attribute packet exchange on or off (_default is on_).
@@ -341,7 +341,7 @@ options specify either protocol transactions or terminal connection.
   - **speed**
     - Communication line speed.
 
-* The \'`remote`\' commands are:
+- The \'`remote`\' commands are:
   - **cwd**
     - Change remote working directory.
   - **delete**

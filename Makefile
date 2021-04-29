@@ -1,6 +1,6 @@
 ###########################################################################
 #                                                                         #
-#                   Makefile, version 2.81, 2021-APR-29                   #
+#                   Makefile, version 2.85, 2021-APR-29                   #
 #                                                                         #
 ###########################################################################
 #                                                                         #
@@ -377,10 +377,12 @@ linux:
 		-fno-asynchronous-unwind-tables -funsigned-char -ffast-math \
 		-ffunction-sections -fmerge-all-constants -flto -ffast-math \
 		-fdelete-null-pointer-checks -funsafe-math-optimizations -g" \
-			"LNKFLAGS = -flto \
+			"LNKFLAGS = \
+				-Wl,-flto \
+				-Wl,-O,2 \
+				-wl,--no-eh-frame-hdr \
 				-Wl,--gc-sections \
-				-Wl,--print-gc-sections \
-				-Wl,-z,relro,-z,now"
+				-Wl,--print-gc-sections"
 #
 ###########################################################################
 #Linux WIP size-reduction, GCC 10 (development)
@@ -396,7 +398,6 @@ linux-small:
 		-DMINBUF -DNOATTR -funsafe-math-optimizations -g -flto -DNODISP \
 		-ULCKDIR" \
 			"LNKFLAGS = \
-				-Wl,-t \
 				-Wl,-flto \
 				-Wl,-O,2 \
 				-Wl,--no-eh-frame-hdr \
@@ -471,13 +472,13 @@ strip:
 		awk '{ print $$5 }' 2>/dev/null || true) bytes" || true
 	@printf '\n%s\n' 2>/dev/null || true
 	@cp -f wermit .wermit.old.2
-	@~/src/bloaty/build/bloaty --domain=vm -n 0 -w -s vm \
+	@~/src/bloaty/build/bloaty -n 0 -w -s vm \
 		-d sections,symbols wermit \
 		2>/dev/null || true
 	@printf '\n%s\n\n' \
 		"Change since $$(stat -c %y .wermit.old.2.saved)" \
 		2>/dev/null || true
-	@~/src/bloaty/build/bloaty --domain=vm -n 0 -w -s vm \
+	@~/src/bloaty/build/bloaty -n 0 -w -s vm \
         -d sections,symbols wermit \
         -- .wermit.old.2.saved \
         2>/dev/null || true
