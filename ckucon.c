@@ -1,8 +1,8 @@
 #ifndef NOICP
-char *connv = "Connect Command, 4G(045)";
+char *connv = "   Connect, 4G(049)";
 #endif /* ifndef NOICP */
 
-/* C K U C O N -- Dumb terminal connection to remote system, for UNIX */
+/* C K U C O N -- Dumb terminal connection to remote system */
 
 /*
  * Copyright (C) 2021, Jeffrey H. Johnson <trnsz@pobox.com>
@@ -66,8 +66,12 @@ int io_retry = 0;
 char *chstr();
 char temp[50];
 
-#define LBUFL 200                    /* Line buffer */
-char lbuf[LBUFL];
+#ifdef MINBUF
+#define LBUFL 48
+#else /* ifdef MINBUF */
+#define LBUFL 100                    /* Line buffer */
+#endif /* ifdef MINBUF */
+char lbuf[LBUFL];                    /* XXX(jhj): 200 stock lbuf */
 
 /*
  * Connect state parent/child
@@ -130,7 +134,7 @@ conect()
       chstr(escape), escape);
   if (seslog)
   {
-    printf("[Session logged to %s]\r\n", sesfil);
+    printf("[Logging to %s]\r\n", sesfil);
   }
 
   /*
@@ -196,7 +200,7 @@ conect()
           }
           else
           {
-            perror("\r\nCan't send character");
+            perror("\r\nCan't send char");
             active = 0;
           }
         }
@@ -238,7 +242,7 @@ conect()
 
         if (errno != 9999)
         {
-          perror("\r\nCan't get character");
+          perror("\r\nCan't get char");
         }
 
         kill(parent_id, SIGUSR1);    /* notify parent. */
@@ -283,7 +287,8 @@ hconne()
 {
   int c;
   static char *hlpmsg[] = {
-    "\r\n\r\n Escape character twice to send it,\r\n",
+    "\r\n",
+/*  "\r\n Escape character twice to send it,\r\n", */
     "\r\n c: close connection",
     "\r\n 0: send NULL",
     "\r\n b: send BREAK",

@@ -1,6 +1,6 @@
 #ifndef NOICP
 #ifdef WARTVER
-char *wartv = "Wart Preprocessor, 1A(223)";
+char *wartv = "     Wart, 1A(225)";
 #endif /* ifndef WARTVER */
 #endif /* ifndef NOICP */
 
@@ -70,8 +70,8 @@ char *wartv = "Wart Preprocessor, 1A(223)";
  * sizes
  */
 
-#define MAXSTATES 50          /* max number of states */
-#define MAXWORD 50            /* max # of chars/word */
+#define MAXSTATES 16          /* max number of states */
+#define MAXWORD 32            /* max # of chars/word */
 #define SBYTES \
   (( MAXSTATES + 7 ) / 8 )    /* # of bytes for state bitmask */
 

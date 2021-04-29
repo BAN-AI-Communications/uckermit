@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *ckxv = "TTY I/O Module, 4G(089)";
+char *ckxv = "    TTY IO, 4G(089)";
 #endif /* ifndef NOICP */
 
 /* C K U T I O */

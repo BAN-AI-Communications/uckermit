@@ -65,7 +65,11 @@ extern int size, spsiz, rpsiz, urpsiz, npad, timint,
 extern int server;
 #endif /* ifndef NOSERVER */
 
-extern int fmask, cmask, backgrd, atcapr, flow, displa,
+#ifndef NOATTR
+extern int atcapr;
+#endif /* ifndef NOATTR */
+
+extern int fmask, cmask, backgrd, flow, displa,
   binary, fncnv, delay, parity, deblog, escape,
   xargc, turn, duplex, cxseen, czseen, nfils,
   ckxech, pktlog, seslog, tralog, stdouf, turnch,
@@ -272,8 +276,10 @@ int xx;
 #endif /* ifndef NODOHLP */
     return ( 0 );
 
+#ifndef NOATTR
   case XYATTR: /* File Attribute packets */
     return ( seton(&atcapr));
+#endif /* ifndef NOATTR */
 
   case XYIFD: /* Incomplete file disposition */
     if (( y = cmkey(ifdtab, 2, "", "discard")) < 0)

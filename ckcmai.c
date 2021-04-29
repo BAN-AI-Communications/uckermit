@@ -1,4 +1,4 @@
-char *versio = "uCKermit, 4G(157), 2021-APR-28";
+char *versio = "uCKermit, 4G(163), 2021-APR-29";
 
 /* C K C M A I -- uCKermit Main program */
 
@@ -117,9 +117,11 @@ int         maxtry = MAXTRY,        /* Maximum retries per packet */
             rptq   = MYRPTQ,        /* Repeat prefix */
             rptflg = 0;             /* Repeat processing flag */
 int         capas  = 10,            /* Position of Capabilities */
+#ifndef NOATTR
             atcapb = 8,             /* Attribute capability */
             atcapr = 1,             /*  requested */
             atcapu = 0,             /*  used */
+#endif /* ifndef NOATTR */
             swcapb = 4,             /* Sliding Window capability */
             swcapr = 0,             /*  requested */
             swcapu = 0,             /*  used */

@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *fnsv = "Kermit Support Functions, 4G(097)";
+char *fnsv = "   Library, 4G(101)";
 #endif /* ifndef NOICP */
 
 /* C K C F N S -- System-independent Kermit protocol support functions */
@@ -74,7 +74,13 @@ extern int  server;
 extern int  cxseen;
 extern int  czseen,   nakstate,  rq,      rqf;
 extern int  sq,       wslots,    urpsiz,  rln;
-extern int  atcapr,   atcapb,    atcapu,  lpcapr;
+
+#ifndef NOATTR
+extern int  atcapr;
+extern int  atcapu;
+#endif /* ifndef NOATTR */
+
+extern int  atcapb,   lpcapr;
 extern int  lpcapb,   lpcapu,    swcapr,  swcapb;
 extern int  swcapu,   bsave,     bsavef,  numerrs;
 
@@ -965,8 +971,10 @@ reof(yy)
 struct zattr *yy;
 {
   int x;
+#ifndef NODISP
   char *p;
   char c;
+#endif /* ifndef NODISP */
 
   if (cxseen == 0)
   {
@@ -985,6 +993,7 @@ struct zattr *yy;
 #ifndef NOSTATS
     fstats();                          /* Close out file statistics */
 #endif /* ifndef NOSTATS */
+#ifndef NODISP
     if (yy->disp.len != 0)             /* Handle file disposition */
     {
       p = yy->disp.val;
@@ -1007,6 +1016,7 @@ struct zattr *yy;
         zdelet(filnam);                /* Delete the file */
       }
     }
+#endif /* ifndef NODISP */
   }
 
   *filnam = '\0';
@@ -1256,10 +1266,12 @@ rpar()
     data[9] = '~';
   }
 
+#ifndef NOATTR
   data[10] = tochar(
     ( atcapr ? atcapb : 0 ) | \
       ( lpcapr ? lpcapb : 0 ) |
         ( swcapr ? swcapb : 0 ));
+#endif /* ifndef NOATTR */
   data[capas + 1] = \
     tochar(swcapr ? wslots : 0);        /* Window size */
 
@@ -1437,6 +1449,7 @@ char *s;
    * Capabilities
    */
 
+#ifndef NOATTR
   atcapu = lpcapu = swcapu = 0;
   if (rln >= 10)
   {
@@ -1456,6 +1469,7 @@ char *s;
       ;
     }
   }
+#endif /* ifndef NOATTR */
 
   /*
    * Long
@@ -1947,7 +1961,9 @@ struct zattr *zz;
   debug(F101, " blksize", (int)zz->blksize, 0);
   debug(F111, " access", zz->access.val, zz->access.len);
   debug(F111, " encoding", zz->encoding.val, zz->encoding.len);
+#ifndef NODISP
   debug(F111, " disposition", zz->disp.val, zz->disp.len);
+#endif /* ifndef NODISP */
   debug(F111, " lprotection", zz->lprotect.val, zz->lprotect.len);
   debug(F111, " gprotection", zz->gprotect.val, zz->gprotect.len);
   debug(F111, " systemid", zz->systemid.val, zz->systemid.len);

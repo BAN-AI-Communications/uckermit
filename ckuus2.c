@@ -99,8 +99,12 @@ extern int turn, turnch, pktlog, tralog, mdmtyp, flow, cmask, timef, spsizf;
 extern int rtimo, timint, srvtim, npad, mypadn, bctr, delay;
 extern int maxtry, spsiz, urpsiz, maxsps, maxrps, ebqflg, ebq;
 extern int rptflg, rptq, fncnv, binary, pktlog, warn, quiet, fmask, keep;
-extern int tsecs, bctu, len, atcapu, lpcapu, swcapu, wslots, sq, rpsiz;
-extern int capas, atcapr;
+extern int tsecs, bctu, len, lpcapu, swcapu, wslots, sq, rpsiz;
+extern int capas;
+#ifndef NOATTR
+extern int atcapr;
+extern int atcapu;
+#endif /* ifndef NOATTR */
 extern long filcnt, tfc, tlci, tlco, ffc, flci, flco;
 extern char *dftty, *versio, *ckxsys;
 extern struct keytab prmtab[];
@@ -135,7 +139,7 @@ static char *hlp1[] = {
 #ifdef DEBUG
   "        -d         debug mode (write debug.log)\n",
 #endif /* ifdef DEBUG */
-  "        -e length  set extended receive packet length (e.g. 1200)\n",
+  "        -e length  set extended receive packet length\n",
 #ifndef NOICP
   "If no ACTION is specified, uCKermit enters interactive mode.\n",
 #endif /* ifndef NOICP */
@@ -1028,7 +1032,7 @@ types of modems are supported by this program.");
     puts("\
 Specify parameters for inbound packets:");
     puts("\
-End-Of-Packet (ASCII value), Packet-Length (1000 or less),");
+End-Of-Packet (ASCII value), Packet-Length (1200 or less),");
     puts("\
 Padding (amount, 94 or less), Pad-Character (ASCII value),");
     puts(
@@ -1042,7 +1046,7 @@ all specified as decimal numbers.");
     puts("\
 Specify parameters for outbound packets:");
     puts("\
-End-Of-Packet (ASCII value), Packet-Length (2000 or less),");
+End-Of-Packet (ASCII value), Packet-Length (1200 or less),");
     puts("\
 Padding (amount, 94 or less), Pad-Character (ASCII value),");
     puts(
@@ -1431,6 +1435,7 @@ shopar()
 
   printf("\n Length Limit: %11d%9d\n", maxsps, maxrps);
   printf("\nFile parameters:               Attributes:       ");
+#ifndef NOATTR
   if (atcapr)
   {
     printf("on");
@@ -1439,6 +1444,9 @@ shopar()
   {
     printf("off");
   }
+#else /* ifndef NOATTR */
+  printf("unavailable");
+#endif /* ifndef NOATTR */
 
   printf("\n File Names:    ");
   if (fncnv)
@@ -1678,7 +1686,9 @@ int len;
   debug(F101, " bctr  ", "", bctr);
   debug(F101, " rptq  ", "", rptq);
   debug(F101, " rptflg", "", rptflg);
+#ifndef NOATTR
   debug(F101, " atcapu", "", atcapu);
+#endif /* ifndef NOATTR */
   debug(F101, " lpcapu", "", lpcapu);
   debug(F101, " swcapu", "", swcapu);
   debug(F101, " wslots", "", wslots);
@@ -1704,7 +1714,9 @@ int len;
   debug(F101, " rptflg", "", rptflg);
   debug(F101, " capas ", "", capas);
   debug(F101, " bits  ", "", data[capas]);
+#ifndef NOATTR
   debug(F101, " atcapu", "", atcapu);
+#endif /* ifndef NOATTR */
   debug(F101, " lpcapu", "", lpcapu);
   debug(F101, " swcapu", "", swcapu);
   debug(F101, " wslots", "", wslots);

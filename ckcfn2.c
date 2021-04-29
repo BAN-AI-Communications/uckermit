@@ -967,9 +967,15 @@ struct zattr *yy;
   static char tsbuf[TSBUFL];
 #define IDBUFL 10                    /* System ID */
   static char idbuf[IDBUFL];
+#ifndef NODISP
 #define DSBUFL 100                   /* Disposition */
   static char dsbuf[DSBUFL];
-#define SPBUFL 512                   /* System-dependent parameters */
+#endif /* ifndef NODISP */
+#ifdef MINBUF
+#define SPBUFL 8                     /* System-dependent parameters */
+#else /* ifdef MINBUF */
+#define SPBUFL 100                   /* XXX(jhj) - 512 is the standard! */
+#endif /* ifdef MINBUF */
   static char spbuf[SPBUFL];
 
   /*
@@ -1032,6 +1038,7 @@ struct zattr *yy;
       yy->encoding.len = i;            /* Length of string */
       break;
 
+#ifndef NODISP
     case '+':                          /* Disposition */
       for (i = 0; ( i < aln ) && \
         ( i < DSBUFL ); i++)
@@ -1043,6 +1050,7 @@ struct zattr *yy;
       yy->disp.val = dsbuf;            /* Pointer to string */
       yy->disp.len = i;                /* Length of string */
       break;
+#endif /* ifndef NODISP */
 
     case '.':                          /* Sender's system ID */
       for (i = 0; ( i < aln ) && \
@@ -1124,8 +1132,10 @@ struct zattr *yy;
   yy->date.len     = 0;
   yy->encoding.val = "";
   yy->encoding.len = 0;
+#ifndef NODISP
   yy->disp.val     = "";
   yy->disp.len     = 0;
+#endif /* ifndef NODISP */
   yy->systemid.val = "";
   yy->systemid.len = 0;
   yy->sysparam.val = "";

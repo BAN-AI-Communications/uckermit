@@ -85,7 +85,9 @@ struct zattr            /* Kermit File Attribute structure */
   long        blksize;  /* (() File blocksize */
   struct zstr access;   /* ()) File access: new, supersede, append, warn */
   struct zstr encoding; /* (*) Encoding (transfer syntax) */
+#ifndef NODISP
   struct zstr disp;     /* (+) Disposition (mail, message, print, etc) */
+#endif /* ifndef NODISP */
   struct zstr lprotect; /* (,) Protection (local syntax) */
   struct zstr gprotect; /* (-) Protection (generic syntax) */
   struct zstr systemid; /* (.) ID for system of origin */
@@ -113,10 +115,14 @@ typedef int SIGTYP;
 #endif /* ifndef FTYPE */
 
 #ifdef BSD4
+#ifndef MINBUF
 #define DTILDE
+#endif /* ifndef MINBUF */
 #endif /* ifdef BSD4 */
 #ifdef UXIII
+#ifndef MINBUF
 #define DTILDE
+#endif /* ifndef MINBUF */
 #endif /* ifdef UXIII */
 
 #ifdef V7

@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *userv = "User Interface, 4G(115)";
+char *userv = "   JSYS UI, 4G(117)";
 #endif /* ifndef NOICP */
 
 /* C K U U S R -- "User Interface" (Part 1) */
@@ -138,7 +138,7 @@ extern char *dialv;
 #ifndef NOCKUSCR
 extern char *loginv;
 #endif /* ifndef NOCKUSCR */
-extern char *ckxsys, *ckzsys, *cmarg, *cmarg2;
+extern char *ckxsys, *cmarg, *cmarg2;
 extern char **xargv, **cmlist;
 extern char *DIRCMD, *PWDCMD, cmerrp[];
 extern CHAR sstate, ttname[];
@@ -160,10 +160,10 @@ extern int backgrd;            /* Kermit executing in background */
 #ifndef NOICP
 char line[CMDBL + 10], *lp; /* Character buffer for anything */
 #endif /* ifndef NOICP */
-char debfil[50];            /* Debugging log file name */
-char pktfil[50];            /* Packet log file name */
-char sesfil[50];            /* Session log file name */
-char trafil[50];            /* Transaction log file name */
+char debfil[30];            /* Debugging log file name */
+char pktfil[30];            /* Packet log file name */
+char sesfil[30];            /* Session log file name */
+char trafil[30];            /* Transaction log file name */
 
 int cflg;                   /* Command-line connect cmd given */
 int action;                 /* Action selected on command line*/
@@ -171,7 +171,7 @@ int action;                 /* Action selected on command line*/
 int repars;                 /* Reparse needed */
 int cwdf = 0;               /* CWD has been done */
 
-#define MAXTAKE 20          /* Maximum nesting of TAKE files */
+#define MAXTAKE 8           /* Maximum nesting of TAKE files */
 FILE *tfile[MAXTAKE];       /* File pointers for TAKE command */
 
 char *homdir;               /* Pointer to home directory string */
@@ -942,7 +942,7 @@ again:
       {
         if (--cbn < 1)
         {
-          fatal("Command too long for internal buffer");
+          fatal("Command too long");
         }
       }
       if (*( cbp - 3 ) == '\\') /* Continued on next line? */
@@ -982,12 +982,12 @@ again:
       case -2:       /* Invalid command given */
         if (backgrd) /* if in background, terminate */
         {
-          fatal("Kermit command error in background execution");
+          fatal("error in background execution");
         }
 
         if (tlevel > -1)   /* If in take file, quit */
         {
-          ermsg("Kermit command error: take file terminated.");
+          ermsg("Error: take file terminated.");
           fclose(tfile[tlevel]);
           tlevel--;
         }
@@ -1022,7 +1022,7 @@ again:
 doexit(exitstat)
 int exitstat;
 {
-  ttclos(); /* Close external line, if any */
+  ttclos();                /* Close external line, if any */
   if (local)
   {
     strcpy(ttname, dftty); /* Restore default tty */
@@ -1031,21 +1031,23 @@ int exitstat;
 
   if (!quiet)
   {
-    conres(); /* Restore console terminal. */
+    conres();              /* Restore console terminal. */
   }
 
   if (!quiet)
   {
-    connoi(); /* Turn off console interrupt traps. */
+    connoi();              /* Turn off console interrupt traps. */
   }
 
-  if (deblog)   /* Close any open logs. */
+#ifdef DEBUG
+  if (deblog)              /* Close any open logs. */
   {
     debug(F100, "Debug Log Closed", "", 0);
     *debfil = '\0';
     deblog = 0;
     zclose(ZDFILE);
   }
+#endif /* ifdef DEBUG */
 
   if (pktlog)
   {
@@ -1061,6 +1063,7 @@ int exitstat;
     zclose(ZSFILE);
   }
 
+#ifdef TLOG
   if (tralog)
   {
     tlog(F100, "Transaction Log Closed", "", 0l);
@@ -1068,6 +1071,7 @@ int exitstat;
     tralog = 0;
     zclose(ZTFILE);
   }
+#endif /* ifdef TLOG */
 
   syscleanup();
   exit(exitstat); /* Exit from the program. */
@@ -1758,28 +1762,27 @@ int cx;
       break;
 
     case SHVER:
-      printf("\r\nVersions:\n");
-      printf(" * %s,%s\n",  versio, ckxsys);
-      printf("  * %s\n",    protv);
-      printf("  * %s\n",    fnsv);
-      printf("  * %s\n",    cmdv);
+      printf("\n  %s,%s\n", versio, ckxsys);
+      printf("%s\n",    protv);
+      printf("%s\n",    fnsv);
+      printf("%s\n",    cmdv);
 #ifndef NOICP
-      printf("  * %s\n",    userv);
+      printf("%s\n",    userv);
 #endif /* ifndef NOICP */
-      printf("  * %s\n",    ckxv);
-      printf("  *%s %s\n",  ckzsys, ckzv);
-      printf("  * %s\n",    connv);
+      printf("%s\n",    ckxv);
+      printf("%s\n",    ckzv);
+      printf("%s\n",    connv);
 #ifndef NOCKUDIA
-      printf("  * %s\n",    dialv);
+      printf("%s\n",    dialv);
 #endif /* ifndef NOCKUDIA */
 #ifndef NOCKUSCR
-      printf("  * %s\n",    loginv);
+      printf("%s\n",    loginv);
 #endif /* ifndef NOCKUSCR */
       printf("\n");
       break;
 
     default:
-      printf("\nNothing to show...\n");
+      printf("\nNothing to show.\n");
       break;
     }
     return ( 0 );
@@ -1959,7 +1962,11 @@ const
 char *s;
 char t;
 {
+#ifndef MINBUF
 #define LINBUFSIZ 150
+#else /* ifndef MINBUF */
+#define LINBUFSIZ 98
+#endif /* ifndef MINBUF */
   char linbuf[LINBUFSIZ + 2];           /* Line buffer */
 
   SIGTYP (*oldsig)();                   /* For saving old interrupt trap. */

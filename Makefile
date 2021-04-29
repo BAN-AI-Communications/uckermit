@@ -1,6 +1,6 @@
 ###########################################################################
 #                                                                         #
-#                   Makefile, version 2.75, 2021-APR-28                   #
+#                   Makefile, version 2.79, 2021-APR-29                   #
 #                                                                         #
 ###########################################################################
 #                                                                         #
@@ -375,10 +375,9 @@ linux:
 		-Wno-implicit-function-declaration -Wno-implicit-fallthrough \
 		-Wno-missing-braces -fno-math-errno -fdata-sections -DNOBTEST \
 		-fno-asynchronous-unwind-tables -funsigned-char -ffast-math \
-		-ffunction-sections -fomit-frame-pointer -fmerge-all-constants \
-		-fdelete-null-pointer-checks -ffast-math -fno-unroll-loops -flto \
-		-funsafe-math-optimizations" \
-			"LNKFLAGS = -flto -Wl,-s \
+		-ffunction-sections -fmerge-all-constants -flto -ffast-math \
+		-fdelete-null-pointer-checks -funsafe-math-optimizations -g" \
+			"LNKFLAGS = -flto \
 				-Wl,--gc-sections \
 				-Wl,--print-gc-sections \
 				-Wl,-z,relro,-z,now"
@@ -387,16 +386,15 @@ linux:
 #Linux WIP size-reduction, GCC 10 (development)
 linux-small:
 	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DUXIII -Wall -Os \
-		-DO_NDELAY -DTIOCFLUSH -DSIGTSTP -DFIONREAD -DDIRENT -DNOCKUSCR \
+		-DO_NDELAY -DTIOCFLUSH -DFIONREAD -DDIRENT -DNOCKUSCR -DSIGTSTP \
 		-DNOCKUDIA -Wno-return-type -Wno-missing-braces -DNODOHLP \
 		-Wno-implicit-function-declaration -Wno-implicit-fallthrough \
 		-fno-asynchronous-unwind-tables -fno-unwind-tables -fno-ident \
 		-fno-exceptions -fdata-sections -ffunction-sections -ffast-math \
-		-fno-math-errno -Wno-implicit-int -DNOSTATS -fno-unroll-loops \
-		-fmerge-all-constants -funsigned-char -fomit-frame-pointer \
-		-fdelete-null-pointer-checks -DNOBTEST -DNOICP -DMINBUF -flto \
-		-funsafe-math-optimizations" \
-			"LNKFLAGS = -flto -fuse-ld=gold -Wl,-s \
+		-fno-math-errno -Wno-implicit-int -DNOSTATS -fmerge-all-constants \
+		-funsigned-char -fdelete-null-pointer-checks -DNOBTEST -DNOICP \
+		-DMINBUF -DNOATTR -funsafe-math-optimizations -g -flto -DNODISP" \
+			"LNKFLAGS = -flto \
 				-Wl,--gc-sections \
 				-Wl,--print-gc-sections \
 				-Wl,-z,relro,-z,now"
@@ -410,13 +408,26 @@ linux-tiny:
 # strip binary aggressively (development)
 strip:
 	@test -f wermit
-	@printf '\n%s ' "Original: " "$$(du --apparent-size \
+	@printf '\n%*s\n' "$${COLUMNS:-$$(tput cols)}" '' | tr ' ' - \
+		2>/dev/null || true
+	@printf '\n%s ' "File size: " "$$(du --apparent-size \
 			-k wermit 2>/dev/null | \
 		cut -f 1 -d "	" 2>/dev/null | \
 		cut -f 1 -d " " 2>/dev/null || true)"K \
 		"$$(/bin/ls -l wermit 2>/dev/null | \
 		awk '{ print $$5 }' 2>/dev/null || true) bytes" || true
-	@printf '\n\n%s\n\n' "" 2>/dev/null || true
+	@printf '\n%s\n' "" 2>/dev/null || true
+	@cp -f wermit .wermit.old.1
+	@~/src/bloaty/build/bloaty --domain=vm -n 0 -w -s vm \
+		-d sections,symbols wermit \
+		2>/dev/null || true
+	@printf '\n%s\n\n' \
+		"Change since $$(stat -c %y .wermit.old.1.saved)" \
+		2>/dev/null || true
+	@~/src/bloaty/build/bloaty --domain=vm -n 0 -w -s vm \
+		-d sections,symbols wermit \
+		-- .wermit.old.1.saved \
+		2>/dev/null || true
 	@strip wermit \
 		2>/dev/null || true
 	@strip -s wermit \
@@ -444,18 +455,30 @@ strip:
 		-R .got.plt \
 		wermit \
 		2>/dev/null || true
-	@size -A wermit 2>/dev/null || true
-	@readelf -a wermit 2>/dev/null || true
-	@~/src/bloaty/build/bloaty -n 0 -v wermit \
-		2>/dev/null || true
 	@sstrip -z wermit 2>/dev/null || true
-		@printf '\n%s ' "Stripped: " "$$(du --apparent-size \
+	@printf '%s\n' "" 2>/dev/null || true
+	@printf '%*s\n' "$${COLUMNS:-$$(tput cols)}" '' | tr ' ' - \
+		2>/dev/null || true
+	@printf '\n%s ' "Stripped Size: " "$$(du --apparent-size \
 			-k wermit 2>/dev/null | \
 		cut -f 1 -d "	" 2>/dev/null | \
 		cut -f 1 -d " " 2>/dev/null || true)K" \
 		"$$(/bin/ls -l wermit 2>/dev/null | \
 		awk '{ print $$5 }' 2>/dev/null || true) bytes" || true
-	@printf '\n%s\n' "" || true
+	@printf '\n%s\n' 2>/dev/null || true
+	@cp -f wermit .wermit.old.2
+	@~/src/bloaty/build/bloaty --domain=vm -n 0 -w -s vm \
+		-d sections,symbols wermit \
+		2>/dev/null || true
+	@printf '\n%s\n\n' \
+		"Change since $$(stat -c %y .wermit.old.2.saved)" \
+		2>/dev/null || true
+	@~/src/bloaty/build/bloaty --domain=vm -n 0 -w -s vm \
+        -d sections,symbols wermit \
+        -- .wermit.old.2.saved \
+        2>/dev/null || true
+	@printf '\n%*s\n\n' "$${COLUMNS:-$$(tput cols)}" '' | tr ' ' - \
+		2>/dev/null || true
 #
 ###########################################################################
 #System V R3, some things changed since System V R2...
@@ -551,5 +574,6 @@ clean:
 	-rm -f ck*.s
 	-rm -f core* vgcore*
 	-rm -f massif.out.*
+	-rm -f .wermit.old.?
 #
 ###########################################################################

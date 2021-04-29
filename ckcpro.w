@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *protv = "Kermit Protocol Module, 4G(067)";
+char *protv = "  Protocol, 4G(071)";
 #endif /* ifndef NOICP */
 
 /* C K C P R O -- uCKermit Protocol Module in Wart preprocessor notation */
@@ -75,11 +75,6 @@ char *protv = "Kermit Protocol Module, 4G(067)";
 %states ipkt rfile rattr rdata ssinit ssfile ssattr ssdata sseof sseot
 %states serve generic get rgen
 
- /*
-  * External uCKermit 
-  * variable declarations
-  */
-
   extern char sstate, *versio, *srvtxt, *cmarg, *cmarg2, *rpar();
   extern char data[], filnam[], srvcmd[], ttname[], *srvptr;
   extern int pktnum, timint, nfils, hcflg, xflg, speed, flow, mdmtyp;
@@ -91,7 +86,10 @@ char *protv = "Kermit Protocol Module, 4G(067)";
 #ifndef NOSTATS
   extern int tsecs;
 #endif /* ifndef NOSTATS */
-  extern int parity, backgrd, nakstate, atcapu;
+#ifndef NOATTR
+  extern int atcapu;
+#endif /* ifndef NOATTR */
+  extern int parity, backgrd, nakstate;
   extern int putsrv(), puttrm(), putfil(), errpkt();
   extern CHAR *rdatap, recpkt[];
   extern char *DIRCMD, *DELCMD, *TYPCMD, *SPACMD, *SPACM2, *WHOCMD;
@@ -106,12 +104,6 @@ char *protv = "Kermit Protocol Module, 4G(067)";
   static char vcmd = 0;                 /* Saved Command */
   int x;                                /* General-purpose integer */
   char *s;                              /* General-purpose string pointer */
-
- /*
-  * Macros - Note: BEGIN is predefined
-  * by Wart (and Lex) as "state = ",
-  * BEGIN is NOT a GOTO!
-  */
 
 #define SERVE  \
   tinit(); BEGIN serve
@@ -445,13 +437,16 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
       tlog(
         F110," stored as",srvcmd,0);  /* Record it in transaction log. */
         }
+#ifndef NOATTR
     if (atcapu) {                     /* If attributes are to be used */
         if (sattr(xflg) < 0) {        /* set and send them */
           errpkt(
             "Can't send attributes"); /* if problem, say so */
               RESUME;                 /* and quit */
         } else BEGIN ssattr;          /* if ok, switch to attribute state */
-    } else if (sdata() < 0) {         /* No attributes, send data */
+    } else 
+#endif /* NOATTR */
+	if (sdata() < 0) {                /* No attributes, send data */
         clsif();                      /* If not ok, close input file, */
         seof("");                     /* send EOF packet */
         BEGIN sseof;                  /* and switch to EOF state. */

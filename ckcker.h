@@ -47,8 +47,13 @@
 #define SP        040         /* ASCII Space */
 #define DEL       0177        /* ASCII Delete (Rubout) */
 
-#define MAXSP     2048        /* Send packet buffer size  */
-#define MAXRP     1024        /* Receive packet buffer size  */
+#ifndef MINBUF
+#define MAXSP     1200        /* Send packet buffer size  */
+#define MAXRP     1200        /* Receive packet buffer size */
+#else /* ifndef MINBUF */
+#define MAXSP     98          /* MINBUF packet buffer, send */
+#define MAXRP     98          /* MINBUF packet buffer, recv */
+#endif /* ifndef MINBUF */
 #define MAXWS     1           /* Maximum window size */
 
 #define MAXPACK   94          /* Maximum unextended packet size */
@@ -91,9 +96,9 @@
 #define ZNFILS    9           /* How many defined file numbers */
 
 #ifdef MINBIF
-#define INBUFSIZE 256
-#else /* ifdef MINBUF */
-#define INBUFSIZE 1024        /* Size of the input & output buffer */
+#define INBUFSIZE 128         /* XXX(jhj): stock 512, min 128 */
+#else /* ifdef MINBUF */      /* XXX(jhj): now 128/256 */
+#define INBUFSIZE 256         /* Size of the input & output buffer */
 #endif /* ifdef MINBUF */
 
 #define zminchar() \

@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *ckzv = "File Support, 4G(085)";
+char *ckzv = "   File IO, 4G(089)";
 #endif /* ifndef NOICP */
 
 /* C K U F I O -- Kermit file system support for UNIX systems */
@@ -160,7 +160,7 @@ char *ckzsys = " Xenix/86";
 #endif /* ifdef M_I386 */
 #else  /* ifdef XENIX */
 #ifdef ISIII
-char *ckzsys = " Interactive Systems Corp, System III";
+char *ckzsys = " ISC System III";
 #else  /* ifdef ISIII */
 #ifdef __linux__
 char *ckzsys = " GNU/Linux";
@@ -263,6 +263,11 @@ char *WHOCMD = "who ";               /* For seeing who's logged in */
 #define O_RDONLY 000
 #endif /* ifndef O_RDONLY */
 
+#ifdef MINBUF
+#undef MAXNAMLEN
+#define MAXNAMLEN 99         /* 99 max filename length for minbuf */
+#endif /* ifdef MINBUF */
+
 #ifndef MAXNAMLEN
 #ifdef __linux__
 #define MAXNANLEN 255        /* Linux XXX(jhj): Find in header */
@@ -274,7 +279,11 @@ char *WHOCMD = "who ";               /* For seeing who's logged in */
 #ifdef BSD29
 #define MAXWLD 50            /* Maximum wildcard filenames */
 #else  /* ifdef BSD29 */
-#define MAXWLD 500
+#ifdef MINBUF
+#define MAXWLD 20            /* XXX(jhj): 20 wildcard files */
+#else /* ifdef MINBUF */
+#define MAXWLD 100           /* XXX(jhj): 100 wildcard files */
+#endif /* ifdef MINBUF */
 #endif /* ifdef BSD29 */
 
 FILE *fp[ZNFILS] = {         /* File pointers */
@@ -1262,8 +1271,10 @@ struct zattr *xx;
   xx->access.val = "";
   xx->encoding.len = 0;             /* Transfer syntax */
   xx->encoding.val = 0;
+#ifndef NODISP
   xx->disp.len = 0;                 /* Disposition upon arrival */
   xx->disp.val = "";
+#endif /* ifndef NODISP */
   xx->lprotect.len = 0;             /* Local protection */
   xx->lprotect.val = "";
   xx->gprotect.len = 0;             /* Generic protection */
@@ -1488,7 +1499,11 @@ path
 #ifdef BSD29
 #define SSPACE 500
 #else  /* ifdef BSD29 */
-#define SSPACE 2000                  /* size of string-generating buffer */
+#ifndef MINBUF
+#define SSPACE 768                   /* XXX 2000 size of string-generating buffer */
+#else /* ifndef MINBUF */
+#define SSPACE 384
+#endif /* ifndef MINBUF */
 #endif /* ifdef BSD29 */
 static char sspace[SSPACE];          /* buffer to generate names in */
 static char *freeptr, **resptr;      /* copies of caller's arguments */
@@ -1909,12 +1924,12 @@ char *
 whoami()
 {
 #ifdef DTILDE
-  static char realname[256];                         /* user's name */
-  static int  realuid = -1;                          /* user's real uid */
-  char        loginname[256], envname[256];          /* temp storage */
-  char        *getlogin(),    *getenv(), *c;
-  struct      passwd *p,      *getpwnam(),
-              *getpwuid(),    *getpwent();
+  static char realname[32];                        /* user's name */
+  static int  realuid = -1;                        /* user's real uid */
+  char        loginname[32], envname[32];          /* temp storage */
+  char        *getlogin(),   *getenv(),   *c;
+  struct      passwd *p,     *getpwnam(),
+              *getpwuid(),   *getpwent();
 
   if (realuid != -1)
   {

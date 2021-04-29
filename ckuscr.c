@@ -1,5 +1,5 @@
 #ifndef NOCKUSCR
-char *loginv = "Script Processor, 4G(031)";
+char *loginv = " Scripting, 4G(033)";
 
 /* C K U S C R -- Login script for logging onto remote system */
 
@@ -81,7 +81,11 @@ static int EXP_ALRM = 15;           /* Time to wait for expect string */
 #define NULL_EXP 2                  /* Time to pause on null expect strg*/
 #define DEL_MSEC 300                /* milliseconds to pause on ~d */
 
+#ifndef MINBUF
 #define SBUFL 512
+#else /* ifndef MINBUF */
+#define SBUFL 128
+#endif /* ifndef MINBUF */
 static char seq_buf[SBUFL + 1], *s; /* Login Sequence buffer */
 static char fls_buf[SBUFL + 1];     /* Flush buffer */
 static int got_it, no_cr;
