@@ -39,9 +39,15 @@
 
 #define HLPLW  78                    /* Width of ?-help line */
 #define HLPCW  19                    /* Width of ?-help column */
+#ifndef MINBUF
 #define CMDBL 255                    /* Command buffer length */
 #define HLPBL 100                    /* Help string buffer length */
 #define ATMBL 256                    /* Command atom buffer length*/
+#else /* ifndef MINBUF */
+#define CMDBL  30                    /* Command buffer length */
+#define HLPBL  30                    /* Help string buffer length */
+#define ATMBL  30                    /* Command atom buffer length*/
+#endif /* ifndef MINBuF */
 
 #ifndef   NUL
 #define   NUL '\0'                   /* NULL */

@@ -1,5 +1,7 @@
 #ifndef NOICP
-char *connv = "   Connect, 4G(049)";
+#ifndef NOCONN
+char *connv = "   Connect, 4G(055)";
+#endif /* ifndef NOCONN */
 #endif /* ifndef NOICP */
 
 /* C K U C O N -- Dumb terminal connection to remote system */
@@ -53,6 +55,13 @@ char *connv = "   Connect, 4G(049)";
 #define SIGUSR1 16
 #endif /* ifndef SIGUSR1 */
 
+#ifdef __linux__
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#endif /* ifdef __linux__ */
+
+#ifndef NOCONN
 extern int local, speed, escape, duplex;
 extern int parity, flow, seslog, mdmtyp;
 extern int errno, cmask, fmask;
@@ -73,11 +82,6 @@ char temp[50];
 #endif /* ifdef MINBUF */
 char lbuf[LBUFL];                    /* XXX(jhj): 200 stock lbuf */
 
-/*
- * Connect state parent/child
- * communication signal handlers
- */
-
 static jmp_buf env_con;              /* Envir ptr for connect errors */
 
 SIGTYP
@@ -88,6 +92,7 @@ conn_int()                           /* Modem read failure handler, */
 
 /* C O N E C T -- Perform terminal connection */
 
+int
 conect()
 {
   int pid,                           /* process id of child: modem reader */
@@ -283,6 +288,7 @@ conect()
 
 /* H C O N N E -- Give help message for connect */
 
+char
 hconne()
 {
   int c;
@@ -332,6 +338,7 @@ int c;
 
 /* D O E S C -- Process an escape character argument */
 
+void
 doesc(c)
 char c;
 {
@@ -439,3 +446,4 @@ char c;
     }
   }
 }
+#endif /* ifndef NOCONN */

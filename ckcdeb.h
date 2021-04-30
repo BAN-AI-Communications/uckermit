@@ -147,3 +147,5 @@ typedef long LONG;
 #define CTTNAM "/dev/tty"
 #define GOOD_EXIT 0
 #define BAD_EXIT  1
+
+#include "ckchdr.h"

@@ -1,8 +1,8 @@
 #ifndef NOICP
-char *cmdv = "    Parser, 4G(057)";
+char *cmdv = "  ICP REPL, 4G(063)";
 #endif /* ifndef NOICP */
 
-/* C K U C M D -- Interactive command package for UNIX */
+/* C K U C M D -- Interactive command package / parser */
 
 /*
  * Copyright (C) 2021, Jeffrey H. Johnson <trnsz@pobox.com>
@@ -102,11 +102,6 @@ char *cmdv = "    Parser, 4G(057)";
 #include <string.h>
 #endif /* ifdef __linux__ */
 
-/*
- * Local
- * variables
- */
-
 #ifndef NOICP
 int psetf = 0;                   /* Flag that prompt has been set */
 int   cc  = 0;                   /* Character count */
@@ -121,7 +116,11 @@ int hw = HLPLW,                  /* Help line width */
 #endif /* ifndef NOICP */
 
 #ifndef NOICP
+#ifndef MINBUF
 #define PROML 60                 /* Maximum length for prompt */
+#else /* ifndef MINBUF */
+#define PROML 10 
+#endif /* ifndef MINBUF */
 char cmprom[PROML + 1];          /* Program's prompt */
 char *dfprom = "Command? ";      /* Default prompt */
 char cmerrp[PROML + 1];          /* Program's error message prefix */
@@ -145,11 +144,31 @@ static char *pp;                 /* Start of current field */
 static char *np;                 /* Start of next field */
 #endif /* ifndef NOICP */
 
+int addbuf(char *s);
+void addhlp(char *s);
+void clrhlp();
+void dmphlp();
 long zchki();
+int gtword();
+int zxpand(char *xp);
+int znext(char *dn);
+int zchko(char *name);
+int rdigits(char *s);
+int setatm(char *cp);
+int chkwld(char *s);
+#ifndef NOICP
+int cmfld(char *xhlp, char *xdef, char **xp);
+int lower(char *s);
+#endif /* ifndef NOICP */
+
+#ifdef DEBUG
+int debug();
+#endif
 
 /* C M S E T P -- Set the program prompt */
 
 #ifndef NOICP
+void
 cmsetp(s)
 char *s;
 {
@@ -174,6 +193,7 @@ char *s;
 /* C M S A V P -- Save a copy of the current prompt */
 
 #ifndef NOICP
+void
 cmsavp(s, n)
 int n;
 char s[];
@@ -187,6 +207,7 @@ char s[];
 /* P R O M P T -- Issue the program prompt */
 
 #ifndef NOICP
+void
 prompt()
 {
   if (psetf == 0)
@@ -201,6 +222,7 @@ prompt()
 /* C M R E S -- Reset pointers to beginning of command buffer */
 
 #ifndef NOICP
+void
 cmres()
 {
   cc = 0;                        /* Reset character counter. */
@@ -219,6 +241,7 @@ cmres()
  */
 
 #ifndef NOICP
+void
 cmini(d)
 int d;
 {
@@ -235,6 +258,7 @@ int d;
   cmres();
 }
 
+void
 stripq(s)
 char *s;
 {                                /* Function to strip '\' quotes */
@@ -271,6 +295,7 @@ char *s;
  */
 
 #ifndef NOICP
+int
 cmnum(xhlp, xdef, radix, n)
 char *xhlp, *xdef;
 int radix, *n;
@@ -330,6 +355,7 @@ int radix, *n;
  */
 
 #ifndef NOICP
+int
 cmofi(xhlp, xdef, xp)
 char *xhlp, *xdef, **xp;
 {
@@ -406,6 +432,7 @@ char *xhlp, *xdef, **xp;
  */
 
 #ifndef NOICP
+int
 cmifi(xhlp, xdef, xp, wild)
 char *xhlp, *xdef, **xp;
 int *wild;
@@ -701,6 +728,7 @@ int *wild;
  */
 
 #ifndef NOICP
+int
 cmdir(xhlp, xdef, xp)
 char *xhlp, *xdef, **xp;
 {
@@ -822,6 +850,7 @@ char *xhlp, *xdef, **xp;
 /* C H K W L D -- Check for wildcard characters '*' or '?' */
 
 #ifndef NOICP
+int
 chkwld(s)
 char *s;
 {
@@ -848,6 +877,7 @@ char *s;
  */
 
 #ifndef NOICP
+int
 cmfld(xhlp, xdef, xp)
 char *xhlp, *xdef, **xp;
 {
@@ -956,6 +986,7 @@ char *xhlp, *xdef, **xp;
  */
 
 #ifndef NOICP
+int
 cmtxt(xhlp, xdef, xp)
 char *xhlp;
 char *xdef;
@@ -1065,6 +1096,11 @@ char **xp;
  */
 
 #ifndef NOICP
+int lookup(struct keytab *table, char *cmd, int n, int *x);
+#endif /* ifndef NOICP */
+
+#ifndef NOICP
+int
 cmkey(table, n, xhlp, xdef)
 struct keytab table[];
 int n;
@@ -1226,6 +1262,7 @@ char *xhlp, *xdef;
  */
 
 #ifndef NOICP
+int
 cmcfm()
 {
   int x, xc;
@@ -1291,6 +1328,7 @@ cmcfm()
 /* C L R H L P -- Initialize/Clear the help line buffer */
 
 #ifndef NOICP
+void
 clrhlp()
 {
   hlpbuf[0] = NUL;               /* Clear the help buffer */
@@ -1301,6 +1339,7 @@ clrhlp()
 /* A D D H L P -- Add a string to the help line buffer */
 
 #ifndef NOICP
+void
 addhlp(s)
 char *s;
 {                                /* Add a word to the help buffer */
@@ -1338,6 +1377,7 @@ char *s;
 /* D M P H L P -- Dump the help line buffer */
 
 #ifndef NOICP
+void
 dmphlp()
 {                                /* Print the help buffer */
   hlpbuf[hx++] = NUL;
@@ -1372,6 +1412,7 @@ dmphlp()
  */
 
 #ifndef NOICP
+int
 lookup(table, cmd, n, x)
 char *cmd;
 struct keytab table[];
@@ -1434,6 +1475,7 @@ int n, *x;
  *    in the word copied to atmbuf
  */
 
+int
 gtword()
 {
   int c;                         /* Current char */
@@ -1685,6 +1727,7 @@ gtword()
 /* A D D B U F -- Add the string pointed to by cp to the command buffer */
 
 #ifndef NOICP
+int
 addbuf(cp)
 char *cp;
 {
@@ -1718,6 +1761,7 @@ char *cp;
  */
 
 #ifndef NOICP
+int
 setatm(cp)
 char *cp;
 {
@@ -1750,6 +1794,7 @@ char *cp;
 /* R D I G I T S -- Verify that all the characters in line ARE DIGITS */
 
 #ifndef NOICP
+int
 rdigits(s)
 char *s;
 {
@@ -1769,6 +1814,7 @@ char *s;
 /* L O W E R -- Lowercase a string */
 
 #ifndef NOICP
+int
 lower(s)
 char *s;
 {

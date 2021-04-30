@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *ckxv = "    TTY IO, 4G(089)";
+char *ckxv = "    TTY IO, 4G(093)";
 #endif /* ifndef NOICP */
 
 /* C K U T I O */
@@ -53,13 +53,15 @@ char *ckxv = "    TTY IO, 4G(089)";
 
 #include <signal.h>    /* Interrupts */
 #include <stdio.h>     /* UNIX Standard i/o */
-
 #include <setjmp.h>    /* Longjumps */
 
 #include "ckcdeb.h"    /* Typedefs, formats for debug() */
 
 #ifdef __linux__
+#include <stdlib.h>
+#include <unistd.h>
 #include <string.h>
+#include <sys/stat.h>
 #endif /* ifdef __linux__ */
 
 #ifndef DEVNAMLEN
@@ -72,8 +74,8 @@ char *ckxv = "    TTY IO, 4G(089)";
 #ifdef MAXNAMLEN
 #define BSD42
 #ifdef SUNOS4
-char *ckxsys = " SUNOS 4.x";
-#else  /* ifdef SUNOS4 */
+char *ckxsys = " SunOS 4.x";
+#else  /* ifdef SunOS4 */
 #ifdef ultrix
 char *ckxsys = " VAX/Ultrix";
 #else  /* ifdef ultrix */
@@ -94,7 +96,7 @@ char *ckxsys = " 4.1 BSD";
 char *ckxsys = " 2.9 BSD";
 #endif /* bsd29 */
 #ifdef V7
-char *ckxsys = " Version 7 UNIX (tm)";
+char *ckxsys = " Version 7 UNIX";
 #endif /* v7 */
 #ifdef UXIII
 #ifdef XENIX
@@ -109,7 +111,7 @@ char *ckxsys = " Xenix/86";
 #endif /* ifdef M_I386 */
 #else  /* ifdef XENIX */
 #ifdef ISIII
-char *ckxsys = " Interactive Systems Corp System III";
+char *ckxsys = " ISC System III";
 #else  /* ifdef ISIII */
 #ifdef hpux
 char *ckxsys = " HP 9000 Series HP-UX";
@@ -125,29 +127,17 @@ char *ckxsys = " AT&T System III/System V";
 #endif /* uxiii */
 #endif /* ifndef NOICP */
 
-/*
- * Where is the
- * UUCP lock file?
- */
+void ztime(char **s);
+void rtimer();
+long ttsspd(long speed);
+char coninc(int timo);
 
 #ifdef NEWUUCP
 #define LCKDIR
 #endif /* ifdef NEWUUCP */
-
-/*
- * Coordinate with
- * HoneyDanBer UUCP?
- */
-
 #ifdef ATT3BX
 #define HDBUUCP
 #endif /* ifdef ATT3BX */
-
-/*
- * (PWP) if LOCK_DIR is already
- * defined, we don't change it
- */
-
 #ifndef LOCK_DIR
 #ifdef ISIII
 #define LOCK_DIR "/etc/locks";
@@ -163,11 +153,6 @@ char *ckxsys = " AT&T System III/System V";
 #endif /* HDBUUCP */
 #endif /* ISIII */
 #endif /* !LOCK_DIR (outside ifndef) */
-
-/*
- * Do own buffering, using
- * unbuffered read() calls...
- */
 
 #ifdef UXIII
 #define MYREAD
@@ -261,11 +246,6 @@ char *ckxsys = " AT&T System III/System V";
  * gtimer()  -- Get elapsed time since last call to rtimer()
  */
 
-/*
- * Whether to include
- * <sys/file.h>...
- */
-
 #ifndef XENIX
 #ifndef unos
 #include <sys/file.h>             /* File information */
@@ -277,11 +257,6 @@ char *ckxsys = " AT&T System III/System V";
 #include <sys/file.h>
 #endif /* ifdef BSD4 */
 
-/*
- * System III
- * or System V
- */
-
 #ifdef UXIII
 #include <termio.h>
 #include <sys/ioctl.h>
@@ -292,11 +267,6 @@ char *ckxsys = " AT&T System III/System V";
 #ifdef HPUX
 #include <sys/modem.h>
 #endif /* ifdef HPUX */
-
-/*
- * Not System III
- * nor System V
- */
 
 #ifndef UXIII
 #include <sgtty.h>                /* Set/Get tty modes */
@@ -372,11 +342,6 @@ int iniflags = 0;                 /* fcntl flags for ttyfd */
 #endif /* ifdef ultrix */
 int ckxech = 0;                   /* 0 if system normally echoes */
                                   /* console characters, else 1 */
-/*
- * Declarations of variables
- * global within this module
- */
-
 #ifndef NOSTATS
 static long tcount;               /* Elapsed time counter */
 #endif /* ifndef NOSTATS */
@@ -409,11 +374,6 @@ static struct timeb ftp;          /* And from sys/timeb.h */
 #ifdef V7
 static long clock;
 #endif /* ifdef V7 */
-
-/*
- * sgtty/termio/termios
- * information...
- */
 
 #ifdef UXIII
 static struct termio ttold = {
@@ -451,8 +411,13 @@ static char ttnmsv[DEVNAMLEN + 1];  /* copy of open path for tthang */
 
 /* S Y S I N I T -- System-dependent program initialization */
 
+int
 sysinit()
 {
+#ifdef BSD42
+(void)tv;
+(void)tz;
+#endif /* ifdef BSD42 */
 #ifdef ultrix
   gtty(0, &vanilla);                 /* Get sgtty info */
   iniflags = fcntl(0, F_GETFL, 0);   /* Get flags */
@@ -466,6 +431,7 @@ sysinit()
 
 /* S Y S C L E A N U P -- System-dependent program cleanup */
 
+int
 syscleanup()
 {
 #ifdef ultrix
@@ -487,6 +453,7 @@ syscleanup()
  *  be opened, then lcl remains (and is returned as) -1.
  */
 
+int
 ttopen(ttname, lcl, modem)
 char *ttname;
 int *lcl, modem;
@@ -574,7 +541,7 @@ int *lcl, modem;
 #endif /* ifdef __linux__ */
       if (x == NULL)
       {
-        return;
+        return ( 0 );
       }
 
 #ifdef __linux__
@@ -777,6 +744,7 @@ ttclosx()   /* To avoid pointer type mismatches */
 }
 #endif /* ifdef COMMENT */
 
+int
 ttclos()
 {
   debug(F101, "ttclos", "", ttyfd);
@@ -860,6 +828,7 @@ ttclos()
 
 /* T T H A N G -- Hangup phone line */
 
+int
 tthang()
 {
 #ifdef UXIII
@@ -980,6 +949,7 @@ tthang()
 
 /* T T R E S -- Restore terminal to "normal" mode */
 
+int
 ttres()
 {                                           /* Restore the tty to normal. */
   int x;
@@ -1073,6 +1043,7 @@ char c;
   return ( NULL );
 }
 
+int
 static
 look4lk(ttname)
 char *ttname;
@@ -1146,7 +1117,7 @@ char *ttname;
 
 /* T T L O C K */
 
-static
+static int
 ttlock(ttfd)
 char *ttfd;
 {                                      /* lock UUCP if possible */
@@ -1191,6 +1162,7 @@ char *ttfd;
 
 /* T T U N L O C K */
 
+int
 static
 ttunlck()
 {                                      /* kill uucp lock if possible */
@@ -1245,10 +1217,11 @@ char *flag, *ttname;
  * -1 on failure.
  */
 
+int
 ttpkt(speed, flow, parity)
 int speed, flow, parity;
 {
-  int s = -1;
+  long s = -1;
   int x;
 
   (void)x;
@@ -1451,6 +1424,7 @@ int speed, flow, parity;
 
 /* T T V T -- Condition communication line for use as virtual terminal */
 
+int
 ttvt(speed, flow)
 int speed, flow;
 {
@@ -1566,9 +1540,12 @@ int speed, flow;
 
 /* T T S S P D -- Return the internal baud rate code for 'speed' */
 
+long
 ttsspd(speed)
+long speed;
 {
-  int s, spdok;
+  long s; 
+  int spdok;
 
   if (speed < 0)
   {
@@ -1716,10 +1693,10 @@ ttsspd(speed)
   default:
     spdok = 0;
 #ifndef NODOHLP
-    fprintf(stderr, "Unsupported line speed - %d\n", speed);
+    fprintf(stderr, "Unsupported line speed - %ld\n", speed);
     fprintf(stderr, "Current speed not changed\n");
 #else /* ifndef NODOHLP */
-    fprintf(stderr, "Bad speed - %d\n", speed);
+    fprintf(stderr, "Bad speed - %ld\n", speed);
 #endif /* ifndef NODOHLP */
     break;
   }
@@ -1735,6 +1712,7 @@ ttsspd(speed)
 
 /* T T F L U I -- Flush tty input buffer */
 
+int
 ttflui()
 {
 #ifndef UXIII
@@ -1811,6 +1789,7 @@ esctrp()
 
 /* C O N I N T -- Console Interrupt setter */
 
+SIGTYP
 conint(f)
 SIGTYP (*f)();
 {                             /* Set an interrupt trap. */
@@ -1921,11 +1900,12 @@ SIGTYP (*f)();
     conif = 1;                /* Flag console interrupts on. */
   }
 
-  return;
+  return ( 0 );;
 }
 
 /* C O N N O I -- Reset console terminal interrupts */
 
+void
 connoi()
 {                             /* Console-no-interrupts */
   debug(F100,
@@ -2207,6 +2187,7 @@ int fn;
 
 /* T T C H K -- Tell how many characters are waiting in tty input buffer */
 
+int
 ttchk()
 {
   int x;
@@ -2244,6 +2225,7 @@ ttchk()
  * available in the input buffer.
  */
 
+int
 ttxin(n, buf)
 int n;
 CHAR *buf;
@@ -2275,6 +2257,7 @@ CHAR *buf;
 
 /* T T O L -- Similar to "ttinl", but for writing */
 
+int
 ttol(s, n)
 int n;
 char *s;
@@ -2301,6 +2284,7 @@ char *s;
  * not create a bottleneck.
  */
 
+int
 ttoc(c)
 char c;
 {
@@ -2338,7 +2322,7 @@ char c;
  */
 
 #define CTRLC '\03'
-
+int
 ttinl(dest, max, timo, eol)
 int max, timo;
 CHAR *dest, eol;
@@ -2447,6 +2431,7 @@ CHAR *dest, eol;
 
 /* T T I N C -- Read a character from the communication line */
 
+int
 ttinc(timo)
 int timo;
 {
@@ -2525,6 +2510,7 @@ int timo;
 
 /* T T S N D B -- Send a BREAK signal */
 
+int
 ttsndb()
 {
   int x;
@@ -2590,11 +2576,10 @@ ttsndb()
  * For big ones, just use sleep().
  */
 
+int
 msleep(m)
 int m;
 {
-  (void)tz;
-  (void)tv;
 
 #ifdef ANYBSD
   int t1, t3, t4;
@@ -2602,7 +2587,6 @@ int m;
   {
     return ( 0 );
   }
-
 #ifndef BSD42
 
   /*
@@ -2713,6 +2697,7 @@ int m;
 /* R T I M E R -- Reset elapsed time counter */
 
 #ifndef NOSTATS
+void
 rtimer()
 {
   tcount = time((long *)0);
@@ -2722,6 +2707,7 @@ rtimer()
 /* G T I M E R -- Get current value of elapsed time counter in seconds */
 
 #ifndef NOSTATS
+int
 gtimer()
 {
   int x;
@@ -2734,6 +2720,7 @@ gtimer()
 
 /* Z T I M E -- Return date/time string */
 
+void
 ztime(s)
 char **s;
 {
@@ -2780,6 +2767,7 @@ char **s;
  * mode and other modes.
  */
 
+int
 congm()
 {
   if (!isatty(0))
@@ -2810,6 +2798,7 @@ congm()
  * -1 if not
  */
 
+int
 concb(esc)
 char esc;
 {
@@ -2867,6 +2856,7 @@ char esc;
  * -1 if not
  */
 
+int
 conbin(esc)
 char esc;
 {
@@ -2922,6 +2912,7 @@ char esc;
 
 /* C O N R E S -- Restore the console terminal */
 
+int
 conres()
 {
   debug(F100, "entering conres", "", 0);
@@ -2951,6 +2942,7 @@ conres()
 
 /* C O N O C -- Output a character to the console terminal */
 
+void
 conoc(c)
 char c;
 {
@@ -3008,6 +3000,7 @@ char *s;
 /* C O N C H K -- Return how many characters available at console */
 
 #ifndef NOICP
+int
 conchk()
 {
   int x;
@@ -3047,6 +3040,7 @@ conchk()
 
 /* C O N I N C -- Get a character from the console */
 
+char
 coninc(timo)
 int timo;
 {

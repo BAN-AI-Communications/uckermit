@@ -1,6 +1,6 @@
 ###########################################################################
 #                                                                         #
-#                   Makefile, version 2.87, 2021-APR-29                   #
+#                   Makefile, version 2.93, 2021-APR-30                   #
 #                                                                         #
 ###########################################################################
 #                                                                         #
@@ -222,27 +222,27 @@ wermit: ckcmai.o ckucmd.o ckuusr.o ckuus2.o ckuus3.o ckcpro.o ckcfns.o \
 #
 ###########################################################################
 #
-ckcmai.o: ckcmai.c ckcker.h ckcdeb.h
+ckcmai.o: ckcmai.c ckcker.h ckcdeb.h ckchdr.h
 #
 ###########################################################################
 #
-ckuusr.o: ckcpro.c ckuusr.c ckucmd.h ckcker.h ckuusr.h ckcdeb.h
+ckuusr.o: ckcpro.c ckuusr.c ckucmd.h ckcker.h ckuusr.h ckcdeb.h ckchdr.h
 #
 ###########################################################################
 #
-ckuus2.o: ckuus2.c ckucmd.h ckcker.h ckuusr.h ckcdeb.h
+ckuus2.o: ckuus2.c ckucmd.h ckcker.h ckuusr.h ckcdeb.h ckchdr.h
 #
 ###########################################################################
 #
-ckuus3.o: ckuus3.c ckucmd.h ckcker.h ckuusr.h ckcdeb.h
+ckuus3.o: ckuus3.c ckucmd.h ckcker.h ckuusr.h ckcdeb.h ckchdr.h
 #
 ###########################################################################
 #
-ckucmd.o: ckucmd.c ckucmd.h ckcdeb.h
+ckucmd.o: ckucmd.c ckucmd.h ckcdeb.h ckchdr.h
 #
 ###########################################################################
 #
-ckcpro.o: ckcpro.c ckcker.h ckcdeb.h
+ckcpro.o: ckcpro.c ckcker.h ckcdeb.h ckchdr.h
 #
 ###########################################################################
 #
@@ -251,23 +251,23 @@ ckcpro.c: ckcpro.w wart
 #
 ###########################################################################
 #
-ckcfns.o: ckcfns.c ckcker.h ckcdeb.h
+ckcfns.o: ckcfns.c ckcker.h ckcdeb.h ckchdr.h
 #
 ###########################################################################
 #
-ckcfn2.o: ckcfn2.c ckcker.h ckcdeb.h
+ckcfn2.o: ckcfn2.c ckcker.h ckcdeb.h ckchdr.h
 #
 ###########################################################################
 #
-ckufio.o: ckufio.c ckcker.h ckcdeb.h
+ckufio.o: ckufio.c ckcker.h ckcdeb.h ckchdr.h
 #
 ###########################################################################
 #
-ckutio.o: ckutio.c ckcdeb.h
+ckutio.o: ckutio.c ckcdeb.h ckchdr.h
 #
 ###########################################################################
 #
-ckucon.o: ckucon.c ckcker.h ckcdeb.h
+ckucon.o: ckucon.c ckcker.h ckcdeb.h ckchdr.h
 #
 ###########################################################################
 #
@@ -276,15 +276,15 @@ wart: ckwart.o
 #
 ###########################################################################
 #
-ckwart.o: ckwart.c
+ckwart.o: ckwart.c ckchdr.h
 #
 ###########################################################################
 #
-ckudia.o: ckudia.c ckcker.h ckcdeb.h ckucmd.h
+ckudia.o: ckudia.c ckcker.h ckcdeb.h ckucmd.h ckchdr.h
 #
 ###########################################################################
 #
-ckuscr.o: ckuscr.c ckcker.h ckcdeb.h
+ckuscr.o: ckuscr.c ckcker.h ckcdeb.h ckchdr.h
 #
 ###########################################################################
 #                                                                         #
@@ -366,43 +366,69 @@ v7:
 		-DNPTYPE=$(NPTYPE) $(DIRECT)"
 #
 ###########################################################################
-#Modern Linux, GCC 10 (development)
+#Linux, full featured
 linux:
 	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DDEBUG -DTLOG -DUXIII \
 		-DO_NDELAY -DTIOCFLUSH -DTIOCSINUSE -Wall -DSIGTSTP -DFIONREAD \
-		-DTIMEZONE -Wall -Wno-return-type -Wno-unused-variable -Os \
-		-Wno-implicit-int -fno-unwind-tables -fno-exceptions -DDIRENT \
-		-Wno-implicit-function-declaration -Wno-implicit-fallthrough \
-		-Wno-missing-braces -fno-math-errno -fdata-sections -DNOBTEST \
-		-fno-asynchronous-unwind-tables -funsigned-char -ffast-math \
-		-ffunction-sections -fmerge-all-constants -flto -ffast-math \
-		-fdelete-null-pointer-checks -funsafe-math-optimizations -g" \
+		-DTIMEZONE -Wall -Os -fno-ident -fno-unwind-tables -g -flto \
+		-fno-exceptions -DDIRENT -fno-math-errno -fdata-sections \
+		-DNOBTEST -fno-asynchronous-unwind-tables -funsigned-char \
+		-ffunction-sections -fmerge-all-constants -ffast-math -DDTILDE \
+		-fdelete-null-pointer-checks -funsafe-math-optimizations" \
 			"LNKFLAGS = \
 				-Wl,-flto \
 				-Wl,--gc-sections \
 				-Wl,--print-gc-sections"
 #
 ###########################################################################
-#Linux WIP size-reduction, GCC 10 (development)
+#Linux, small - no dialer, no scripting, no help, no attributes,
+#               no statistics, no disposition, minimal buffering.
 linux-small:
-	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DUXIII -Wall -Os \
-		-DO_NDELAY -DTIOCFLUSH -DFIONREAD -DDIRENT -DNOCKUSCR -DSIGTSTP \
-		-DNOCKUDIA -Wno-return-type -Wno-missing-braces -DNODOHLP \
-		-Wno-implicit-function-declaration -Wno-implicit-fallthrough \
-		-fno-asynchronous-unwind-tables -fno-unwind-tables -fno-ident \
-		-fno-exceptions -fdata-sections -ffunction-sections -ffast-math \
-		-fno-math-errno -Wno-implicit-int -DNOSTATS -fmerge-all-constants \
-		-funsigned-char -fdelete-null-pointer-checks -DNOBTEST -DNOICP \
-		-DMINBUF -DNOATTR -funsafe-math-optimizations -g -flto -DNODISP" \
+	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DUXIII -g -DNOLOGS \
+		-Wall -DFIONREAD -DNOATTR -fno-ident -DNOSTATS -Os -DNODOHLP \
+		-DNODISP -DNOCKUDIA -DMINBUF -fno-unwind-tables -fno-exceptions \
+		-DDIRENT -DNOCKUSCR -fno-math-errno -fdata-sections -DNOBTEST \
+		-DNODISP -fno-asynchronous-unwind-tables -funsigned-char -flto \
+		-ffunction-sections -fmerge-all-constants -ffast-math -DNOCONN \
+		-fdelete-null-pointer-checks -funsafe-math-optimizations \
+		-UDTILDE" \
 			"LNKFLAGS = \
 				-Wl,-flto \
 				-Wl,--gc-sections \
 				-Wl,--print-gc-sections"
 #
 ###########################################################################
-#Linux WIP size-reduction target (alternate target name)
+#Linux, minimal - no dialer, no scripting, no help, no attributes, no ICP,
+#                 no dispositions, no statistics, minimal buffering.
+linux-minimal:
+	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DUXIII -Wall -Os \
+		-DFIONREAD -DDIRENT -DNOCKUSCR -DNOCKUDIA -DNODOHLP -DNODISP \
+		-fno-asynchronous-unwind-tables -fno-unwind-tables -g -fno-ident \
+		-fno-exceptions -fdata-sections -ffunction-sections -ffast-math \
+		-fno-math-errno -DNOSTATS -fmerge-all-constants -funsigned-char \
+		-fdelete-null-pointer-checks -DNOBTEST -DNOICP -DMINBUF -DNOATTR \
+		-funsafe-math-optimizations -flto -DNOCONN -DNOLOGS -UDTILDE" \
+			"LNKFLAGS = \
+				-Wl,-flto \
+				-Wl,--gc-sections \
+				-Wl,--print-gc-sections"
+#
+###########################################################################
+#Linux, alias for minimal 
 linux-tiny:
-	make linux-small
+	make linux-minimal
+#
+###########################################################################
+# cache binary for bloaty analysis
+savebin:
+	-cp -f .wermit.old.2 .wermit.old.2.saved
+	-cp -f .wermit.old.1 .wermit.old.1.saved
+#
+###########################################################################
+# clean up all binaries used for bloaty analysis
+cleanbin:
+	-rm -f .wermit.old.?.*
+	-rm -f .wermir.old.?
 #
 ###########################################################################
 # strip binary aggressively (development)
@@ -422,7 +448,7 @@ strip:
 		-d sections,symbols wermit \
 		2>/dev/null || true
 	@printf '\n%s\n\n' \
-		"Change since $$(stat -c %y .wermit.old.1.saved)" \
+		"$$(stat -c %y .wermit.old.1.saved 2>/dev/null)" \
 		2>/dev/null || true
 	@bloaty --domain=vm -n 0 -w -s vm \
 		-d sections,symbols wermit \
@@ -468,7 +494,7 @@ strip:
 		-d sections,symbols wermit \
 		2>/dev/null || true
 	@printf '\n%s\n\n' \
-		"Change since $$(stat -c %y .wermit.old.2.saved)" \
+		"$$(stat -c %y .wermit.old.2.saved 2>/dev/null)" \
 		2>/dev/null || true
 	@bloaty -n 0 -w -s vm \
         -d sections,symbols wermit \

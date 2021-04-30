@@ -1,5 +1,5 @@
 #ifndef NOCKUDIA
-char *dialv = "    Dialer, 4G(051)";
+char *dialv = "    Dialer, 4G(057)";
 
 /* C K U D I A -- Dialing program for connection to remote system */
 
@@ -116,12 +116,13 @@ char *dialv = "    Dialer, 4G(051)";
 #include <ctype.h>
 #include <signal.h>
 #include <stdio.h>
-
 #include <setjmp.h>
 
 #ifdef __linux__
 #include <string.h>
 #endif /* ifdef __linux__ */
+
+void xcpy(char *to, char *from, unsigned int len);
 
 extern int flow, local, mdmtyp, quiet, speed, parity, seslog, ttyfd;
 extern char ttname[], sesfil[];
@@ -632,10 +633,9 @@ static jmp_buf sjbuf;
 static SIGTYP (*savAlrm)();  /* for saving alarm handler */
 static SIGTYP (*savInt)();   /* for saving interrupt handler */
 
-char *                       /* Copy a string of the */
+void                         /* Copy a string of the */
 xcpy(to, from, len)          /* the given length. */
-register char *to,
-*from;
+register char *to, *from;
 register unsigned len;
 {
   while (len--)
@@ -656,7 +656,7 @@ dialint()                    /* user-interrupt handler */
   longjmp(sjbuf, F_int);
 }
 
-static
+static int
 ttolSlow(s, millisec)
 char *s;
 int millisec;
@@ -666,6 +666,7 @@ int millisec;
     ttoc(*s);
     msleep(millisec);
   }
+  return ( 0 );
 }
 
 /*
@@ -678,7 +679,7 @@ int millisec;
  * specified.
  */
 
-static
+static int
 waitFor(s)
 char *s;
 {
@@ -691,9 +692,10 @@ char *s;
       ;
     }
   }
+  return ( 0 );
 }
 
-static
+static int
 didWeGet(s, r)
 char *s, *r;
 {                            /* Looks in string s for response r */
@@ -717,16 +719,18 @@ char *s, *r;
 
 /* R E S E T -- Reset alarms, etc. on exit */
 
-static
+static int
 reset()
 {
   alarm(0);
   signal(SIGALRM, savAlrm);  /* restore alarm handler */
   signal(SIGINT, savInt);    /* restore interrupt handler */
+  return ( 0 );
 }
 
 /* C K D I A L -- Dial up the remote system */
 
+int
 ckdial(telnbr)
 char *telnbr;
 {

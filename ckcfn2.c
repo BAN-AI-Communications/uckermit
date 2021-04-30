@@ -73,6 +73,12 @@ extern CHAR filnam[], sndpkt[], recpkt[], data[];
 extern CHAR srvcmd[], *srvptr,  stchr,    mystch;
 extern CHAR *rdatap;
 
+void         rcalcpsz();
+void         nack();
+void         nxtpkt();
+void         nack();
+void         resend();
+
 int          numerrs = 0;         /* Total number of packet errors so far */
 char         *strcpy();           /* Forward declarations */
 unsigned int chk2();              /* of non-int functions */
@@ -135,6 +141,7 @@ static unsigned int crctb[16] = {
  *     indicating that an error packet should be sent.
  */
 
+int
 input()
 {
   int type, numtry;
@@ -301,6 +308,7 @@ register CHAR ch;
  * for later retransmission. Updates global sndpktl (send-packet length).
  */
 
+int
 spack(type, n, len, d)
 char type;
 int n;
@@ -442,6 +450,7 @@ register char *d;
 
 /* C H K 1 -- Compute a type-1 Kermit 6-bit checksum. */
 
+int
 chk1(pkt)
 register CHAR *pkt;
 {
@@ -505,12 +514,14 @@ register CHAR *pkt;
  * various kinds of packets
  */
 
+void
 ack()                               /* Send an ordinary acknowledgment. */
 {
   spack('Y', pktnum, 0, "");        /* No data. */
   nxtpkt(&pktnum);                  /* Increment the packet number. */
 }                                   /* Note, only call this once! */
 
+void
 ack1(s)
 char *s;
 {                                   /* Send an ACK with data. */
@@ -518,6 +529,7 @@ char *s;
   nxtpkt(&pktnum);                  /* Increment the packet number. */
 }                                   /* Only call this once! */
 
+void
 nack()
 {                                   /* Negative acknowledgment. */
   spack('N', pktnum, 0, "");        /* NAK's never have data. */
@@ -535,6 +547,7 @@ nack()
  *  packet_len = sqrt (file_chars * header_len / errors)
  */
 
+void
 rcalcpsz()
 {
   register long x, q;
@@ -595,6 +608,7 @@ rcalcpsz()
   spsiz = q;                            /* set new send packet size */
 }
 
+void
 resend()
 {                                       /* Send the old packet again. */
   if (spktl)                            /* If buffer has something, */
@@ -619,6 +633,7 @@ resend()
   }
 }
 
+void
 errpkt(reason)
 char *reason;
 {                                       /* Send an error packet. */
@@ -633,6 +648,7 @@ char *reason;
   screen(SCR_TC, 0, 0l, "");
 }
 
+void
 scmd(t, dat)
 char t, *dat;
 {                                       /* Send packet of the given type */
@@ -640,12 +656,14 @@ char t, *dat;
   spack(t, pktnum, size, data);
 }
 
+void
 srinit()
 {                                       /* Send R (GET) packet */
   encstr(cmarg);                        /* Encode the filename. */
   spack('R', pktnum, size, data);       /* Send the packet. */
 }
 
+void
 nxtpkt(num)
 int *num;
 {
@@ -653,6 +671,7 @@ int *num;
   *num = ( *num + 1 ) % 64;             /* Increment packet number mod 64 */
 }
 
+int
 sigint(
 #ifdef DEBUG
   sig,
@@ -673,6 +692,7 @@ int sig, code;
   debug(F101, " code", "", code);
 #endif /* ifdef DEBUG */
   doexit(GOOD_EXIT);                    /* Exit program */
+  return ( GOOD_EXIT );
 }
 
 /* R P A C K -- Read a Packet */
@@ -685,6 +705,7 @@ int sig, code;
  * data field).
  */
 
+int
 rpack()
 {
   register int i, j, x, try, type, lp;  /* Local variables */
@@ -870,6 +891,7 @@ rpack()
  * Returns 0 on success, -1 on failure.
  */
 
+int
 sattr(xp)
 int xp;
 {                                               /* Send Attributes */
@@ -938,6 +960,7 @@ int xp;
   return ( 0 );
 }
 
+int
 rsattr(s)
 char *s;
 {                                    /* Read response to attribute packet */
@@ -950,6 +973,7 @@ char *s;
   return ( 0 );
 }
 
+int
 gattr(s, yy)
 char *s;
 struct zattr *yy;
@@ -1121,7 +1145,7 @@ struct zattr *yy;
 }
 
 /* I N I T A T T R -- Initialize file attribute structure */
-
+int
 initattr(yy)
 struct zattr *yy;
 {

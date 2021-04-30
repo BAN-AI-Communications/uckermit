@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *fnsv = "   Library, 4G(101)";
+char *fnsv = "   Library, 4G(105)";
 #endif /* ifndef NOICP */
 
 /* C K C F N S -- System-independent Kermit protocol support functions */
@@ -47,6 +47,7 @@ char *fnsv = "   Library, 4G(101)";
 #ifdef __linux__
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <string.h>
 #endif /* ifdef __linux__ */
 
@@ -99,14 +100,15 @@ extern CHAR srvcmd[], stchr,     mystch;
 extern char *cmarg,   *cmarg2,   *hlptxt;
 extern char **cmlist, *rdatap;
 
+void spar();
+void sipkt();
 long zchki();
 char *strcpy();
 CHAR *rpar();
 
-/*
- * External definitions for things used
- * in buffered file input and output.
- */
+void errpkt(char *reason);
+
+extern void errpkt();
 
 extern CHAR zinbuffer[], zoutbuffer[];
 extern CHAR *zinptr,     *zoutptr;
@@ -143,6 +145,7 @@ static CHAR next;            /* Next character */
  * is a string, rather than a file.
  */
 
+void
 encstr(s)
 char *s;
 {
@@ -169,6 +172,7 @@ char *s;
  * passed to 'decode'
  */
 
+int
 putsrv(c)
 register char c;
 {                             /* Put character in server command buffer */
@@ -177,6 +181,7 @@ register char c;
   return ( 0 );
 }
 
+int
 puttrm(c)
 register char c;
 {                             /* Output character to console */
@@ -184,6 +189,7 @@ register char c;
   return ( 0 );
 }
 
+int
 putfil(c)
 register char c;
 {                             /* Output char to file */
@@ -208,6 +214,7 @@ register char c;
  * (e.g. disk full)
  */
 
+int
 decode(buf, fn)
 register CHAR *buf;
 register int (*fn)();
@@ -332,6 +339,7 @@ register int (*fn)();
  * some confusion with line termination (CR+LF vs. LF vs. CR).
  */
 
+int
 getpkt(bufmax)
 int bufmax;
 {                                     /* Fill one packet buffer */
@@ -575,6 +583,7 @@ int bufmax;
 
 /* C A N N E D -- Check if current file transfer cancelled */
 
+int
 canned(buf)
 char *buf;
 {
@@ -596,6 +605,7 @@ char *buf;
 /* R E S E T C -- Reset per-transaction character counters */
 
 #ifndef NOSTATS
+void
 resetc()
 {
   flci = flco = 0;
@@ -604,7 +614,7 @@ resetc()
 #endif /* ifndef NOSTATS */
 
 /* T I N I T -- Initialize a transaction */
-
+void
 tinit()
 {
   xflg            = 0;             /* Reset x-packet flag */
@@ -642,6 +652,7 @@ tinit()
 
 /* R I N I T -- Respond to S or I packet */
 
+void
 rinit(d)
 char *d;
 {
@@ -667,6 +678,7 @@ char *d;
 
 /* S I N I T -- Make sure file exists, then send Send-Init packet */
 
+int
 sinit()
 {
   int x;
@@ -800,6 +812,7 @@ sinit()
   return ( 1 );
 }
 
+void
 sipkt(c)
 char c;
 {                                   /* Send S or I packet. */
@@ -820,6 +833,7 @@ char c;
  * makes a new unique name.
  */
 
+int
 rcvfil(n)
 char *n;
 {
@@ -895,6 +909,7 @@ char *n;
  * exists, then a unique name is chosen.
  */
 
+int
 opena(f, zz)
 char *f;
 struct zattr *zz;
@@ -950,7 +965,9 @@ struct zattr *zz;
 
     screen(SCR_AN, 0, 0l, f);
 #ifndef NOICP
+#ifndef NOCONN
     intmsg(filcnt);
+#endif /* ifndef NOCONN */
 #endif /* ifndef NOICP */
   }
   else                              /* Did not open file OK. */
@@ -967,6 +984,7 @@ struct zattr *zz;
 
 /* R E O F -- Receive End Of File */
 
+int
 reof(yy)
 struct zattr *yy;
 {
@@ -1025,6 +1043,7 @@ struct zattr *yy;
 
 /* R E O T -- Receive End Of Transaction */
 
+void
 reot()
 {
   cxseen = czseen = 0;                 /* Reset interruption flags */
@@ -1041,6 +1060,7 @@ reot()
  * success, 0 on failure.
  */
 
+int
 sfile(x)
 int x;
 {
@@ -1116,8 +1136,10 @@ int x;
   }
 
 #ifndef NOICP
+#ifndef NOCONN
   intmsg(++filcnt);             /* Count file, give interrupt msg */
 #endif /* ifndef NOICP */
+#endif /* ifndef NOCONN */
   first = 1;                    /* Init file character lookahead. */
   n_len = -1;                   /* Init the packet encode-ahead length */
   ffc = 0;                      /* Init file character counter. */
@@ -1126,6 +1148,7 @@ int x;
 
 /* S D A H E A D -- (PWP) Encode the next data packet to send */
 
+void
 sdahead()
 {
   if (spsiz > MAXPACK)                 /* S logic in ckcfn2.c, spack() */
@@ -1145,6 +1168,7 @@ sdahead()
  * sends packet and returns length.
  */
 
+int
 sdata()
 {
   int len;
@@ -1189,6 +1213,7 @@ sdata()
  * pointer, or "" for no data.
  */
 
+void
 seof(s)
 char *s;
 {
@@ -1211,6 +1236,7 @@ char *s;
 
 /* S E O T -- Send an End-Of-Transaction packet */
 
+void
 seot()
 {
   nxtpkt(&pktnum);             /* Increment the packet number */
@@ -1289,6 +1315,7 @@ rpar()
   return ( data + 1 );                  /* Return pointer to string. */
 }
 
+void
 spar(s)
 char *s;
 {                                       /* Set parameters */
@@ -1540,6 +1567,7 @@ char *s;
  * next file, 0 otherwise
  */
 
+int
 gnfile()
 {
   int x;
@@ -1636,6 +1664,7 @@ gnfile()
 
 /* O P E N I -- Open an existing file for input */
 
+int
 openi(name)
 char *name;
 {
@@ -1686,6 +1715,7 @@ char *name;
  * file was opened in string 'name2'.
  */
 
+int
 openo(name)
 char *name;
 {
@@ -1721,6 +1751,7 @@ char *name;
 
 /* O P E N T -- Open the terminal for output, in place of a file */
 
+int
 opent()
 {
   ffc = 0;
@@ -1732,6 +1763,7 @@ opent()
 
 /* C L S I F -- Close the current input file */
 
+void
 clsif()
 {
   if (memstr)                        /* If input was memory string, */
@@ -1766,6 +1798,7 @@ clsif()
  * on success.
  */
 
+int
 clsof(disp)
 int disp;
 {
@@ -1813,6 +1846,7 @@ int disp;
 
 /* S N D H L P -- Routine to send builtin help */
 
+int
 sndhlp()
 {
   nfils = 0;                             /* No files, no lists. */
@@ -1827,7 +1861,7 @@ sndhlp()
     savmod = 1;                          /* remember to restore it later. */
   }
 
-  return ( sinit());
+  return ( sinit() );
 }
 
 /* C W D -- Change current working directory */
@@ -1839,6 +1873,7 @@ sndhlp()
  * ACKs (with name) and succeeds.
  */
 
+int
 cwd(vdir)
 char *vdir;
 {
@@ -1888,6 +1923,7 @@ char *vdir;
  * concatenating the two arguments
  */
 
+int
 syscmd(prefix, suffix)
 char *prefix, *suffix;
 {
@@ -1941,6 +1977,7 @@ char *prefix, *suffix;
 /* A D E B U -- Write attribute packet info to debug log */
 
 #ifdef DEBUG
+int
 adebu(f, zz)
 char *f;
 struct zattr *zz;

@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *ckzv = "   File IO, 4G(089)";
+char *ckzv = "   File IO, 4G(093)";
 #endif /* ifndef NOICP */
 
 /* C K U F I O -- Kermit file system support for UNIX systems */
@@ -50,6 +50,8 @@ char *ckzv = "   File IO, 4G(089)";
 #include <sys/dir.h>              /* Directory structure */
 #include <sys/types.h>            /* Data types */
 
+
+
 /*
  * File date
  * material
@@ -74,37 +76,23 @@ extern long timezone;
 #endif /* ifdef UXIII */
 
 #ifdef __linux__
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <signal.h>
 #endif /* ifdef __linux__ */
-
-/*
- * Is year y a
- * leap year?
- */
 
 #define leap(y) \
   ((( y ) % 4 == 0 && ( y ) % 100 != 0 ) || ( y ) % 400 == 0 )
 
-/*
- * Number of leap years from 1970 to `y'
- * (not including `y' itself).
- */
-
 #define nleap(y) \
   ((( y ) - 1969 ) / 4 - (( y ) - 1901 ) / 100 + (( y ) - 1601 ) / 400 )
 
-/*
- * Number of days in each
- * month of the year.
- */
-
-#ifndef NODOHLP
 static char monlens[] = {
   31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
 };
-#endif /* ifndef NODOHLP */
 
 #include <sys/stat.h>       /* File status */
 
@@ -329,6 +317,7 @@ static char *mtchs[MAXWLD],        /* Matches found for filename */
  * getppid(), just do kill(0,9)...
  */
 
+int
 zkself()
 {                                  /* For "bye", but, no guarantees! */
 #ifdef V7
@@ -342,6 +331,7 @@ zkself()
 
 /* Z O P E N I -- Open an existing file for input */
 
+int
 zopeni(n, name)
 int n;
 char *name;
@@ -392,6 +382,7 @@ char *name;
 
 /* Z O P E N O -- Open a new file for output */
 
+int
 zopeno(n, name)
 int n;
 char *name;
@@ -456,6 +447,7 @@ char *name;
  * -1 if close failed.
  */
 
+int
 zclose(n)
 int n;
 {
@@ -545,11 +537,12 @@ char *c;
 #endif /* ifdef COMMENT */
 
 /*
- * (PWP) (re)fill the buffered input buffer with data.
+ * (Re)fill the buffered input buffer with data.
  * All file input should go through this routine, usually
  * by calling the zminchar() macro.
  */
 
+int
 zinfill()
 {
   zincnt = fread(zinbuffer, sizeof ( char ), INBUFSIZE, fp[ZIFILE]);
@@ -567,6 +560,7 @@ zinfill()
 
 /* Z S O U T -- Write a string out to the given file, buffered */
 
+int
 zsout(n, s)
 int n;
 char *s;
@@ -582,6 +576,7 @@ char *s;
 
 /* Z S O U T L -- Write string to file, with line terminator, buffered */
 
+int
 zsoutl(n, s)
 int n;
 char *s;
@@ -594,6 +589,7 @@ char *s;
 
 /* Z S O U T X -- Write x characters to file, unbuffered */
 
+int
 zsoutx(n, s, x)
 int n, x;
 char *s;
@@ -610,6 +606,7 @@ char *s;
  * -1 on failures (e.g. disk full)
  */
 
+int
 zchout(n, c)
 /* register */
 int n;
@@ -635,10 +632,11 @@ char c;
 }
 
 /*
- * (PWP) buffered character output
+ * Buffered character output
  * routine to speed up file IO
  */
 
+int
 zoutdump()
 {
   int x;
@@ -680,6 +678,7 @@ zoutdump()
  * 1: n in range and file is open
  */
 
+int
 chkfn(n)
 int n;
 {
@@ -774,6 +773,7 @@ char *name;
  */
 
 #ifndef NOICP
+int
 zchko(name)
 char *name;
 {
@@ -826,6 +826,7 @@ char *name;
 
 /* Z D E L E T -- Delete the named file */
 
+void
 zdelet(name)
 char *name;
 {
@@ -839,6 +840,7 @@ char *name;
  * uppercase letters to lowercase.
  */
 
+void
 zrtol(name, name2)
 char *name, *name2;
 {
@@ -858,6 +860,7 @@ char *name, *name2;
  * format to common (remote) form
  */
 
+void
 zltor(name, name2)
 char *name, *name2;
 {
@@ -908,6 +911,7 @@ char *name, *name2;
 
 /* Z C H D I R -- Change directory */
 
+int
 zchdir(dirnam)
 char *dirnam;
 {
@@ -970,6 +974,7 @@ zgtdir()
 /* Z X C M D -- Run system command so its output can be read like a file */
 
 #ifndef NOPUSH
+int
 zxcmd(comand)
 char *comand;
 {
@@ -1087,6 +1092,7 @@ char *comand;
 
 /* Z C L O S F -- wait for the child fork to terminate and close the pipe */
 
+int
 zclosf()
 {
   int wstat;
@@ -1117,6 +1123,7 @@ zclosf()
  * next znext() call.
  */
 
+int
 zxpand(fn)
 char *fn;
 {
@@ -1137,6 +1144,7 @@ char *fn;
  * string, or 0 if no more files in list.
  */
 
+int
 znext(fn)
 char *fn;
 {
@@ -1155,6 +1163,7 @@ char *fn;
 
 /* Z N E W N -- Make a new name for the given file */
 
+void
 znewn(fn, s)
 char *fn, **s;
 {
@@ -1230,6 +1239,7 @@ char *fn, **s;
  * be ignored.
  */
 
+int
 zsattr(xx)
 struct zattr *xx;
 {
@@ -1424,6 +1434,7 @@ struct tm *tm;
 #endif /* ifdef TIMESTAMP */
 #endif /* ifdef TIEMZONE */
 
+int
 zmail(p, f)
 char *p;
 char *f;
@@ -1459,6 +1470,7 @@ char *f;
   return ( 0 );
 }
 
+int
 zprint(p, f)
 char *p;
 char *f;
@@ -1480,9 +1492,7 @@ char *f;
 /*
  * Directory Functions for UNIX, written
  * by Jeff Damens, CUCCA, 1984.
- */
-
-/*
+ *
  * The path structure is used to represent the name to match.
  * Each slash-separated segment of the name is kept in one
  * such structure, and they are linked together, to make
@@ -1496,13 +1506,16 @@ path
   struct path *fwd;                  /* forward ptr */
 };
 
+void traverse(struct path *pl, char *sofar, char *endcur);
+void addresult(char *str);
+
 #ifdef BSD29
 #define SSPACE 500
 #else  /* ifdef BSD29 */
 #ifndef MINBUF
 #define SSPACE 768                   /* XXX 2000 size of string-generating buffer */
 #else /* ifndef MINBUF */
-#define SSPACE 384
+#define SSPACE 88
 #endif /* ifndef MINBUF */
 #endif /* ifdef BSD29 */
 static char sspace[SSPACE];          /* buffer to generate names in */
@@ -1615,6 +1628,7 @@ char *p;
  * By:      Jeff Damens, CUCCA, 1984.
  */
 
+int
 fgen(pat, resarry, len)
 char *pat, *resarry[];
 int len;
@@ -1674,6 +1688,7 @@ int len;
  * Returns: nothing.
  */
 
+void
 traverse(pl, sofar, endcur)
 struct path *pl;
 char *sofar, *endcur;
@@ -1806,6 +1821,7 @@ char *sofar, *endcur;
  * Returns: nothing.
  */
 
+void
 addresult(str)
 char *str;
 {
@@ -1834,6 +1850,7 @@ char *str;
   numfnd++;
 }
 
+int
 iswild(str)
 char *str;
 {
@@ -1863,6 +1880,7 @@ char *str;
  * Returns: 1 if match, 0 if no match.
  */
 
+int
 match(pattern, string)
 char *pattern, *string;
 {

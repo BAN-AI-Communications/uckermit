@@ -1,6 +1,6 @@
 #ifndef NOICP
 #ifdef WARTVER
-char *wartv = "     Wart, 1A(227)";
+char *wartv = "     Wart, 1A(231)";
 #endif /* ifndef WARTVER */
 #endif /* ifndef NOICP */
 
@@ -71,7 +71,7 @@ char *wartv = "     Wart, 1A(227)";
   (( MAXSTATES + 7 ) / 8 )    /* # of bytes for state bitmask */
 
 #ifndef FNAME
-#define FNAME "wart"
+#define FNAME "int wart"
 #endif /* ifndef FNAME */
 
 struct
@@ -284,6 +284,8 @@ newtrans()
   new->nxt = NULL;
   return ( new );
 }
+
+int statelist(FILE *fp, Trans t);
 
 Trans
 rdrules(fp, out)

@@ -340,6 +340,7 @@ The 'remote' command is used to send file management instructions to a\n",
 /* D O H L P -- Give a help message */
 
 #ifndef NODOHLP
+int
 dohlp(xx)
 int xx;
 {
@@ -506,6 +507,7 @@ Specify 0 for no waiting."));
 /* H M S G -- Get confirmation, then print the given message */
 
 #ifndef NODOHLP
+int
 hmsg(s)
 char *s;
 {
@@ -519,6 +521,7 @@ char *s;
   return ( 0 );
 }
 
+int
 hmsga(s)
 char *s[];
 { /* Same function, but for arrays */
@@ -542,6 +545,7 @@ char *s[];
 
 #ifndef NODOHLP
 #ifndef NOICP
+int
 bcarcb(calsp)
 long calsp;
 {
@@ -793,6 +797,7 @@ long calsp;
     printf("\n");
     bcharc = 0;
   }
+  return ( 0 );
 }
 #endif /* ifndef NOICP */
 #endif /* ifndef NODOHLP */
@@ -800,6 +805,7 @@ long calsp;
 /* D O H S E T -- Give help for SET command */
 
 #ifndef NODOHLP
+int
 dohset(xx)
 int xx;
 {
@@ -1076,6 +1082,7 @@ a NAK while waiting for a command packet.  Specify 0 for no NAKs at all.");
 /* D O H R M T -- Give help about REMOTE command */
 
 #ifndef NODOHLP
+int
 dohrmt(xx)
 int xx;
 {
@@ -1148,7 +1155,9 @@ about the specified user."));
 
 /* D O L O G -- Do the log command */
 
+#ifndef NOLOGS
 #ifndef NOICP
+int
 dolog(x)
 int x;
 {
@@ -1257,9 +1266,12 @@ int x;
   }
 }
 #endif /* ifndef NOICP */
+#endif /* ifndef NOLOGS */
 
 /* D E B O P N -- Open a debugging file */
 
+#ifndef NOLOGS
+int
 debopn(
 #ifdef DEBUG
   s
@@ -1294,10 +1306,12 @@ char *s;
 
 #endif /* ifdef DEBUG */
 }
+#endif /* ifndef NOLOGS */
 
 /* S H O P A R -- Show Parameters */
 
 #ifndef NOICP
+int
 shopar()
 {
 #ifndef NOCKUDIA
@@ -1458,6 +1472,7 @@ shopar()
     printf("%-12s", "literal");
   }
 
+#ifndef NOLOGS
 #ifdef DEBUG
   printf("   Debugging Log:    ");
   if (deblog)
@@ -1468,8 +1483,9 @@ shopar()
   {
     printf("none");
   }
-
 #endif /* ifdef DEBUG */
+#endif /* ifndef NOLOGS */
+
   printf("\n Transfer Mode: ");
   if (binary)
   {
@@ -1480,6 +1496,7 @@ shopar()
     printf("%-12s", "text");
   }
 
+#ifndef NOLOGS
   printf("   Packet Log:       ");
   if (pktlog)
   {
@@ -1489,6 +1506,7 @@ shopar()
   {
     printf("none");
   }
+#endif /* ifndef NOLOGS */
 
   printf("\n Overwrite:     ");
   if (warn)
@@ -1500,6 +1518,7 @@ shopar()
     printf("%-12s", "on");
   }
 
+#ifndef NOLOGS
   printf("   Session Log:      ");
   if (seslog)
   {
@@ -1509,6 +1528,7 @@ shopar()
   {
     printf("none");
   }
+#endif /* ifndef NOLOGS */
 
   printf("\n Info Display:  ");
   if (quiet)
@@ -1521,6 +1541,7 @@ shopar()
   }
 
 #ifdef TLOG
+#ifndef NOLOGS
   printf("   Transaction Log:  ");
   if (tralog)
   {
@@ -1530,7 +1551,7 @@ shopar()
   {
     printf("none");
   }
-
+#endif /* ifndef NOLOGS */
 #endif /* ifdef TLOG */
   printf("\n\nFile Byte Size: %d", ( fmask == 0177 ) ? 7 : 8);
   printf(", Incomplete File Disposition: ");
@@ -1543,7 +1564,7 @@ shopar()
     printf("discard");
   }
 printf("\r\n\n");
-
+return ( 0 );
 }
 #endif /* ifndef NOICP */
 
@@ -1551,6 +1572,8 @@ printf("\r\n\n");
 
 #ifndef NOICP
 #ifndef NOSTATS
+#ifndef NOLOGS
+int
 dostat()
 {
   printf("\r\n");
@@ -1608,6 +1631,7 @@ dostat()
 
 /* F S T A T S -- Record file statistics in transaction log */
 
+int
 fstats()
 {
   tfc += ffc;
@@ -1615,14 +1639,16 @@ fstats()
   tlog(F101, "  file characters        ", "", ffc);
   tlog(F101, "  communication line in  ", "", flci);
   tlog(F101, "  communication line out ", "", flco);
+  return ( 0 );
 }
 
 /* T S T A T S -- Record statistics in transaction log */
 
+void
 tstats()
 {
   char *tp;
-  int x;
+  /* int x; */
 
   ztime(&tp);                               /* Get time stamp */
   tlog(F110, "End of transaction", tp, 0l);   /* Record it */
@@ -1665,12 +1691,15 @@ tstats()
 
   tlog(F100, "", "", 0L);   /* Leave a blank line */
 }
+#endif /* ifndef NOLOGS */
 #endif /* ifndef NOSTATS */
 #endif /* ifndef NOICP */
 
 /* S D E B U -- Record spar results in debugging log */
 
 #ifdef DEBUG
+#ifndef NOLOGS
+int
 sdebu(len)
 int len;
 {
@@ -1692,10 +1721,12 @@ int len;
   debug(F101, " lpcapu", "", lpcapu);
   debug(F101, " swcapu", "", swcapu);
   debug(F101, " wslots", "", wslots);
+  return ( 0 );
 }
 
 /* R D E B U -- Debugging display of rpar() values */
 
+int
 rdebu(len)
 int len;
 {
@@ -1721,5 +1752,7 @@ int len;
   debug(F101, " swcapu", "", swcapu);
   debug(F101, " wslots", "", wslots);
   debug(F101, " rpsiz(extended)", "", rpsiz);
+  return ( 0 );
 }
+#endif /* ifndef NOLOGS */
 #endif /* ifdef DEBUG */

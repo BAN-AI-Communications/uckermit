@@ -1,5 +1,5 @@
 #ifndef NOCKUSCR
-char *loginv = " Scripting, 4G(033)";
+char *loginv = " Scripting, 4G(037)";
 
 /* C K U S C R -- Login script for logging onto remote system */
 
@@ -75,6 +75,7 @@ extern int local, speed, flow, seslog, mdmtyp, quiet, duplex;
 extern char ttname[];
 extern CHAR dopar();
 static char *chstr();
+void flushi();
 
 static int EXP_ALRM = 15;           /* Time to wait for expect string */
 #define SND_ALRM 15                 /* Time to allow for sending string */
@@ -110,7 +111,7 @@ scrtime()                           /* Modem read failure handler */
  * 1 expecting to be called again after the ~d executes.
  */
 
-static
+static int
 sequenc()
 {
   int i;
@@ -231,7 +232,7 @@ sequenc()
  * (or failure) in got_it
  */
 
-static
+static int
 recvSeq()
 {
   char *e, got[7], trace[SBUFL];
@@ -252,7 +253,7 @@ recvSeq()
     sleep(NULL_EXP);
     got_it = 1;
     tlog(F100, "got it (null sequence)", "", 0l);
-    return;
+    return ( 0 );
   }
 
   *trace = '\0';
@@ -295,7 +296,7 @@ recvSeq()
   signal(SIGALRM, SIG_IGN);
   tlog(F110, "received sequence: ", trace, 0l);
   tlog(F101, "returning with got-it code", "", (long)got_it);
-  return;
+  return ( 1 );
 }
 
 /*
@@ -379,6 +380,7 @@ outSeq()
 
 /* L O G I N -- Login to remote system */
 
+int
 login(cmdstr)
 char *cmdstr;
 {
@@ -534,6 +536,7 @@ char c;
 
 /* F L U S H I -- Flush, but log, input buffer */
 
+void
 flushi()
 {
   int n;

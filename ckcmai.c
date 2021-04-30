@@ -1,4 +1,4 @@
-char *versio = "uCKermit, 4G(163), 2021-APR-29";
+char *versio = "uCKermit, 4G(169), 2021-APR-30";
 
 /* C K C M A I -- uCKermit Main program */
 
@@ -47,6 +47,15 @@ char *versio = "uCKermit, 4G(163), 2021-APR-29";
 #include <string.h>                 /* String manipulation */
 #include <stdio.h>
 #endif /* ifdef __linux__ */
+
+int sysinit();
+int proto();
+int cmdini();
+//int cmdlin();
+int cmfld();
+//int conect();
+int doexit(int exit);
+int conoll(char *s);
 
 /*
  * Text message definitions, each
@@ -287,6 +296,7 @@ char **argv;
   sstate = 0;                       /* No default start state. */
   if (sysinit() < 0)
   {
+	  
 #ifndef NOICP
     doexit(BAD_EXIT);               /* System-dependent initialization. */
 #else /* ifndef NOICP */
@@ -332,10 +342,12 @@ char **argv;
         conoll("");                 /* put cursor back at left margin, */
       }
 
+#ifndef NOCONN
       if (cnflg)
       {
         conect();                   /* connect if requested, */
       }
+#endif /* ifndef NOCONN */
 #ifndef NOICP
       doexit(GOOD_EXIT);            /* and then exit with status 0. */
 #else /* ifndef NOICP */
@@ -354,10 +366,13 @@ char **argv;
   while (1)                         /* Loop getting commands. */
   {
     sstate = parser();
+#endif /* ifndef NOICP */
     if (sstate)
     {
+		printf("%d\n,sstate");
       proto();                      /* Enter protocol if requested. */
     }
+#ifndef NOICP
   }
 #endif /* ifndef NOICP */
 

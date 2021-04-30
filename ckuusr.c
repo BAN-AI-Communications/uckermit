@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *userv = "   JSYS UI, 4G(117)";
+char *userv = "   JSYS UI, 4G(121)";
 #endif /* ifndef NOICP */
 
 /* C K U U S R -- "User Interface" (Part 1) */
@@ -160,10 +160,12 @@ extern int backgrd;            /* Kermit executing in background */
 #ifndef NOICP
 char line[CMDBL + 10], *lp; /* Character buffer for anything */
 #endif /* ifndef NOICP */
+#ifndef NOLOGS
 char debfil[30];            /* Debugging log file name */
 char pktfil[30];            /* Packet log file name */
 char sesfil[30];            /* Session log file name */
 char trafil[30];            /* Transaction log file name */
+#endif /* ifndef NOLOGS */
 
 int cflg;                   /* Command-line connect cmd given */
 int action;                 /* Action selected on command line*/
@@ -171,12 +173,16 @@ int action;                 /* Action selected on command line*/
 int repars;                 /* Reparse needed */
 int cwdf = 0;               /* CWD has been done */
 
-#define MAXTAKE 8           /* Maximum nesting of TAKE files */
+#define MAXTAKE 3           /* Maximum nesting of TAKE files */
 FILE *tfile[MAXTAKE];       /* File pointers for TAKE command */
 
 char *homdir;               /* Pointer to home directory string */
 #endif /* ifndef NOICP */
+#ifndef MINBUF
 char cmdstr[100];           /* Place to build generic command */
+#else /* ifndef MINBUF */
+char cmdstr[48];
+#endif /* ifndef MINBUF */
 
 /* C M D L I N -- Get arguments from command line */
 
@@ -186,6 +192,7 @@ char cmdstr[100];           /* Place to build generic command */
  *   Hemenway & Armitage, UNIX/World, Vol.1, No.3, 1984.
  */
 
+int
 cmdlin()
 {
   char x;                   /* Local general-purpose int */
@@ -267,14 +274,17 @@ cmdlin()
 
   if (cflg)
   {
+#ifndef NOCONN
     conect(); /* Connect if requested */
+#endif /* ifndef NOCONN */
     if (action == 0)
     {
       if (cnflg)
       {
+#ifndef NOCONN
         conect();        /* And again if requested */
+#endif /* if def NOCON  */
       }
-
       doexit(GOOD_EXIT); /* Then exit indicating success */
     }
   }
@@ -291,6 +301,7 @@ cmdlin()
 
 /* D O A R G -- Do a command-line argument */
 
+int
 doarg(x)
 char x;
 {
@@ -535,7 +546,11 @@ char x;
       break;
 
     case 'd': /* debug */
+#ifndef NOLOGS
+#ifdef DEBUG
       debopn("debug.log");
+#endif /* ifdef DEBUG */
+#endif /* ifndef NOLOGS */
       break;
 
     case 'p': /* set parity */
@@ -596,6 +611,7 @@ char *msg;
   fprintf(stderr, "\rFatal: %s\r\n", msg);
   tlog(F110, "Fatal:", msg, 0l);
   doexit(BAD_EXIT);   /* Exit indicating failure */
+  return ( BAD_EXIT );
 }
 
 int
@@ -635,10 +651,14 @@ struct keytab cmdtab[] = {
 #endif /* ifndef NOPUSH */
   "%",          XXCOM, CM_INV,
   "bye",        XXBYE, 0,
+#ifndef NOCONN
   "c",          XXCON, CM_INV,
+#endif /* ifndef NOCONN */
   "cd",         XXCWD, 0,
   "close",      XXCLO, 0,
+#ifndef NOCONN
   "connect",    XXCON, 0,
+#endif /* ifndef NOCONN */
   "cwd",        XXCWD, 0,
 #ifndef NOCKUDIA
   "dial",       XXDIAL, 0,
@@ -654,7 +674,9 @@ struct keytab cmdtab[] = {
 #ifndef NODOHLP
   "help",       XXHLP, 0,
 #endif /* ifndef NODOHLP */
+#ifndef NOLOGS
   "log",        XXLOG, 0,
+#endif /* ifndef NOLOGS */
   "quit",       XXQUI, 0, 
 /* "r",         XXREC,  CM_INV, */
   "receive",    XXREC, 0,
@@ -739,14 +761,18 @@ struct keytab remcmd[] = {
 
 int nrmt = ( sizeof ( remcmd ) / sizeof ( struct keytab ));
 
+#ifndef NOLOGS
 struct keytab logtab[] = {
   "debugging",    LOGD, 0,
   "packets",      LOGP, 0,
   "session",      LOGS, 0,
   "transactions", LOGT, 0
 };
+#endif /* ifndef NOLOGS */
 
+#ifndef NOLOGS
 int nlog = ( sizeof ( logtab ) / sizeof ( struct keytab ));
+#endif /* ifndef NOLOGS */
 #endif /* ifndef NOICP */
 
 /*
@@ -767,6 +793,7 @@ struct keytab shotab[] = {
 /* C M D I N I -- Initialize the interactive command parser */
 
 #ifndef NOICP
+int
 cmdini()
 {
   tlevel = -1;         /* Take file level */
@@ -806,6 +833,7 @@ cmdini()
   }
 
   congm(); /* Get console tty modes */
+  return ( 0 );
 }
 #endif /* ifndef NOICP */
 
@@ -815,6 +843,7 @@ cmdini()
  */
 
 #ifndef NOICP
+int
 herald()
 {
   if (!backgrd)
@@ -824,12 +853,14 @@ herald()
     printf("Interactive mode.  Type '?' for help.\n");
 #endif /* ifndef NODOHLP */
   }
+  return ( 0 );
 }
 #endif /* ifndef NOICP */
 
 /* T R A P -- Terminal interrupt handler */
 
 #ifndef NOICP
+int
 trap(
 #ifdef DEBUG
   sig,
@@ -846,6 +877,7 @@ int sig, code;
   debug(F101, " code", "", code);
 #endif /* ifdef DEBUG */
   doexit(GOOD_EXIT); /* Exit indicating success */
+  return ( 0 );
 }
 #endif /* ifndef NOICP */
 
@@ -1019,6 +1051,7 @@ again:
 
 /* D O E X I T -- Exit from the program. */
 
+int
 doexit(exitstat)
 int exitstat;
 {
@@ -1039,6 +1072,7 @@ int exitstat;
     connoi();              /* Turn off console interrupt traps. */
   }
 
+#ifndef NOLOGS
 #ifdef DEBUG
   if (deblog)              /* Close any open logs. */
   {
@@ -1072,9 +1106,11 @@ int exitstat;
     zclose(ZTFILE);
   }
 #endif /* ifdef TLOG */
+#endif/* ifndef NOLOGS */
 
   syscleanup();
   exit(exitstat); /* Exit from the program. */
+  return ( exitstat );
 }
 
 /* B L D L E N -- Make length-encoded copy of string */
@@ -1092,6 +1128,7 @@ char *str, *dest;
 
 /* S E T G E N -- Construct a generic command */
 
+int
 setgen(type, arg1, arg2, arg3)
 char type, *arg1, *arg2, *arg3;
 {
@@ -1129,6 +1166,7 @@ char type, *arg1, *arg2, *arg3;
  */
 
 #ifndef NOICP
+int
 docmd(cx)
 int cx;
 {
@@ -1208,6 +1246,7 @@ int cx;
     system(PWDCMD);
     return ( 0 );
 
+#ifndef NOLOGS
   case XXCLO:
     x = cmkey(logtab, nlog, "Which log to close", "");
     if (x == -3)
@@ -1276,6 +1315,7 @@ int cx;
       printf("\n?Unexpected log designator - %ld\n", (long)x);
       return ( 0 );
     }
+#endif /* ifndef NOLOGS */
 
   case XXDIAL: /* dial number */
 #ifndef NOCKUDIA
@@ -1491,17 +1531,17 @@ int cx;
   case XXHLP:   /* Help */
     x = cmkey(cmdtab, ncmd, "uCKermit command", "help");
     return ( dohlp(x));
-
 #endif /* ifndef NODOHLP */
-  case XXHAN: /* Hangup */
+
 #ifndef NOCKUDIA
+  case XXHAN: /* Hangup */
     if (( x = cmcfm()) > -1)
     {
       return ( tthang());
     }
-
 #endif /* ifndef NOCKUDIA */
 
+#ifndef NOLOGS
   case XXLOG: /* Log */
     x = cmkey(logtab, nlog, "What to log", "");
     if (x == -3)
@@ -1516,6 +1556,7 @@ int cx;
     }
 
     return ( dolog(x));
+#endif /* ifndef NOLOGS */
 
 #ifndef NOCKUSCR
   case XXLOGI:   /* Send script remote system */
@@ -1525,7 +1566,6 @@ int cx;
     }
 
     return ( login(s));   /* Return 0=completed, -2=failed */
-
 #endif /* ifndef NOCKUSCR */
 
   case XXREC: /* Receive */
@@ -1622,7 +1662,6 @@ int cx;
     {
       displa = 1;
     }
-
     return ( 0 );
 #endif
   case XXSET: /* Set */
@@ -1771,7 +1810,9 @@ int cx;
 #endif /* ifndef NOICP */
       printf("%s\n",    ckxv);
       printf("%s\n",    ckzv);
+#ifndef NOCONN
       printf("%s\n",    connv);
+#endif /* ifndef NOCONN */
 #ifndef NOCKUDIA
       printf("%s\n",    dialv);
 #endif /* ifndef NOCKUDIA */
@@ -1916,12 +1957,15 @@ int cx;
  */
 
 #ifndef NOICP
+int
 doconect()
 {
   int x;
 
   conres();          /* Put console back to normal */
+#ifndef NOCONN
   x = conect();      /* Connect */
+#endif
   concb(escape);     /* Put console into cbreak mode, */
   return ( x );      /* for more command parsing. */
 }
@@ -1951,10 +1995,10 @@ trtrap()
 {                                       /* TRANSMIT interrupt trap */
   tr_int = 1;
 #ifdef __linux__
-  return ( 0 );
 #endif /* ifdef __linux__ */
 }
 
+int
 transmit(s, t)
 #ifdef __linux__
 const

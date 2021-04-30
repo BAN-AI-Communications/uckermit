@@ -97,6 +97,8 @@ extern char debfil[50],     /* Debugging log file name */
 extern int tlevel;          /* Take Command file level */
 extern FILE *tfile[];       /* Array of take command fd's */
 
+char coninc(int timo);
+
 /*
  * Keyword tables
  * for SET commands
@@ -254,6 +256,7 @@ struct keytab srvtab[] = {
  *   0: success
  */
 
+int
 doprm(xx)
 int xx;
 {
@@ -829,6 +832,7 @@ int xx;
 
 /* C H K S P D -- Check if argument is a valid baud rate */
 
+int
 chkspd(x)
 int x;
 {                       /* XXX(jhj): Needs fixin! */
@@ -871,6 +875,7 @@ int x;
 #ifndef NOICP
 /* S E T O N -- Parse on/off (default on), set parameter to result */
 
+int
 seton(prm)
 int *prm;
 {
@@ -897,6 +902,7 @@ int *prm;
  * y - return code from cmnum
  */
 
+int
 setnum(prm, x, y, max)
 int x, y, *prm, max;
 {
@@ -923,6 +929,7 @@ int x, y, *prm, max;
 
 /* S E T C C -- Set parameter to an ASCII control character value */
 
+int
 setcc(prm, x, y)
 int x, y, *prm;
 {
@@ -948,6 +955,7 @@ int x, y, *prm;
 
 /* D O R M T -- Do a remote command */
 
+int
 dormt(xx)
 int xx;
 {
@@ -1112,6 +1120,7 @@ int xx;
 
 /* R F I L O P -- Remote File Operation */
 
+int
 rfilop(s, t)
 char *s, t;
 {
@@ -1138,6 +1147,7 @@ char *s, t;
  *  This version is for a dumb tty.
  */
 
+void
 screen(f, c, n, s)
 int f;
 long n;
@@ -1347,6 +1357,7 @@ char *s;
 /* I N T M S G -- Issue message about terminal interrupts */
 
 #ifndef NOICP
+void
 intmsg(n)
 long n;
 {
@@ -1397,6 +1408,7 @@ long n;
  * destroy typeahead
  */
 
+int
 chkint()
 {
   int ch, cn;
@@ -1482,6 +1494,7 @@ chkint()
 
 #ifdef DEBUG
 #define DBUFL 1200
+int
 debug(f, s1, s2, n)
 int f, n;
 char *s1, *s2;
@@ -1491,7 +1504,7 @@ char *s1, *s2;
 
   if (!deblog)
   {
-    return;   /* If no debug log, don't */
+    return ( 0 );   /* If no debug log, don't */
   }
 
   switch (f)
@@ -1587,6 +1600,7 @@ char *s1, *s2;
     sprintf(sp, "\n?Invalid format for debug() - %d\n", n);
     zsout(ZDFILE, s);
   }
+return ( 0 );
 }
 #endif /* ifdef DEBUG */
 
@@ -1602,6 +1616,7 @@ char *s1, *s2;
  *  n  - Int, argument 3.
  */
 
+void
 tlog(f, s1, s2, n)
 int f;
 long n;

@@ -51,8 +51,8 @@
 #define MAXSP     1200        /* Send packet buffer size  */
 #define MAXRP     1200        /* Receive packet buffer size */
 #else /* ifndef MINBUF */
-#define MAXSP     98          /* MINBUF packet buffer, send */
-#define MAXRP     98          /* MINBUF packet buffer, recv */
+#define MAXSP     94          /* MINBUF packet buffer, send */
+#define MAXRP     94          /* MINBUF packet buffer, recv */
 #endif /* ifndef MINBUF */
 #define MAXWS     1           /* Maximum window size */
 
