@@ -142,7 +142,7 @@ static unsigned int crctb[16] = {
  */
 
 int
-input()
+kinput()
 {
   int type, numtry;
 
@@ -431,6 +431,7 @@ register char *d;
   spktl = i;                           /* Remember packet length */
   flco += spktl;                       /* Count the characters */
   tlco += spktl;
+#ifndef NOLOGS
   if (pktlog)                          /* If logging packets, log it */
   {
     zsout(ZPFILE, "s-");
@@ -443,6 +444,7 @@ register char *d;
       zsoutl(ZPFILE, sohp);
     }
   }
+#endif /* ifndef NOLOGS */
 
   screen(SCR_PT, type, (long)n, sohp); /* Update screen */
   return ( i );                        /* Return length */
@@ -623,14 +625,19 @@ resend()
     nack();                             /* otherwise send a NAK. */
   }
 
+#ifdef DEBUG
   debug(F111, "resend", sndpkt, spktl);
+#endif /* ifdef DEBUG */
+
   screen(SCR_PT, '%',
     (long)pktnum, "(resend)");          /* Say resend occurred */
+#ifndef NOLOGS
   if (pktlog)
   {
     zsout(ZPFILE, "s-");
     zsoutl(ZPFILE, "(resend)");         /* Log packet if desired */
   }
+#endif /* ifndef NOLOGS */
 }
 
 void
@@ -763,12 +770,17 @@ rpack()
     return ( 'Q' );                             /* Diagnose bad packet. */
   }
 
+#ifdef DEBUG
   debug(F111, "ttinl", sohp, j);                /* Log packet infofmation */
+#endif /* ifdef DEBUG */
+
+#ifndef NOLOGS
   if (pktlog)
   {
     zsout(ZPFILE, "r-");
     zsoutl(ZPFILE, sohp);
   }
+#endif /* ifndef NOLOGS */
 
   lp = i;                                       /* Remember LEN position */
   if (( j = xunchar(recpkt[i++])) == 0)

@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int input(void);
+int kinput(void);
 /* CHAR dopar(int ch); */
 int spack(int type, int n, register int len, register char *d);
 int chk1(register CHAR *pkt);

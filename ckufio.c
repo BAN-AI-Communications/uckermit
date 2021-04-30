@@ -90,9 +90,11 @@ extern long timezone;
 #define nleap(y) \
   ((( y ) - 1969 ) / 4 - (( y ) - 1901 ) / 100 + (( y ) - 1601 ) / 400 )
 
+#ifdef TIMEZONE
 static char monlens[] = {
   31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
 };
+#endif /* ifdef TIMEZONE */
 
 #include <sys/stat.h>       /* File status */
 
@@ -1432,7 +1434,7 @@ struct tm *tm;
       timezone );
 }
 #endif /* ifdef TIMESTAMP */
-#endif /* ifdef TIEMZONE */
+#endif /* ifdef TIMEZONE */
 
 int
 zmail(p, f)

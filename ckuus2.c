@@ -126,8 +126,10 @@ static char *hlp1[] = {
   "        -x         start server mode\n",
 #endif /* ifndef NOSERVER */
   "      * -f         send finish command to remote\n",
+#ifndef NOCONN
   "      * -c         connect pre-transaction\n",
   "      * -n         connect post-transaction\n",
+#endif /* ifndef NOCONN */
   "   SETTING --\n",
   "        -l line    line device (e.g. '/dev/ttyS1')\n",
   "        -b baud    baud (e.g. '9600')\n",
@@ -136,9 +138,11 @@ static char *hlp1[] = {
   "        -t         set line turnaround to XON (half duplex)\n",
   "        -w         overwrite existing files\n",
   "        -q         quiet mode (no status display)\n",
+#ifndef NOLOGS
 #ifdef DEBUG
   "        -d         debug mode (write debug.log)\n",
 #endif /* ifdef DEBUG */
+#endif /* ifndef NOLOGS */
   "        -e length  set extended receive packet length\n",
 #ifndef NOICP
   "If no ACTION is specified, uCKermit enters interactive mode.\n",
@@ -356,29 +360,30 @@ int xx;
   switch (xx)
   {
   case XXBYE:
-    return ( hmsg(hmxxbye));
+    return ( hmsg(hmxxbye) );
 
   case XXCLO:
-    return ( hmsg(hmxxclo));
+    return ( hmsg(hmxxclo) );
 
+#ifndef NOCONN
   case XXCON:
-    return ( hmsg(hmxxcon));
+    return ( hmsg(hmxxcon) );
+#endif /* ifndef NOCONN */
 
   case XXCWD:
     return ( hmsg(
-               "Change Working Directory, equivalent to UNIX 'cd' command"));
+               "Change Working Directory") );
 
   case XXDEL:
-    return ( hmsg("Delete a local file or files"));
+    return ( hmsg("Delete a local file or files") );
 
-  case XXDIAL:
 #ifndef NOCKUDIA
-    return ( hmsg("Dial a number using modem autodialer"));
-
+  case XXDIAL:
+    return ( hmsg("Dial a number using modem autodialer") );
 #endif /* ifndef NOCKUDIA */
 
   case XXDIR:
-    return ( hmsg("Display a directory of local files"));
+    return ( hmsg("Display a directory of local files") );
 
   case XXECH:
     return ( hmsg(
@@ -387,35 +392,36 @@ useful in command files."));
 
   case XXEXI:
   case XXQUI:
-    return ( hmsg("Exit from the Kermit program, closing any open logs."));
+    return ( hmsg("Exit the program, clesing any open logs.") );
 
   case XXFIN:
     return ( hmsg(
                "\
-Tell the remote Kermit server to shut down without logging out."));
+Tell the remote Kermit server to shut down without logging out.") );
 
   case XXGET:
-    return ( hmsg(hmxxget));
+    return ( hmsg(hmxxget) );
 
-  case XXHAN:
 #ifndef NOCKUDIA
-    return ( hmsg("Hang up the phone."));
-
+  case XXHAN:
+    return ( hmsg("Hang up the phone.") );
 #endif /* ifndef NOCKUDIA */
 
   case XXHLP:
-    return ( hmsga(tophlp));
+    return ( hmsga(tophlp) );
 
+#ifndef NOLOGS
   case XXLOG:
-    return ( hmsga(hmxxlg));
+    return ( hmsga(hmxxlg) );
+#endif /* ifndef NOLOGS */
 
 #ifndef NOCKUSCR
   case XXLOGI:
-    return ( hmsga(hmxxlogi));
+    return ( hmsga(hmxxlogi) );
 #endif /* ifndef NOCKUSCR */
 
   case XXREC:
-    return ( hmsga(hmxxrc));
+    return ( hmsga(hmxxrc) );
 
   case XXREM:
     if (( y = cmkey(remcmd, nrmt, "Remote command", "")) == -2)
@@ -433,13 +439,13 @@ Tell the remote Kermit server to shut down without logging out."));
       return ( x );
     }
 
-    return ( dohrmt(y));
+    return ( dohrmt(y) );
 
   case XXSEN:
-    return ( hmsg(hmxxsen));
+    return ( hmsg(hmxxsen) );
 
   case XXSER:
-    return ( hmsg(hmxxser));
+    return ( hmsg(hmxxser) );
 
   case XXSET:
     if (( y = cmkey(prmtab, nprm, "Parameter", "")) == -2)
@@ -457,13 +463,13 @@ Tell the remote Kermit server to shut down without logging out."));
       return ( x );
     }
 
-    return ( dohset(y));
+    return ( dohset(y) );
 
 #ifndef NOPUSH
   case XXSHE:
     return ( hmsg(
                "\
-Issue a command to the UNIX shell (space required after '!')"));
+Issue a command to the UNIX shell (space required after '!')") );
 
 #endif /* ifndef NOPUSH */
 
@@ -471,13 +477,15 @@ Issue a command to the UNIX shell (space required after '!')"));
     return ( hmsg(
                "\
 Display current values of 'set' parameters; 'show version' will display\n\
-program version information for each of the uCKermit modules."));
+program version information for each of the uCKermit modules.") );
 
   case XXSPA:
-    return ( hmsg("Display disk usage in current device, directory"));
+    return ( hmsg("Display disk usage in current device, directory") );
 
+#ifndef NOSTATS
   case XXSTA:
-    return ( hmsg("Display statistics about most recent file transfer"));
+    return ( hmsg("Display statistics about most recent file transfer") );
+#endif /* ifndef NOSTATS */
 
   case XXTAK:
     return ( hmsg(
@@ -811,7 +819,7 @@ int xx;
 {
   if (xx == -3)
   {
-    return ( hmsga(hmhset));
+    return ( hmsga(hmhset) );
   }
 
   if (xx < 0)
@@ -822,16 +830,18 @@ int xx;
   switch (xx)
   {
 
+#ifndef NOATTRIB
   case XYATTR:
     puts("Turn Attribute packet exchange off or on");
     return ( 0 );
+#endif /* ifndef NOATTRIB */
 
   case XYIFD:
     puts("Discard or Keep incompletely received files, default is discard");
     return ( 0 );
 
   case XYCHKT:
-    return ( hmsga(hmxychkt));
+    return ( hmsga(hmxychkt) );
 
   case XYDELA:
     puts(
@@ -861,7 +871,7 @@ Decimal ASCII value for escape character during 'connect', normally 28\n\
     return ( 0 );
 
   case XYFILE:
-    return ( hmsga(hmxyf));
+    return ( hmsga(hmxyf) );
 
   case XYFLOW:
     puts(
@@ -906,11 +916,10 @@ To use the modem to dial out, first set modem-dialer (e.g., to hayes), then");
       puts("set line, next issue the dial command, and finally connect.");
 #endif /* ifndef NOCKUDIA */
     }
-
     return ( 0 );
 
-  case XYMODM:
 #ifndef NOCKUDIA
+  case XYMODM:
     puts(
       "\
 Type of modem for dialing remote connections.  Needed to indicate modem can");
@@ -922,8 +931,8 @@ be commanded to dial without 'carrier detect' from modem.  Many recently");
 manufactured modems use 'hayes' protocol.  Type 'set modem ?' to see what");
     puts("\
 types of modems are supported by this program.");
-#endif /* ifndef NOCKUDIA */
     return ( 0 );
+#endif /* ifndef NOCKUDIA */
 
   case XYPARI:
     puts("Parity to use during terminal connection and file transfer:");
@@ -1062,6 +1071,7 @@ Start-Of-Packet (ASCII value), and Timeout (94 seconds or less),");
 all specified as decimal numbers.");
     return ( 0 );
 
+#ifndef NOSERVER
   case XYSERV:
     puts("server timeout:");
     puts(
@@ -1071,6 +1081,7 @@ Server command wait timeout interval, how often the uCKermit server issues");
       "\
 a NAK while waiting for a command packet.  Specify 0 for no NAKs at all.");
     return ( 0 );
+#endif /* ifndef NOSERVER */
 
   default:
     printf("Not available yet - %s\n", cmdbuf);
@@ -1089,7 +1100,7 @@ int xx;
   int x;
   if (xx == -3)
   {
-    return ( hmsga(hmhrmt));
+    return ( hmsga(hmhrmt) );
   }
 
   if (xx < 0)

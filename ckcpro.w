@@ -41,36 +41,11 @@ char *protv = "  Protocol, 4G(071)";
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
  */
 
-/*
- * Author: Frank da Cruz (fdc@columbia.edu, FDCCU@CUVMA.BITNET),
- * Columbia University Center for Computing Activities.
- *
- * First released January 1985.
- *
- * Copyright (C) 1985, 1989,
- *   Trustees of Columbia University in the City of New York.
- *
- * Permission is granted to any individual or institution to use, copy,
- *   or redistribute this software so long as it is not sold for profit,
- *   provided this copyright notice is retained. 
- */
-
 #include "ckcdeb.h"
 #include "ckcker.h"
 
-/*
- * Note: This file may also be preprocessed by the UNIX Lex program, but 
- * you must indent the above #include statements before using Lex, and
- * then restore them to the left margin in the resulting C program before
- * compilation. Also, the invocation of the "wart()" function below must
- * be replaced by an invocation of the "yylex()" function. It might also
- * be necessary to remove comments in the %%...%% section.
- */
-
- /*
-  * State definitions
-  * for Wart (or Lex)
-  */
+#define WART 1
+#define WARTVER WART
 
 %states ipkt rfile rattr rdata ssinit ssfile ssattr ssdata sseof sseot
 %states serve generic get rgen
@@ -105,6 +80,8 @@ char *protv = "  Protocol, 4G(071)";
   int x;                                /* General-purpose integer */
   char *s;                              /* General-purpose string pointer */
 
+#define input kinput
+
 #define SERVE  \
   tinit(); BEGIN serve
 #ifndef NOSERVER
@@ -136,7 +113,7 @@ g { tinit(); vstate = rgen; vcmd = 'G'; \
 
 x { sleep(1); SERVE; }                         /* Be a Server */
 
-a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
+a { errpkt("User cancel");                     /* ABEND: Tell other side. */
     return(0); }                               /* Return from protocol. */
 
 /*
@@ -223,21 +200,21 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
       BEGIN ssinit;                   /* If OK, send back its output */
     else {                            /* Otherwise */
       errpkt(
-        "Can't do command");          /* report error */
+        "Error");                     /* report error */
           SERVE;                      /* & go back to server command wait */
     }
 }
 
 <serve>. {                            /* Any other command in this state */
     errpkt(
-        "Not a server function");     /* we don't know about */
+        "Error");                     /* we don't know about */
     SERVE;                            /* back to server command wait */
 }
 
 <generic>C {                          /* Got REMOTE CWD command */
     if (!cwd(srvcmd+1))
       errpkt(
-        "Can't change directory");    /* Try to do it */
+        "Error");                     /* Try to do it */
     SERVE;                            /* Back to server command wait */
 }
 
@@ -246,7 +223,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
       BEGIN ssinit;                   /* send the results back */
     else {                            /* otherwise */
         errpkt(
-          "Can't list directory");    /* report failure */
+          "Error");                   /* report failure */
         SERVE;                        /* & return to server command wait */
     }
 }
@@ -256,7 +233,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
       BEGIN ssinit;                   /* If OK send results back */
     else {                            /* otherwise */
         errpkt(
-          "Can't remove file");       /* report failure */
+          "Error");                   /* report failure */
         SERVE;                        /* & return to server command wait */
     }
 }
@@ -278,7 +255,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
     if (sndhlp()) BEGIN ssinit;       /* Try to send it */
     else {                            /* If not ok, */
         errpkt(
-          "Can't send help");         /* send error message instead */
+          "Error");                   /* send error message instead */
         SERVE;                        /* & return to server command wait */
     }
 }
@@ -288,7 +265,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
       BEGIN ssinit;                   /* OK */
     else {                            /* not OK */
         errpkt(
-          "Can't type file");         /* give error message */
+          "Error");                   /* give error message */
         SERVE;                        /* wait for next server command */
     }
 }
@@ -303,7 +280,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
       BEGIN ssinit;                   /* send it */
     else {                            /* otherwise */
         errpkt(
-          "Can't check space");       /* send error message */
+          "Error");                   /* send error message */
         SERVE;                        /* and await next server command */
     }
 }
@@ -313,14 +290,14 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
       BEGIN ssinit;
     else {
         errpkt(
-          "Can't do command");
+          "Error");
         SERVE;
     }
 }
 
 <generic>. {                          /* Anything else in this state ... */
     errpkt(
-      "Not a server function");       /* Complain */
+      "Error");                       /* Complain */
     SERVE;                            /* & return to server command wait */
 }
 
@@ -364,14 +341,14 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
         decode(
           rdatap,putfil) < 0) {       /* decode first data packet */
         errpkt(
-          "Error writing data");
+          "Error");
          RESUME;
         }
         ack();                        /* acknowledge it */
         BEGIN rdata;                  /* and switch to receive-data state */
     } else {                          /* otherwise */
         errpkt(
-          "Can't open file");         /* send error message */
+          "Error");                   /* send error message */
         RESUME;                       /* and quit. */
     }
 }
@@ -394,7 +371,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
       decode(
         rdatap,putfil) < 0) {         /* Normal case, */
       errpkt(
-          "Error writing data");      /*   decode data to file */
+          "Error");                   /*   decode data to file */
         RESUME;                       /* Send ACK if data written */
     } else ack();                     /* to file OK. */
 }
@@ -402,7 +379,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
 <rdata,rattr>Z {                      /* End Of File (EOF) Packet */
     if (reof(&iattr) < 0) {           /* Close & dispose of the file */
         errpkt(
-          "Can't close file");        /* If problem, send error message */
+          "Error");                   /* If problem, send error message */
         RESUME;                       /* and quit */
     } else {                          /* otherwise */
         ack();                        /* acknowledge the EOF packet */
@@ -422,8 +399,8 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
         BEGIN ssfile;                 /* and switch to receive-file state */
     } else {                          /* otherwise send error msg & quit */
         s = xflg ? \
-          "Can't do command" : \
-            "Can't open file";
+          "Error" : \
+            "Error";
         errpkt(s);
         RESUME;
     }
@@ -433,15 +410,19 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
     srvptr = srvcmd;                  /* Point to string buffer */
     decode(rdatap,putsrv);            /* Decode data field, if any */
     putsrv('\0');                     /* Terminate with null */
+#ifndef NOLOGS
+#ifdef TLOG
     if (*srvcmd) {                    /* If remote name was recorded */
       tlog(
         F110," stored as",srvcmd,0);  /* Record it in transaction log. */
         }
+#endif /* ifdef TLOG */
+#endif /* ifndef NOLOGS */
 #ifndef NOATTR
     if (atcapu) {                     /* If attributes are to be used */
         if (sattr(xflg) < 0) {        /* set and send them */
           errpkt(
-            "Can't send attributes"); /* if problem, say so */
+            "Error");                 /* if problem, say so */
               RESUME;                 /* and quit */
         } else BEGIN ssattr;          /* if ok, switch to attribute state */
     } else 
@@ -483,7 +464,7 @@ a { errpkt("User cancelled transaction");      /* ABEND: Tell other side. */
           BEGIN ssfile;               /* if ok, enter send-file state */
         else {                        /* otherwise */
           errpkt(
-            "Can't open file");       /* send error message */
+            "Error");                 /* send error message */
               RESUME;                 /* and quit */
         }
     } else {                          /* No next file */
@@ -512,12 +493,12 @@ E {                                   /* Got Error packet, in any state */
         && !server
 #endif /* ifndef NOSERVER */
         )
-          fatal("Protocol error");
+          fatal("ERR");
     RESUME;
 }
 
 . {                                   /* Anything not accounted for above */
-    errpkt("Unknown packet type");    /* Give error message */
+    errpkt("ERROR");                  /* Give error message */
     RESUME;                           /* and quit */
 }
 %%
@@ -545,16 +526,19 @@ proto()
 
     x = -1;
     if (ttopen(ttname,&x,mdmtyp) < 0) {
+#ifdef DEBUG
         debug(
           F111,"failed: proto ttopen local",ttname,local);
+#endif /* ifdef DEBUG */
         screen(
           SCR_EM,0,0l,"Can't open line");
         return;
     }
     if (x > -1) local = x;
+#ifdef DEBUG
     debug(
       F111,"proto ttopen local",ttname,local);
-
+#endif /* ifdef DEBUG */
     x = (local) ? speed : -1;
     if (ttpkt(x,flow,parity) < 0) {   /* Put line in packet mode, */
         screen(

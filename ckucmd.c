@@ -333,7 +333,7 @@ int radix, *n;
   else
   {
     printf(
-      "\n?not a number - %s\n",
+      "\n?NaN - %s\n",
       s);
     return ( -2 );
   }
@@ -397,7 +397,7 @@ char *xhlp, *xdef, **xp;
   if (zchko(s) < 0)
   {
     printf(
-      "\n?Write permission denied - %s\n",
+      "\n?Permission denied - %s\n",
         s);
     return ( -2 );
   }
@@ -574,11 +574,12 @@ int *wild;
           addbuf(xdef);          /* supply default. */
           cc = setatm(xdef);
         }
+#ifdef COMMENT
         else                     /* No default */
         {
           putchar(BEL);
         }
-
+#endif /* ifdef COMMENT */
         break;
       }
 
@@ -593,7 +594,9 @@ int *wild;
       if (
         ( *wild = chkwld(*xp)))  /* No completion if wild */
       {
+#ifdef COMMENT
         putchar(BEL);
+#endif /* ifdef COMMENT */
         break;
       }
 
@@ -606,20 +609,22 @@ int *wild;
       if (y == 0)
       {
         printf(
-          "\n?No files match - %s\n",
+          "\n?No match - %s\n",
           atmbuf);
         return ( -2 );
       }
       else if (y < 0)
       {
         printf(
-          "\n?Too many files match - %s\n",
+          "\n?Too many matches - %s\n",
           atmbuf);
         return ( -2 );
       }
       else if (y > 1)            /* Not unique, just beep. */
       {
+#ifdef COMMENT
         putchar(BEL);
+#endif /* ifdef COMMENT */
       }
       else                       /* Unique, complete it.  */
       {
@@ -664,21 +669,21 @@ int *wild;
         if (y == 0)
         {
           printf(
-            "\n?No files match - %s\n",
+            "\n?No match - %s\n",
               atmbuf);
           return ( -2 );
         }
         else if (y < 0)
         {
           printf(
-            "\n?Too many file match - %s\n",
+            "\n?Too many matches - %s\n",
               atmbuf);
           return ( -2 );
         }
         else
         {
           printf(
-            ", one of the following:\n");
+            ", one of:\n");
           clrhlp();
           for (
             i = 0;
@@ -810,7 +815,7 @@ char *xhlp, *xdef, **xp;
 
       if (y == -3)
       {
-        printf("\n?Read permission denied - %s\n", *xp);
+        printf("\n?Permission denied - %s\n", *xp);
         return ( -2 );
       }
       else if (y == -2)          /* Probably a directory... */
@@ -826,13 +831,15 @@ char *xhlp, *xdef, **xp;
       return ( x );
 
     case 2:                      /* ESC */
+#ifdef COMMENT
       putchar(BEL);
+#endif /* ifdef COMMENT */
       break;
 
     case 3:                      /* Question mark */
       if (*xhlp == NUL)
       {
-        printf(" Directory name");
+        printf(" Dir name");
       }
       else
       {
@@ -943,18 +950,19 @@ char *xhlp, *xdef, **xp;
         cc = setatm(xdef);       /* Return as if whole field */
         return ( 0 );            /* typed, followed by space. */
       }
+#ifdef COMMENT
       else
       {
         putchar(BEL);            /* Beep if already into field. */
       }
-
+#endif /* ifdef COMMENT */
       break;
 
     case 3:                      /* Question mark */
       if (*xhlp == NUL)
       {
         printf(
-          " Please complete this field");
+          " Complete field");
       }
       else
       {
@@ -1050,17 +1058,19 @@ char **xp;
         printf("%s ", xdef);
         cc = addbuf(xdef);
       }
+#ifdef COMMENT
       else
       {
         putchar(BEL);
       }
+#endif /* ifdef COMMENT */
 
       break;
 
     case 3:                      /* Question Mark */
       if (*xhlp == NUL)
       {
-        printf(" Text string");
+        printf(" text");
       }
       else
       {
@@ -1071,7 +1081,7 @@ char **xp;
       break;
 
     default:
-      printf("\n?Unexpected return code from gtword() - %d\n", x);
+      printf("\n?Error - %d\n", x);
       return ( -2 );
     }
     x = gtword();
@@ -1174,19 +1184,21 @@ char *xhlp, *xdef;
         }
         else
         {
-          putchar(BEL);          /* No default, just beep */
+          /* putchar(BEL); */   /* No default, just beep */
           break;
         }
       }
 
       y = lookup(
         table, atmbuf, n, &z);  /* Something in atmbuf */
+#ifdef DEBUG
       debug(F111,
             "cmkey: esc", atmbuf,
           y);
+#endif /* ifdef DEBUG */
       if (y == -2)
       {
-        putchar(BEL);
+        /* putchar(BEL); */
         break;
       }
 
@@ -1199,7 +1211,9 @@ char *xhlp, *xdef;
       xp = table[z].kwd + cc;
       printf("%s ", xp);
       addbuf(xp);
+#ifdef DEBUG
       debug(F110, "cmkey: addbuf", cmdbuf, 0);
+#endif /* ifdef DEBUG */
       return ( y );
 
     case 3:                      /* User terminated word with "?" */
@@ -1218,11 +1232,11 @@ char *xhlp, *xdef;
 
       if (*xhlp == NUL)
       {
-        printf(" One of the following:\n");
+        printf(" One of:\n");
       }
       else
       {
-        printf(" %s, one of the following:\n", xhlp);
+        printf(" %s, one of:\n", xhlp);
       }
 
       clrhlp();
@@ -1244,7 +1258,7 @@ char *xhlp, *xdef;
       break;
 
     default:
-      printf("\n%d - Unexpected return code from gtword\n", zz);
+      printf("\n%d - error\n", zz);
       return ( cmflgs = -2 );
     }
     zz = gtword();
@@ -1302,7 +1316,7 @@ cmcfm()
       }
 
     case 2:
-      putchar(BEL);
+      /* putchar(BEL); */
       continue;
 
     case 3:
@@ -1312,7 +1326,7 @@ cmcfm()
         return ( -2 );
       }
 
-      printf("\n Type a carriage return to confirm the command\n");
+      printf("\n Type return to confirm\n");
       printf("%s%s", cmprom, cmdbuf);
       continue;
     }
@@ -1638,7 +1652,7 @@ gtword()
         }
         else                     /* ... Otherwise, */
         {
-          putchar(BEL);          /* beep, */
+          /* putchar(BEL); */    /* beep, */
           cmres();               /* and start parsing a new command. */
         }
 
@@ -1669,7 +1683,7 @@ gtword()
       {
         if (bp <= cmdbuf)        /* Beep if nothing to delete */
         {
-          putchar(BEL);
+          /* putchar(BEL); */
           cmres();
           return ( cmflgs = -1 );
         }
@@ -1718,7 +1732,7 @@ gtword()
 
     quote = 0;                   /* Turn off quote. */
   }                              /* end of big while */
-  putchar(BEL);                  /* Get here if... */
+/* putchar(BEL); */              /* Get here if... */
   printf("\n?Buffer full\n");    /* buffer is full. */
   return ( cmflgs = -2 );
 }

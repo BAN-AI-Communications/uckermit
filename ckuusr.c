@@ -127,7 +127,11 @@ extern int  parity, deblog, escape, xargc, flow, turn, duplex, nfils;
 extern int  ckxech, pktlog, seslog, tralog, stdouf, turnch, dfloc, keep;
 extern int  maxrps, warn, quiet, cnflg, tlevel, mdmtyp, zincnt;
 
-extern char *versio, *protv, *ckxv, *ckzv, *fnsv, *dftty, *cmdv;
+extern char *versio;
+#ifdef WART
+extern char *protv;
+#endif /* ifdef WART */
+extern char *ckxv, *ckzv, *fnsv, *dftty, *cmdv;
 #ifndef NOICP
 extern char *connv;
 #endif /* ifndef NOICP */
@@ -146,8 +150,9 @@ extern CHAR *zinptr;
 char *strcpy(), *getenv();
 
 extern char cmdbuf[];          /* Command buffer */
-
+#ifndef NOSPACE
 extern char *SPACMD, *zhome(); /* Space command, home directory. */
+#endif /* ifndef NOSPACE */
 extern int backgrd;            /* Kermit executing in background */
 
 /*
@@ -317,7 +322,7 @@ char x;
     case 'x': /* server */
       if (action)
       {
-        fatal("conflicting actions");
+        fatal("bad request");
       }
 
       action = 'x';
@@ -326,7 +331,7 @@ char x;
     case 'f':
       if (action)
       {
-        fatal("conflicting actions");
+        fatal("bad request");
       }
 
       action = setgen('F', "", "", "");
@@ -335,7 +340,7 @@ char x;
     case 'r': /* receive */
       if (action)
       {
-        fatal("conflicting actions");
+        fatal("bad request");
       }
 
       action = 'v';
@@ -344,7 +349,7 @@ char x;
     case 'k': /* receive to stdout */
       if (action)
       {
-        fatal("conflicting actions");
+        fatal("bad request");
       }
 
       stdouf = 1;
@@ -354,12 +359,12 @@ char x;
     case 's': /* send */
       if (action)
       {
-        fatal("conflicting actions");
+        fatal("bad request");
       }
 
       if (*( xp + 1 ))
       {
-        fatal("invalid arg after -s");
+        fatal("invalid arg");
       }
 
       z = nfils = 0;        /* Initialize file counter, flag */
@@ -382,7 +387,7 @@ char x;
       xargc++, xargv--; /* Adjust argv/argc */
       if (nfils < 1)
       {
-        fatal("missing filename for -s");
+        fatal("missing filename");
       }
 
       if (z > 1)
@@ -398,7 +403,7 @@ char x;
         }
         else
         {
-          fatal("invalid mixture of filenames and '-' in -s");
+          fatal("invalid mix of filenames and '-' in -s");
         }
       }
 
@@ -406,7 +411,7 @@ char x;
       {
         if (isatty(0))
         {
-          fatal("sending from terminal not allowed");
+          fatal("terminal input not allowed");
         }
       }
 
@@ -417,24 +422,25 @@ char x;
     case 'g': /* get */
       if (action)
       {
-        fatal("conflicting actions");
+        fatal("bad request");
       }
 
       if (*( xp + 1 ))
       {
-        fatal("invalid arg after -g");
+        fatal("invalid arg");
       }
 
       xargv++, xargc--;
       if (( xargc == 0 ) || ( **xargv == '-' ))
       {
-        fatal("missing filename for -g");
+        fatal("missing filename");
       }
 
       cmarg = *xargv;
       action = 'r';
       break;
 
+#ifndef NOCONN
     case 'c': /* connect before */
       cflg = 1;
       break;
@@ -442,21 +448,24 @@ char x;
     case 'n': /* connect after */
       cnflg = 1;
       break;
+#endif /* ifndef NOCONN */
 
+#ifndef NODOHLP
     case 'h': /* help */
       usage();
       doexit(GOOD_EXIT);
+#endif /* ifndef NODOHLP */
 
     case 'a': /* "as" */
       if (*( xp + 1 ))
       {
-        fatal("invalid arg after -a");
+        fatal("invalid arg");
       }
 
       xargv++, xargc--;
       if (( xargc < 1 ) || ( **xargv == '-' ))
       {
-        fatal("missing name in -a");
+        fatal("missing name");
       }
 
       cmarg2 = *xargv;
@@ -465,13 +474,13 @@ char x;
     case 'l': /* set line */
       if (*( xp + 1 ))
       {
-        fatal("invalid arg after -l");
+        fatal("invalid arg");
       }
 
       xargv++, xargc--;
       if (( xargc < 1 ) || ( **xargv == '-' ))
       {
-        fatal("device name missing");
+        fatal("missing name");
       }
 
       strcpy(ttname, *xargv);
@@ -528,7 +537,7 @@ char x;
       }
       else
       {
-        fatal("Unsupported packet length");
+        fatal("Unsupported length");
       }
 
       break;
@@ -609,7 +618,11 @@ char *msg;
 {
   /* Fatal error message */
   fprintf(stderr, "\rFatal: %s\r\n", msg);
+#ifndef NOLOGS
+#ifdef TLOG
   tlog(F110, "Fatal:", msg, 0l);
+#endif /* ifdef TLOG */
+#endif /* ifndef NOLOGS */
   doexit(BAD_EXIT);   /* Exit indicating failure */
   return ( BAD_EXIT );
 }
@@ -630,7 +643,11 @@ char *msg;
         msg);
   }
 
+#ifndef NOLOGS
+#ifdef TLOG
   tlog(F110, "Error -", msg, 0l);
+#endif /* ifdef TLOG */
+#endif /* ifndef NOLOGS */
   return ( 0 );
 }
 
@@ -691,7 +708,9 @@ struct keytab cmdtab[] = {
 #endif /* ifndef NOSERVER */
   "set",        XXSET, 0,
   "show",       XXSHO, 0,
+#ifndef NOSPACE
   "space",      XXSPA, 0,
+#endif /* ifndef NOSPACE */
 #ifndef NOSTATS
   "statistics", XXSTA, 0,
 #endif /* ifndef NOSTATS */
@@ -712,7 +731,9 @@ struct keytab prmtab[] = {
   "block-check", XYCHKT, 0,
   "delay", XYDELA, 0,
   "duplex", XYDUPL, 0,
+#ifdef COMMENT
   "end-of-packet", XYEOL, CM_INV,      /* moved to send/receive */
+#endif /* ifdef COMMENT */
   "escape-character", XYESC, 0,
   "file", XYFILE, 0,
   "flow-control", XYFLOW, 0,
@@ -722,9 +743,11 @@ struct keytab prmtab[] = {
 #ifndef NOCKUDIA
   "modem-dialer", XYMODM, 0,
 #endif /* ifndef NOCKUDIA */
+#ifdef COMMENT
   "packet-length", XYLEN, CM_INV,      /* moved to send/receive */
   "pad-character", XYPADC, CM_INV,     /* moved to send/receive */
   "padding", XYNPAD, CM_INV,           /* moved to send/receive */
+#endif /* ifdef COMMENT */
   "parity", XYPARI, 0,
   "prompt", XYPROM, 0,
   "receive", XYRECV, 0,
@@ -734,9 +757,11 @@ struct keytab prmtab[] = {
   "server", XYSERV, 0,
 #endif /* ifndef NOSERVER */
   "speed", XYSPEE, 0,
+#ifdef COMMENT
   "start-of-packet", XYMARK, CM_INV,   /* moved to send/receive */
-  "terminal", XYTERM, 0,
-  "timeout", XYTIMO, CM_INV            /* moved to send/receive */
+#endif /* ifndef COMMENT */
+  "terminal", XYTERM, 0
+/*  "timeout", XYTIMO, CM_INV */       /* moved to send/receive */
 };
 
 int nprm = \
@@ -935,7 +960,7 @@ parser()
 
   if (local && !backgrd)
   {
-    printf("\n");       /* Ensure prompt will be visibl3 */
+    printf("\n");       /* Ensure prompt will be visible */
   }
 
   sstate = 0;           /* Start with no start state. */
@@ -948,7 +973,7 @@ parser()
       if (tlevel < 0)   /* Just popped out of cmd files? */
       {
         conint(trap);   /* Check background stuff again. */
-        return ( 0 );       /* End of init file or whatever. */
+        return ( 0 );   /* End of init file or whatever. */
       }
     }
     debug(F101, "tlevel", "", tlevel);
@@ -1198,7 +1223,7 @@ int cx;
 
     if (!local)
     {
-      printf("You have to 'set line' first\n");
+      printf("'set line' first\n");
       return ( 0 );
     }
 
@@ -1206,7 +1231,7 @@ int cx;
     return ( 0 );
 
   case XXCOM: /* comment */
-    if (( x = cmtxt("Text of comment line", "", &s)) < 0)
+    if (( x = cmtxt("comment", "", &s)) < 0)
     {
       return ( x );
     }
@@ -1223,7 +1248,7 @@ int cx;
 
   case XXCWD:
     if (( x = cmdir(
-      "Name of local directory, or carriage return",
+      "Name of dir, or return",
         homdir,
           &s))
             < 0)
@@ -1233,7 +1258,7 @@ int cx;
 
     if (x == 2)
     {
-      printf("\n?Wildcards not allowed in directory name\n");
+      printf("\n?Wildcards not allowed in dir name\n");
       return ( -2 );
     }
 
@@ -1276,7 +1301,7 @@ int cx;
 
       *debfil = '\0';
       deblog = 0;
-      return ( zclose(ZDFILE));
+      return ( zclose(ZDFILE) );
 
     case LOGP:
       if (pktlog == 0)
@@ -1287,7 +1312,7 @@ int cx;
 
       *pktfil = '\0';
       pktlog = 0;
-      return ( zclose(ZPFILE));
+      return ( zclose(ZPFILE) );
 
     case LOGS:
       if (seslog == 0)
@@ -1298,7 +1323,7 @@ int cx;
 
       *sesfil = '\0';
       seslog = 0;
-      return ( zclose(ZSFILE));
+      return ( zclose(ZSFILE) );
 
     case LOGT:
       if (tralog == 0)
@@ -1309,27 +1334,27 @@ int cx;
 
       *trafil = '\0';
       tralog = 0;
-      return ( zclose(ZTFILE));
+      return ( zclose(ZTFILE) );
 
     default:
-      printf("\n?Unexpected log designator - %ld\n", (long)x);
+      printf("\n?No log - %ld\n", (long)x);
       return ( 0 );
     }
 #endif /* ifndef NOLOGS */
 
   case XXDIAL: /* dial number */
 #ifndef NOCKUDIA
-    if (( x = cmtxt("Number to be dialed", "", &s)) < 0)
+    if (( x = cmtxt("Number to dial", "", &s)) < 0)
     {
       return ( x );
     }
 
     debug(F110, "ckuusr calling ckdial", s, 0);
-    return ( ckdial(s));
+    return ( ckdial(s) );
 #endif /* ifndef NOCKUDIA */
 
   case XXDIR: /* directory */
-    if (( x = cmdir("Directory/file specification", "*", &s)) < 0)
+    if (( x = cmdir("Dir/file spec", "*", &s)) < 0)
     {
       return ( x );
     }
@@ -1340,7 +1365,7 @@ int cx;
     return ( 0 );
 
   case XXECH: /* echo */
-    if (( x = cmtxt("Material to be echoed", "", &s)) < 0)
+    if (( x = cmtxt("data to echo", "", &s)) < 0)
     {
       return ( x );
     }
@@ -1385,7 +1410,7 @@ int cx;
 
     if (!local)
     {
-      printf("You have to 'set line' first\n");
+      printf("'set line' first\n");
       return ( 0 );
     }
 
@@ -1395,11 +1420,11 @@ int cx;
   case XXGET: /* get */
     if (!local)
     {
-      printf("\nYou have to 'set line' first\n");
+      printf("\n'set line' first\n");
       return ( 0 );
     }
 
-    x = cmtxt("Name of remote file(s), or carriage return", "", &cmarg);
+    x = cmtxt("Name of file(s), or return", "", &cmarg);
     if (( x == -2 ) || ( x == -1 ))
     {
       return ( x );
@@ -1415,7 +1440,7 @@ int cx;
     {
       if (tlevel > -1)   /* Input is from take file */
       {
-        if (fgets(line, 100, tfile[tlevel]) == NULL)
+        if (fgets(line, CMDBL, tfile[tlevel]) == NULL)
         {
           fatal("take file ends prematurely in 'get'");
         }
@@ -1456,7 +1481,7 @@ int cx;
       {
         char psave[40]; /* Save old prompt */
         cmsavp(psave, 40);
-        cmsetp(" Remote file specification: "); /* Make new one */
+        cmsetp(" Remote file spec: "); /* Make new one */
         cmini(ckxech);
         x = -1;
         if (!backgrd)
@@ -1529,7 +1554,7 @@ int cx;
 
 #ifndef NODOHLP
   case XXHLP:   /* Help */
-    x = cmkey(cmdtab, ncmd, "uCKermit command", "help");
+    x = cmkey(cmdtab, ncmd, "command", "help");
     return ( dohlp(x));
 #endif /* ifndef NODOHLP */
 
@@ -1597,10 +1622,10 @@ int cx;
       return ( -2 );
     }
 
-    x = cmkey(remcmd, nrmt, "Remote Kermit server command", "");
+    x = cmkey(remcmd, nrmt, "Remote command", "");
     if (x == -3)
     {
-      printf("?Command for remote server?\n");
+      printf("?Command for remote?\n");
       return ( -2 );
     }
 
@@ -1612,7 +1637,7 @@ int cx;
     {
       if (x == -3)
       {
-        printf("?File specification is required\n");
+        printf("?File spec required\n");
         return ( -2 );
       }
 
@@ -1695,7 +1720,7 @@ int cx;
   case XXSHE:   /* Local shell command */
   {
     int pid;
-    if (cmtxt("UNIX shell command to execute", "", &s) < 0)
+    if (cmtxt("command to execute", "", &s) < 0)
     {
       return ( -1 );
     }
@@ -1802,7 +1827,9 @@ int cx;
 
     case SHVER:
       printf("\n  %s,%s\n", versio, ckxsys);
+#ifdef WART
       printf("%s\n",    protv);
+#endif /* ifdef WART */
       printf("%s\n",    fnsv);
       printf("%s\n",    cmdv);
 #ifndef NOICP
@@ -1828,6 +1855,7 @@ int cx;
     }
     return ( 0 );
 
+#ifndef NOSPACE
   case XXSPA: /* space */
     if (( x = cmcfm()) < 0)
     {
@@ -1836,6 +1864,7 @@ int cx;
 
     system(SPACMD);
     return ( 0 );
+#endif /* ifndef NOSPACE */
 
 #ifndef NOSTATS
   case XXSTA:   /* statistics */
@@ -1845,7 +1874,6 @@ int cx;
     }
 
     return ( dostat());
-
 #endif /* ifndef NOSTATS */
 
   case XXTAK: /* take */
@@ -1855,11 +1883,11 @@ int cx;
       return ( -2 );
     }
 
-    if (( y = cmifi("uCKermit command file", "", &s, &x)) < 0)
+    if (( y = cmifi("command file", "", &s, &x)) < 0)
     {
       if (y == -3)
       {
-        printf("?A file specification is required\n");
+        printf("?A file spec is required\n");
         return ( -2 );
       }
       else
@@ -1870,7 +1898,7 @@ int cx;
 
     if (x != 0)
     {
-      printf("?Wildcards not allowed in command file name\n");
+      printf("?Wildcards not allowed\n");
       return ( -2 );
     }
 
@@ -1903,17 +1931,19 @@ int cx;
 
     if (y != 0)
     {
-      printf("?Only a single file may be transmitted\n");
+      printf("?Only one file may be transmitted\n");
       return ( -2 );
     }
 
     strcpy(line, s); /* Save copy of string just parsed. */
     y = cmnum(
-      "Decimal ASCII value of line turnaround character",
+      "ASCII value of turnaround char",
       "10",
       10,
       &x);
+#ifdef DEBUG
     debug(F101, "transmit parse turnaround", "", x);
+#endif /* ifdef DEBUG */
     if (y < 0)
     {
       return ( y );
@@ -1921,7 +1951,7 @@ int cx;
 
     if (x < 0 || x > 127)
     {
-      printf("?Decimal number between 0 and 127\n");
+      printf("?0 to 127\n");
       return ( -2 );
     }
 
@@ -1936,12 +1966,13 @@ int cx;
                      *   }
                      */
     }
-
+#ifdef DEBUG
     debug(F110, "calling transmit", line, 0);
+#endif /* ifdef DEBUG */
     return ( transmit(line, x)); /* Do the command */
 
   default:
-    printf("Not available - %s\n", cmdbuf);
+    printf("??? - %s\n", cmdbuf);
     return ( -2 );
   }
 }
@@ -1960,7 +1991,7 @@ int cx;
 int
 doconect()
 {
-  int x;
+  int x = 0;
 
   conres();          /* Put console back to normal */
 #ifndef NOCONN
@@ -2009,7 +2040,7 @@ char t;
 #ifndef MINBUF
 #define LINBUFSIZ 150
 #else /* ifndef MINBUF */
-#define LINBUFSIZ 98
+#define LINBUFSIZ 85
 #endif /* ifndef MINBUF */
   char linbuf[LINBUFSIZ + 2];           /* Line buffer */
 

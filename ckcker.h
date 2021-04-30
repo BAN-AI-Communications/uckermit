@@ -51,8 +51,8 @@
 #define MAXSP     1200        /* Send packet buffer size  */
 #define MAXRP     1200        /* Receive packet buffer size */
 #else /* ifndef MINBUF */
-#define MAXSP     94          /* MINBUF packet buffer, send */
-#define MAXRP     94          /* MINBUF packet buffer, recv */
+#define MAXSP     90          /* MINBUF packet buffer, send */
+#define MAXRP     90          /* MINBUF packet buffer, recv */
 #endif /* ifndef MINBUF */
 #define MAXWS     1           /* Maximum window size */
 
@@ -95,9 +95,9 @@
 #define ZSYSFN    8           /* Input from a system function */
 #define ZNFILS    9           /* How many defined file numbers */
 
-#ifdef MINBIF
-#define INBUFSIZE 128         /* XXX(jhj): stock 512, min 128 */
-#else /* ifdef MINBUF */      /* XXX(jhj): now 128/256 */
+#ifdef MINBUF
+#define INBUFSIZE 96         /* XXX(jhj): stock 512 */
+#else /* ifdef MINBUF */
 #define INBUFSIZE 256         /* Size of the input & output buffer */
 #endif /* ifdef MINBUF */
 

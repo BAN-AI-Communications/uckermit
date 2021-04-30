@@ -273,7 +273,7 @@ int xx;
   case XYNPAD:
   case XYPADC:
   case XYTIMO:
-    printf("...Use 'set send' or 'set receive' instead.\n");
+    printf("Use 'set send' or 'set receive'.\n");
 #ifndef NODOHLP
     printf("Type 'help set send' or 'help set receive' for more info.\n");
 #endif /* ifndef NODOHLP */
@@ -341,11 +341,15 @@ int xx;
     bctr = y;
     return ( 0 );
 
+#ifndef NOLOGS
+#ifdef DEBUG
   case XYDEBU:
     return ( seton(&deblog));
+#endif /* ifdef DEBUG */
+#endif /* ifndef NOLOGS */
 
   case XYDELA:
-    y = cmnum("Number of seconds before starting to send", "5", 10, &x);
+    y = cmnum("Seconds to delay send", "5", 10, &x);
     debug(F101, "XYDELA: y", "", y);
     return ( setnum(&delay, x, y, 94));
 
@@ -406,14 +410,14 @@ int xx;
         return ( x );
       }
 
-      if (( y = cmnum("file byte size (7 or 8)", "8", 10, &z)) < 0)
+      if (( y = cmnum("file byte size", "8", 10, &z)) < 0)
       {
         return ( y );
       }
 
       if (z != 7 && z != 8)
       {
-        printf("\n?The choices are 7 and 8\n");
+        printf("\n?7 or 8\n");
         return ( -2 );
       }
 
@@ -438,7 +442,7 @@ int xx;
       return ( seton(&warn));
 
     default:
-      printf("?unexpected file parameter\n");
+      printf("?unexpected parameter\n");
       return ( -2 );
     }
 
@@ -476,7 +480,7 @@ int xx;
     if (( x = cmkey(
             mdmtab,
             nmdm,
-            "type of modem, direct means none",
+            "type of modem, or direct",
             "direct")) < 0)
     {
       return ( x );
@@ -519,7 +523,7 @@ int xx;
     return ( 0 );
 
   case XYPROM:
-    if (( x = cmtxt("Program's command prompt", "uCKermit>", &s)) < 0)
+    if (( x = cmtxt("local prompt", "uCKermit>", &s)) < 0)
     {
       return ( x );
     }
@@ -539,7 +543,7 @@ int xx;
     return ( 0 );
 
   case XYRETR: /* Per-packet retry limit */
-    y = cmnum("Maximum retries per packet", "10", 10, &x);
+    y = cmnum("retries per packet", "10", 10, &x);
     return ( setnum(&maxtry, x, y, 94));
 
   case XYSERV: /* Server timeout */
@@ -565,7 +569,7 @@ int xx;
 
       if (x < 0)
       {
-        printf("\n?Specify a positive number, or 0 for no server NAKs\n");
+        printf("\n?Positive number, 0 to disable.\n");
         return ( -2 );
       }
 
@@ -590,14 +594,14 @@ int xx;
     switch (y)
     {
     case 0:
-      if (( y = cmnum("bytesize for terminal connection", "8", 10, &x)) < 0)
+      if (( y = cmnum("bytesize for terminal", "8", 10, &x)) < 0)
       {
         return ( y );
       }
 
       if (x != 7 && x != 8)
       {
-        printf("\n?The choices are 7 and 8\n");
+        printf("\n?Only 7 and 8\n");
         return ( -2 );
       }
 
@@ -645,7 +649,7 @@ int xx;
     switch (y)
     {
     case XYEOL:
-      y = cmnum("Decimal ASCII code for packet terminator", "13", 10, &x);
+      y = cmnum("ASCII code for terminator", "13", 10, &x);
       if (( y = setcc(&z, x, y)) < 0)
       {
         return ( y );
@@ -663,7 +667,7 @@ int xx;
       return ( y );
 
     case XYLEN:
-      y = cmnum("Maximum number of characters in a packet", "90", 10, &x);
+      y = cmnum("Max chars in packet", "90", 10, &x);
       if (xx == XYRECV)   /* Receive... */
       {
         if (( y = setnum(&z, x, y, MAXRP)) < 0)
@@ -685,16 +689,18 @@ int xx;
         spsizf = 1; /*   to allow overriding Send-Init. */
       }
 
+	#ifndef NODOHLP
       if (z > 94 && !backgrd)
       {
         printf("Extended-length packets requested\n");
       }
+	#endif /* ifndef NODOHLP */
 
       return ( y );
 
     case XYMARK:
       y = cmnum(
-        "Decimal ASCII code for packet-start character",
+        "ASCII code for start character",
         "1",
         10,
         &x);
@@ -716,7 +722,7 @@ int xx;
 
     case XYNPAD: /* Padding */
       y = cmnum(
-        "How many padding characters for inbound packets",
+        "Padding characters for inbound packets",
         "0",
         10,
         &x);
@@ -738,7 +744,7 @@ int xx;
 
     case XYPADC: /* Pad character */
       y = cmnum(
-        "Decimal ASCII code for inbound pad character",
+        "ASCII code for pad character",
         "0",
         10,
         &x);
@@ -759,7 +765,7 @@ int xx;
       return ( y );
 
     case XYTIMO:
-      y = cmnum("Interpacket timeout interval", "5", 10, &x);
+      y = cmnum("Interpacket timeout", "5", 10, &x);
       if (( y = setnum(&z, x, y, 94)) < 0)
       {
         return ( y );
@@ -914,7 +920,7 @@ int x, y, *prm, max;
 
   if (x > max)
   {
-    printf("\n?%d is the maximum\n", max);
+    printf("\n?%d max\n", max);
     return ( -2 );
   }
 
@@ -940,7 +946,7 @@ int x, y, *prm;
 
   if (( x > 037 ) && ( x != 0177 ))
   {
-    printf("\n?Not in ASCII control range - %d\n", x);
+    printf("\n?Not a control char - %d\n", x);
     return ( -2 );
   }
 
@@ -970,7 +976,7 @@ int xx;
   switch (xx)
   {
   case XZCWD: /* CWD */
-    if (( x = cmtxt("Remote directory name", "", &s)) < 0)
+    if (( x = cmtxt("Remote dir", "", &s)) < 0)
     {
       return ( x );
     }
@@ -985,10 +991,11 @@ int xx;
       {
         if (fgets(sbuf, 50, tfile[tlevel]) == NULL)
         {
-          fatal("take file ends prematurely in 'remote cwd'");
+          fatal("take file ended in 'remote cwd'");
         }
-
+#ifdef DEBUG
         debug(F110, " pswd from take file", s2, 0);
+#endif /* ifdef DEBUG */
         for (x = strlen(sbuf);
              x > 0 && ( sbuf[x - 1] == NL || sbuf[x - 1] == CR ); x--)
         {
@@ -1000,15 +1007,17 @@ int xx;
         printf(" Password: "); /* get a password */
         while ((( x = getchar()) != NL ) && ( x != CR )) /* with no echo */
         {
+#ifdef COMMENT
           if (( x &= 0177 ) == '?')
           {
-            printf("? Password of remote directory\n Password: ");
+            printf("? Password\n Password: ");
             s2 = sbuf;
             *sbuf = NUL;
           }
-          else if (x == ESC)   /* Mini command line editor... */
+#endif /* ifdef COMMENT */
+          if (x == ESC)   /* Mini command line editor... */
           {
-            putchar(BEL);
+            /* putchar(BEL); */
           }
           else if (x == BS || x == 0177)
           {
@@ -1040,7 +1049,7 @@ int xx;
     return ( 0 );
 
   case XZDEL: /* Delete */
-    if (( x = cmtxt("Name of remote file(s) to delete", "", &s)) < 0)
+    if (( x = cmtxt("Remote file(s) to delete", "", &s)) < 0)
     {
       return ( x );
     }
@@ -1048,7 +1057,7 @@ int xx;
     return ( sstate = rfilop(s, 'E'));
 
   case XZDIR: /* Directory */
-    if (( x = cmtxt("Remote directory or file specification", "", &s)) < 0)
+    if (( x = cmtxt("Remote dir or file spec", "", &s)) < 0)
     {
       return ( x );
     }
@@ -1065,7 +1074,7 @@ int xx;
     return ( 0 );
 
   case XZHOS: /* Host */
-    if (( x = cmtxt("Command for remote system", "", &cmarg)) < 0)
+    if (( x = cmtxt("Command for remote", "", &cmarg)) < 0)
     {
       return ( x );
     }
@@ -1074,7 +1083,7 @@ int xx;
 
   case XZPRI: /* Print */
     if (( x = cmtxt(
-            "Remote file(s) to print on remote printer",
+            "Remote file(s) to print on remote",
             "",
             &s)) < 0)
     {
@@ -1084,7 +1093,7 @@ int xx;
     return ( sstate = rfilop(s, 'S'));
 
   case XZSPA: /* Space */
-    if (( x = cmtxt("Confirm, or remote directory name", "", &s)) < 0)
+    if (( x = cmtxt("Confirm, or remote dir name", "", &s)) < 0)
     {
       return ( x );
     }
@@ -1092,7 +1101,7 @@ int xx;
     return ( sstate = setgen('U', s, "", ""));
 
   case XZTYP: /* Type */
-    if (( x = cmtxt("Remote file specification", "", &s)) < 0)
+    if (( x = cmtxt("Remote file spec", "", &s)) < 0)
     {
       return ( x );
     }
@@ -1100,7 +1109,7 @@ int xx;
     return ( sstate = rfilop(s, 'T'));
 
   case XZWHO:
-    if (( x = cmtxt("Remote user name, or carriage return", "", &s)) < 0)
+    if (( x = cmtxt("User name, or return", "", &s)) < 0)
     {
       return ( x );
     }
@@ -1126,7 +1135,7 @@ char *s, t;
 {
   if (*s == NUL)
   {
-    printf("?File specification required\n");
+    printf("?File spec required\n");
     return ( -2 );
   }
 
@@ -1297,7 +1306,7 @@ char *s;
     return;
 
   case SCR_TC: /* transaction complete */
-    conoc(BEL);
+    /* conoc(BEL); */
     return;
 
   case SCR_EM: /* Error message */
@@ -1388,7 +1397,7 @@ long n;
       SCR_TN,
       0,
       0l,
-      "CTRL-F to cancel file,  CTRL-R to resend current packet");
+      "CTRL-F to cancel file,  CTRL-R to resend packet");
     screen(
       SCR_TN,
       0,
@@ -1492,6 +1501,7 @@ chkint()
  *  f=0 is special: print s1,s2, and interpret n as a char.
  */
 
+#ifndef NOLOGS
 #ifdef DEBUG
 #define DBUFL 1200
 int
@@ -1603,9 +1613,12 @@ char *s1, *s2;
 return ( 0 );
 }
 #endif /* ifdef DEBUG */
+#endif /* ifndef NOLOGS */
 
 #ifdef TLOG
+#ifndef NOLOGS
 #define TBUFL 300
+#endif /* ifndef NOLOGS */
 
 /* T L O G -- Log a record in the transaction file */
 
@@ -1616,6 +1629,7 @@ return ( 0 );
  *  n  - Int, argument 3.
  */
 
+#ifndef NOLOGS
 void
 tlog(f, s1, s2, n)
 int f;
@@ -1750,4 +1764,5 @@ char *s1, *s2;
   }
 }
 #endif /* ifdef TLOG */
+#endif /* ifndef NOLOGS */
 #endif /* ifndef NOICP */

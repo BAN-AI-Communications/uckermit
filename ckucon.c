@@ -295,11 +295,11 @@ hconne()
   static char *hlpmsg[] = {
     "\r\n",
 /*  "\r\n Escape character twice to send it,\r\n", */
-    "\r\n c: close connection",
-    "\r\n 0: send NULL",
-    "\r\n b: send BREAK",
+    "\r\n c: close",
+    "\r\n 0: do NULL",
+    "\r\n b: do BREAK",
     "\r\n h: hangup",
-    "\r\n q: hangup & quit",
+    "\r\n q: quit",
     "\r\n s: status",
     "\r\n ?: help",
     "\r\n\r\n",
@@ -418,11 +418,13 @@ char c;
         conol(" parity");
       }
 
+#ifndef NOLOGS
       if (seslog)
       {
         conol(", logging to ");
         conol(sesfil);
       }
+#endif /* ifndef NOLOGS */
 
       conoll("");
       return;
@@ -441,7 +443,7 @@ char c;
       return;
 
     default:                         /* Other */
-      conoc(BEL);
+      /* conoc(BEL); */
       return;                        /* Invalid esc arg, beep */
     }
   }

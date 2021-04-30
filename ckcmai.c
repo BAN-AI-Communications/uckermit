@@ -1,4 +1,4 @@
-char *versio = "uCKermit, 4G(169), 2021-APR-30";
+char *versio = "uCKermit, 4G(170), 2021-APR-30";
 
 /* C K C M A I -- uCKermit Main program */
 
@@ -47,15 +47,6 @@ char *versio = "uCKermit, 4G(169), 2021-APR-30";
 #include <string.h>                 /* String manipulation */
 #include <stdio.h>
 #endif /* ifdef __linux__ */
-
-int sysinit();
-int proto();
-int cmdini();
-//int cmdlin();
-int cmfld();
-//int conect();
-int doexit(int exit);
-int conoll(char *s);
 
 /*
  * Text message definitions, each
@@ -216,11 +207,21 @@ int         tsecs;                  /* Seconds for transaction */
  * Flags
  */
 
-int         deblog   = 0,           /* Flag for debug logging */
-            pktlog   = 0,           /* Flag for packet logging */
-            seslog   = 0,           /* Session logging */
-            tralog   = 0,           /* Transaction logging */
-            displa   = 0,           /* File transfer display on/off */
+#ifdef DEBUG
+#ifndef NOLOGS
+int         deblog   = 0;           /* Flag for debug logging */
+#endif /* ifndef NOLOGS */
+#endif /* ifdef DEBUG */
+#ifndef NOLOGS
+int         pktlog   = 0,           /* Flag for packet logging */
+            seslog   = 0;           /* Session logging */
+#endif /* ifndef NOLOGS */
+#ifndef NOLOGS
+#ifdef TLOG
+int         tralog   = 0;           /* Transaction logging */
+#endif /* ifdef TLOG */
+#endif /* ifndef NOLOGS */
+int         displa   = 0,           /* File transfer display on/off */
             stdouf   = 0,           /* Flag for output to stdout */
             xflg     = 0,           /* Flag for X instead of F packet */
             hcflg    = 0,           /* Doing Host command */
@@ -237,7 +238,9 @@ int         deblog   = 0,           /* Flag for debug logging */
 #ifndef NOSERVER
             server   = 0,           /* Flag for being a server */
 #endif /* ifndef NOSERVER */
+#ifndef NOCOCONN
             cnflg    = 0,           /* Connect after transaction */
+#endif /* ifndef NOCONN */
             cxseen   = 0,           /* Flag for cancelling a file */
             czseen   = 0,           /* Flag for cancelling file group */
             keep     = 0,           /* Keep incomplete files */
@@ -369,7 +372,6 @@ char **argv;
 #endif /* ifndef NOICP */
     if (sstate)
     {
-		printf("%d\n,sstate");
       proto();                      /* Enter protocol if requested. */
     }
 #ifndef NOICP
