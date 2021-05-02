@@ -121,7 +121,9 @@ typedef int SIGTYP;
 #endif /* ifdef BSD4 */
 #ifdef UXIII
 #ifndef MINBUF
+#ifndef NOTILDE
 #define DTILDE
+#endif /* ifndef NOTILDE */
 #endif /* ifndef MINBUF */
 #endif /* ifdef UXIII */
 

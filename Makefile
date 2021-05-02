@@ -1,6 +1,6 @@
 ###########################################################################
 #                                                                         #
-#                   Makefile, version 2.94, 2021-APR-30                   #
+#                   Makefile, version 2.95  2021-MAY-02                   #
 #                                                                         #
 ###########################################################################
 #                                                                         #
@@ -373,7 +373,7 @@ linux:
 	-DTIMEZONE -Wall -Os -fno-ident -fno-unwind-tables -flto -DDIRENT \
 	-fno-exceptions -flto -fno-math-errno -fdata-sections -ffast-math \
 	-fno-asynchronous-unwind-tables -funsigned-char -ffunction-sections \
-	-fmerge-all-constants -DDTILDE -fdelete-null-pointer-checks \
+	-fmerge-all-constants -fdelete-null-pointer-checks \
 	-funsafe-math-optimizations" \
 	"LNKFLAGS = -Wl,-O,2 -Wl,-flto -Wl,--gc-sections"
 #
@@ -385,7 +385,7 @@ linux-small:
 	-Wall -DFIONREAD -DNOATTR -fno-ident -DNOSTATS -Os -DNODOHLP -DNODISP \
 	-DNOCKUDIA -DMINBUF -fno-unwind-tables -fno-exceptions -DDIRENT -flto \
 	-DNOCKUSCR -fno-math-errno -fdata-sections -DNODISP -ffast-math \
-	-fno-asynchronous-unwind-tables -funsigned-char -DNOCONN -UDTILDE \
+	-fno-asynchronous-unwind-tables -funsigned-char -DNOCONN -DNOTILDE \
 	-ffunction-sections -fmerge-all-constants -fdelete-null-pointer-checks \
 	-funsafe-math-optimizations -DNOSPACE" \
 	"LNKFLAGS = -Wl,-O,2 -Wl,-flto -Wl,--gc-sections"
@@ -399,7 +399,7 @@ linux-minimal:
 	-fno-asynchronous-unwind-tables -fno-unwind-tables -fno-ident -flto \
 	-fno-exceptions -fdata-sections -ffunction-sections -ffast-math \
 	-fno-math-errno -DNOSTATS -fmerge-all-constants -funsigned-char \
-	-fdelete-null-pointer-checks -DNOICP -DMINBUF -DNOATTR -UDTILDE \
+	-fdelete-null-pointer-checks -DNOICP -DMINBUF -DNOATTR -DNOTILDE \
 	-funsafe-math-optimizations -DNOCONN -DNOLOGS -DNOSPACE" \
 	"LNKFLAGS = -Wl,-O,2 -Wl,-flto -Wl,--gc-sections"
 #

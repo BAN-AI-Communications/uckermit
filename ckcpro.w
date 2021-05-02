@@ -1,45 +1,45 @@
 #ifndef NOICP
-char *protv = "  Protocol, 4G(071)";
+char *protv = "  Protocol, 4G(072)";
 #endif /* ifndef NOICP */
 
-/* C K C P R O -- uCKermit Protocol Module in Wart preprocessor notation */
+ /* C K C P R O - Kermit Protocol Module in Wart preprocessor notation */
 
-/*
- * Copyright (C) 2021, Jeffrey H. Johnson <trnsz@pobox.com>
- *
- * Copyright (C) 1981-2011,
- *   Trustees of Columbia University in the City of New York.
- *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- *   modification, are permitted provided that the following conditions
- *   are met:
- *
- *   - Redistributions of source code must retain the above copyright 
- *       notice, this list of conditions and the following disclaimer.
- *      
- *   - Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in   
- *       the documentation and/or other materials provided with the
- *       distribution.                                                     
- *     
- *   - Neither the name of Columbia University nor the names of its
- *       contributors may be used to endorse or promote products derived
- *       from this software without specific prior written permission. 
- *       
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
- */
+ /*
+  * Copyright (C) 2021, Jeffrey H. Johnson <trnsz@pobox.com>
+  *
+  * Copyright (C) 1981-2011,
+  *   Trustees of Columbia University in the City of New York.
+  *
+  * All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+  *   modification, are permitted provided that the following conditions
+  *   are met:
+  *
+  *   - Redistributions of source code must retain the above copyright 
+  *       notice, this list of conditions and the following disclaimer.
+  *      
+  *   - Redistributions in binary form must reproduce the above copyright
+  *       notice, this list of conditions and the following disclaimer in   
+  *       the documentation and/or other materials provided with the
+  *       distribution.                                                     
+  *     
+  *   - Neither the name of Columbia University nor the names of its
+  *       contributors may be used to endorse or promote products derived
+  *       from this software without specific prior written permission. 
+  *       
+  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+  */
 
 #include "ckcdeb.h"
 #include "ckcker.h"
@@ -116,10 +116,10 @@ x { sleep(1); SERVE; }                         /* Be a Server */
 a { errpkt("User cancel");                     /* ABEND: Tell other side. */
     return(0); }                               /* Return from protocol. */
 
-/*
- * Dynamic states:
- * <current-states>input-character { action }
- */
+ /*
+  * Dynamic states:
+  * <current-states>input-character { action }
+  */
 
 <rgen,get,serve>S {                 /* Receive Send-Init packet */
     rinit(rdatap);                  /* Set parameters */
@@ -131,10 +131,10 @@ a { errpkt("User cancel");                     /* ABEND: Tell other side. */
     BEGIN rfile;                    /* Go into receive-file state */
 }
 
-/*
- * States in which we get replies back
- * from commands sent to a server.
- */
+ /*
+  * States in which we get replies back
+  * from commands sent to a server.
+  */
 
 <ipkt>Y {                             /* Get ack for I-packet */
     spar(rdatap);                     /* Set parameters */
@@ -502,8 +502,6 @@ E {                                   /* Got Error packet, in any state */
     RESUME;                           /* and quit */
 }
 %%
-
-/* P R O T O -- Protocol entry function */
 
 proto()
 {
