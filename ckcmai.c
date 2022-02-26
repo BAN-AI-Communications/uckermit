@@ -1,9 +1,9 @@
-char *versio = "uCKermit, 4G(171), 2021-MAY-02";
+char *versio = "uCKermit, 4G(172), 2022-FEB-26";
 
 /* C K C M A I -- uCKermit Main program */
 
 /*
- * Copyright (C) 2021, Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (C) 2021-2022, Jeffrey H. Johnson <trnsz@pobox.com>
  *
  * Copyright (C) 1981-2011,
  *   Trustees of Columbia University in the City of New York.

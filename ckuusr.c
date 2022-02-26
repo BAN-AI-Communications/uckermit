@@ -1,11 +1,11 @@
 #ifndef NOICP
-char *userv = "   JSYS UI, 4G(121)";
+char *userv = "   JSYS UI, 4G(122)";
 #endif /* ifndef NOICP */
 
 /* C K U U S R -- "User Interface" (Part 1) */
 
 /*
- * Copyright (C) 2021 Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (C) 2021-2022 Jeffrey H. Johnson <trnsz@pobox.com>
  *
  * Copyright (C) 1981-2011,
  *   Trustees of Columbia University in the City of New York.

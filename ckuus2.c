@@ -1,7 +1,7 @@
 /* C K U U S 2 -- "User Interface" STRINGS module */
 
 /*
- * Copyright (C) 2021, Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (C) 2021-2022 Jeffrey H. Johnson <trnsz@pobox.com>
  *
  * Copyright (C) 1981-2011,
  *   Trustees of Columbia University in the City of New York.
@@ -174,7 +174,7 @@ In interactive mode, the following characters have special meaning:\n\n\
  CTRL-W:  Delete the most recent full word.\n",
 "\
  CTRL-U:  Delete the current full line.\n\
- CTRL-R   Redisplay the current full line.\n\
+ CTRL-R:  Redisplay the current full line.\n\
  CTRL-L:  Clear the display and then execute the current full line.\n\
       ?:  (QUESTION) Display help for the current command or field.\n\
  ESCAPE:  (or TAB) Attempt completing the current command or field.\n",
