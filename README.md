@@ -3,7 +3,6 @@
 ## _micro_–C֊Kermit (_microkermit_)
 
 [![License: BSD](https://img.shields.io/badge/License-BSD%20-blue.svg)](https://github.com/BAN-AI-Communications/uckermit/blob/master/LICENSE)
-[![LocCount](https://img.shields.io/tokei/lines/github/BAN-AI-Communications/uckermit.svg)](https://github.com/XAMPPRocky/tokei)
 [![GitHubCodeSize](https://img.shields.io/github/languages/code-size/BAN-AI-Communications/uckermit.svg)](https://github.com/BAN-AI-Communications/uckermit)
 [![TickgitTODOs](https://img.shields.io/endpoint?url=https://api.tickgit.com/badge?repo=github.com/BAN-AI-Communications/uckermit)](https://www.tickgit.com/browse?repo=github.com/BAN-AI-Communications/uckermit)
 [![CodebeatBadge](https://codebeat.co/badges/d423617a-5c80-40fd-97f2-baa839f1ee77)](https://codebeat.co/projects/github-com-ban-ai-communications-uckermit-master)
