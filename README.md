@@ -366,9 +366,9 @@ options specify either protocol transactions or terminal connection.
 
 **_Revised 3‑Clause BSD License for Columbia University Kermit Software_**
 
-Copyright © 1981—2011, Trustees of Columbia University in the City of New York.
-Copyright © 1984 Jeff Damens, Columbia University Center for Computing Activites
-Copyright © 1985, Herman Fischer, Encino CA
+Copyright © 1981—2011, Trustees of Columbia University in the City of New York.  
+Copyright © 1984 Jeff Damens, Columbia University Center for Computing Activites  
+Copyright © 1985, Herman Fischer, Encino CA  
 Copyright © 2021—2022, Jeffrey H. Johnson \<trnsz@pobox.com\>
 
 All rights reserved.
