@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *userv = "   JSYS UI, 4G(122)";
+char *userv = "   JSYS UI, 4G(123)";
 #endif /* ifndef NOICP */
 
 /* C K U U S R -- "User Interface" (Part 1) */

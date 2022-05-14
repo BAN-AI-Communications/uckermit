@@ -1,4 +1,4 @@
-char *versio = "uCKermit, 4G(172), 2022-FEB-26";
+char *versio = "uCKermit, 4G(173), 2022-MAY-14";
 
 /* C K C M A I -- uCKermit Main program */
 
