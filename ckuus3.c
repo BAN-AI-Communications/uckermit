@@ -689,13 +689,6 @@ int xx;
         spsizf = 1; /*   to allow overriding Send-Init. */
       }
 
-	#ifndef NODOHLP
-      if (z > 94 && !backgrd)
-      {
-        printf("Extended-length packets requested\n");
-      }
-	#endif /* ifndef NODOHLP */
-
       return ( y );
 
     case XYMARK:
