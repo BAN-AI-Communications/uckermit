@@ -1,9 +1,9 @@
-char *versio = "uCKermit, 4G(173), 2022-MAY-14";
+char *versio = "uCKermit, 4G(174), 2022-AUG-01";
 
 /* C K C M A I -- uCKermit Main program */
 
 /*
- * Copyright (C) 2021-2022, Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (C) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
  *
  * Copyright (C) 1981-2011,
  *   Trustees of Columbia University in the City of New York.
@@ -299,7 +299,7 @@ char **argv;
   sstate = 0;                       /* No default start state. */
   if (sysinit() < 0)
   {
-	  
+
 #ifndef NOICP
     doexit(BAD_EXIT);               /* System-dependent initialization. */
 #else /* ifndef NOICP */

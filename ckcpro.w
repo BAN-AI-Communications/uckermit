@@ -1,11 +1,11 @@
 #ifndef NOICP
-char *protv = "  Protocol, 4G(072)";
+char *protv = "  Protocol, 4G(073)";
 #endif /* ifndef NOICP */
 
  /* C K C P R O - Kermit Protocol Module in Wart preprocessor notation */
 
  /*
-  * Copyright (C) 2021, Jeffrey H. Johnson <trnsz@pobox.com>
+  * Copyright (C) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
   *
   * Copyright (C) 1981-2011,
   *   Trustees of Columbia University in the City of New York.
@@ -16,18 +16,18 @@ char *protv = "  Protocol, 4G(072)";
   *   modification, are permitted provided that the following conditions
   *   are met:
   *
-  *   - Redistributions of source code must retain the above copyright 
+  *   - Redistributions of source code must retain the above copyright
   *       notice, this list of conditions and the following disclaimer.
-  *      
+  *
   *   - Redistributions in binary form must reproduce the above copyright
-  *       notice, this list of conditions and the following disclaimer in   
+  *       notice, this list of conditions and the following disclaimer in
   *       the documentation and/or other materials provided with the
-  *       distribution.                                                     
-  *     
+  *       distribution.
+  *
   *   - Neither the name of Columbia University nor the names of its
   *       contributors may be used to endorse or promote products derived
-  *       from this software without specific prior written permission. 
-  *       
+  *       from this software without specific prior written permission.
+  *
   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
   * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -38,7 +38,7 @@ char *protv = "  Protocol, 4G(072)";
   * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
   * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
   * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   */
 
 #include "ckcdeb.h"
@@ -425,7 +425,7 @@ a { errpkt("User cancel");                     /* ABEND: Tell other side. */
             "Error");                 /* if problem, say so */
               RESUME;                 /* and quit */
         } else BEGIN ssattr;          /* if ok, switch to attribute state */
-    } else 
+    } else
 #endif /* NOATTR */
 	if (sdata() < 0) {                /* No attributes, send data */
         clsif();                      /* If not ok, close input file, */
@@ -488,7 +488,7 @@ E {                                   /* Got Error packet, in any state */
     tsecs = gtimer();                 /* Get timers */
 #endif /* ifndef NOSTATS */
     quiet = x;                        /* restore quiet state */
-    if (backgrd 
+    if (backgrd
 #ifndef NOSERVER
         && !server
 #endif /* ifndef NOSERVER */

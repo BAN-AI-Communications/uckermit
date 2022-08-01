@@ -1,11 +1,11 @@
 #ifndef NOICP
-char *cmdv = "  JSYS ICP, 4G(063)";
+char *cmdv = "  JSYS ICP, 4G(064)";
 #endif /* ifndef NOICP */
 
 /* C K U C M D -- Interactive command package / parser */
 
 /*
- * Copyright (C) 2021, Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (C) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
  *
  * Copyright (C) 1981-2011,
  *   Trustees of Columbia University in the City of New York.
@@ -119,7 +119,7 @@ int hw = HLPLW,                  /* Help line width */
 #ifndef MINBUF
 #define PROML 60                 /* Maximum length for prompt */
 #else /* ifndef MINBUF */
-#define PROML 10 
+#define PROML 10
 #endif /* ifndef MINBUF */
 char cmprom[PROML + 1];          /* Program's prompt */
 char *dfprom = "Command? ";      /* Default prompt */

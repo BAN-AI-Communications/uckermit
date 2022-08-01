@@ -1,9 +1,5 @@
 ###########################################################################
 #                                                                         #
-#                   Makefile, version 2.95  2021-MAY-02                   #
-#                                                                         #
-###########################################################################
-#                                                                         #
 # Makefile to build uCKermit (microkermit) for UNIX and UNIX-like systems #
 #                                                                         #
 ###########################################################################
@@ -49,7 +45,7 @@
 # for Sequent Symmetry S/81 running DYNIX 3.0.12, "make bsdlck"           #
 # for Sun with SunOS 4.0 or later, "make sunos4" (uses BSD environment)   #
 # for Sun with SunOS 4.0 or later, "make sys5r3" (uses AT&T environment)  #
-#                                                                         # 
+#                                                                         #
 ###########################################################################
 #                                                                         #
 # The result should be a runnable program called "wermit" in the current  #
@@ -146,7 +142,7 @@
 ###########################################################################
 #                                                                         #
 #  Other systems require some special treatment:                          #
-#                                                                         # 
+#                                                                         #
 #  For Ridge32 (ROS3.2), use "make sys3", but                             #
 #                                                                         #
 #  1. Use "CFLAGS = -DUXIII -i -O" "LNKFLAGS = -i"                        #
@@ -215,9 +211,9 @@ make:
 #
 wermit: ckcmai.o ckucmd.o ckuusr.o ckuus2.o ckuus3.o ckcpro.o ckcfns.o \
 	ckcfn2.o ckucon.o ckutio.o ckufio.o ckudia.o ckuscr.o
-	$(CC2) $(LNKFLAGS) -o wermit \
+	$(CC2) $(LNKFLAGS) -o wermit                                   \
 	ckcmai.o ckutio.o ckufio.o ckcfns.o ckcfn2.o ckcpro.o ckucmd.o \
-	ckuus2.o ckuus3.o ckuusr.o ckucon.o ckudia.o ckuscr.o \
+	ckuus2.o ckuus3.o ckuusr.o ckucon.o ckudia.o ckuscr.o          \
 	$(LIBS)
 #
 ###########################################################################
@@ -362,49 +358,49 @@ sr10-bsd:
 #Version 7 UNIX (see comments above)
 v7:
 	make wermit "CFLAGS=-DV7 -DDEBUG -DTLOG -DPROCNAME=\\\"$(PROC)\\\" \
-	-DBOOTNAME=\\\"$(BOOTFILE)\\\" -DNPROCNAME=\\\"$(NPROC)\\\" \
+	-DBOOTNAME=\\\"$(BOOTFILE)\\\" -DNPROCNAME=\\\"$(NPROC)\\\"        \
 	-DNPTYPE=$(NPTYPE) $(DIRECT)"
 #
 ###########################################################################
 #Linux, full featured
 linux:
 	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DDEBUG -DTLOG -DUXIII \
-	-DO_NDELAY -DTIOCFLUSH -DTIOCSINUSE -Wall -DSIGTSTP -DFIONREAD -g \
-	-DTIMEZONE -Wall -Os -fno-ident -fno-unwind-tables -flto -DDIRENT \
-	-fno-exceptions -flto -fno-math-errno -fdata-sections -ffast-math \
-	-fno-asynchronous-unwind-tables -funsigned-char -ffunction-sections \
-	-fmerge-all-constants -fdelete-null-pointer-checks \
-	-funsafe-math-optimizations" \
+	-DO_NDELAY -DTIOCFLUSH -DTIOCSINUSE -Wall -DSIGTSTP -DFIONREAD -g     \
+	-DTIMEZONE -Wall -Os -fno-ident -fno-unwind-tables -flto -DDIRENT     \
+	-fno-exceptions -flto -fno-math-errno -fdata-sections -ffast-math     \
+	-fno-asynchronous-unwind-tables -funsigned-char -ffunction-sections   \
+	-fmerge-all-constants -fdelete-null-pointer-checks                    \
+	-funsafe-math-optimizations"                                          \
 	"LNKFLAGS = -Wl,-O,2 -Wl,-flto -Wl,--gc-sections"
 #
 ###########################################################################
 #Linux, small - no dialer, no scripting, no help, no attributes,
 #               no statistics, no disposition, minimal buffering.
 linux-small:
-	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DUXIII -g -DNOLOGS \
+	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DUXIII -g -DNOLOGS    \
 	-Wall -DFIONREAD -DNOATTR -fno-ident -DNOSTATS -Os -DNODOHLP -DNODISP \
 	-DNOCKUDIA -DMINBUF -fno-unwind-tables -fno-exceptions -DDIRENT -flto \
-	-DNOCKUSCR -fno-math-errno -fdata-sections -DNODISP -ffast-math \
-	-fno-asynchronous-unwind-tables -funsigned-char -DNOCONN -DNOTILDE \
-	-ffunction-sections -fmerge-all-constants -fdelete-null-pointer-checks \
-	-funsafe-math-optimizations -DNOSPACE" \
+	-DNOCKUSCR -fno-math-errno -fdata-sections -DNODISP -ffast-math       \
+	-fno-asynchronous-unwind-tables -funsigned-char -DNOCONN -DNOTILDE    \
+	-ffunction-sections -fmerge-all-constants                             \
+	-fdelete-null-pointer-checks -funsafe-math-optimizations -DNOSPACE"   \
 	"LNKFLAGS = -Wl,-O,2 -Wl,-flto -Wl,--gc-sections"
 #
 ###########################################################################
 #Linux, minimal - no dialer, no scripting, no help, no attributes, no ICP,
 #                 no dispositions, no statistics, minimal buffering.
 linux-minimal:
-	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DUXIII -Wall -Os \
-	-DFIONREAD -DDIRENT -DNOCKUSCR -DNOCKUDIA -DNODOHLP -DNODISP -g \
+	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DUXIII -Wall -Os    \
+	-DFIONREAD -DDIRENT -DNOCKUSCR -DNOCKUDIA -DNODOHLP -DNODISP -g     \
 	-fno-asynchronous-unwind-tables -fno-unwind-tables -fno-ident -flto \
-	-fno-exceptions -fdata-sections -ffunction-sections -ffast-math \
-	-fno-math-errno -DNOSTATS -fmerge-all-constants -funsigned-char \
-	-fdelete-null-pointer-checks -DNOICP -DMINBUF -DNOATTR -DNOTILDE \
-	-funsafe-math-optimizations -DNOCONN -DNOLOGS -DNOSPACE" \
+	-fno-exceptions -fdata-sections -ffunction-sections -ffast-math     \
+	-fno-math-errno -DNOSTATS -fmerge-all-constants -funsigned-char     \
+	-fdelete-null-pointer-checks -DNOICP -DMINBUF -DNOATTR -DNOTILDE    \
+	-funsafe-math-optimizations -DNOCONN -DNOLOGS -DNOSPACE"            \
 	"LNKFLAGS = -Wl,-O,2 -Wl,-flto -Wl,--gc-sections"
 #
 ###########################################################################
-#Linux, alias for minimal 
+#Linux, alias for minimal
 linux-tiny:
 	make linux-minimal
 #
@@ -427,22 +423,22 @@ shrink:
 	@printf '\n%*s\n' "$${COLUMNS:-$$(tput cols)}" '' | tr ' ' - \
 	2>/dev/null || true
 	@printf '\n%s ' "File size: " "$$(du --apparent-size \
-	-k wermit 2>/dev/null | \
-	cut -f 1 -d "	" 2>/dev/null | \
-	cut -f 1 -d " " 2>/dev/null || true)"K \
-	"$$(/bin/ls -l wermit 2>/dev/null | \
+	-k wermit 2>/dev/null |                              \
+	cut -f 1 -d "	" 2>/dev/null |                      \
+	cut -f 1 -d " " 2>/dev/null || true)"K               \
+	"$$(/bin/ls -l wermit 2>/dev/null |                  \
 	awk '{ print $$5 }' 2>/dev/null || true) bytes" || true
 	@printf '\n%s\n' "" 2>/dev/null || true
 	@cp -f wermit .wermit.old.1
 	@bloaty --domain=vm -n 0 -w -s vm \
-	-d sections,symbols wermit \
+	-d sections,symbols wermit        \
 	2>/dev/null || true
-	@printf '\n%s\n\n' \
+	@printf '\n%s\n\n'                               \
 	"$$(stat -c %y .wermit.old.1.saved 2>/dev/null)" \
 	2>/dev/null || true
 	@bloaty --domain=vm -n 0 -w -s vm \
-	-d sections,symbols wermit \
-	-- .wermit.old.1.saved \
+	-d sections,symbols wermit        \
+	-- .wermit.old.1.saved            \
 	2>/dev/null || true
 	@strip wermit \
 	2>/dev/null || true
@@ -450,45 +446,45 @@ shrink:
 	2>/dev/null || true
 	@strip --strip-all wermit \
 	2>/dev/null || true
-	@strip --strip-dwo \
-	-R .note.\* \
-	-R .comment.* \
-	-R .note \
-	-R .comment \
-	-R .tm_clone_table \
-	-R .got \
-	-R .gnu.version \
-	-R .gnu.hash \
-	-R .gnu.build.attributes \
-	-R .data.rel.ro \
-	-R .rel.eh_frame \
-	-R .eh_frame_hdr \
-	-R .eh_frame \
-	-R .rela.eh_frame \
+	@strip --strip-dwo        \
+	-R .note.\*               \
+	-R .comment.*             \
+	-R .note                  \
+	-R .comment               \
+	-R .tm_clone_table        \
+	-R .got                   \
+	-R .gnu.version           \
+	-R .gnu.hash              \
+	-R .gnu.build.attributes  \
+	-R .data.rel.ro           \
+	-R .rel.eh_frame          \
+	-R .eh_frame_hdr          \
+	-R .eh_frame              \
+	-R .rela.eh_frame         \
 	-R .note.gnu.gold-version \
-	wermit \
+	wermit                    \
 	2>/dev/null || true
 	@sstrip -z wermit 2>/dev/null || true
 	@printf '%s\n' "" 2>/dev/null || true
 	@printf '%*s\n' "$${COLUMNS:-$$(tput cols)}" '' | tr ' ' - \
 	2>/dev/null || true
 	@printf '\n%s ' "Stripped Size: " "$$(du --apparent-size \
-	-k wermit 2>/dev/null | \
-	cut -f 1 -d "	" 2>/dev/null | \
-	cut -f 1 -d " " 2>/dev/null || true)K" \
-	"$$(/bin/ls -l wermit 2>/dev/null | \
+	-k wermit 2>/dev/null |                                  \
+	cut -f 1 -d "	" 2>/dev/null |                          \
+	cut -f 1 -d " " 2>/dev/null || true)K"                   \
+	"$$(/bin/ls -l wermit 2>/dev/null |                      \
 	awk '{ print $$5 }' 2>/dev/null || true) bytes" || true
 	@printf '\n%s\n' 2>/dev/null || true
 	@cp -f wermit .wermit.old.2
-	@bloaty -n 0 -w -s vm \
+	@bloaty -n 0 -w -s vm      \
 	-d sections,symbols wermit \
 	2>/dev/null || true
-	@printf '\n%s\n\n' \
+	@printf '\n%s\n\n'                               \
 	"$$(stat -c %y .wermit.old.2.saved 2>/dev/null)" \
 	2>/dev/null || true
-	@bloaty -n 0 -w -s vm \
+	@bloaty -n 0 -w -s vm      \
 	-d sections,symbols wermit \
-	-- .wermit.old.2.saved \
+	-- .wermit.old.2.saved     \
 	2>/dev/null || true
 	@printf '\n%*s\n\n' "$${COLUMNS:-$$(tput cols)}" '' | tr ' ' - \
 	2>/dev/null || true
@@ -544,34 +540,34 @@ mpsysv:
 #Microsoft "Xenix/286" e.g. for IBM PC/AT
 xenix:
 	make wermit "CFLAGS= -DXENIX -Dunix -DUXIII -DDEBUG -DTLOG \
-	-F 3000 -i" \
+	-F 3000 -i"                                                \
 	"LNKFLAGS = -F 3000 -i"
 #
 ###########################################################################
 #SCO Xenix/286 2.2.1, e.g. for IBM PC/AT, PS/2 Model 50, etc.
 sco286:
 	make wermit "CFLAGS= -DXENIX  -Dunix -DUXIII -DDEBUG -DTLOG \
-	-F 3000 -i -M2le" \
+	-F 3000 -i -M2le"                                           \
 	"LNKFLAGS = -F 3000 -i -M2le"
 #
 ###########################################################################
 #SCO Xenix 2.2.1 for IBM PC, XT, PS2/30, or other 8088 or 8086 machine
 sco86:
 	make wermit "CFLAGS= -DXENIX  -Dunix -DUXIII -DDEBUG -DTLOG \
-	-F 3000 -i -M0me" \
+	-F 3000 -i -M0me"                                           \
 	"LNKFLAGS = -F 3000 -i -M0me"
 #
 ###########################################################################
 #SCO Xenix/386 2.2.2
 sco386:
 	make wermit "CFLAGS= -DXENIX -Dunix -DUXIII -DDEBUG -DTLOG \
-	-Otcl  -i -M3e" \
+	-Otcl  -i -M3e"                                            \
 	"LNKFLAGS = -i"
 #
 ###########################################################################
 #Interactive Corp System III port in general --
 is3:
-	make wermit \
+	make wermit                                                  \
 	"CFLAGS = -DISIII -DUXIII -DDEBUG -DTLOG -Ddata=datax -O -i" \
 	"LNKFLAGS = -i"
 #

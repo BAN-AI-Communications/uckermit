@@ -1,11 +1,11 @@
 #ifndef NOICP
-char *fnsv = "   Library, 4G(105)";
+char *fnsv = "   Library, 4G(106)";
 #endif /* ifndef NOICP */
 
 /* C K C F N S -- System-independent Kermit protocol support functions */
 
 /*
- * Copyright (C) 2021, Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (C) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
  *
  * Copyright (C) 1981-2011,
  *   Trustees of Columbia University in the City of New York.
@@ -88,7 +88,7 @@ extern int  swcapu,   bsave,     bsavef,  numerrs;
 extern long filcnt,   ffc,       fsize;
 
 #ifndef NOSTATS
-extern long flci,     flco,      tlci; 
+extern long flci,     flco,      tlci;
 extern long tlco,     tfc;
 #endif /* ifndef NOSTATS */
 
@@ -161,7 +161,7 @@ char *s;
 
   getpkt(
     spsiz - bctu - 3);        /* Fill a packet from the string. */
-  
+
   memstr = m;                 /* Restore memory string flag */
   memptr = p;                 /* and pointer */
   first  = 1;                 /* Put this back as we found it. */

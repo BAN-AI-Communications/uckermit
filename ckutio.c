@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *ckxv = "    TTY IO, 4G(093)";
+char *ckxv = "    TTY IO, 4G(094)";
 #endif /* ifndef NOICP */
 
 /* C K U T I O */
@@ -669,7 +669,7 @@ int *lcl, modem;
 #else /* NODOHLP */
       fprintf(
         stderr,
-          "TIOCEXCL failed\n"); 
+          "TIOCEXCL failed\n");
 #endif /* NODOHLP */
     }
   }
@@ -1544,7 +1544,7 @@ long
 ttsspd(speed)
 long speed;
 {
-  long s; 
+  long s;
   int spdok;
 
   if (speed < 0)
@@ -2447,7 +2447,7 @@ int timo;
   if (timo <= 0)                       /* Untimed. */
   {
 #ifdef MYREAD
-    /* 
+    /*
      * myread comm line failure
      * returns -1 thru myread, so,
      * no &= 0377

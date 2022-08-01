@@ -1,7 +1,7 @@
 /* C K U U S 2 -- "User Interface" STRINGS module */
 
 /*
- * Copyright (C) 2021-2022 Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (C) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
  *
  * Copyright (C) 1981-2011,
  *   Trustees of Columbia University in the City of New York.

@@ -1,11 +1,11 @@
 #ifndef NOICP
-char *userv = "   JSYS UI, 4G(123)";
+char *userv = "   JSYS UI, 4G(124)";
 #endif /* ifndef NOICP */
 
 /* C K U U S R -- "User Interface" (Part 1) */
 
 /*
- * Copyright (C) 2021-2022 Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (C) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
  *
  * Copyright (C) 1981-2011,
  *   Trustees of Columbia University in the City of New York.
@@ -694,7 +694,7 @@ struct keytab cmdtab[] = {
 #ifndef NOLOGS
   "log",        XXLOG, 0,
 #endif /* ifndef NOLOGS */
-  "quit",       XXQUI, 0, 
+  "quit",       XXQUI, 0,
 /* "r",         XXREC,  CM_INV, */
   "receive",    XXREC, 0,
   "remote",     XXREM, 0,

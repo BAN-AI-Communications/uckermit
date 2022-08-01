@@ -187,7 +187,7 @@ You may type the following "interrupt" commands during file transfer:
 
 These  interrupt characters differ from the ones used in other Kermit implemen-
 tations to avoid conflict with commonly used UNIX shell  interrupt  characters.
-With UNIX V7, UNIX System  III, and UNIX System V systems, interrupt  commands 
+With UNIX V7, UNIX System  III, and UNIX System V systems, interrupt  commands
 must be preceeded by the 'connect'  escape  character  (e.g.  normally Ctrl-\).
 Ctrl-F and Ctrl-B  are effective only  during the transfer of data (D) packets,
 and cannot be used to interrupt a transfer that has not yet reached that stage.

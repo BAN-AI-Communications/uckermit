@@ -1,4 +1,4 @@
-.TH UCKERMIT 1C LOCAL 
+.TH UCKERMIT 1C LOCAL
 .SH NAME
 uckermit \- minimalistic kermit file transfer
 .SH SYNOPSIS
@@ -69,11 +69,11 @@ list.  If
 .I fn
 is '-' then
 .I uCKermit
-sends from standard input, which may come from a file:  
+sends from standard input, which may come from a file:
 .sp 0.6v
             uckermit -s - < foo.bar
 .sp 0.6v
-or a parallel process:  
+or a parallel process:
 .sp 0.6v
             ls -l | uckermit -s -
 .IP
@@ -120,7 +120,7 @@ option.  For example,
 sends the file foo telling the receiver that its name is bar.  If more
 than one file arrives or is sent, only the first file is affected by the
 .B \-a
-option:  
+option:
 .sp 0.6v
         uckermit -ra baz
 .IP
@@ -161,7 +161,7 @@ options for successful communication with the remote system:
 .TP
 .BI \-b " n"
 Baud \(em Specify the baud rate for the line given in the
-.B \-l 
+.B \-l
 option, as in
 .sp 0.6v
             uckermit -l /dev/ttyS5 -b 9600
@@ -189,7 +189,7 @@ Specifies half duplex, line turnaround with XON as the handshake
 character.
 .RE 1
 .PP
-The following commands may be used only with a 
+The following commands may be used only with a
 .I uCKermit
 which is local \(em either by default or else because the
 .B  \-l
@@ -230,18 +230,18 @@ is illustrated below.
 .PP
 On a timesharing system, the
 .B \-l
-and 
+and
 .B \-b
 options will also have to be included with the
 .BR \-r ,
 .BR \-k ,
 or
 .B \-s
-options if the other 
+options if the other
 .I uCKermit
 is on a remote system.
 .PP
-If 
+If
 .I uckermit
 is in local mode, the screen (stdout) is continously updated to show the
 progress of the file transer.  A dot is printed for every four data
@@ -365,7 +365,7 @@ the commands.  One important command is "help" \(em you should use it the
 first time you run
 .I uCKermit.
 .PP
-Interactive 
+Interactive
 .I uCKermit
 accepts commands from files as well as from the keyboard.  Upon
 startup,
@@ -377,7 +377,7 @@ not UNIX command-line format.  A "take" command is also provided for use
 at any time during an interactive session.  Command files may be nested
 to any reasonable depth.
 .PP
-Here is a brief list of 
+Here is a brief list of
 .I uCKermit
 interactive commands:
 .PD 0.6v
@@ -415,12 +415,12 @@ Display arguments literally.  Useful in take-command files.
 Exit from the program, closing any open logs.
 .TP
 .B finish
-Instruct a remote 
+Instruct a remote
 .I uCKermit
 server to exit, but not log out.
 .TP
 .B get
-Get files from a remote 
+Get files from a remote
 .I uCKermit
 server.
 .TP
@@ -465,7 +465,7 @@ Display current disk space usage.
 .B statistics
 Display statistics about most recent transaction.
 .TP
-.B take 
+.B take
 Execute commands from a file.
 .TP
 .B transmit
@@ -493,7 +493,7 @@ Character to prefix "escape commands" during 'connect'.
 Set various file parameters.
 .TP
 .B
-flow-control  
+flow-control
 Communication line full-duplex flow control.
 .TP
 .B handshake
@@ -509,7 +509,7 @@ Type of modem-dialer on communication line.
 Communication line character parity.
 .TP
 .B prompt
-Change the 
+Change the
 .I uCKermit
 program's prompt.
 .TP
@@ -531,25 +531,25 @@ Communication line speed.
 .PP
 The 'remote' commands are:
 .TP 12
-.B cwd  
+.B cwd
 Change remote working directory.
 .TP
-.B delete  
+.B delete
 Delete remote files.
 .TP
-.B directory  
+.B directory
 Display a listing of remote file names.
 .TP
-.B help  
+.B help
 Request help from a remote server.
 .TP
-.B host  
+.B host
 Issue a command to the remote host in its own command language.
 .TP
-.B  space  
+.B  space
 Display current disk space usage on remote system.
 .TP
-.B type  
+.B type
 Display a remote file on your screen.
 .TP
 .B who

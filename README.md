@@ -135,11 +135,11 @@ options specify either protocol transactions or terminal connection.
   - Like **`-c`,** but after a protocol transaction takes place; **`-c`** and
     **`-n`** may both be used in the same command. The use of **`-n`** and
     **`-c`** is illustrated below.
-    
+
 - On a timesharing system, the **`-l`** and **`-b`** options will also have to
   be included with the **`-r`**, **`-k`**, or **`-s`** options if the other
   _μCKermit_ is on a remote system.
-  
+
 - If _uckermit_ is in local mode, the screen (stdout) is continously updated to
   show the progress of the file transer. A dot is printed for every four data
   packets, other packets are shown by type (e.g. \'`S`\' for _Send-Init_),
@@ -156,7 +156,7 @@ options specify either protocol transactions or terminal connection.
   implementations to avoid conflict with UNIX shell interrupt characters. With
   System III and System V implementations of UNIX, interrupt commands must be
   preceeded by the escape character (e.g. `Control-\`).
-  
+
 - Several other command-line options are provided:
   - **`-i`**
     - Specifies that files should be sent or received with text conversion.
@@ -189,7 +189,7 @@ options specify either protocol transactions or terminal connection.
   You may omit trailing characters from any keyword, so long as you specify
   sufficient characters to distinguish it from any other keyword valid in that
   field.
-  
+
 - Certain characters have special functions in interactive commands:
   - **`?`**
     - Question mark, typed at any point in a command, will produce a message
@@ -221,7 +221,7 @@ options specify either protocol transactions or terminal connection.
       literally. To enter a backslash, type two backslashes in a row (`\\`). A
       single backslash immediately preceding a carriage return allows you to
       continue the command on the next line.
-      
+
 - You may type the editing characters (`DEL`, `^W`, etc) repeatedly, to delete
   all the way back to the prompt. No action will be performed until the command
   is entered by typing `carriage return`, `linefeed`, or `formfeed`. If you make
@@ -229,7 +229,7 @@ options specify either protocol transactions or terminal connection.
   make liberal use of \'`?`\' and `ESC` to feel your way through the commands.
   One important command is \"`help`\" — you should use it the first time you run
   _μCKermit._
-  
+
 - Interactive _μCKermit_ accepts commands from files as well as from the
   keyboard. Upon startup, _μCKermit_ looks for the file .uckermrc in your home
   or current directory (first it looks in the home directory, then in the
@@ -237,7 +237,7 @@ options specify either protocol transactions or terminal connection.
   in interactive format, not UNIX command-line format. A \"`take`\" command is
   also provided for use at any time during an interactive session. Command files
   may be nested to any reasonable depth.
-  
+
 - Here is a brief list of _μCKermit_ **interactive commands**:
   - **! command**
     - Execute a UNIX shell command. _A space is required after after the `!`_.
@@ -293,7 +293,7 @@ options specify either protocol transactions or terminal connection.
     - Execute commands from a file.
   - **transmit**
     - Send a file without error checking.
-    
+
 - The \'`set`\' parameters are:
   - **attributes**
     - Turn attribute packet exchange on or off (_default is on_).
@@ -329,7 +329,7 @@ options specify either protocol transactions or terminal connection.
     - Set server-related parameters (_like timeout_).
   - **speed**
     - Communication line speed.
-    
+
 - The \'`remote`\' commands are:
   - **cwd**
     - Change remote working directory.
@@ -365,10 +365,10 @@ options specify either protocol transactions or terminal connection.
 
 **_Revised 3‑Clause BSD License for Columbia University Kermit Software_**
 
-Copyright © 1981—2011, Trustees of Columbia University in the City of New York.  
-Copyright © 1984 Jeff Damens, Columbia University Center for Computing Activites  
-Copyright © 1985, Herman Fischer, Encino CA  
-Copyright © 2021—2022, Jeffrey H. Johnson \<trnsz@pobox.com\>
+Copyright © 1981—2011, Trustees of Columbia University in the City of New York.
+Copyright © 1984 Jeff Damens, Columbia University Center for Computing Activites
+Copyright © 1985, Herman Fischer, Encino CA
+Copyright © 2021, 2022, Jeffrey H. Johnson \<trnsz@pobox.com\>
 
 All rights reserved.
 
@@ -377,11 +377,11 @@ All rights reserved.
 
   - Redistributions of source code must retain the above copyright notice, this
     list of conditions and the following disclaimer.
-    
+
   - Redistributions in binary form must reproduce the above copyright notice,
     this list of conditions and the following disclaimer in the documentation
     and or other materials provided with the distribution.
-    
+
   - Neither the name of Columbia University nor the names of its contributors
     may be used to endorse or promote products derived from this software
     without specific prior written permission.
