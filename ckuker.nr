@@ -1,3 +1,8 @@
+.\" SPDX-License-Identifier: BSD-3-Clause
+.\" Copyright (c) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
+.\" Copyright (c) 1984, Jeff Damens, Columbia University Center for Computing Activites
+.\" Copyright (c) 1985, Herman Fischer, Encino CA
+.\" Copyright (c) 1981-2011, Trustees of Columbia University in the City of New York.
 .TH UCKERMIT 1C LOCAL
 .SH NAME
 uckermit \- minimalistic kermit file transfer
@@ -563,54 +568,39 @@ https://github.com/BAN-AI-Communications/uckermit
 Frank da Cruz, Columbia University Center for Computing Activities,
 with contributions from many others.
 .SH LICENSE
-.TP
+SPDX-License-Identifier: BSD-3-Clause
+.PP
 Revised 3-Clause BSD License for Columbia University Kermit Software
-.TP
-Copyright (C) 2021,
-Jeffrey H. Johnson <trnsz@pobox.com>
-.TP
-Copyright (C) 1984,
-Jeff Damens, Columbia University Center for Computing Activites
-.TP
-Copyright (C) 1985,
-Herman Fischer, Encino CA
-.TP
-Copyright (C) 1981-2011,
-Trustees of Columbia University in the City of New York.
-.TP
-All rights reserved.
-.TP
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-.TP
-Redistributions of source code must retain the above copyright notice, this
-list of conditions and the following disclaimer.
-.TP
-Redistributions in binary form must reproduce the above copyright notice,
-this list of conditions and the following disclaimer in the documentation
-and / or other materials provided with the distribution.
-.TP
-Neither the name of Columbia University nor the names of its contributors
-may be used to endorse or promote products derived from this software
-without specific prior written permission.
-.TP
+.PP
+Copyright (c) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
+.br
+Copyright (c) 1984, Jeff Damens, Columbia University Center for Computing Activites
+.br
+Copyright (c) 1985, Herman Fischer, Encino CA
+.br
+Copyright (c) 1981-2011, Trustees of Columbia University in the City of New York.
+.PP
+All Rights Reserved.
+.PP
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+.PP
+.br
+.IP 1.
+Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+.PP
+.IP 2.
+Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and / or other materials provided with the distribution.
+.PP
+.IP 3.
+Neither the name of Columbia University nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+.PP
 .B
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 .SH FILES
 .ta \w"$HOME/.uckermrc  "u
-$HOME/.uckermrc	\fIuCKermit\fR initialization commands
+$HOME/.uckermrc    \fIuCKermit\fR initialization commands
 .br
-\&./.uckermrc	more \fIuCKermit\fR initialization commands
+\&./.uckermrc    more \fIuCKermit\fR initialization commands
 .PD
 .SH SEE ALSO
 .TP

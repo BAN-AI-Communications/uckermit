@@ -3,12 +3,14 @@ char *dialv = "    Dialer, 4G(057)";
 
 /* C K U D I A -- Dialing program for connection to remote system */
 
+/* SPDX-License-Identifier: BSD-3-Clause */
+
 /*
- * Copyright (C) 2021, Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (c) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
  *
- * Copyright (C) 1985, Herman Fischer, Encino CA
+ * Copyright (c) 1985, Herman Fischer, Encino CA
  *
- * Copyright (C) 1981-2011,
+ * Copyright (c) 1981-2011,
  *   Trustees of Columbia University in the City of New York.
  *
  * All rights reserved.

@@ -4,10 +4,12 @@ char *fnsv = "   Library, 4G(106)";
 
 /* C K C F N S -- System-independent Kermit protocol support functions */
 
+/* SPDX-License-Identifier: BSD-3-Clause */
+
 /*
- * Copyright (C) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (c) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
  *
- * Copyright (C) 1981-2011,
+ * Copyright (c) 1981-2011,
  *   Trustees of Columbia University in the City of New York.
  *
  * All rights reserved.
@@ -125,18 +127,18 @@ static char *memptr;         /* Pointer for memory strings */
 static char cmdstr[100];     /* UNIX system command string */
 
 static int  sndsrc;          /* Flag for where to send from: */
-                             /*   -1: name in cmdata, */
-                             /*    0: stdin, */
-                             /*   >0: list in cmlist. */
+                             /*   -1: name in cmdata,        */
+                             /*    0: stdin,                 */
+                             /*   >0: list in cmlist.        */
 
 static int  n_len;           /* Packet encode-ahead length and flag */
-                             /* if < 0, no pre-encoded data. */
+                             /* if < 0, no pre-encoded data.        */
 
 static int  memstr;          /* Flag for input from memory string */
-static int  first;           /* Flag for first char from input */
+static int  first;           /* Flag for first char from input    */
 
 static CHAR t;               /* Current character */
-static CHAR next;            /* Next character */
+static CHAR next;            /* Next character    */
 
 /* E N C S T R -- Encode a string from memory. */
 
@@ -155,15 +157,15 @@ char *s;
   m = memstr;
   p = memptr;                 /* Save these. */
 
-  memptr = s;                 /* Point to the string. */
-  memstr = 1;                 /* Flag memory string as source. */
+  memptr = s;                 /* Point to the string.            */
+  memstr = 1;                 /* Flag memory string as source.   */
   first  = 1;                 /* Initialize character lookahead. */
 
   getpkt(
     spsiz - bctu - 3);        /* Fill a packet from the string. */
 
-  memstr = m;                 /* Restore memory string flag */
-  memptr = p;                 /* and pointer */
+  memstr = m;                 /* Restore memory string flag    */
+  memptr = p;                 /* and pointer                   */
   first  = 1;                 /* Put this back as we found it. */
 }
 
@@ -231,20 +233,20 @@ register int (*fn)();
       if (
         (unsigned int)a == \
         (unsigned int)rptq)
-      {                              /* Yes, got a repeat prefix? */
-        rpt = xunchar(*buf++);       /* Yes, get the repeat count, */
+      {                              /* Yes, got a repeat prefix?       */
+        rpt = xunchar(*buf++);       /* Yes, get the repeat count,      */
         a = *buf++;                  /* and get the prefixed character. */
       }
     }
 
     b8 = 0;                          /* Check high order "8th" bit */
-    if (ebqflg)                      /* 8th-bit prefixing? */
+    if (ebqflg)                      /* 8th-bit prefixing?         */
     {
       if (
         (unsigned int)a == \
         (unsigned int)ebq)
-      {                              /* Yes, got an 8th-bit prefix? */
-        b8 = 0200;                   /* Yes, remember this, */
+      {                              /* Yes, got an 8th-bit prefix?     */
+        b8 = 0200;                   /* Yes, remember this,             */
         a = *buf++;                  /* and get the prefixed character. */
       }
     }
@@ -252,12 +254,12 @@ register int (*fn)();
     if (
       (unsigned int)a == \
       (unsigned int)ctlq)
-    {                                /* If control prefix, */
-      a = *buf++;                    /* get its operand. */
+    {                                /* If control prefix,       */
+      a = *buf++;                    /* get its operand.         */
       a7 = a & 0177;                 /* Only look at low 7 bits. */
       if (
         ( a7 >= 0100 && a7 <= 0137 ) \
-          || a7 == '?')              /* Uncontrollify, */
+            || a7 == '?')            /* Uncontrollify, */
       {
         a = ctl(a);                  /* if in control range */
       }
@@ -342,11 +344,11 @@ register int (*fn)();
 int
 getpkt(bufmax)
 int bufmax;
-{                                     /* Fill one packet buffer */
+{                                     /* Fill one packet buffer          */
   register CHAR rt = t, rnext = next; /* register shadows of the globals */
-  register CHAR *dp, *odp, *p1, *p2;  /* pointers... */
-  register int x;                     /* Loop index. */
-  register int a7;                    /* Low 7 bits of character */
+  register CHAR *dp, *odp, *p1, *p2;  /* pointers...                     */
+  register int x;                     /* Loop index.                     */
+  register int a7;                    /* Low 7 bits of character         */
   static   CHAR leftover[6] = {
     '\0', '\0', '\0',
     '\0', '\0', '\0'
@@ -354,10 +356,10 @@ int bufmax;
 
   if (first == 1)                     /* If first time thru...  */
   {
-    first = 0;                        /* remember, */
-    *leftover = '\0';                 /* discard interrupted leftovers, */
+    first = 0;                        /* remember,                        */
+    *leftover = '\0';                 /* discard interrupted leftovers,   */
                                       /* get 1st character of file into t */
-    if (memstr)                       /* watching out for null file */
+    if (memstr)                       /* watching out for null file       */
     {
       if (( rt = *memptr++ ) == '\0') /* end of string ==> EOF. */
       {
@@ -412,7 +414,7 @@ int bufmax;
    */
 
   rpt = 0;                               /* Clear out old repeat count. */
-  while (first > -1)                     /* Until EOF... */
+  while (first > -1)                     /* Until EOF...                */
   {
     if (memstr)                          /* get next character */
     {
@@ -434,7 +436,7 @@ int bufmax;
       else
       {
         rnext = x & fmask;               /* Bytesize mask. */
-        ffc++;                           /* Count it */
+        ffc++;                           /* Count it       */
       }
     }
 
@@ -477,8 +479,8 @@ int bufmax;
       else if (rpt > 1)                  /* More than two */
       {
         *dp++ = rptq;                    /* Insert the repeat prefix */
-        *dp++ = tochar(++rpt);           /* and count. */
-        rpt = 0;                         /* Reset repeat counter. */
+        *dp++ = tochar(++rpt);           /* and count.               */
+        rpt = 0;                         /* Reset repeat counter.    */
       }
     }
 
@@ -486,7 +488,7 @@ int bufmax;
     if (!binary && ( rt == NLCHAR ))
     {
       *dp++ = myctlq;                    /* Put in the encoding directly */
-      *dp++ = 'M';                       /* == ctl(CR) */
+      *dp++ = 'M';                       /* == ctl(CR)                   */
       if (( dp - data ) <= maxsize)
       {
         odp = dp;                        /* check packet bounds */
@@ -496,7 +498,7 @@ int bufmax;
     }
 #endif /* ifdef NLCHAR */
 
-    a7 = rt & 0177;                      /* Low 7 bits of character */
+    a7 = rt & 0177;                      /* Low 7 bits of character     */
     if (ebqflg && ( rt & 0200 ))         /* Do 8th bit prefix if needed */
     {
       *dp++ = ebq;
@@ -542,12 +544,12 @@ int bufmax;
       }
     }
 
-    rt = rnext;                          /* Next is now current. */
+    rt = rnext;                          /* Next is now current.          */
     if (( dp - data ) >= bufmax)         /* If too big save some for next */
     {
       size = ( dp - data );
       *dp = '\0';                        /* mark (current) the end. */
-      if (( dp - data ) > bufmax)        /* if packet is overfull */
+      if (( dp - data ) > bufmax)        /* if packet is overfull   */
       {
         for (p1 = leftover, p2 = odp;
               ( *p1 = *p2 ) != '\0';
@@ -561,7 +563,7 @@ int bufmax;
         debug(F101,
               " osize", "", ( odp - data ));
         size = ( odp - data );           /* Return truncated packet. */
-        *odp = '\0';                     /* Mark real end */
+        *odp = '\0';                     /* Mark real end            */
       }
       else                               /* If the packet is exactly full */
       {
@@ -577,7 +579,7 @@ int bufmax;
   size = ( dp - data );
   *dp = '\0';                            /* mark (current) the end. */
   debug(F111,
-    "getpkt eof/eot", data, size);       /* Fell thru before full, */
+    "getpkt eof/eot", data, size);       /* Fell thru before full,      */
   return ( size );                       /* Return part filled last pkt */
 }
 
@@ -617,29 +619,29 @@ resetc()
 void
 tinit()
 {
-  xflg            = 0;             /* Reset x-packet flag */
+  xflg            = 0;             /* Reset x-packet flag              */
   rqf             = -1;            /* Reset 8th-bit-quote request flag */
-  memstr          = 0;             /* Reset memory-string flag */
-  memptr          = NULL;          /*  and pointer */
-  n_len           = -1;            /* No encoded-ahead data */
-  bctu            = 1;             /* Reset block check type to 1 */
-  ebq = ebqflg    = 0;             /* Reset 8th-bit quoting stuff */
+  memstr          = 0;             /* Reset memory-string flag         */
+  memptr          = NULL;          /*  and pointer                     */
+  n_len           = -1;            /* No encoded-ahead data            */
+  bctu            = 1;             /* Reset block check type to 1      */
+  ebq = ebqflg    = 0;             /* Reset 8th-bit quoting stuff      */
 
   if (savmod)                      /* If global file mode was saved, */
   {
     binary        = 1;             /*  restore it, */
-    savmod        = 0;             /*  unsave it. */
+    savmod        = 0;             /*  unsave it.  */
   }
 
   prvpkt          = -1;            /* Reset packet number */
   pktnum          = 0;
   numerrs         = 0;             /* Transmission error counter */
-  cxseen = czseen = 0;             /* Reset interrupt flags */
+  cxseen = czseen = 0;             /* Reset interrupt flags      */
 
-  *filnam         = '\0';          /* Clear file name */
+  *filnam         = '\0';          /* Clear file name             */
   *sndpkt         = '\0';          /* Clear retransmission buffer */
 
-  spktl           = 0;             /* And its length */
+  spktl           = 0;             /* And its length                   */
   nakstate        = 0;             /* Say we're not in a NAK'ing state */
 
 #ifndef NOSERVER
@@ -696,7 +698,7 @@ sinit()
   {
 #ifdef DTILDE
     char *tnam, *tilde_expand();    /* May have to expand tildes */
-    tnam = tilde_expand(cmarg);     /* Try to expand tilde. */
+    tnam = tilde_expand(cmarg);     /* Try to expand tilde.      */
     if (*tnam != '\0')
     {
       cmarg = tnam;
@@ -781,7 +783,7 @@ sinit()
       ( *cmarg2 ))
     {
       strcpy(filnam, cmarg2);       /* If F packet, "as" name is used */
-      cmarg2 = "";                  /* if provided, */
+      cmarg2 = "";                  /* if provided,                   */
     }
     else                            /* otherwise */
     {
@@ -818,7 +820,7 @@ char c;
 {                                   /* Send S or I packet. */
   CHAR *rp;
   ttflui();                         /* Flush pending input. */
-  rp = rpar();                      /* Get parameters. */
+  rp = rpar();                      /* Get parameters.      */
   spack(c, pktnum, strlen(rp), rp);
 }
 
@@ -857,8 +859,8 @@ char *n;
   }
 
 #endif /* ifdef DTILDE */
-  screen(SCR_FN, 0, 0l, srvcmd);       /* Put it on screen */
-  tlog(F110, "Receiving", srvcmd, 0l); /* Transaction log entry */
+  screen(SCR_FN, 0, 0l, srvcmd);       /* Put it on screen         */
+  tlog(F110, "Receiving", srvcmd, 0l); /* Transaction log entry    */
   if (cmarg2 != NULL)                  /* Check for alternate name */
   {
     if (*cmarg2 != '\0')
@@ -869,7 +871,7 @@ char *n;
   }
 
   xp = xname;                          /* OK to proceed. */
-  if (fncnv)                           /* If desired, */
+  if (fncnv)                           /* If desired,    */
   {
     zrtol(srvcmd, xp);                 /* convert name to local form */
   }
@@ -894,7 +896,7 @@ char *n;
     "rcvfil: xname",
       xname, 0);
   strcpy(n, xname);                    /* Return pointer to actual name. */
-  ffc = 0;                             /* Init file character counter */
+  ffc = 0;                             /* Init file character counter    */
   filcnt++;
   return ( 1 );                        /* Always succeeds */
 }
@@ -923,7 +925,7 @@ struct zattr *zz;
   if (bsavef)                       /* If somehow file mode */
   {
     binary = bsave;                 /* was saved but not restored, */
-    bsavef = 0;                     /* restore it. */
+    bsavef = 0;                     /* restore it.                 */
     debug(F101,
       "opena restoring binary",
         "", binary);
@@ -932,9 +934,9 @@ struct zattr *zz;
   if (( x = openo(f)))              /* Try to open the file. */
   {
     tlog(F110, " as", f, 0l);       /* OK, open, record name. */
-    if (zz->type.val[0] == 'A')     /* Check attributes */
+    if (zz->type.val[0] == 'A')     /* Check attributes       */
     {
-      bsave = binary;               /* Save global file type */
+      bsave = binary;               /* Save global file type     */
       bsavef = 1;                   /* ( restore it in clsof() ) */
       binary = 0;
       debug(F100,
@@ -978,7 +980,7 @@ struct zattr *zz;
       "Can't open file");
   }
 
-  ffc = 0;                          /* Init file character counter */
+  ffc = 0;                          /* Init file character counter    */
   return ( x );                     /* Pass on return code from openo */
 }
 
@@ -1071,7 +1073,7 @@ int x;
   {
     if (*cmarg2 != '\0')               /* If we have a send-as name, */
     {
-      strcpy(pktnam, cmarg2);          /* copy it literally, */
+      strcpy(pktnam, cmarg2);          /* copy it literally,              */
       cmarg2 = "";                     /* and blank it out for next time. */
     }
     else                               /* Otherwise use actual file name: */
@@ -1100,12 +1102,12 @@ int x;
   }
   else                                 /* X-packet setup */
   {
-    debug(F110, "sxpack", cmdstr, 0);  /* Log debugging info */
+    debug(F110, "sxpack", cmdstr, 0);  /* Log debugging info  */
     s = cmdstr;                        /* Name for data field */
   }
 
   encstr(s);                           /* Encode the name into data[]. */
-  nxtpkt(&pktnum);                     /* Increment the packet number */
+  nxtpkt(&pktnum);                     /* Increment the packet number  */
   spack(
     x ? 'X' : 'F',
       pktnum, size, data);             /* Send the F or X packet */
@@ -1140,9 +1142,9 @@ int x;
   intmsg(++filcnt);             /* Count file, give interrupt msg */
 #endif /* ifndef NOICP */
 #endif /* ifndef NOCONN */
-  first = 1;                    /* Init file character lookahead. */
+  first = 1;                    /* Init file character lookahead.      */
   n_len = -1;                   /* Init the packet encode-ahead length */
-  ffc = 0;                      /* Init file character counter. */
+  ffc = 0;                      /* Init file character counter.        */
   return ( 1 );
 }
 
@@ -1190,7 +1192,7 @@ sdata()
   }
 
   nxtpkt(&pktnum);                /* Increment the packet number */
-  spack('D', pktnum, len, data);  /* Send the packet */
+  spack('D', pktnum, len, data);  /* Send the packet             */
 
   /*
    * Comment out next statement,
@@ -1219,7 +1221,7 @@ char *s;
 {
   nxtpkt(&pktnum);                /* Increment the packet number */
   if (( s != NULL ) && \
-    ( *s != '\0' ))
+     ( *s != '\0' ))
   {
     spack('Z', pktnum, 1, s);
     tlog(F100,
@@ -1240,8 +1242,8 @@ void
 seot()
 {
   nxtpkt(&pktnum);             /* Increment the packet number */
-  spack('B', pktnum, 0, "");   /* Send the EOT packet */
-  cxseen = czseen = 0;         /* Reset interruption flags */
+  spack('B', pktnum, 0, "");   /* Send the EOT packet         */
+  cxseen = czseen = 0;         /* Reset interruption flags    */
 #ifndef NOSTATS
   tstats();                    /* Log timing info */
 #endif /* ifndef NOSTATS */
@@ -1261,12 +1263,12 @@ rpar()
     data[1] = tochar(rpsiz);   /* else use what the user said. */
   }
 
-  data[2] = tochar(rtimo);     /* When I want to be timed out */
+  data[2] = tochar(rtimo);     /* When I want to be timed out    */
   data[3] = tochar(mypadn);    /* How much padding I need (none) */
-  data[4] = ctl(mypadc);       /* Padding character I want */
-  data[5] = tochar(eol);       /* End-Of-Line character I want */
+  data[4] = ctl(mypadc);       /* Padding character I want       */
+  data[5] = tochar(eol);       /* End-Of-Line character I want   */
   data[6] = '#';               /* Control-Quote character I send */
-  switch (rqf)                 /* 8th-bit prefix */
+  switch (rqf)                 /* 8th-bit prefix                 */
   {
   case -1:
   case 1:
@@ -1282,7 +1284,7 @@ rpar()
     break;
   }
   data[7] = sq;
-  data[8] = bctr + '0';                 /* Block check type */
+  data[8] = bctr + '0';                 /* Block check type    */
   if (rptflg)                           /* Run length encoding */
   {
     data[9] = rptq;                     /* If receiving, agree. */
@@ -1301,10 +1303,10 @@ rpar()
   data[capas + 1] = \
     tochar(swcapr ? wslots : 0);        /* Window size */
 
-  rpsiz = urpsiz;                       /* Long packets ... */
-  data[capas + 2] = tochar(rpsiz / 95); /* Long packet size, big part */
+  rpsiz = urpsiz;                       /* Long packets ...              */
+  data[capas + 2] = tochar(rpsiz / 95); /* Long packet size, big part    */
   data[capas + 3] = tochar(rpsiz % 95); /* Long packet size, little part */
-  data[capas + 4] = '\0';               /* Terminate the init string */
+  data[capas + 4] = '\0';               /* Terminate the init string     */
 #ifdef DEBUG
   if (deblog)
   {
@@ -1323,12 +1325,12 @@ char *s;
 
   debug(F110,
     "entering spar", s, 0);
-  s--;                                  /* Line up with field numbers */
+  s--;                                  /* Line up with field numbers     */
                                         /* Limit size of outbound packets */
   x = ( rln >= 1 ) ? \
-    xunchar(s[1]) : 80;
+     xunchar(s[1]) : 80;
   lpsiz = spsiz;                        /* Remember what they SET. */
-  if (spsizf)                           /* SET-command override? */
+  if (spsizf)                           /* SET-command override?   */
   {
     if (x < spsiz)
     {
@@ -1340,10 +1342,10 @@ char *s;
     spsiz = ( x < 10 ) ? 80 : x;        /* believe them if reasonable */
   }
 
-  if (!timef)                           /* Timeout on inbound packets */
+  if (!timef)                           /* Timeout on inbound packets   */
   {                                     /* Only if not SET-cmd override */
-    x = ( rln >= 2 ) ?\
-      xunchar(s[2]) : 5;
+    x = ( rln >= 2 ) ? \
+       xunchar(s[2]) : 5;
     timint = ( x < 0 ) ? 5 : x;
   }
 
@@ -1375,7 +1377,7 @@ char *s;
   seol = ( rln >= 5 ) ? \
     xunchar(s[5]) : '\r';
   if (( seol < 2 ) || \
-    ( seol > 31 ))
+      ( seol > 31 ))
   {
     seol = '\r';
   }
@@ -1387,8 +1389,9 @@ char *s;
 
   x = ( rln >= 6 ) ? \
     s[6] : '#';
-  myctlq = (( x > 32 && x < 63 ) || \
-    ( x > 95 && x < 127 )) ? x : '#';
+  myctlq = (( x > 32 && x < 63 ) ||  \
+            ( x > 95 && x < 127 )) ? \
+              x : '#';
 
   /*
    * 8th-bit
@@ -1402,7 +1405,7 @@ char *s;
     rqf = 1;
   }
   else if (( rq > 32 && rq < 63 ) || \
-    ( rq > 95 && rq < 127 ))
+           ( rq > 95 && rq < 127 ))
   {
     rqf = 2;
   }
@@ -1427,9 +1430,9 @@ char *s;
     break;
 
   case 2:
-    if (( ebqflg = \
+    if (( ebqflg =   \
       ( ebq == sq || \
-        sq == 'Y' )))
+         sq == 'Y' )))
     {
       ebq = rq;
     }
@@ -1490,8 +1493,8 @@ char *s;
     for (
       capas = 10;
       ( xunchar(s[capas]) & 1 ) && \
-        ( rln >= capas );
-          capas++)
+         ( rln >= capas );
+            capas++)
     {
       ;
     }
@@ -1508,7 +1511,7 @@ char *s;
     if (rln > capas + 2)
     {
       x = xunchar(s[capas + 2]) * \
-          95 + xunchar(s[capas + 3]);
+        95 + xunchar(s[capas + 3]);
       if (spsizf)                           /* If overriding negotiations */
       {
         spsiz = ( x < lpsiz ) ? x : lpsiz;  /* do this, */
@@ -1686,9 +1689,9 @@ char *name;
   }
   else                                          /* If not found, */
   {
-    char xname[100];                            /* convert the name */
+    char xname[100];                            /* convert the name       */
     zrtol(name, xname);                         /* to local form and then */
-    x = zopeni(filno, xname);                   /* try opening it again. */
+    x = zopeni(filno, xname);                   /* try opening it again.  */
     debug(F101, " zopeni", "", x);
     if (x)
     {
@@ -1730,7 +1733,7 @@ char *name;
   {
     debug(F100,
       " open cancelled", "", 0);            /* destroying existing file. */
-    return ( 1 );                           /* Pretend to succeed. */
+    return ( 1 );                           /* Pretend to succeed.       */
   }
 
   if (zopeno(ZOFILE, name) == 0)            /* Try to open the file */
@@ -1784,8 +1787,8 @@ clsif()
     screen(SCR_ST, ST_OK, 0l, "");
   }
 
-  cxseen = hcflg = 0;                /* Reset flags, */
-  *filnam = '\0';                    /* and current file name */
+  cxseen = hcflg = 0;                /* Reset flags,                      */
+  *filnam = '\0';                    /* and current file name             */
   n_len = -1;                        /* reinit packet encode-ahead length */
 }
 
@@ -1811,7 +1814,7 @@ int disp;
         "clsof restoring binary",
           "",
             binary);
-    binary = bsave;                  /* restore it */
+    binary = bsave;                  /* restore it      */
     bsavef = 0;                      /* only this once. */
   }
 
@@ -1849,13 +1852,13 @@ int disp;
 int
 sndhlp()
 {
-  nfils = 0;                             /* No files, no lists. */
+  nfils = 0;                             /* No files, no lists.         */
   xflg = 1;                              /* Flag we must send X packet. */
-  strcpy(cmdstr, "help text");           /* Data for X packet. */
-  first = 1;                             /* Init getchx lookahead */
-  memstr = 1;                            /* Just set the flag. */
-  memptr = hlptxt;                       /* And the pointer. */
-  if (binary)                            /* If file mode is binary, */
+  strcpy(cmdstr, "help text");           /* Data for X packet.          */
+  first = 1;                             /* Init getchx lookahead       */
+  memstr = 1;                            /* Just set the flag.          */
+  memptr = hlptxt;                       /* And the pointer.            */
+  if (binary)                            /* If file mode is binary,     */
   {
     binary = 0;                          /* turn it back to text for this */
     savmod = 1;                          /* remember to restore it later. */
@@ -1930,13 +1933,13 @@ char *prefix, *suffix;
   char *cp;
 
   if (prefix == NULL || \
-    *prefix == '\0')
+     *prefix == '\0')
   {
     return ( 0 );
   }
 
   for (cp = cmdstr; *prefix != \
-    '\0'; *cp++ = *prefix++)
+      '\0'; *cp++ = *prefix++)
   {
     ;
   }
@@ -1954,11 +1957,11 @@ char *prefix, *suffix;
     debug(F100,
       "syscmd zopeni ok", cmdstr, 0);
     nfils = sndsrc = 0;                 /* Flag that input is from stdin */
-    xflg = hcflg = 1;                   /* And special flags for pipe */
-    if (binary)                         /* If file mode is binary, */
+    xflg = hcflg = 1;                   /* And special flags for pipe    */
+    if (binary)                         /* If file mode is binary,       */
     {
       binary = 0;                       /* turn it back to text for this, */
-      savmod = 1;                       /* remember to restore it later. */
+      savmod = 1;                       /* remember to restore it later.  */
     }
 
     return ( sinit() );                 /* Send S packet */

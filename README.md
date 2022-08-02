@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: BSD-3-Clause -->
+<!-- Copyright (c) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com> -->
 # μ*C֊Kermit*
 
 ## _micro_–C֊Kermit (_microkermit_)

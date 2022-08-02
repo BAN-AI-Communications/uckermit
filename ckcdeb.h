@@ -1,5 +1,7 @@
 /* C K C D E B -- Logging, debugging, and shared definitions. */
 
+/* SPDX-License-Identifier: BSD-3-Clause */
+
 /*
  * This file is included by all modules, including the modules
  * that aren't specific to uCKermit. It specifies format codes
@@ -8,9 +10,9 @@
  */
 
 /*
- * Copyright (C) 2021, Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (c) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
  *
- * Copyright (C) 1981-2011,
+ * Copyright (c) 1981-2011,
  *   Trustees of Columbia University in the City of New York.
  *
  * All rights reserved.
@@ -70,30 +72,30 @@
 struct zstr             /* String format */
 {
   int  len;             /* Length */
-  char *val;            /* Value */
+  char *val;            /* Value  */
 };
 
 struct zattr            /* Kermit File Attribute structure */
 {
-  long        lengthk;  /* (!) File length in K */
-  struct zstr type;     /* (") File type (text or binary) */
+  long        lengthk;  /* (!) File length in K                           */
+  struct zstr type;     /* (") File type (text or binary)                 */
   struct zstr date;     /* (#) File creation date [yy]yymmdd[ hh:mm[:ss]] */
-  struct zstr creator;  /* ($) File creator id */
-  struct zstr account;  /* (%) File account */
-  struct zstr area;     /* (&) Area (e.g. directory) for file */
-  struct zstr passwd;   /* (') Password for area */
-  long        blksize;  /* (() File blocksize */
-  struct zstr access;   /* ()) File access: new, supersede, append, warn */
-  struct zstr encoding; /* (*) Encoding (transfer syntax) */
+  struct zstr creator;  /* ($) File creator id                            */
+  struct zstr account;  /* (%) File account                               */
+  struct zstr area;     /* (&) Area (e.g. directory) for file             */
+  struct zstr passwd;   /* (') Password for area                          */
+  long        blksize;  /* (() File blocksize                             */
+  struct zstr access;   /* ()) File access: new, supersede, append, warn  */
+  struct zstr encoding; /* (*) Encoding (transfer syntax)                 */
 #ifndef NODISP
-  struct zstr disp;     /* (+) Disposition (mail, message, print, etc) */
+  struct zstr disp;     /* (+) Disposition (mail, message, print, etc)    */
 #endif /* ifndef NODISP */
-  struct zstr lprotect; /* (,) Protection (local syntax) */
-  struct zstr gprotect; /* (-) Protection (generic syntax) */
-  struct zstr systemid; /* (.) ID for system of origin */
-  struct zstr recfm;    /* (/) Record format */
-  struct zstr sysparam; /* (0) System-dependent parameter string */
-  long        length;   /* (1) Exact length (on system of origin) */
+  struct zstr lprotect; /* (,) Protection (local syntax)                  */
+  struct zstr gprotect; /* (-) Protection (generic syntax)                */
+  struct zstr systemid; /* (.) ID for system of origin                    */
+  struct zstr recfm;    /* (/) Record format                              */
+  struct zstr sysparam; /* (0) System-dependent parameter string          */
+  long        length;   /* (1) Exact length (on system of origin)         */
 };
 
 #ifdef SVR3
@@ -147,6 +149,7 @@ typedef long LONG;
 
 #define NLCHAR 012
 #define CTTNAM "/dev/tty"
+
 #define GOOD_EXIT 0
 #define BAD_EXIT  1
 

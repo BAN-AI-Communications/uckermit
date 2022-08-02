@@ -4,10 +4,12 @@ char *protv = "  Protocol, 4G(073)";
 
  /* C K C P R O - Kermit Protocol Module in Wart preprocessor notation */
 
+ /* SPDX-License-Identifier: BSD-3-Clause */
+
  /*
-  * Copyright (C) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
+  * Copyright (c) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
   *
-  * Copyright (C) 1981-2011,
+  * Copyright (c) 1981-2011,
   *   Trustees of Columbia University in the City of New York.
   *
   * All rights reserved.
@@ -427,7 +429,7 @@ a { errpkt("User cancel");                     /* ABEND: Tell other side. */
         } else BEGIN ssattr;          /* if ok, switch to attribute state */
     } else
 #endif /* NOATTR */
-	if (sdata() < 0) {                /* No attributes, send data */
+    if (sdata() < 0) {                /* No attributes, send data */
         clsif();                      /* If not ok, close input file, */
         seof("");                     /* send EOF packet */
         BEGIN sseof;                  /* and switch to EOF state. */

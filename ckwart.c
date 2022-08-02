@@ -6,13 +6,15 @@ char *wartv = "     Wart, 1A(231)";
 
 /* W A R T */
 
+/* SPDX-License-Identifier: BSD-3-Clause */
+
 /*
- * Copyright (C) 2021, Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (c) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
  *
- * Copyright (C) 1984,
+ * Copyright (c) 1984,
  *   Jeff Damens, Columbia University Center for Computing Activites
  *
- * Copyright (C) 1981-2011,
+ * Copyright (c) 1981-2011,
  *   Trustees of Columbia University in the City of New York.
  *
  * All rights reserved.
