@@ -929,6 +929,8 @@ char *dirnam;
     hd = dirnam;
   }
 
+  if (hd == NULL)
+    return 1;
   return (( chdir(hd) == 0 ) ? 1 : 0 );
 }
 
