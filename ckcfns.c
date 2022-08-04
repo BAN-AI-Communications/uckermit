@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *fnsv = "   Library, 4G(106)";
+char *fnsv = "   Library, 4G(107)";
 #endif /* ifndef NOICP */
 
 /* C K C F N S -- System-independent Kermit protocol support functions */

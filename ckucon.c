@@ -1,6 +1,6 @@
 #ifndef NOICP
 #ifndef NOCONN
-char *connv = "   Connect, 4G(055)";
+char *connv = "   Connect, 4G(056)";
 #endif /* ifndef NOCONN */
 #endif /* ifndef NOICP */
 

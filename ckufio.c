@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *ckzv = "   File IO, 4G(093)";
+char *ckzv = "   File IO, 4G(094)";
 #endif /* ifndef NOICP */
 
 /* C K U F I O -- Kermit file system support for UNIX systems */
@@ -929,8 +929,6 @@ char *dirnam;
     hd = dirnam;
   }
 
-  if (hd == NULL)
-    return 1;
   return (( chdir(hd) == 0 ) ? 1 : 0 );
 }
 

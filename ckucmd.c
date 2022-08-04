@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *cmdv = "  JSYS ICP, 4G(064)";
+char *cmdv = "  JSYS ICP, 4G(065)";
 #endif /* ifndef NOICP */
 
 /* C K U C M D -- Interactive command package / parser */

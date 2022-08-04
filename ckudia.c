@@ -1,5 +1,5 @@
 #ifndef NOCKUDIA
-char *dialv = "    Dialer, 4G(057)";
+char *dialv = "    Dialer, 4G(058)";
 
 /* C K U D I A -- Dialing program for connection to remote system */
 

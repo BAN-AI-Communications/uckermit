@@ -1,6 +1,6 @@
 #ifndef NOICP
 #ifdef WARTVER
-char *wartv = "     Wart, 1A(231)";
+char *wartv = "     Wart, 1A(232)";
 #endif /* ifndef WARTVER */
 #endif /* ifndef NOICP */
 

@@ -1,5 +1,5 @@
 #ifndef NOCKUSCR
-char *loginv = "    Script, 4G(037)";
+char *loginv = "    Script, 4G(038)";
 
 /* C K U S C R -- Login script for logging onto remote system */
 
