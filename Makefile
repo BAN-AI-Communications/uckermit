@@ -2,11 +2,7 @@
 # vim: set ts=8 sw=0 tw=0 noexpandtab list :
 # SPDX-License-Identifier: BSD-3-Clause
 ###########################################################################
-#
-###########################################################################
-#                                                                         #
 # Makefile to build uCKermit (microkermit) for UNIX and UNIX-like systems #
-#                                                                         #
 ###########################################################################
 #                                                                         #
 # Copyright (c) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>        : #
@@ -239,6 +235,8 @@ CC2?= $(CC)
 #                                                                         #
 ###########################################################################
 #
+all: make
+help: make
 make:
 	@grep '^# .*#$$' Makefile | tr -d '#' | \
                  grep -v ': \+$$' | tr -s ' ' | uniq
