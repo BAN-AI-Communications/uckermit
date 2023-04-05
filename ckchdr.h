@@ -3,7 +3,7 @@
 /* SPDX-License-Identifier: BSD-3-Clause */
 
 /*
- * Copyright (c) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson <trnsz@pobox.com>
  *
  * Copyright (c) 1981-2011,
  *   Trustees of Columbia University in the City of New York.
@@ -170,7 +170,7 @@ int syscleanup    (void);
 int syscmd        (char *prefix, char *suffix);
 int sysinit       (void);
 /* int teststate  (int state, Trans t); */
-int transmit      (const char *s, int t);
+int transmit      (char *s, int t);
 /* int trap       (void); */
 int ttchk         (void);
 int ttclos        (void);
