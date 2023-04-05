@@ -106,7 +106,7 @@ void spar();
 void sipkt();
 long zchki();
 char *strcpy();
-CHAR *rpar();
+char *rpar();
 
 void errpkt(char *reason);
 
@@ -1251,7 +1251,7 @@ seot()
 
 /* R P A R -- Fill the data array with my send-init parameters */
 
-CHAR *
+char *
 rpar()
 {
   if (rpsiz > MAXPACK)         /* Biggest normal packet I want. */
