@@ -48,7 +48,7 @@ char *copy         (char *s);
 /* CHAR dopar      (int ch); */
 char  hconne       (void);
 char  parser       (void);
-CHAR *rpar         (void);
+char *rpar         (void);
 char *tilde_expand (char *dirname);
 char *whoami       (void);
 char *zfcdat       (char *name);
