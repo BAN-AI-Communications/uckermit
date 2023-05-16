@@ -1852,6 +1852,7 @@ char *s;
 
 #ifndef NOICP
 #ifndef NOBTEST
+int
 btest(x, m)
 int x, m;
 {                                /* Returns 1 if any bits from m are */
