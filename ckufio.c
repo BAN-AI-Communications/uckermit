@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *ckzv = "   File IO, 4G(094)";
+char *ckzv = "   File IO, 4G(095)";
 #endif /* ifndef NOICP */
 
 /* C K U F I O -- Kermit file system support for UNIX systems */
@@ -7,7 +7,7 @@ char *ckzv = "   File IO, 4G(094)";
 /* SPDX-License-Identifier: BSD-3-Clause */
 
 /*
- * Copyright (c) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson <trnsz@pobox.com>
  *
  * Copyright (c) 1981-2011,
  *   Trustees of Columbia University in the City of New York.
@@ -308,7 +308,7 @@ static char zmbuf[200];            /* For mail, remote print strings */
 char *malloc();
 #endif /* ifndef __linux__ */
 char *getenv(), *strcpy();         /* System functions */
-extern errno;                      /* System error code */
+extern int errno;                  /* System error code */
 
 static char *mtchs[MAXWLD],        /* Matches found for filename */
   **mtchptr;                       /* Pointer to current match */

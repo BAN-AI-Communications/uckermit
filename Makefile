@@ -5,7 +5,7 @@
 # Makefile to build uCKermit (microkermit) for UNIX and UNIX-like systems #
 ###########################################################################
 #                                                                         #
-# Copyright (c) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>        : #
+# Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson <trnsz@pobox.com>   : #
 # Copyright (c) 1981-2011,                                              : #
 #         Trustees of Columbia University in the City of New York.      : #
 #                                                                         #
@@ -304,12 +304,8 @@ ckucon.o: ckucon.c ckcker.h ckcdeb.h ckchdr.h
 #
 ###########################################################################
 #
-wart: ckwart.o
-	$(CC) $(LNKFLAGS) -o wart ckwart.o
-#
-###########################################################################
-#
-ckwart.o: ckwart.c ckchdr.h
+wart: ckwart.c ckchdr.h
+	$(CC) $(LNKFLAGS) -o wart ckwart.c
 #
 ###########################################################################
 #
@@ -419,11 +415,12 @@ linux:
                               -fdata-sections -ffast-math                 \
                               -fno-asynchronous-unwind-tables             \
                               -funsigned-char -ffunction-sections         \
-                              -fmerge-all-constants                       \
+                              -fmerge-all-constants -Wno-return-type      \
                               -fdelete-null-pointer-checks                \
                               -Wno-implicit-function-declaration          \
+                              -Wno-incompatible-function-pointer-types    \
                               -funsafe-math-optimizations"                \
-                    "LNKFLAGS = -Wl,-O,2 -Wl,-flto -Wl,--gc-sections"
+                    "LNKFLAGS = -Wl,-O,2 -Wl,-flto -flto -Wl,--gc-sections"
 #
 ###########################################################################
 #Linux, small - no dialer, no scripting, no help, no attributes,
@@ -441,8 +438,10 @@ linux-small:
                               -ffunction-sections -fmerge-all-constants   \
                               -fdelete-null-pointer-checks                \
                               -Wno-implicit-function-declaration          \
-                              -funsafe-math-optimizations -DNOSPACE"      \
-                    "LNKFLAGS = -Wl,-O,2 -Wl,-flto -Wl,--gc-sections"
+                              -Wno-incompatible-function-pointer-types    \
+                              -Wno-return-type -DNOSPACE                  \
+                              -funsafe-math-optimizations"                \
+                    "LNKFLAGS = -Wl,-O,2 -Wl,-flto -flto -Wl,--gc-sections"
 #
 ###########################################################################
 #Linux, minimal - no dialer, no scripting, no help, no attributes, no ICP,
@@ -460,8 +459,9 @@ linux-minimal:
                               -DMINBUF -DNOATTR -DNOTILDE                 \
                               -funsafe-math-optimizations -DNOCONN        \
                               -Wno-implicit-function-declaration          \
-                              -DNOLOGS -DNOSPACE"                         \
-                    "LNKFLAGS = -Wl,-O,2 -Wl,-flto -Wl,--gc-sections"
+                              -Wno-incompatible-function-pointer-types    \
+                              -Wno-return-type -DNOLOGS -DNOSPACE"        \
+                    "LNKFLAGS = -Wl,-O,2 -Wl,-flto -flto -Wl,--gc-sections"
 #
 ###########################################################################
 #Linux, alias for minimal

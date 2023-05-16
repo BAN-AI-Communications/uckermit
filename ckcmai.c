@@ -1,11 +1,11 @@
-char *versio = "uCKermit, 4G(176), 2023-APR-05";
+char *versio = "uCKermit, 4G(177), 2023-MAY-16";
 
 /* C K C M A I -- uCKermit Main program */
 
 /* SPDX-License-Identifier: BSD-3-Clause */
 
 /*
- * Copyright (c) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson <trnsz@pobox.com>
  *
  * Copyright (c) 1981-2011,
  *   Trustees of Columbia University in the City of New York.

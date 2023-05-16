@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *protv = "  Protocol, 4G(073)";
+char *protv = "  Protocol, 4G(074)";
 #endif /* ifndef NOICP */
 
  /* C K C P R O - Kermit Protocol Module in Wart preprocessor notation */
@@ -7,7 +7,7 @@ char *protv = "  Protocol, 4G(073)";
  /* SPDX-License-Identifier: BSD-3-Clause */
 
  /*
-  * Copyright (c) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
+  * Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson <trnsz@pobox.com>
   *
   * Copyright (c) 1981-2011,
   *   Trustees of Columbia University in the City of New York.
@@ -505,6 +505,7 @@ E {                                   /* Got Error packet, in any state */
 }
 %%
 
+int
 proto()
 {
 
