@@ -417,6 +417,7 @@ linux:
                               -funsigned-char -ffunction-sections         \
                               -fmerge-all-constants                       \
                               -fdelete-null-pointer-checks                \
+                              -Wno-implicit-function-declaration          \
                               -funsafe-math-optimizations"                \
                     "LNKFLAGS = -Wl,-O,2 -Wl,-flto -Wl,--gc-sections"
 #
@@ -434,6 +435,7 @@ linux-small:
                               -funsigned-char -DNOCONN -DNOTILDE          \
                               -ffunction-sections -fmerge-all-constants   \
                               -fdelete-null-pointer-checks                \
+                              -Wno-implicit-function-declaration          \
                               -funsafe-math-optimizations -DNOSPACE"      \
                     "LNKFLAGS = -Wl,-O,2 -Wl,-flto -Wl,--gc-sections"
 #
@@ -452,6 +454,7 @@ linux-minimal:
                               -fdelete-null-pointer-checks -DNOICP        \
                               -DMINBUF -DNOATTR -DNOTILDE                 \
                               -funsafe-math-optimizations -DNOCONN        \
+                              -Wno-implicit-function-declaration          \
                               -DNOLOGS -DNOSPACE"                         \
                     "LNKFLAGS = -Wl,-O,2 -Wl,-flto -Wl,--gc-sections"
 #
