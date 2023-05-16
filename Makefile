@@ -404,12 +404,16 @@ v7:
                             -DNPTYPE=$(NPTYPE) $(DIRECT)"
 #
 ###########################################################################
+#Default to -Os, but newer compilers may support -Oz
+Osm ?= -Os
+#
+###########################################################################
 #Linux, full featured
 linux:
 	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DDEBUG -DTLOG     \
                               -DUXIII -DO_NDELAY -DTIOCFLUSH              \
                               -DTIOCSINUSE -Wall -DSIGTSTP -DFIONREAD -g  \
-                              -DTIMEZONE -Wall -Os -fno-ident             \
+                              -DTIMEZONE -Wall $(Osm) -fno-ident          \
                               -fno-unwind-tables -flto -DDIRENT           \
                               -fno-exceptions -flto -fno-math-errno       \
                               -fdata-sections -ffast-math                 \
@@ -427,11 +431,12 @@ linux:
 linux-small:
 	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DUXIII -g         \
                               -DNOLOGS -Wall -DFIONREAD -DNOATTR          \
-                              -fno-ident -DNOSTATS -Os -DNODOHLP -DNODISP \
-                              -DNOCKUDIA -DMINBUF -fno-unwind-tables      \
-                              -fno-exceptions -DDIRENT -flto -DNOCKUSCR   \
-                              -fno-math-errno -fdata-sections -DNODISP    \
-                              -ffast-math -fno-asynchronous-unwind-tables \
+                              -fno-ident -DNOSTATS $(Osm) -DNODOHLP       \
+                              -DNODISP -DNOCKUDIA -DMINBUF                \
+                              -fno-unwind-tables -fno-exceptions -DDIRENT \
+                              -flto -DNOCKUSCR -fno-math-errno            \
+                              -fdata-sections -DNODISP -ffast-math        \
+                              -fno-asynchronous-unwind-tables             \
                               -funsigned-char -DNOCONN -DNOTILDE          \
                               -ffunction-sections -fmerge-all-constants   \
                               -fdelete-null-pointer-checks                \
@@ -443,13 +448,13 @@ linux-small:
 #Linux, minimal - no dialer, no scripting, no help, no attributes, no ICP,
 #                 no dispositions, no statistics, minimal buffering.
 linux-minimal:
-	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DUXIII -Wall -Os  \
+	make wermit "CFLAGS = -DSYSVR3 -DUXIII -DBSD42 -DUXIII -Wall      \
                               -DFIONREAD -DDIRENT -DNOCKUSCR -DNOCKUDIA   \
                               -DNODOHLP -DNODISP -g -fno-unwind-tables    \
                               -fno-asynchronous-unwind-tables -fno-ident  \
                               -flto -fno-exceptions -fdata-sections       \
                               -ffunction-sections -ffast-math             \
-                              -fno-math-errno -DNOSTATS                   \
+                              -fno-math-errno -DNOSTATS $(Osm)            \
                               -fmerge-all-constants -funsigned-char       \
                               -fdelete-null-pointer-checks -DNOICP        \
                               -DMINBUF -DNOATTR -DNOTILDE                 \

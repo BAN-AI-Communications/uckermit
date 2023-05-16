@@ -2034,7 +2034,7 @@ trtrap()
 int
 transmit(s, t)
 #ifdef __linux__
-const
+/* const */
 #endif /* ifdef __linux__ */
 char *s;
 char t;
