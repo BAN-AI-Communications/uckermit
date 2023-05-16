@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *ckxv = "    TTY IO, 4G(095)";
+char *ckxv = "    TTY IO, 4G(096)";
 #endif /* ifndef NOICP */
 
 /* C K U T I O */
@@ -9,7 +9,7 @@ char *ckxv = "    TTY IO, 4G(095)";
 /* uCKermit interrupt, terminal control & I/O functions for UNIX systems */
 
 /*
- * Copyright (c) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson <trnsz@pobox.com>
  *
  * Copyright (c) 1981-2011,
  *   Trustees of Columbia University in the City of New York.

@@ -1,12 +1,12 @@
 #ifndef NOCKUDIA
-char *dialv = "    Dialer, 4G(058)";
+char *dialv = "    Dialer, 4G(059)";
 
 /* C K U D I A -- Dialing program for connection to remote system */
 
 /* SPDX-License-Identifier: BSD-3-Clause */
 
 /*
- * Copyright (c) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson <trnsz@pobox.com>
  *
  * Copyright (c) 1985, Herman Fischer, Encino CA
  *

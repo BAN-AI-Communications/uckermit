@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *ckzv = "   File IO, 4G(095)";
+char *ckzv = "   File IO, 4G(096)";
 #endif /* ifndef NOICP */
 
 /* C K U F I O -- Kermit file system support for UNIX systems */

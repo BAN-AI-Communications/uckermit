@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *cmdv = "  JSYS ICP, 4G(065)";
+char *cmdv = "  JSYS ICP, 4G(066)";
 #endif /* ifndef NOICP */
 
 /* C K U C M D -- Interactive command package / parser */
@@ -7,7 +7,7 @@ char *cmdv = "  JSYS ICP, 4G(065)";
 /* SPDX-License-Identifier: BSD-3-Clause */
 
 /*
- * Copyright (c) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson <trnsz@pobox.com>
  *
  * Copyright (c) 1981-2011,
  *   Trustees of Columbia University in the City of New York.

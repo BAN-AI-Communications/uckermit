@@ -1,6 +1,6 @@
 #ifndef NOICP
 #ifdef WARTVER
-char *wartv = "     Wart, 1A(232)";
+char *wartv = "     Wart, 1A(233)";
 #endif /* ifndef WARTVER */
 #endif /* ifndef NOICP */
 
@@ -9,7 +9,7 @@ char *wartv = "     Wart, 1A(232)";
 /* SPDX-License-Identifier: BSD-3-Clause */
 
 /*
- * Copyright (c) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson <trnsz@pobox.com>
  *
  * Copyright (c) 1984,
  *   Jeff Damens, Columbia University Center for Computing Activites

@@ -1,6 +1,6 @@
 #ifndef NOICP
 #ifndef NOCONN
-char *connv = "   Connect, 4G(056)";
+char *connv = "   Connect, 4G(057)";
 #endif /* ifndef NOCONN */
 #endif /* ifndef NOICP */
 
@@ -9,7 +9,7 @@ char *connv = "   Connect, 4G(056)";
 /* SPDX-License-Identifier: BSD-3-Clause */
 
 /*
- * Copyright (c) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson <trnsz@pobox.com>
  *
  * Copyright (c) 1981-2011,
  *   Trustees of Columbia University in the City of New York.

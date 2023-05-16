@@ -1,12 +1,12 @@
 #ifndef NOCKUSCR
-char *loginv = "    Script, 4G(038)";
+char *loginv = "    Script, 4G(039)";
 
 /* C K U S C R -- Login script for logging onto remote system */
 
 /* SPDX-License-Identifier: BSD-3-Clause */
 
 /*
- * Copyright (c) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson <trnsz@pobox.com>
  *
  * Copyright (c) 1985, Herman Fischer, Encino CA
  *

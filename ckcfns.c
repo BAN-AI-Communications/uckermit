@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *fnsv = "   Library, 4G(107)";
+char *fnsv = "   Library, 4G(108)";
 #endif /* ifndef NOICP */
 
 /* C K C F N S -- System-independent Kermit protocol support functions */
@@ -7,7 +7,7 @@ char *fnsv = "   Library, 4G(107)";
 /* SPDX-License-Identifier: BSD-3-Clause */
 
 /*
- * Copyright (c) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson <trnsz@pobox.com>
  *
  * Copyright (c) 1981-2011,
  *   Trustees of Columbia University in the City of New York.
