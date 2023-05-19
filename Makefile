@@ -413,7 +413,7 @@ linux:
                               -DTIMEZONE -Wall $(Osm) -fno-ident          \
                               -fno-unwind-tables -DDIRENT                 \
                               -fno-exceptions -flto -fno-math-errno       \
-                              -fdata-sections -ffast-math -DCK_TERMIOS    \
+                              -fdata-sections -ffast-math                 \
                               -fno-asynchronous-unwind-tables             \
                               -funsigned-char -ffunction-sections         \
                               -fmerge-all-constants -Wno-return-type      \
@@ -440,7 +440,7 @@ linux-small:
                               -fdelete-null-pointer-checks                \
                               -Wno-implicit-function-declaration          \
                               -Wno-incompatible-function-pointer-types    \
-                              -Wno-return-type -DNOSPACE -DCK_TERMIOS     \
+                              -Wno-return-type -DNOSPACE                  \
                               -funsafe-math-optimizations"                \
                     "LNKFLAGS = -flto -Wl,--gc-sections"
 #
@@ -457,7 +457,7 @@ linux-minimal:
                               -fno-math-errno -DNOSTATS $(Osm)            \
                               -fmerge-all-constants -funsigned-char       \
                               -fdelete-null-pointer-checks -DNOICP        \
-                              -DMINBUF -DNOATTR -DNOTILDE -DCK_TERMIOS    \
+                              -DMINBUF -DNOATTR -DNOTILDE                 \
                               -funsafe-math-optimizations -DNOCONN        \
                               -Wno-implicit-function-declaration          \
                               -Wno-incompatible-function-pointer-types    \
