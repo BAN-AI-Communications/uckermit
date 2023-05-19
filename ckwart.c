@@ -50,12 +50,8 @@ char *wartv = "     Wart, 1A(233)";
 
 #include "ckcdeb.h"           /* Includes */
 #include <stdio.h>
-
-#ifdef __linux__
 #include <stdlib.h>
 #include <string.h>
-#endif /* ifdef __linux__ */
-
 #include <ctype.h>
 
 #define TBL_TYPE "CHAR"
@@ -87,10 +83,6 @@ trans
 };                               /* next transition */
 
 typedef struct trans *Trans;
-
-#ifndef __linux__
-char *malloc();                  /* Returns pointer (not int) */
-#endif /* ifndef __linux__ */
 
 int lines, nstates, nacts;
 char tokval[MAXWORD];
