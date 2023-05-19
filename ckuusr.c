@@ -2081,7 +2081,11 @@ char t;
   }
 
   i = 0;                                /* Beginning of buffer. */
+#ifndef __linux__
   oldsig = signal(SIGINT, trtrap);      /* Save current interrupt trap. */
+#else
+  oldsig = signal(SIGINT, (__sighandler_t)trtrap);
+#endif /* ifndef __linux__ */
   tr_int = 0;                           /* Have not been interrupted yet */
   z = 0;                                /* Return code presumed good. */
 

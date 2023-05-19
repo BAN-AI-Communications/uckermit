@@ -264,7 +264,11 @@ recvSeq()
     got[i] = '\0';
   }
 
+#ifndef __linux__
   signal(SIGALRM, scrtime);                  /* did we get it? */
+#else
+  signal(SIGALRM, (__sighandler_t)scrtime);
+#endif /* ifndef __linux__ */
   if (!setjmp(alrmRng))                      /* not timed out yet */
   {
     alarm(EXP_ALRM);
@@ -321,7 +325,11 @@ outSeq()
     delay = sequenc();
     l = strlen(seq_buf);
     tlog(F111, "sending sequence ", seq_buf, (long)l);
+#ifndef __linux__
     signal(SIGALRM, scrtime);
+#else
+    signal(SIGALRM, (__sighandler_t)scrtime);
+#endif /* ifndef __linux__ */
     if (!setjmp(alrmRng))
     {
       alarm(SND_ALRM);

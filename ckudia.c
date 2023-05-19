@@ -819,10 +819,18 @@ char *telnbr;
     }
     else                          /* first (i.e., non-nested) failure */
     {
+#ifndef __linux__
       signal(SIGALRM, dialtime);  /* be sure to catch signals */
+#else
+      signal(SIGALRM, (__sighandler_t)dialtime);
+#endif /* ifndef __linux__ */
       if (signal(SIGINT, SIG_IGN) != SIG_IGN)
       {
+#ifndef __linux__
         signal(SIGINT, dialint);
+#else
+        signal(SIGINT, (__sighandler_t)dialint);
+#endif /* ifndef __linux__ */
       }
 
       alarm(10);                  /* be sure to exit this section */
@@ -884,11 +892,20 @@ char *telnbr;
   /* ttflui(); */                 /* flush input buffer if any */
 
   savAlrm = signal(
-    SIGALRM, dialtime);           /* set alarm handler */
+#ifndef __linux__
+    SIGALRM, dialtime             /* set alarm handler */
+#else
+    SIGALRM, (__sighandler_t)dialtime
+#endif /* ifndef __linux__ */
+);                                /* set alarm handler */
   if (( savInt = signal(
     SIGINT, SIG_IGN)) != SIG_IGN)
   {
+#ifndef __linux__
     signal(SIGINT, dialint);      /* set int handler if not ignored */
+#else
+    signal(SIGINT, (__sighandler_t)dialint);
+#endif /* ifndef __linux__ */
   }
 
   debug(F100,
