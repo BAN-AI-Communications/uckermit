@@ -1656,9 +1656,10 @@ int len;
   resptr = resarry;                  /* static copies of these so*/
   remlen = len;                      /* recursive calls can alter them */
   traverse(head, scratch, sptr);     /* go walk the directory tree */
-  for (; head != NULL; head = head->fwd)
-  {
-    free(head);                      /* return the path segments */
+  while (head != NULL) {
+    struct path *next = head->fwd;
+    free((char *)head);              /* return the path segments */
+    head = next;
   }
   return ( numfnd );                 /* and return the number of matches */
 }

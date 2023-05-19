@@ -62,7 +62,11 @@
 #endif /* ifdef BSD4 */
 
 #ifdef UXIII
+#ifdef CK_TERMIOS
+#include <termios.h>
+#else
 #include <termio.h>
+#endif /* ifdef CK_TERMIOS */
 #include <sys/ioctl.h>
 #include <errno.h>                /* error numbers for system returns */
 #include <fcntl.h>                /* directory reading for locking */

@@ -400,8 +400,9 @@ v7:
                             -DNPTYPE=$(NPTYPE) $(DIRECT)"
 #
 ###########################################################################
-#Default to -Os, but newer compilers may support -Oz
+#Default to -Os, but newer compilers (GCC 12.1+, etc.) may support -Oz.
 Osm ?= -Os
+#Osm ?= -Oz
 #
 ###########################################################################
 #Linux, full featured
@@ -412,7 +413,7 @@ linux:
                               -DTIMEZONE -Wall $(Osm) -fno-ident          \
                               -fno-unwind-tables -flto -DDIRENT           \
                               -fno-exceptions -flto -fno-math-errno       \
-                              -fdata-sections -ffast-math                 \
+                              -fdata-sections -ffast-math -DCK_TERMIOS    \
                               -fno-asynchronous-unwind-tables             \
                               -funsigned-char -ffunction-sections         \
                               -fmerge-all-constants -Wno-return-type      \
@@ -439,7 +440,7 @@ linux-small:
                               -fdelete-null-pointer-checks                \
                               -Wno-implicit-function-declaration          \
                               -Wno-incompatible-function-pointer-types    \
-                              -Wno-return-type -DNOSPACE                  \
+                              -Wno-return-type -DNOSPACE -DCK_TERMIOS     \
                               -funsafe-math-optimizations"                \
                     "LNKFLAGS = -Wl,-O,2 -Wl,-flto -flto -Wl,--gc-sections"
 #
@@ -456,7 +457,7 @@ linux-minimal:
                               -fno-math-errno -DNOSTATS $(Osm)            \
                               -fmerge-all-constants -funsigned-char       \
                               -fdelete-null-pointer-checks -DNOICP        \
-                              -DMINBUF -DNOATTR -DNOTILDE                 \
+                              -DMINBUF -DNOATTR -DNOTILDE -DCK_TERMIOS    \
                               -funsafe-math-optimizations -DNOCONN        \
                               -Wno-implicit-function-declaration          \
                               -Wno-incompatible-function-pointer-types    \

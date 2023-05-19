@@ -52,7 +52,11 @@
 #include <stdio.h>
 
 #ifdef UXIII
+#ifdef CK_TERMIOS
+#include <termios.h>
+#else
 #include <termio.h>
+#endif /* ifdef CK_TERMIOS */
 #endif /* ifdef UXIII */
 
 #ifdef __linux__

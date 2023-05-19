@@ -260,7 +260,11 @@ char coninc(int timo);
 #endif /* ifdef BSD4 */
 
 #ifdef UXIII
+#ifdef CK_TERMIOS
+#include <termios.h>
+#else
 #include <termio.h>
+#endif /* ifdef CK_TERMIOS */
 #include <sys/ioctl.h>
 #include <errno.h>                /* error numbers for system returns */
 #include <fcntl.h>                /* directory reading for locking */
@@ -378,37 +382,30 @@ static long clock;
 #endif /* ifdef V7 */
 
 #ifdef UXIII
-static struct termio ttold = {
-  0
-};                                /* Init'd for word alignment, */
-static struct termio ttraw = {
-  0
-};                                /* which is important for some */
-static struct termio tttvt = {
-  0
-};                                /* systems, like Zilog... */
-static struct termio ccold = {
-  0
-};
-static struct termio ccraw = {
-  0
-};
-static struct termio cccbrk = {
-  0
-};
+#ifdef CK_TERMIOS
+#define LTERMIO termios
+#else
+#define LTERMIO termio
+#endif /* ifdef CK_TERMIOS */
+static struct LTERMIO ttold  = { 0 };  /* Init'd for word alignment, */
+static struct LTERMIO ttraw  = { 0 };  /* which is important for some */
+static struct LTERMIO tttvt  = { 0 };  /* systems, like Zilog... */
+static struct LTERMIO ccold  = { 0 };
+static struct LTERMIO ccraw  = { 0 };
+static struct LTERMIO cccbrk = { 0 };
 #else  /* ifdef UXIII */
-static struct sgttyb                /* sgtty info... */
+static struct sgttyb /* sgtty info... */
   ttold, ttraw, tttvt,  ttbuf,
   ccold, ccraw, cccbrk, vanilla;
 #endif /* ifdef UXIII */
 
 static char flfnam[80];             /* UUCP lock file path name */
-static int hasLock = 0;             /* =1 if this kermit locked uucp */
-static int inbufc  = 0;             /* stuff for efficient SIII raw line */
-static int ungotn  = -1;            /* pushback to unread character */
-static int conesc  = 0;             /* set to 1 if esc char (^\) typed */
-static int ttlock();                /* definition of ttlock subprocedure */
-static int ttunlck();               /* and unlock subprocedure */
+static int  hasLock = 0;            /* =1 if this kermit locked uucp */
+static int  inbufc  = 0;            /* stuff for efficient SIII raw line */
+static int  ungotn  = -1;           /* pushback to unread character */
+static int  conesc  = 0;            /* set to 1 if esc char (^\) typed */
+static int  ttlock();               /* definition of ttlock subprocedure */
+static int  ttunlck();              /* and unlock subprocedure */
 static char ttnmsv[DEVNAMLEN + 1];  /* copy of open path for tthang */
 
 /* S Y S I N I T -- System-dependent program initialization */
