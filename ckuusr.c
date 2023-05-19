@@ -2024,7 +2024,7 @@ int tr_int;                             /* Flag if TRANSMIT interrupted */
 #ifdef __linux__
 void
 #endif /* ifdef __linux__ */
-trtrap()
+trtrap(void)
 {                                       /* TRANSMIT interrupt trap */
   tr_int = 1;
 #ifdef __linux__
