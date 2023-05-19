@@ -1,7 +1,6 @@
 #ifndef NOICP
-#ifdef WARTVER
-char *wartv = "     Wart, 1A(233)";
-#endif /* ifndef WARTVER */
+#define WARTVER WART
+char *wartv = "     Wart, 1A(234)";
 #endif /* ifndef NOICP */
 
 /* W A R T */
@@ -144,10 +143,11 @@ FILE *infp, *outfp;
   fprintf(outfp, "source file instead, */\n");
   fprintf(outfp, "%c* and then run it through Wart to produce a new ", '/');
   fprintf(outfp, "C source file.     */\n\n");
-  fprintf(outfp, "%c* Wart Version Info: */\n", '/');
 #endif /* ifndef NODOHLP */
-#ifndef NOICP
-/*  fprintf(outfp, "char *wartv = \"%s\";\n\n", wartv); */
+# ifndef NOICP
+#  ifdef WARTVER
+  fprintf(outfp, "%c* Wart Version Info: %s */\n\n", '/', wartv);
+#  endif /* ifdef WARTVER */
 #endif /* ifndef NOICP */
 
   initial(infp, outfp);       /* read state names, initial defs */

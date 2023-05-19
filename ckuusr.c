@@ -602,7 +602,11 @@ char x;
       break;
 
     default:
+#ifndef NODOHLP
       fatal("invalid arg, try '-h' for help");
+#else
+      fatal("invalid argument");
+#endif /* ifndef NODOHLP */
     }
 
     x = *++xp; /* See if options are bundled */
