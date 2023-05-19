@@ -421,7 +421,7 @@ linux:
                               -Wno-implicit-function-declaration          \
                               -Wno-incompatible-function-pointer-types    \
                               -funsafe-math-optimizations"                \
-                    "LNKFLAGS = -Wl,-flto -Wl,--gc-sections"
+                    "LNKFLAGS = -Wl,-flto -flto -Wl,--gc-sections"
 #
 ###########################################################################
 #Linux, small - no dialer, no scripting, no help, no attributes,
@@ -442,7 +442,7 @@ linux-small:
                               -Wno-incompatible-function-pointer-types    \
                               -Wno-return-type -DNOSPACE -DCK_TERMIOS     \
                               -funsafe-math-optimizations"                \
-                    "LNKFLAGS = -Wl,-flto -Wl,--gc-sections"
+                    "LNKFLAGS = -Wl,-flto -flto -Wl,--gc-sections"
 #
 ###########################################################################
 #Linux, minimal - no dialer, no scripting, no help, no attributes, no ICP,
@@ -462,7 +462,7 @@ linux-minimal:
                               -Wno-implicit-function-declaration          \
                               -Wno-incompatible-function-pointer-types    \
                               -Wno-return-type -DNOLOGS -DNOSPACE"        \
-                    "LNKFLAGS = -Wl,-flto -Wl,--gc-sections"
+                    "LNKFLAGS = -Wl,-flto -flto -Wl,--gc-sections"
 #
 ###########################################################################
 #Linux, alias for minimal
