@@ -180,11 +180,7 @@ conect()
     active = 1;                      /* This fork reads, sends keystrokes */
     if (!setjmp(env_con))            /* comm error in child process */
     {
-#ifndef __linux__
       signal(SIGUSR1, conn_int);     /* routine for child process exit */
-#else
-      signal(SIGUSR1, (__sighandler_t)conn_int);
-#endif /* ifndef __linux__ */
       while (active)
       {
         c = coninc(0) & cmask;       /* Get character from keyboard */

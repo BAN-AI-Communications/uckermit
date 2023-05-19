@@ -1856,13 +1856,8 @@ SIGTYP (*f)();
 #endif /* ifdef BSD29 */
   debug(F101, "conint backgrd", "", backgrd);
 
-#ifndef __linux__
   signal(SIGHUP, f);          /* Ensure lockfile cleared on hangup */
   signal(SIGTERM, f);         /* or soft kill. */
-#else
-  signal(SIGHUP, (__sighandler_t)f);
-  signal(SIGTERM, (__sighandler_t)f);
-#endif /* ifndef __linux__ */
 
   /*
    * Check if invoked in background,
@@ -1881,24 +1876,12 @@ SIGTYP (*f)();
   else
   {
     debug(F100, "conint foreground catching signals", "", 0);
-#ifndef __linux__
     signal(SIGINT, f);        /* Catch terminal interrupt */
-#else
-    signal(SIGINT, (__sighandler_t)f);
-#endif /* ifndef __linux__ */
 #ifdef SIGTSTP
-#ifndef __linux__
     signal(SIGTSTP, stptrap); /* Keyboard stop */
-#else
-    signal(SIGTSTP, (__sighandler_t)stptrap);
-#endif /* ifndef __linux__ */
 #endif /* ifdef SIGTSTP */
 #ifdef UXIII
-#ifndef __linux__
     signal(SIGQUIT, esctrp);  /* Quit signal, Sys III/V. */
-#else
-    signal(SIGQUIT, (__sighandler_t)esctrp);
-#endif /* ifndef __linux__ */
     if (conesc)
     {
       conesc = 0;             /* Clear out pending escapes */
@@ -2082,11 +2065,7 @@ int tty;
 
   lseek(m, (long)( nl[1].n_value ), 0);
   read(m, &xproc, sizeof ( xproc ));
-#ifndef __linux__
   signal(SIGALRM, catch);
-#else
-  signal(SIGALRM, (__sighandler_t)catch);
-#endif /* ifndef __linux__ */
   if (( pid = fork()) == 0)
   {
     while (1)
@@ -2320,11 +2299,7 @@ char c;
     return ( -1 );                       /* Check for not open. */
   }
 
-#ifndef __linux__
   signal(SIGALRM, timerh);               /* Enable timer interrupt */
-#else
-  signal(SIGALRM, (__sighandler_t)timerh);
-#endif /* ifndef __linux__ */
   alarm(2);                              /* for 2 seconds. */
   x = write(ttyfd, &c, 1);               /* Try to write the character. */
   if (setjmp(sjbuf))                     /* Timer went off? */
@@ -2333,11 +2308,7 @@ char c;
   }
 
   alarm(0);                              /* Turn off timers, etc. */
-#ifndef __linux__
   signal(SIGALRM, SIG_DFL);
-#else
-  signal(SIGALRM, (__sighandler_t)SIG_DFL);
-#endif /* ifndef __linux__ */
   return ( x );
 }
 
@@ -2371,11 +2342,7 @@ CHAR *dest, eol;
   *dest = '\0';                             /* Clear destination buffer */
   if (timo)
   {
-#ifndef __linux__
     signal(SIGALRM, timerh);                /* Enable timer interrupt */
-#else
-    signal(SIGALRM, (__sighandler_t)timerh);
-#endif /* ifndef __linux__ */
   }
 
   alarm(timo);                              /* Set it. */
@@ -2509,11 +2476,7 @@ int timo;
 #endif /* ifdef MYREAD */
   }
 
-#ifndef __linux__
   signal(SIGALRM, timerh);             /* Timed, set up timer. */
-#else
-  signal(SIGALRM, (__sighandler_t)timerh);
-#endif /* ifndef __linux__ */
   alarm(timo);
   if (setjmp(sjbuf))
   {
@@ -2542,11 +2505,7 @@ int timo;
   }
 
   alarm(0);                            /* Turn off timer, */
-#ifndef __linux__
   signal(SIGALRM, SIG_DFL);            /* and interrupt. */
-#else
-  signal(SIGALRM, (__sighandler_t)SIG_DFL);
-#endif /* ifndef __linux__ */
   return (( n < 0 ) ? -1 : \
     ( ch & m ));                       /* Return char or -1. */
 }
@@ -3110,11 +3069,7 @@ int timo;
     }
   }
 
-#ifndef __linux__
   signal(SIGALRM, timerh);             /* Timed read, so set up timer */
-#else
-  signal(SIGALRM, (__sighandler_t)timerh);
-#endif /* ifndef __linux__ */
   alarm(timo);
   if (setjmp(sjbuf))
   {
@@ -3127,11 +3082,7 @@ int timo;
   }
 
   alarm(0);                            /* Stop timing we got our character */
-#ifndef __linux__
   signal(SIGALRM, SIG_DFL);
-#else
-  signal(SIGALRM, (__sighandler_t)SIG_DFL);
-#endif
   if (n > 0)
   {
     return ( ch );

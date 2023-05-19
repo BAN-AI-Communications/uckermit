@@ -99,19 +99,15 @@ struct zattr            /* Kermit File Attribute structure */
 };
 
 #ifdef SVR3
-/* typedef void SIGTYP; */
-#define SIGTYP void
+typedef void SIGTYP;
 #else  /* ifdef SVR3 */
 #ifdef SUNOS4
-/* typedef void SIGTYP; */
-#define SIGTYP void
+typedef void SIGTYP;
 #else  /* ifdef SUNOS4 */
 #ifdef __linux__
-/* typedef void SIGTYP; */
-#define SIGTYP void
+typedef void SIGTYP;
 #else  /* ifdef __linux__ */
-/* typedef int SIGTYP; */
-#define SIGTYP int
+typedef int SIGTYP;
 #endif /* ifdef __linux__ */
 #endif /* ifdef SUNOS4 */
 #endif /* ifdef SVR3 */
