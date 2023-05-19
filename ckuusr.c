@@ -1,5 +1,5 @@
 #ifndef NOICP
-char *userv = "   JSYS UI, 4G(127)";
+char *userv = "   JSYS UI, 4G(128)";
 #endif /* ifndef NOICP */
 
 /* C K U U S R -- "User Interface" (Part 1) */
@@ -666,58 +666,58 @@ char *msg;
 #ifndef NOICP
 struct keytab cmdtab[] = {
 #ifndef NOPUSH
-  "!",          XXSHE, 0,
-#endif /* ifndef NOPUSH */
-  "%",          XXCOM, CM_INV,
-  "bye",        XXBYE, 0,
+    {   "!",          XXSHE,  0,      },
+#endif  /* ifndef NOPUSH */
+    {   "%",          XXCOM,  CM_INV, },
+    {   "bye",        XXBYE,  0,      },
 #ifndef NOCONN
-  "c",          XXCON, CM_INV,
-#endif /* ifndef NOCONN */
-  "cd",         XXCWD, 0,
-  "close",      XXCLO, 0,
+    {   "c",          XXCON,  CM_INV, },
+#endif  /* ifndef NOCONN */
+    {   "cd",         XXCWD,  0,      },
+    {   "close",      XXCLO,  0,      },
 #ifndef NOCONN
-  "connect",    XXCON, 0,
-#endif /* ifndef NOCONN */
-  "cwd",        XXCWD, 0,
+    {   "connect",    XXCON,  0,      },
+#endif  /* ifndef NOCONN */
+    {   "cwd",        XXCWD,  0,      },
 #ifndef NOCKUDIA
-  "dial",       XXDIAL, 0,
-#endif /* ifndef NOCKUDIA */
-  "directory",  XXDIR, 0,
-  "echo",       XXECH, 0,
-  "exit",       XXEXI, 0,
-  "finish",     XXFIN, 0,
-  "get",        XXGET, 0,
+    {   "dial",       XXDIAL, 0,      },
+#endif  /* ifndef NOCKUDIA */
+    {   "directory",  XXDIR,  0,      },
+    {   "echo",       XXECH,  0,      },
+    {   "exit",       XXEXI,  0,      },
+    {   "finish",     XXFIN,  0,      },
+    {   "get",        XXGET,  0,      },
 #ifndef NOCKUDIA
-  "hangup",     XXHAN, 0,
-#endif /* ifndef NOCKUDIA */
+    {   "hangup",     XXHAN,  0,      },
+#endif  /* ifndef NOCKUDIA */
 #ifndef NODOHLP
-  "help",       XXHLP, 0,
-#endif /* ifndef NODOHLP */
+    {   "help",       XXHLP,  0,      },
+#endif  /* ifndef NODOHLP */
 #ifndef NOLOGS
-  "log",        XXLOG, 0,
-#endif /* ifndef NOLOGS */
-  "quit",       XXQUI, 0,
+    {   "log",        XXLOG,  0,      },
+#endif  /* ifndef NOLOGS */
+    {   "quit",       XXQUI,  0,      },
 /* "r",         XXREC,  CM_INV, */
-  "receive",    XXREC, 0,
-  "remote",     XXREM, 0,
+    {   "receive",    XXREC,  0,      },
+    {   "remote",     XXREM,  0,      },
 /* "s",         XXSEN,  CM_INV, */
 #ifndef NOCKUSCR
-  "script",     XXLOGI, 0,
-#endif /* ifndef NOCKUSCR */
-  "send",       XXSEN, 0,
+    {   "script",     XXLOGI, 0,      },
+#endif  /* ifndef NOCKUSCR */
+    {   "send",       XXSEN,  0,      },
 #ifndef NOSERVER
-  "server",     XXSER, 0,
-#endif /* ifndef NOSERVER */
-  "set",        XXSET, 0,
-  "show",       XXSHO, 0,
+    {   "server",     XXSER,  0,      },
+#endif  /* ifndef NOSERVER */
+    {   "set",        XXSET,  0,      },
+    {   "show",       XXSHO,  0,      },
 #ifndef NOSPACE
-  "space",      XXSPA, 0,
-#endif /* ifndef NOSPACE */
+    {   "space",      XXSPA,  0,      },
+#endif  /* ifndef NOSPACE */
 #ifndef NOSTATS
-  "statistics", XXSTA, 0,
-#endif /* ifndef NOSTATS */
-  "take",       XXTAK, 0,
-  "transmit",   XXTRA, 0
+    {   "statistics", XXSTA,  0,      },
+#endif  /* ifndef NOSTATS */
+    {   "take",       XXTAK,  0,      },
+    {   "transmit",   XXTRA,  0       }
 };
 
 int ncmd = ( sizeof ( cmdtab ) / sizeof ( struct keytab ));
@@ -728,42 +728,42 @@ int ncmd = ( sizeof ( cmdtab ) / sizeof ( struct keytab ));
  */
 
 struct keytab prmtab[] = {
-  "attributes", XYATTR, 0,
-  "baud", XYSPEE, CM_INV,
-  "block-check", XYCHKT, 0,
-  "delay", XYDELA, 0,
-  "duplex", XYDUPL, 0,
+    { "attributes",       XYATTR, 0,      },
+    { "baud",             XYSPEE, CM_INV, },
+    { "block-check",      XYCHKT, 0,      },
+    { "delay",            XYDELA, 0,      },
+    { "duplex",           XYDUPL, 0,      },
 #ifdef COMMENT
-  "end-of-packet", XYEOL, CM_INV,      /* moved to send/receive */
+    { "end-of-packet",    XYEOL,  CM_INV, }, /* moved to send/receive */
 #endif /* ifdef COMMENT */
-  "escape-character", XYESC, 0,
-  "file", XYFILE, 0,
-  "flow-control", XYFLOW, 0,
-  "handshake", XYHAND, 0,
-  "incomplete", XYIFD, 0,
-  "line", XYLINE, 0,
+    { "escape-character", XYESC,  0,      },
+    { "file",             XYFILE, 0,      },
+    { "flow-control",     XYFLOW, 0,      },
+    { "handshake",        XYHAND, 0,      },
+    { "incomplete",       XYIFD,  0,      },
+    { "line",             XYLINE, 0,      },
 #ifndef NOCKUDIA
-  "modem-dialer", XYMODM, 0,
+    { "modem-dialer",     XYMODM, 0,      },
 #endif /* ifndef NOCKUDIA */
 #ifdef COMMENT
-  "packet-length", XYLEN, CM_INV,      /* moved to send/receive */
-  "pad-character", XYPADC, CM_INV,     /* moved to send/receive */
-  "padding", XYNPAD, CM_INV,           /* moved to send/receive */
+    { "packet-length",    XYLEN,  CM_INV, }, /* moved to send/receive */
+    { "pad-character",    XYPADC, CM_INV, }, /* moved to send/receive */
+    { "padding",          XYNPAD, CM_INV, }, /* moved to send/receive */
 #endif /* ifdef COMMENT */
-  "parity", XYPARI, 0,
-  "prompt", XYPROM, 0,
-  "receive", XYRECV, 0,
-  "retry", XYRETR, 0,
-  "send", XYSEND, 0,
+    { "parity",           XYPARI, 0,      },
+    { "prompt",           XYPROM, 0,      },
+    { "receive",          XYRECV, 0,      },
+    { "retry",            XYRETR, 0,      },
+    { "send",             XYSEND, 0,      },
 #ifndef NOSERVER
-  "server", XYSERV, 0,
+    { "server",           XYSERV, 0,      },
 #endif /* ifndef NOSERVER */
-  "speed", XYSPEE, 0,
+    { "speed",            XYSPEE, 0,      },
 #ifdef COMMENT
-  "start-of-packet", XYMARK, CM_INV,   /* moved to send/receive */
+    { "start-of-packet",  XYMARK, CM_INV, }, /* moved to send/receive */
 #endif /* ifndef COMMENT */
-  "terminal", XYTERM, 0
-/*  "timeout", XYTIMO, CM_INV */       /* moved to send/receive */
+    { "terminal",         XYTERM, 0       }
+/*  "timeout", XYTIMO, CM_INV */ /* moved to send/receive */
 };
 
 int nprm = \
@@ -775,25 +775,25 @@ int nprm = \
  */
 
 struct keytab remcmd[] = {
-  "cd",        XZCWD,    CM_INV,
-  "cwd",       XZCWD,    0,
-  "delete",    XZDEL,    0,
-  "directory", XZDIR,    0,
-  "help",      XZHLP,    0,
-  "host",      XZHOS,    0,
-  "space",     XZSPA,    0,
-  "type",      XZTYP,    0,
-  "who",       XZWHO,    0
+    { "cd",        XZCWD, CM_INV, },
+    { "cwd",       XZCWD, 0,      },
+    { "delete",    XZDEL, 0,      },
+    { "directory", XZDIR, 0,      },
+    { "help",      XZHLP, 0,      },
+    { "host",      XZHOS, 0,      },
+    { "space",     XZSPA, 0,      },
+    { "type",      XZTYP, 0,      },
+    { "who",       XZWHO, 0       }
 };
 
 int nrmt = ( sizeof ( remcmd ) / sizeof ( struct keytab ));
 
 #ifndef NOLOGS
 struct keytab logtab[] = {
-  "debugging",    LOGD, 0,
-  "packets",      LOGP, 0,
-  "session",      LOGS, 0,
-  "transactions", LOGT, 0
+    { "debugging",    LOGD, 0, },
+    { "packets",      LOGP, 0, },
+    { "session",      LOGS, 0, },
+    { "transactions", LOGT, 0  }
 };
 #endif /* ifndef NOLOGS */
 
@@ -812,8 +812,8 @@ int nlog = ( sizeof ( logtab ) / sizeof ( struct keytab ));
 
 #ifndef NOICP
 struct keytab shotab[] = {
-  "parameters", SHPAR, 0,
-  "versions",   SHVER, 0
+    { "parameters", SHPAR, 0, },
+    { "versions",   SHVER, 0  }
 };
 #endif /* ifndef NOICP */
 
