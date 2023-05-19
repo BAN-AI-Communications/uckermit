@@ -260,9 +260,13 @@ char *WHOCMD = "who ";               /* For seeing who's logged in */
 #define MAXNAMLEN 99         /* 99 max filename length for minbuf */
 #endif /* ifdef MINBUF */
 
-#ifndef MAXNAMLEN
 #ifdef __linux__
-#define MAXNANLEN 255        /* Linux XXX(jhj): Find in header */
+#include <limits.h>
+#ifdef NAM_MAX
+#define MAXNAMLEN NAM_MAX
+#endif /* ifdef NAM_MAX */
+#ifndef MAXNAMLEN
+#define MAXNAMLEN 255
 #else  /* ifdef __linux__ */
 #define MAXNAMLEN 14         /* If still not defined... */
 #endif /* ifdef __linux__ */
