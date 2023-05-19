@@ -2024,6 +2024,11 @@ int tr_int;                             /* Flag if TRANSMIT interrupted */
 #ifdef __linux__
 void
 #endif /* ifdef __linux__ */
+#ifdef __APPLE__
+#ifdef __MACH__
+void
+#endif /* ifdef __MACH__ */
+#endif /* ifdef __APPLE__ */
 trtrap(void)
 {                                       /* TRANSMIT interrupt trap */
   tr_int = 1;
