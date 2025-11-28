@@ -5,7 +5,7 @@
 # Makefile to build uCKermit (microkermit) for UNIX and UNIX-like systems #
 ###########################################################################
 #                                                                         #
-# Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson <trnsz@pobox.com>   : #
+# Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson                     : #
 # Copyright (c) 1981-2011,                                              : #
 #         Trustees of Columbia University in the City of New York.      : #
 #                                                                         #

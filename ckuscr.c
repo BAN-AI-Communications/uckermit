@@ -6,7 +6,7 @@ char *loginv = "    Script, 4G(039)";
 /* SPDX-License-Identifier: BSD-3-Clause */
 
 /*
- * Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson
  *
  * Copyright (c) 1985, Herman Fischer, Encino CA
  *

@@ -9,7 +9,7 @@ char *ckxv = "    TTY IO, 4G(096)";
 /* uCKermit interrupt, terminal control & I/O functions for UNIX systems */
 
 /*
- * Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson
  *
  * Copyright (c) 1981-2011,
  *   Trustees of Columbia University in the City of New York.

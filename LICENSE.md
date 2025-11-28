@@ -5,7 +5,7 @@ Revised 3‑Clause BSD License
 Copyright © 1981—2011, Trustees of Columbia University in the City of New York.
 Copyright © 1984, Jeff Damens, Columbia University Center for Computing Activities
 Copyright © 1985, Herman Fischer, Encino CA
-Copyright © 2021, 2022, 2023 Jeffrey H. Johnson \<trnsz@pobox.com\>
+Copyright © 2021, 2022, 2023 Jeffrey H. Johnson
 
 All rights reserved.
 

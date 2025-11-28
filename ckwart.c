@@ -8,7 +8,7 @@ char *wartv = "     Wart, 1A(234)";
 /* SPDX-License-Identifier: BSD-3-Clause */
 
 /*
- * Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson
  *
  * Copyright (c) 1984,
  *   Jeff Damens, Columbia University Center for Computing Activites

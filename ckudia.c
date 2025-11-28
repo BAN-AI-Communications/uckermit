@@ -6,7 +6,7 @@ char *dialv = "    Dialer, 4G(060)";
 /* SPDX-License-Identifier: BSD-3-Clause */
 
 /*
- * Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson <trnsz@pobox.com>
+ * Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson
  *
  * Copyright (c) 1985, Herman Fischer, Encino CA
  *

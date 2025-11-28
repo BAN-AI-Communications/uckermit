@@ -1,5 +1,5 @@
 .\" SPDX-License-Identifier: BSD-3-Clause
-.\" Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson <trnsz@pobox.com>
+.\" Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson
 .\" Copyright (c) 1984, Jeff Damens, Columbia University Center for Computing Activites
 .\" Copyright (c) 1985, Herman Fischer, Encino CA
 .\" Copyright (c) 1981-2011, Trustees of Columbia University in the City of New York.
@@ -561,7 +561,7 @@ Display a remote file on your screen.
 Display who's logged in, or get information about a user.
 .SH CONTACT
 Jeffrey H. Johnson
-<trnsz@pobox.com>
+<johnsonjh.dev@gmail.com>
 .SH HOMEPAGE
 https://github.com/BAN-AI-Communications/uckermit
 .SH ORIGINAL AUTHORS
@@ -572,7 +572,7 @@ SPDX-License-Identifier: BSD-3-Clause
 .PP
 Revised 3-Clause BSD License for Columbia University Kermit Software
 .PP
-Copyright (c) 2021, 2022, Jeffrey H. Johnson <trnsz@pobox.com>
+Copyright (c) 2021, 2022, Jeffrey H. Johnson <johnsonjh.dev@gmail.com>
 .br
 Copyright (c) 1984, Jeff Damens, Columbia University Center for Computing Activites
 .br

@@ -1,5 +1,5 @@
 <!-- SPDX-License-Identifier: BSD-3-Clause -->
-<!-- Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson <trnsz@pobox.com> -->
+<!-- Copyright (c) 2021, 2022, 2023 Jeffrey H. Johnson -->
 # μ*C֊Kermit*
 
 ## _micro_–C֊Kermit (_microkermit_)
@@ -352,7 +352,7 @@ options specify either protocol transactions or terminal connection.
 
 ## CONTACT
 
-- [Jeffrey H. Johnson](mailto:trnsz@pobox.com)
+- [Jeffrey H. Johnson](mailto:johnsonjh.dev@gmail.com)
 
 ## HOMEPAGE
 
@@ -374,7 +374,7 @@ Copyright © 1984 Jeff Damens, Columbia University Center for Computing Activite
 \
 Copyright © 1985, Herman Fischer, Encino CA
 \
-Copyright © 2021, 2022, 2023 Jeffrey H. Johnson \<trnsz@pobox.com\>
+Copyright © 2021, 2022, 2023 Jeffrey H. Johnson
 
 All rights reserved.
 
